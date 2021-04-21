@@ -12,6 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography'
+import {PropTable} from './prop_table'
 
 const useStyles = makeStyles(theme => ({
   root: { 
@@ -100,7 +101,9 @@ function App() {
         </Toolbar>
       </AppBar>
       <JsonBlockViewer theme={jsonTheme} />
+        <PropTable obsid={'2003'}/>
       </div>
+
     </ThemeProvider>
   );
 }
