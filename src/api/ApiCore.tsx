@@ -2,12 +2,6 @@
 
 import {apiProvider} from './ApiRoot';
 
-// const apiTasks = new ApiCore({
-//     getAll: true,
-//     url: url,
-//     api: api
-// });
-
 interface options {
     getAll: boolean;
     url: string;
