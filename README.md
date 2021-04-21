@@ -1,4 +1,6 @@
-# Getting Started with Create React App
+# papahana_frontend
+
+React App acting as UI for papahana_backend
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
