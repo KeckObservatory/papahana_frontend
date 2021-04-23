@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core"
 import './App.css';
 import JsonBlockViewer from './json_viewer/JsonBlockViewer'
 import Switch from "@material-ui/core/Switch"
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { createMuiTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { lightBlue, deepOrange, deepPurple} from '@material-ui/core/colors';
 import AppBar from '@material-ui/core/AppBar';
@@ -12,7 +12,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography'
-// import PropTable from './prop_table'
 
 const useStyles = makeStyles(theme => ({
   root: { 
@@ -51,61 +50,71 @@ const useStyles = makeStyles(theme => ({
   fixedHeight: { height: 240 }
 }));
 
-function App() {
+export function TopBar(props: any) {
   const classes = useStyles();
-  const [darkState, setDarkState] = useState(true);
+  return( 
+    <AppBar 
+      position="absolute"
+      className={classes.appBar}  
+    >
+      <Toolbar
+        className={classes.toolbar}
+      >
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="open drawer"
+        >
+          <MenuIcon />
+        </IconButton>
+        <Typography
+          component="h1"
+          variant="h6"
+          color="inherit"
+          noWrap
+          className={classes.title}
+        >
+          Papahana Demo
+        </Typography>
+        <Tooltip title="Toggle on for dark mode">
+          <Switch checked={props.darkState} onChange={props.handleThemeChange}/>
+        </Tooltip>
+      </Toolbar>
+    </AppBar>
+  )
+}
+
+const handleTheme = (darkState: boolean): Theme => {
   const palletType = darkState ? "dark" : "light"
   const mainPrimaryColor = darkState ? '#cf7d34': lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
-  const jsonTheme = darkState ? 'bespin': 'summerfruit:inverted'
-  const darkTheme = createMuiTheme({
+  const theme = createMuiTheme({
     palette: {
       type: palletType,
       primary: { main: mainPrimaryColor},
       secondary: {main: mainSecondaryColor}
     }
   })
-    const handleThemeChange = (): void => {
-        setDarkState( !darkState);
-    }
+  return theme
+}
+
+export default function App() {
+  const classes = useStyles();
+  const [darkState, setDarkState] = useState(true);
+  const jsonTheme = darkState ? 'bespin': 'summerfruit:inverted'
+  const darkTheme = handleTheme(darkState)
+
+  const handleThemeChange = (): void => {
+      setDarkState( !darkState);
+  }
+
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <div className={classes.root}>
-      <AppBar 
-        position="absolute"
-        className={classes.appBar}  
-      >
-        <Toolbar
-          className={classes.toolbar}
-        >
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="inherit"
-            noWrap
-            className={classes.title}
-          >
-            Papahana Demo
-          </Typography>
-          <Tooltip title="Toggle on for dark mode">
-            <Switch checked={darkState} onChange={handleThemeChange}/>
-          </Tooltip>
-        </Toolbar>
-      </AppBar>
-      <JsonBlockViewer theme={jsonTheme} />
-      {/* <PropTable obsid={'2003'}/> */}
+        <TopBar darkTheme={darkTheme} handleThemeChange={handleThemeChange} />
+        <JsonBlockViewer theme={jsonTheme} />
       </div>
-
     </ThemeProvider>
   );
 }
-
-export default App;
