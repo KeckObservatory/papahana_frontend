@@ -12,6 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography'
+import { BrowserRouter as Router, Route, useLocation, useHistory } from "react-router-dom"
 
 const useStyles = makeStyles(theme => ({
   root: { 
@@ -98,22 +99,54 @@ const handleTheme = (darkState: boolean): Theme => {
   return theme
 }
 
+
+export function getQuery(location: any) {
+  const searchParams = new URLSearchParams(location.search);
+  return {
+    ob_id: searchParams.get("ob_id"),
+    darkTheme: searchParams.get("darkTheme")
+  };
+}
+
+export function setQuery( key: string, value: any ): string {
+  const searchParams = new URLSearchParams();
+  searchParams.set(key, value);
+  return searchParams.toString()
+}
+
 export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useState(true);
+  const location = useLocation()
+  const history = useHistory()
+  const query = getQuery(location)
+  console.log('location')
+  console.log(location)
+  console.log('history')
+  console.log(history)
+
+  console.log('query')
+  console.log(query)
   const jsonTheme = darkState ? 'bespin': 'summerfruit:inverted'
   const darkTheme = handleTheme(darkState)
 
   const handleThemeChange = (): void => {
       setDarkState( !darkState);
+      history.push(setQuery("darkState", !darkState))
   }
 
   return (
     <ThemeProvider theme={darkTheme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <div className={classes.root}>
+        <Route>
         <TopBar darkTheme={darkTheme} handleThemeChange={handleThemeChange} />
-        <JsonBlockViewer theme={jsonTheme} />
+        {/* <Route
+          path="/"
+          render={handleJsonView}
+        /> */}
+          <JsonBlockViewer theme={jsonTheme} />
+        </Route>
       </div>
     </ThemeProvider>
   );
