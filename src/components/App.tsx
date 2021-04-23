@@ -102,21 +102,6 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
   return [theme, jsonTheme]
 }
 
-
-export function getQuery(location: any) {
-  const searchParams = new URLSearchParams(location.search);
-  return {
-    ob_id: searchParams.get("ob_id"),
-    darkTheme: searchParams.get("darkTheme")
-  };
-}
-
-export function setQuery( location: any, key: string, value: any ): string {
-  const searchParams = new URLSearchParams(location.search);
-  searchParams.set(key, value)
-  return searchParams.toString()
-}
-
 export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', BooleanParam);

@@ -46,7 +46,7 @@ export const mock_observations: Observation = {
 }
 
 export const mock_ob: ObservationBlock = {
-  '_id': "1",
+  '_id': "1_mock",
   'signature': mock_signature, 
   'target': mock_target,
   'acquisition': mock_acquisition,
