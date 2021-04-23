@@ -12,7 +12,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography'
-import { BrowserRouter as Router, Route, useLocation, useHistory } from "react-router-dom"
+import { BooleanParam, QueryParamProvider, useQueryParam } from 'use-query-params'
+import { ThemeKeys } from 'react-json-view';
 
 const useStyles = makeStyles(theme => ({
   root: { 
@@ -85,7 +86,7 @@ export function TopBar(props: any) {
   )
 }
 
-const handleTheme = (darkState: boolean): Theme => {
+const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys | undefined ] => {
   const palletType = darkState ? "dark" : "light"
   const mainPrimaryColor = darkState ? '#cf7d34': lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
@@ -96,7 +97,9 @@ const handleTheme = (darkState: boolean): Theme => {
       secondary: {main: mainSecondaryColor}
     }
   })
-  return theme
+  let jsonTheme = darkState ? 'bespin': 'summerfruit:inverted' as ThemeKeys
+  if (darkState) jsonTheme = 'bespin' as ThemeKeys
+  return [theme, jsonTheme]
 }
 
 
@@ -108,45 +111,27 @@ export function getQuery(location: any) {
   };
 }
 
-export function setQuery( key: string, value: any ): string {
-  const searchParams = new URLSearchParams();
-  searchParams.set(key, value);
+export function setQuery( location: any, key: string, value: any ): string {
+  const searchParams = new URLSearchParams(location.search);
+  searchParams.set(key, value)
   return searchParams.toString()
 }
 
 export default function App() {
   const classes = useStyles();
-  const [darkState, setDarkState] = useState(true);
-  const location = useLocation()
-  const history = useHistory()
-  const query = getQuery(location)
-  console.log('location')
-  console.log(location)
-  console.log('history')
-  console.log(history)
-
-  console.log('query')
-  console.log(query)
-  const jsonTheme = darkState ? 'bespin': 'summerfruit:inverted'
-  const darkTheme = handleTheme(darkState)
+  const [darkState, setDarkState] = useQueryParam('darkState', BooleanParam);
+  const [theme, jsonTheme] = handleTheme(darkState)
 
   const handleThemeChange = (): void => {
-      setDarkState( !darkState);
-      history.push(setQuery("darkState", !darkState))
+      setDarkState(!darkState);
   }
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <div className={classes.root}>
-        <Route>
-        <TopBar darkTheme={darkTheme} handleThemeChange={handleThemeChange} />
-        {/* <Route
-          path="/"
-          render={handleJsonView}
-        /> */}
-          <JsonBlockViewer theme={jsonTheme} />
-        </Route>
+        <TopBar darkTheme={theme} handleThemeChange={handleThemeChange} />
+        <JsonBlockViewer theme={jsonTheme} />
       </div>
     </ThemeProvider>
   );

@@ -6,8 +6,9 @@ import SearchIcon from '@material-ui/icons/Search'
 import { mock_ob } from './mock_ob'
 import React, { useState } from 'react'
 import {api_call} from "../../api/utils";
-import { useHistory } from "react-router-dom"
+import { useHistory, useLocation } from "react-router-dom"
 import { getQuery, setQuery } from '../App'
+import { StringParam, useQueryParam } from 'use-query-params'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -30,7 +31,6 @@ const defaultState: State = {
 
 export interface Props {
    theme: ThemeKeys
-   query?: any 
    iconStyle: 'circle' | 'triangle' | 'square'
    collapsed: number | boolean, 
    collapseStringsAfter: number | false
@@ -39,12 +39,17 @@ export interface Props {
 
 export default function JsonBlockViewer(props: Props) {
     const classes = useStyles(); 
-    const [ob_id, setOBID] = useState(defaultState.ob._id)
+    const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
+    if (!ob_id) {
+        setOBID(defaultState.ob._id)
+    }
     const [ob, setOB] = useState(defaultState.ob)
+    const location = useLocation()
     const history = useHistory()
     const getOB = () => {
         const query = `ob_id=${ob_id}`
-        history.push(setQuery('ob_id', ob_id))
+        const route = `?${setQuery(location, 'ob_id', ob_id)}`
+        history.push(route)
         api_call(query, 'papahana_demo').then( (result: ObservationBlock[]) => {
             console.log(`querying ${query}, result: ${result}`)
             setOB(result[0])
