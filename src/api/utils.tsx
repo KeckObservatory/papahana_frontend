@@ -1,15 +1,18 @@
 import {ApiCore} from "./ApiCore";
 
-export function api_call(url: string, api: string) {
+export function api_call(url: string, api: string, method: string) {
 
     const apiTasks = new ApiCore({
-        getAll: true,
+        get: true,
+        put: true,
+        post: true,
+        remove: true,
         url: url,
         api: api
     });
 
     return (
-        apiTasks.getAll().then((res: any) => {
+        apiTasks.get().then((res: any) => {
             return res;
         })
     )

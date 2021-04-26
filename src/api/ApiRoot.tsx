@@ -1,4 +1,5 @@
 // provider.js
+// get, push, put, delete
 
 import axios from 'axios';
 import { handleResponse, handleError } from './response';
@@ -11,15 +12,37 @@ const BASE_URL: any = {
     papahana_local: 'localhost:500001/v0/obsBlocks?'
 }
 
-
-/** @param {string} resource */
-const getAll = (resource: string, api_type: string) => { 
+const get = (resource: string, api_type: string) => {
     return axios
         .get(`${BASE_URL[api_type]}${resource}`)
         .then(handleResponse)
         .catch(handleError);
 };
 
-export const apiProvider = {
-    getAll,
+const post = (resource: string, api_type: string, model: object) => {
+    return axios
+        .post(`${BASE_URL[api_type]}${resource}`, model)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+const put = (resource: string, api_type: string, model: object) => {
+    return axios
+        .put(`${BASE_URL[api_type]}${resource}`, model)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+const remove = (resource: string, api_type: string, id: string) => {
+    return axios
+        .delete(`${BASE_URL[api_type]}${resource}`, { data: { ob_id: id } })
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+export const api_funcs = {
+    get,
+    post,
+    put,
+    remove,
 };
