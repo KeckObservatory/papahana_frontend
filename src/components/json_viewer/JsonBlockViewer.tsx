@@ -41,7 +41,7 @@ export default function JsonBlockViewer(props: Props) {
     const [ob, setOB] = useState(defaultState.ob)
     const getOB = () => {
         const query = `ob_id=${ob_id}`
-        api_call(query, 'papahana_demo').then( (result: ObservationBlock[]) => {
+        api_call(query, 'papahana_demo', 'get').then( (result: ObservationBlock[]) => {
             console.log(`querying ${query}, result: ${result}`)
             setOB(result[0])
             },
