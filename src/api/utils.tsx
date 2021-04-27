@@ -2,7 +2,7 @@ import {ApiCore} from "./ApiCore";
 
 export function api_call(url: string, api: string, method: string) {
 
-    const apiTasks = new ApiCore({
+    const api_tasks = new ApiCore({
         get: true,
         put: true,
         post: true,
@@ -11,23 +11,10 @@ export function api_call(url: string, api: string, method: string) {
         api: api
     });
 
-
-    if (method === 'get') {
-        var func = apiTasks.get
-    }
-    if (method === 'put') {
-        var func = apiTasks.put
-    }
-    if (method === 'post') {
-        var func = apiTasks.post
-    }
-    if (method === 'remove') {
-        var func = apiTasks.remove
-    }
+    var func_str: string = "api_tasks." + method
 
     return (
-        // apiTasks.get().then((res: any) => {
-        func().then((res: any) => {
+        eval(func_str)().then((res: any) => {
             return res;
         })
     )
