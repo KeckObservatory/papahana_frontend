@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React  from 'react';
 import { makeStyles } from "@material-ui/core"
 import './App.css';
 import JsonBlockViewer from './json_viewer/JsonBlockViewer'
@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography'
-import { BooleanParam, QueryParamProvider, useQueryParam } from 'use-query-params'
+import { BooleanParam, useQueryParam } from 'use-query-params'
 import { ThemeKeys } from 'react-json-view';
 
 const useStyles = makeStyles(theme => ({
