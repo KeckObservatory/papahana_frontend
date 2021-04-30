@@ -7,12 +7,13 @@ import { mock_ob } from './mock_ob'
 import { useState } from 'react'
 import { useQueryParam, StringParam } from 'use-query-params'
 import { api_call } from '../../api/utils'
-import OBJSONForm from '../ob_form'
+import OBForm from '../ob_form'
+import Grid from '@material-ui/core/Grid'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
         textAlign: 'left',
-        padding: theme.spacing(10),
+        paddingTop: theme.spacing(10),
         margin: theme.spacing(1),
         display: 'flex',
         flexWrap: 'wrap',
@@ -25,6 +26,13 @@ const useStyles = makeStyles( (theme: Theme) => ({
         padding: theme.spacing(3),
         margin: theme.spacing(1),
         elevation: 3,
+    },
+    widepaper: {
+        padding: theme.spacing(3),
+        margin: theme.spacing(1),
+        minWidth: theme.spacing(50),
+        maxWidth: 'min-content',
+        elevation: 3
     }
 }))
 
@@ -68,9 +76,9 @@ export default function JsonBlockViewer(props: Props) {
       }
 
     const handleEdit = props.editable ? onEdit : false
-    
     return (
-    <div className={classes.root}>
+    <Grid container className={classes.root}>
+    <Grid item xs>
     <Paper className={classes.paper} elevation={3}>
         <h3>Observation block</h3>
         <TextField 
@@ -93,13 +101,15 @@ export default function JsonBlockViewer(props: Props) {
         onEdit={handleEdit}
         />
     </Paper>
-    <Paper>
-        <OBJSONForm 
+    </Grid>
+    <Grid item xs={6}>
+    <Paper className={classes.widepaper}>
+        <OBForm 
         ob={ob}
         setOB={setOB}/>
-
     </Paper>
-    </div>
+    </Grid>
+    </Grid>
     )
 }
 

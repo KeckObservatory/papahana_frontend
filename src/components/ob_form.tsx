@@ -1,18 +1,26 @@
 import React  from "react";
 import Form from '@rjsf/material-ui'
 import { ObservationBlock, Signature } from "../papahana";
-import { ISubmitEvent } from "@rjsf/core";
-import { makeStyles, Theme } from "@material-ui/core";
+import { ISubmitEvent, UiSchema } from "@rjsf/core";
+import { Box, makeStyles, Theme } from "@material-ui/core";
+import Tabs from '@material-ui/core/Tabs';
+import Tab from '@material-ui/core/Tab';
+import { AppBar } from '@material-ui/core'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
         textAlign: 'left',
-        margin: theme.spacing(3),
+        margin: theme.spacing(0),
         display: 'flex',
         flexWrap: 'wrap',
     },
     form: {
-        margin: theme.spacing(1),
+        margin: theme.spacing(0),
+        padding: theme.spacing(0)
+    },
+    tab: {
+      minWidth: theme.spacing(15),
+      width: 'flex' 
     }
 }))
 
@@ -50,7 +58,7 @@ const signatureSchema = {
   }
 }
 
-const uiSchema = {
+const uiSchema: UiSchema = {
   pi: {
     "ui:readonly": true
   }
@@ -64,12 +72,66 @@ interface Props {
 }
 
 const log = (type: any) => console.log.bind(console, type);
+export function a11yProps(index: any) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
 
-export const parse_signature = (sig: Signature) => {
-  
-} 
+function TabPanel(props: any) {
+  const { children, value, index, ...other } = props;
+  return <div {...other}>{value === index && <Box p={3}>{children}</Box>}</div>;
+}
 
-export default function OBJSONForm(props: Props) {
+export default function OBForm(props: Props) {
+  const classes = useStyles() 
+  const [value, setValue] = React.useState(0);
+  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+    setValue(newValue);
+  };
+
+  return (
+    <div className={classes.root}>
+      <AppBar position="static">
+        <Tabs value={value} 
+              onChange={handleChange} 
+              aria-label="simple tabs example"
+              // variant="fullWidth"
+              centered={true}
+              variant="scrollable"
+        >
+          <Tab className={classes.tab} label="Signature" {...a11yProps(0)} />
+          <Tab className={classes.tab} label="Target" {...a11yProps(1)} />
+          <Tab className={classes.tab} label="Acquistion" {...a11yProps(2)} />
+          <Tab className={classes.tab} label="Observations" {...a11yProps(3)} />
+          <Tab className={classes.tab} label="Associations" {...a11yProps(4)} />
+          <Tab className={classes.tab} wrapped label="Observation Type" {...a11yProps(5)} />
+        </Tabs>
+      </AppBar>
+      <TabPanel value={value} index={0}>
+        <SignatureForm ob={props.ob} setOB={props.setOB} />
+      </TabPanel>
+      <TabPanel value={value} index={1}>
+        Target form goes here
+      </TabPanel>
+      <TabPanel value={value} index={2}>
+        Acquisition form goes here 
+      </TabPanel>
+      <TabPanel value={value} index={3}>
+        Observations form goes here 
+      </TabPanel>
+      <TabPanel value={value} index={4}>
+        Associaiotins form goes here 
+      </TabPanel>
+      <TabPanel value={value} index={5}>
+        Observation type form goes here 
+      </TabPanel>
+    </div>
+  )
+}
+
+export function SignatureForm(props: Props) {
   const classes = useStyles()
   const setSignature = (sig: Signature) => {
     let newOb = {...props.ob}
@@ -81,7 +143,6 @@ export default function OBJSONForm(props: Props) {
   }
 return(
   <div className={classes.root}>
-  <h3>Form Editor</h3>
   <Form className={classes.form} 
         schema={props.schema}
         uiSchema={props.uiSchema}
@@ -92,7 +153,10 @@ return(
   </div>
 )}
 
-OBJSONForm.defaultProps = {
+const defaultProps = {
   schema: signatureSchema,
   uiSchema: uiSchema
 }
+
+SignatureForm.defaultProps = defaultProps
+OBForm.defaultProps = defaultProps
