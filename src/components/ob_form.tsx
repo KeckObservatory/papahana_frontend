@@ -19,6 +19,7 @@ const useStyles = makeStyles( (theme: Theme) => ({
 const signatureSchema = {
   title: "Signature",
   type: "object",
+  readonly: true,
   required: ["pi", "semester", "observers", "program", "container"],
   properties: {
     pi: {
@@ -49,9 +50,16 @@ const signatureSchema = {
   }
 }
 
+const uiSchema = {
+  pi: {
+    "ui:readonly": true
+  }
+}
+
 interface Props {
     ob: ObservationBlock,
     schema: object,
+    uiSchema: object,
     setOB: Function
 }
 
@@ -74,7 +82,9 @@ export default function OBJSONForm(props: Props) {
 return(
   <div className={classes.root}>
   <h3>Form Editor</h3>
-  <Form className={classes.form} schema={props.schema}
+  <Form className={classes.form} 
+        schema={props.schema}
+        uiSchema={props.uiSchema}
         formData={props.ob.signature}
         onChange={log("changed")}
         onSubmit={handleSubmit}
@@ -83,5 +93,6 @@ return(
 )}
 
 OBJSONForm.defaultProps = {
-  schema: signatureSchema
+  schema: signatureSchema,
+  uiSchema: uiSchema
 }
