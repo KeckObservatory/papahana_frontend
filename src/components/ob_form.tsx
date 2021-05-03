@@ -1,11 +1,12 @@
 import React  from "react";
 import Form from '@rjsf/material-ui'
-import { ObservationBlock, Signature } from "../papahana";
-import { ISubmitEvent, UiSchema } from "@rjsf/core";
+import { OBComponent, ObservationBlock, Signature } from "../typings/papahana";
+import { ISubmitEvent, UiSchema  } from "@rjsf/core";
 import { Box, makeStyles, Theme } from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core'
+import * as obt from '../typings/ob_json_form'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -24,16 +25,15 @@ const useStyles = makeStyles( (theme: Theme) => ({
     }
 }))
 
-const signatureSchema = {
+const signatureSchema: obt.OBJsonSchema = {
   title: "Signature",
   type: "object",
-  readonly: true,
   required: ["pi", "semester", "observers", "program", "container"],
   properties: {
     pi: {
       type: "string",
       title: "primary investigator",
-      readonly: true
+      readonly: true 
     },
     semester: {
       type: "string",
@@ -43,9 +43,9 @@ const signatureSchema = {
       type: "array",
       title: "observers",
       items: {
-        "type": "string",
+        type: "string",
       },
-      "uniqueItems": true
+      uniqueItems: true
     },
     program: {
       title: "program",
@@ -58,9 +58,29 @@ const signatureSchema = {
   }
 }
 
+export const createUISchema = (formData: OBComponent, schema: obt.OBJsonSchema, title: string): UiSchema => {
+  // Generate a UI schema based on complete form schema of a complete OB component
+  let uiSchema = {} as UiSchema
+  // first define readonly values
+  for (const [key, property] of Object.entries(schema.properties)) {
+    uiSchema[key] = {}  
+    if (property.readonly) {
+      uiSchema[key]["ui:readonly"] = true
+    }
+  }
+  // Hide form widgets that are not included in OB
+  for (const key in Object.keys(formData)) {
+    if (!Object.keys(uiSchema).includes(key)) {
+        uiSchema[key]['ui:widget'] = 'hidden'
+    }
+  }
+  return uiSchema
+}
+
 const uiSchema: UiSchema = {
   pi: {
-    "ui:readonly": true
+    "ui:readonly": true,
+    "ui:widget": "hidden"
   }
 }
 

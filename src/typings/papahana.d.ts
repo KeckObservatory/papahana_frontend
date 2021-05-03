@@ -1,3 +1,6 @@
+
+export type OBComponent = Target | Acquisition | Observation | Signature
+
 export interface Base {
 	_id: string
 }

@@ -1,5 +1,5 @@
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
-import {ObservationBlock} from '../../papahana'
+import {ObservationBlock} from '../../typings/papahana'
 import { TextField, IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'

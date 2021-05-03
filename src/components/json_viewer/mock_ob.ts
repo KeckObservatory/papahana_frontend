@@ -1,4 +1,4 @@
-import { ObservationBlock, Acquisition, Signature, TargetDescription, Magnitude, Observation } from './../../papahana'
+import { ObservationBlock, Acquisition, Signature, TargetDescription, Magnitude, Observation } from './../../typings/papahana'
 
 export const mock_acquisition: Acquisition = {
     'instrumental_setup': 'ahat',
