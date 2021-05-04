@@ -92,6 +92,7 @@ interface Props {
 }
 
 const log = (type: any) => console.log.bind(console, type);
+
 export function a11yProps(index: any) {
   return {
     id: `simple-tab-${index}`,
