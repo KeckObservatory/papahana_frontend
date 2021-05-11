@@ -1,14 +1,18 @@
 import React  from "react";
-import Form from '@rjsf/material-ui'
-import { OBComponent, ObservationBlock, Signature } from "../typings/papahana";
-import { ISubmitEvent, UiSchema  } from "@rjsf/core";
+import { OBComponent, ObservationBlock } from "../typings/papahana";
 import { Box, makeStyles, Theme } from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core'
 import * as obt from '../typings/ob_json_form'
+import { UiSchema  } from "@rjsf/core";
+// import SignatureForm from "./signature_form";
+import TargetForm from "./target_form"
+import AcquisitionForm from "./acquisition_form";
+import ScienceForm from "./science_form";
+import OverviewForm from "./overview_form";
 
-const useStyles = makeStyles( (theme: Theme) => ({
+export const useStyles = makeStyles( (theme: Theme) => ({
     root: {
         textAlign: 'left',
         margin: theme.spacing(0),
@@ -25,40 +29,8 @@ const useStyles = makeStyles( (theme: Theme) => ({
     }
 }))
 
-const signatureSchema: obt.OBJsonSchema = {
-  title: "Signature",
-  type: "object",
-  required: ["pi", "semester", "observers", "program", "container"],
-  properties: {
-    pi: {
-      type: "string",
-      title: "primary investigator",
-      readonly: true 
-    },
-    semester: {
-      type: "string",
-      title: "semester id"
-    },
-    observers: {
-      type: "array",
-      title: "observers",
-      items: {
-        type: "string",
-      },
-      uniqueItems: true
-    },
-    program: {
-      title: "program",
-      type: "integer"
-    },
-    container: {
-      title: "container id",
-      type: "integer"
-    }
-  }
-}
 
-export const createUISchema = (formData: OBComponent, schema: obt.OBJsonSchema, title: string): UiSchema => {
+export const createUISchema = (formData: OBComponent, schema: obt.JsonSchema, title: string): UiSchema => {
   // Generate a UI schema based on complete form schema of a complete OB component
   let uiSchema = {} as UiSchema
   // first define readonly values
@@ -77,21 +49,18 @@ export const createUISchema = (formData: OBComponent, schema: obt.OBJsonSchema, 
   return uiSchema
 }
 
-const uiSchema: UiSchema = {
-  pi: {
-    "ui:readonly": true,
-    "ui:widget": "hidden"
-  }
+
+export interface FormProps extends Props {
+    schema: object,
+    uiSchema: object,
 }
 
 interface Props {
     ob: ObservationBlock,
-    schema: object,
-    uiSchema: object,
     setOB: Function
 }
 
-const log = (type: any) => console.log.bind(console, type);
+export const log = (type: any) => console.log.bind(console, type);
 
 export function a11yProps(index: any) {
   return {
@@ -122,62 +91,26 @@ export default function OBForm(props: Props) {
               centered={true}
               variant="scrollable"
         >
-          <Tab className={classes.tab} label="Signature" {...a11yProps(0)} />
+          <Tab className={classes.tab} label="Overview" {...a11yProps(0)} />
+          {/* <Tab className={classes.tab} label="Signature" {...a11yProps(0)} /> */}
           <Tab className={classes.tab} label="Target" {...a11yProps(1)} />
           <Tab className={classes.tab} label="Acquistion" {...a11yProps(2)} />
-          <Tab className={classes.tab} label="Observations" {...a11yProps(3)} />
-          <Tab className={classes.tab} label="Associations" {...a11yProps(4)} />
-          <Tab className={classes.tab} wrapped label="Observation Type" {...a11yProps(5)} />
+          <Tab className={classes.tab} label="Science" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        <SignatureForm ob={props.ob} setOB={props.setOB} />
+        {/* <SignatureForm ob={props.ob} setOB={props.setOB} /> */}
+        <OverviewForm ob={props.ob} setOB={props.setOB} />
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Target form goes here
+        <TargetForm ob={props.ob} setOB={props.setOB} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        Acquisition form goes here 
+        <AcquisitionForm ob={props.ob} setOB={props.setOB} />
       </TabPanel>
       <TabPanel value={value} index={3}>
-        Observations form goes here 
-      </TabPanel>
-      <TabPanel value={value} index={4}>
-        Associaiotins form goes here 
-      </TabPanel>
-      <TabPanel value={value} index={5}>
-        Observation type form goes here 
+        <ScienceForm ob={props.ob} setOB={props.setOB} />
       </TabPanel>
     </div>
   )
 }
-
-export function SignatureForm(props: Props) {
-  const classes = useStyles()
-  const setSignature = (sig: Signature) => {
-    let newOb = {...props.ob}
-    newOb.signature = sig
-    props.setOB(newOb)
-  }
-  const handleSubmit = ( evt: ISubmitEvent<Signature>): void => {
-    setSignature(evt.formData)
-  }
-return(
-  <div className={classes.root}>
-  <Form className={classes.form} 
-        schema={props.schema}
-        uiSchema={props.uiSchema}
-        formData={props.ob.signature}
-        onChange={log("changed")}
-        onSubmit={handleSubmit}
-        onError={log("errors")} />
-  </div>
-)}
-
-const defaultProps = {
-  schema: signatureSchema,
-  uiSchema: uiSchema
-}
-
-SignatureForm.defaultProps = defaultProps
-OBForm.defaultProps = defaultProps
