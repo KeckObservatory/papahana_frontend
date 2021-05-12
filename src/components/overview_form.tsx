@@ -126,7 +126,7 @@ export default function OverviewForm(props: FormProps) {
     setOverview(evt.formData)
   }
   console.log('ob')
-  console.log(ob)
+  console.log(props.ob)
 return(
   <div className={classes.root}>
   <Form className={classes.form} 
