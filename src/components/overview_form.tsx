@@ -11,18 +11,22 @@ const signatureSchema: obt.JsonSchema = {
   type: "object",
   required: ["pi", "semesters", "observers", "program" ],
   properties: {
-    pi: {
+    pi_id: {
       type: "string",
       title: "primary investigator",
       readonly: true 
     },
-    semesters: {
+    sem_id: {
       type: "array",
       items: {
         type: "string",
       },
       title: "semester id",
       comment: "text"
+    },
+    instrument: {
+      type: "string",
+      title: "instrument"
     },
     observers: {
       type: "array",
@@ -121,6 +125,8 @@ export default function OverviewForm(props: FormProps) {
   const handleSubmit = ( evt: ISubmitEvent<ObservationBlock>): void => {
     setOverview(evt.formData)
   }
+  console.log('ob')
+  console.log(ob)
 return(
   <div className={classes.root}>
   <Form className={classes.form} 

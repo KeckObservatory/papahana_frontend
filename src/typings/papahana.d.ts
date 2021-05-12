@@ -82,14 +82,14 @@ export interface Science extends Base{
 }
 
 export interface Observation extends Base {
-	instrument: string,
 	exposure_sequences: string[],
 	associations: string[],
 }
 
 export interface Signature extends Base {
-	pi: string,
-	semesters: string[],
+	instrument: string,
+	pi_id: string,
+	sem_id: string[],
 	program: number,
 	observers: string[],
 }
