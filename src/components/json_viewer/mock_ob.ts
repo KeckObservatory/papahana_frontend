@@ -2,10 +2,11 @@ import { KCWIAcquisition, KCWIScience } from './../../typings/papahana.d';
 import { ObservationBlock, Science, Acquisition, Signature, Target, Magnitude, Observation } from './../../typings/papahana'
 
 export const mock_signature: Signature = {
-        "pi": "George Michael Bluth",
-        "semesters": [
+        "pi_id": "George Michael Bluth",
+        "sem_id": [
             "2027B"
         ],
+        "instrument": "KCWI",
         "program": 3,
         "observers": [
             "Mort Meyers",
@@ -67,7 +68,6 @@ export const mock_acquisition: KCWIAcquisition = {
 
 export const mock_ob: ObservationBlock = {
   '_id': "1_mock",
-  'instrument': 'KCWI',
   'version': '0.1',
   'signature': mock_signature, 
   'target': mock_target,
