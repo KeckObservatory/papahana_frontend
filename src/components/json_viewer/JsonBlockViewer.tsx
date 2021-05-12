@@ -61,7 +61,7 @@ export default function JsonBlockViewer(props: Props) {
     const [ob, setOB] = useState(defaultState.ob)
     const getOB = ():void => {
         const query = `ob_id=${ob_id}`
-        api_call(query, 'papahana_local', 'get').then( (result: ObservationBlock[]) => {
+        api_call(query, 'papahana_demo', 'get').then( (result: ObservationBlock[]) => {
             setOB(result[0])
             },
             (error: any) => {
@@ -71,7 +71,7 @@ export default function JsonBlockViewer(props: Props) {
     }
     const replaceOB = ():void => {
         const query =  `ob_id=${ob_id}`
-        api_call(query, 'papahana_local', 'put', ob)
+        api_call(query, 'papahana_demo', 'put', ob)
     }
 
     const onEdit = (e: InteractionProps) => {
