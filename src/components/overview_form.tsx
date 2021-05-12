@@ -61,7 +61,6 @@ const overviewSchema: obt.JsonSchema = {
   type: "object",
   required: ["priority", "version", "status"],
   properties: {
-    signature: signatureSchema,
     priority: {
       title: 'priority',
       type: 'number',
@@ -74,6 +73,7 @@ const overviewSchema: obt.JsonSchema = {
       title: 'version',
       type: 'string',
     },
+    signature: signatureSchema,
     associations: {
       type: "array",
       title: "associations",
@@ -113,7 +113,6 @@ const defaultSignatureProps = {
   uiSchema: uiOverviewSchema
 }
 
-
 export default function OverviewForm(props: FormProps) {
   const classes = useStyles()
   const setOverview = (ob: ObservationBlock) => {
@@ -128,7 +127,7 @@ return(
         schema={props.schema}
         uiSchema={props.uiSchema}
         formData={props.ob}
-        onChange={log("changed")}
+        onChange={handleSubmit}
         onSubmit={handleSubmit}
         onError={log("errors")} />
   </div>

@@ -87,19 +87,15 @@ export default function OBForm(props: Props) {
         <Tabs value={value} 
               onChange={handleChange} 
               aria-label="simple tabs example"
-              // variant="fullWidth"
               centered={true}
-              variant="scrollable"
         >
           <Tab className={classes.tab} label="Overview" {...a11yProps(0)} />
-          {/* <Tab className={classes.tab} label="Signature" {...a11yProps(0)} /> */}
           <Tab className={classes.tab} label="Target" {...a11yProps(1)} />
           <Tab className={classes.tab} label="Acquistion" {...a11yProps(2)} />
           <Tab className={classes.tab} label="Science" {...a11yProps(3)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        {/* <SignatureForm ob={props.ob} setOB={props.setOB} /> */}
         <OverviewForm ob={props.ob} setOB={props.setOB} />
       </TabPanel>
       <TabPanel value={value} index={1}>

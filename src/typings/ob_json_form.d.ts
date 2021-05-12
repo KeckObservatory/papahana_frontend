@@ -1,24 +1,28 @@
 
 export interface Items {
-  type: string
+  type: string | array | object
 }
 
-export interface OBJSProperty {
+export interface JSProperty {
   type: string
   title: string
   readonly?: boolean
   comment?: string
+  required?: array
   uniqueItems?: boolean
-  items?: Items
+  enum?: array
+  items?: Items | JsonSchema
+  properties?: OBJsonSchemaProperties
 }
 
 export interface OBJsonSchemaProperties {
   [key: string]: OBJSProperty
 }
 
-export interface OBJsonSchema {
+export interface JsonSchema {
   title: string
   type: string
-  required: string[]
-  properties: OBJsonSchemaProperties
+  required?: string[]
+  items?: object,
+  properties: OBJsonSchemaProperties 
 }

@@ -3,6 +3,7 @@ import {ObservationBlock} from '../../typings/papahana'
 import { TextField, IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
+import PublishIcon from '@material-ui/icons/Publish'
 import { mock_ob } from './mock_ob'
 import { useState } from 'react'
 import { useQueryParam, StringParam } from 'use-query-params'
@@ -58,10 +59,9 @@ export default function JsonBlockViewer(props: Props) {
     const classes = useStyles(); 
     const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
     const [ob, setOB] = useState(defaultState.ob)
-    const getOB = () => {
+    const getOB = ():void => {
         const query = `ob_id=${ob_id}`
-        api_call(query, 'papahana_demo', 'get').then( (result: ObservationBlock[]) => {
-            console.log(`querying ${query}, result: ${result}`)
+        api_call(query, 'papahana_local', 'get').then( (result: ObservationBlock[]) => {
             setOB(result[0])
             },
             (error: any) => {
@@ -69,9 +69,12 @@ export default function JsonBlockViewer(props: Props) {
             }
         )
     }
+    const replaceOB = ():void => {
+        const query =  `ob_id=${ob_id}`
+        api_call(query, 'papahana_local', 'put', ob)
+    }
 
     const onEdit = (e: InteractionProps) => {
-          console.log(e);
           setOB(e.updated_src as ObservationBlock);
       }
 
@@ -88,8 +91,11 @@ export default function JsonBlockViewer(props: Props) {
           value={ob_id}
           onChange={ (evt) => setOBID(evt.target.value)}
         />
-        <IconButton aria-label="delete" onClick={getOB}>
+        <IconButton aria-label="search" onClick={getOB}>
         <SearchIcon />
+        </IconButton>
+        <IconButton aria-label='replace' onClick={replaceOB}>
+        <PublishIcon />
         </IconButton>
         <ReactJson
         src={ob as object} 

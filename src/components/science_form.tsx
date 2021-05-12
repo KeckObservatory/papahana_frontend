@@ -139,8 +139,6 @@ const defaultScienceProps = {
 }
 export default function ScienceForm(props: FormProps) {
   const classes = useStyles()
-  console.log('science')
-  console.log(props.ob.science)
   const setSignature = (sci: Science[]) => {
     let newOb = {...props.ob}
     newOb.science = sci
@@ -156,7 +154,7 @@ return(
         schema={props.schema}
         uiSchema={props.uiSchema}
         formData={scienceForm}
-        onChange={log("changed")}
+        onChange={handleSubmit}
         onSubmit={handleSubmit}
         onError={log("errors")} />
   </div>

@@ -104,7 +104,8 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
 
 export default function App() {
   const classes = useStyles();
-  const [darkState, setDarkState] = useQueryParam('darkState', BooleanParam);
+  const [ darkState, setDarkState ] = useQueryParam('darkState', BooleanParam);
+  if (darkState===undefined) { setDarkState(true) }
   const [theme, jsonTheme] = handleTheme(darkState)
 
   const handleThemeChange = (): void => {

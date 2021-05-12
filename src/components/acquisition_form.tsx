@@ -92,7 +92,7 @@ return(
         schema={props.schema}
         uiSchema={props.uiSchema}
         formData={props.ob.acquisition}
-        onChange={log("changed")}
+        onChange={handleSubmit}
         onSubmit={handleSubmit}
         onError={log("errors")} />
   </div>
