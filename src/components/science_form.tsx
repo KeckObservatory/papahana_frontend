@@ -137,6 +137,7 @@ const defaultScienceProps = {
   schema: scienceSchema,
   uiSchema: uiScienceSchema
 }
+
 export default function ScienceForm(props: FormProps) {
   const classes = useStyles()
   const setSignature = (sci: Science[]) => {
@@ -147,13 +148,12 @@ export default function ScienceForm(props: FormProps) {
   const handleSubmit = ( evt: ISubmitEvent<Science[]>): void => {
     setSignature(evt.formData)
   }
-  const scienceForm = { 'science': props.ob.science }
 return(
   <div className={classes.root}>
   <Form className={classes.form} 
         schema={props.schema}
         uiSchema={props.uiSchema}
-        formData={scienceForm}
+        formData={props.ob.science}
         onChange={handleSubmit}
         onSubmit={handleSubmit}
         onError={log("errors")} />

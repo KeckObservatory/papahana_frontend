@@ -72,8 +72,12 @@ export default function JsonBlockViewer(props: Props) {
         )
     }
     const replaceOB = ():void => {
-        const query =  `ob_id=${ob_id}`
-        api_call(query, 'papahana_demo', 'put', ob)
+        const query = `ob_id=${ob_id}`
+        console.log('replacing ob with edited ob')
+        api_call(query, 'papahana_demo', 'put', ob).then ( (result: any) => {
+            console.log('put result')
+            console.log(result)
+        })
     }
 
     const onEdit = (e: InteractionProps) => {

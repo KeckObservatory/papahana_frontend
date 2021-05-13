@@ -15,7 +15,6 @@ const BASE_URL: any = {
 
 const get = (resource: string, api_type: string): Promise<Document> => {
     const url = `${BASE_URL[api_type]}${resource}`
-    console.log(`url ${url}`)
     return axios
         .get(url)
         .then(handleResponse)
@@ -31,7 +30,7 @@ const post = (resource: string, api_type: string, model: object): Promise<any> =
 
 const put = (resource: string, api_type: string, model: object): Promise<any> => {
     const url = `${BASE_URL[api_type]}${resource}`
-    console.log(`url ${url}`)
+    console.log(`put url ${url}`)
     console.log(`model ${model}`)
     console.log(model)
     return axios
