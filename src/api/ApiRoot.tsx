@@ -1,10 +1,9 @@
 // provider.js
 // get, push, put, delete
 
-import axios, { AxiosResponse } from 'axios';
+import axios  from 'axios';
 import { handleResponse, handleError } from './response';
 import { Document } from './../typings/papahana'
-import { pseudoRandomBytes } from 'crypto';
 
 
 // Define your api url from any source.

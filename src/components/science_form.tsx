@@ -133,10 +133,6 @@ const defaultScienceArrayProps = {
   uiSchema: uiScienceArraySchema
 }
 
-const defaultScienceProps = {
-  schema: scienceSchema,
-  uiSchema: uiScienceSchema
-}
 
 export default function ScienceForm(props: FormProps) {
   const classes = useStyles()

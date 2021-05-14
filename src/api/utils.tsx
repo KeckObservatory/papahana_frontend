@@ -1,4 +1,4 @@
-import { Method, ObservationBlock, SourceAPI, Document } from "../typings/papahana";
+import { Method, SourceAPI, Document } from "../typings/papahana";
 import {api_funcs} from './ApiRoot';
 
 

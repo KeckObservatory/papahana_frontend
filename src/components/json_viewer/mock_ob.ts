@@ -1,14 +1,12 @@
-import { KCWIAcquisition, KCWIScience } from './../../typings/papahana.d';
-import { ObservationBlock, Science, Acquisition, Signature, Target, Magnitude, Observation } from './../../typings/papahana'
+import { KCWIAcquisition, KCWIScience, Status } from './../../typings/papahana.d';
+import { ObservationBlock, Signature, Target, Magnitude } from './../../typings/papahana'
 
 export const mock_signature: Signature = {
-        "pi_id": "George Michael Bluth",
-        "sem_id": [
-            "2027B"
-        ],
+        "pi_id": 55,
+        "name": "cornballer",
+        "sem_id":  "2027B",
         "instrument": "KCWI",
-        "program": 3,
-        "observers": [
+        "observer_ids": [
             "Mort Meyers",
             "Mark Cherry",
             "Lupe",
@@ -20,7 +18,7 @@ export const mock_signature: Signature = {
 
 export const mock_magnitude: Magnitude = {
     "band" : "hg",
-    "magnitude" : 1.4813954055593237,
+    "mag" : 1.4813954055593237,
     "comment" : "I hear the jury’s still out on science."
 }
 
@@ -66,6 +64,15 @@ export const mock_acquisition: KCWIAcquisition = {
         "guider_gs_mode": "Operator"
 }
 
+export const mock_status: Status = {
+    "state" : "invalid",
+    "executions" : [
+        "2020-11-04 12:08:47",
+        "2018-03-14 18:11:47"
+    ]
+}
+
+
 export const mock_ob: ObservationBlock = {
   '_id': "1_mock",
   'version': '0.1',
@@ -75,7 +82,7 @@ export const mock_ob: ObservationBlock = {
   'science': [mock_science],
   'observation_type': ['asdfe'],
   'priority': 46.00345040437236,
-  "status": "completed",
+  "status": mock_status,
   "comment": "I hear the jury’s still out on science.",
   "associations": [
         "czlem",

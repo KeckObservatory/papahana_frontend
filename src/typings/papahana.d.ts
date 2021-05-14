@@ -15,18 +15,23 @@ export interface Group extends Base {
 
 }
 
+export interface Status extends Base {
+	executions: string[]
+	state: string
+}
+
 export interface ObservationBlock extends Base {
 	_id: string,
 	target?: Target,
 	instrument?: Instruement,
 	version?: string,
-	science: Science[] | KCWIScience[],
+	science: Science[],
 	acquisition?: Acquisition | KCWIAcquisition,
 	associations: string[],
 	observation_type: string[],
 	signature: Signature
 	priority?: number
-	status: string
+	status: Status 
 }
 
 export interface Acquisition extends Base {
@@ -61,6 +66,8 @@ export interface Dither extends Base {
 	'letter': string,
 }
 
+export type Science = DefaultScience | KCWIScience
+
 export interface KCWIScience extends Base {
 	name: string,
 	version: string,
@@ -75,7 +82,7 @@ export interface KCWIScience extends Base {
 	cfg_slicer: Slicer
 }
 
-export interface Science extends Base{
+export interface DefaultScience extends Base{
 	instrument: string,
 	exposure_sequences: string[],
 	associations: string[],
@@ -87,11 +94,11 @@ export interface Observation extends Base {
 }
 
 export interface Signature extends Base {
+	name: string,
 	instrument: string,
-	pi_id: string,
-	sem_id: string[],
-	program: number,
-	observers: string[],
+	pi_id: number,
+	sem_id: string,
+	observer_ids: string[],
 }
 
 export interface Target {
@@ -116,6 +123,6 @@ export interface Target {
 
 export interface Magnitude extends Base {
 	band: string,
-	magnitude: number,
+	mag: number,
 }
 
