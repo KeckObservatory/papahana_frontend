@@ -3,7 +3,8 @@ import {api_funcs} from './ApiRoot';
 
 export const mock_sem_id_call = (): Promise<string[]> => {
    const containers = 
-   ["60a44a59415bce1d8a07e1c5",
+   ["all",
+   "60a44a59415bce1d8a07e1c5",
    "60a44a59415bce1d8a07e1c7",
    "60a44a59415bce1d8a07e1c8",
    "60a44a59415bce1d8a07e1ca",
@@ -21,6 +22,7 @@ export const mock_container_call = (): Promise<string[]> => {
       "60a44a59415bce1d8a07e15e",
       "60a44a59415bce1d8a07e15f",
       "60a44a59415bce1d8a07e160"]
+
       
    const mockPromise = new Promise<string[]>((resolve) => {
       resolve(obs)

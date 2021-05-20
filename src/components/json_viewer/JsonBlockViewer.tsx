@@ -1,19 +1,19 @@
-import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
+import ReactJson, { ThemeKeys, InteractionProps, ThemeObject } from 'react-json-view'
 import {ObservationBlock} from '../../typings/papahana'
-import { TextField, IconButton, Paper, makeStyles } from '@material-ui/core'
+import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
-import SearchIcon from '@material-ui/icons/Search'
 import PublishIcon from '@material-ui/icons/Publish'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 import { mock_ob } from './mock_ob'
 import { useState } from 'react'
-import { useQueryParam, StringParam } from 'use-query-params'
+import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
 import OBForm from '../ob_form'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
+import { DropDown } from './ob_select'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -43,14 +43,16 @@ const useStyles = makeStyles( (theme: Theme) => ({
 
 interface State {
    ob: ObservationBlock 
+   theme: ThemeKeys | ThemeObject | undefined
 }
 
 const defaultState: State = {
    ob: mock_ob, 
+   theme: 'bespin'
 }
 
 export interface Props {
-   theme: ThemeKeys
+   theme: ThemeKeys | null | undefined
    iconStyle: 'circle' | 'triangle' | 'square'
    collapsed: number | boolean, 
    collapseStringsAfter: number | false
@@ -58,10 +60,40 @@ export interface Props {
    editable: boolean
 }
 
+interface ThemeSelectProps {
+  theme: string | ThemeKeys | null | undefined
+  setTheme: Function
+}
+
+export const JsonViewTheme = (props: ThemeSelectProps) => {
+
+  const keyList: ThemeKeys[] = [ 'apathy', 'apathy:inverted', 'ashes',
+  'bespin', 'brewer', 'bright:inverted', 'bright', 'chalk',
+  'codeschool', 'colors', 'eighties', 'embers', 'flat',
+  'google', 'grayscale', 'grayscale:inverted', 'greenscreen', 'harmonic',
+  'hopscotch', 'isotope', 'marrakesh', 'mocha', 'monokai', 'ocean',
+  'paraiso', 'pop', 'railscasts', 'rjv-default', 'shapeshifter', 'shapeshifter:inverted',
+  'solarized', 'summerfruit', 'summerfruit:inverted', 'threezerotwofour', 'tomorrow',
+  'tube', 'twilight' ] 
+  return(
+  <DropDown 
+  placeholder={'json theme'} 
+  arr={keyList} 
+  value={props.theme} 
+  handleChange={props.setTheme} 
+  label={'JSON Theme'}
+  />  
+  )
+}
+
 export default function JsonBlockViewer(props: Props) {
     const classes = useStyles(); 
     const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
     const [ob, setOB] = useState(defaultState.ob)
+    const [theme, setTheme] = 
+      useQueryParam('theme', withDefault(StringParam, props.theme as string))
+
+
     const getOB = (): void => {
         const query = `ob_id=${ob_id}`
         api_call(query, 'papahana_demo', 'get').then( (newOb: ObservationBlock) => {
@@ -120,11 +152,11 @@ export default function JsonBlockViewer(props: Props) {
     <Paper className={classes.paper} elevation={3}>
         <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id}/>
         <h3>Observation block</h3>
-        <Tooltip title="Search for OB by ID">
+        {/* <Tooltip title="Search for OB by ID">
           <IconButton aria-label="search" onClick={getOB}>
             <SearchIcon />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title="Update OB in form">
           <IconButton aria-label='replace' onClick={replaceOB}>
             <PublishIcon />
@@ -137,13 +169,14 @@ export default function JsonBlockViewer(props: Props) {
         </Tooltip>
         <Tooltip title="Delete OB by ID">
           <DeleteDialog deleteOB={deleteOB} />
-          {/* <IconButton area-label='remove' onClick={deleteOB} >
-            <DeleteIcon />
-          </IconButton> */}
         </Tooltip>
+        <JsonViewTheme
+          theme={theme as ThemeKeys | null | undefined}
+          setTheme={setTheme}
+        />
         <ReactJson
         src={ob as object} 
-        theme={props.theme}
+        theme={theme as ThemeKeys | undefined}
         iconStyle={props.iconStyle}
         collapsed={props.collapsed}
         collapseStringsAfterLength={props.collapseStringsAfter}

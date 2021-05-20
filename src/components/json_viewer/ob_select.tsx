@@ -6,10 +6,9 @@ import { useState } from 'react';
 import { FormControl, TextField } from '@material-ui/core'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
+import InputLabel from '@material-ui/core/InputLabel'
 const useStyles = makeStyles( (theme: Theme) => ({
     formControl: {
-        // textAlign: 'left',
-        // paddingTop: theme.spacing(10),
         minWidth: 120,
         margin: theme.spacing(1),
         display: 'flex',
@@ -48,12 +47,14 @@ interface MenuProps {
     handleChange: Function 
     value: string | null | undefined
     placeholder: string
+    label: string
 }
 
-const DropDown = (props: MenuProps) => { 
+export const DropDown = (props: MenuProps) => { 
     const classes = useStyles()
     return(
     <FormControl className={classes.formControl}>
+    <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
     <Select value={props.value} onChange={(event) => props.handleChange(event.target.value)}>
         <MenuItem disabled value="">
             <em>{props.placeholder}</em>
@@ -62,9 +63,6 @@ const DropDown = (props: MenuProps) => {
     </Select>
     </FormControl>
     )}
-
-            
-
 
 export default function ObservationBlockSelecter(props: Props) {
     const classes = useStyles();
@@ -112,18 +110,21 @@ export default function ObservationBlockSelecter(props: Props) {
         arr={semIdList} 
         value={sem_id} 
         handleChange={handle_sem_id_submit} 
+        label={'Semester ID'}
         />
         <DropDown 
         placeholder={'container id'} 
         arr={containerIdList} 
         value={container_id} 
         handleChange={handle_container_id_submit} 
+        label={'Container ID'}
         />
         <DropDown 
         placeholder={'observation blocks'} 
         arr={obList} 
         value={props.ob_id} 
         handleChange={handle_ob_id_select} 
+        label={'Observation Block ID'}
         />
         </div>
 
