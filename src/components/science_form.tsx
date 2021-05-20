@@ -136,13 +136,13 @@ const defaultScienceArrayProps = {
 
 export default function ScienceForm(props: FormProps) {
   const classes = useStyles()
-  const setSignature = (sci: Science[]) => {
+  const setScience = (sci: Science[]) => {
     let newOb = {...props.ob}
     newOb.science = sci
     props.setOB(newOb)
   }
   const handleSubmit = ( evt: ISubmitEvent<Science[]>): void => {
-    setSignature(evt.formData)
+    setScience(evt.formData)
   }
 return(
   <div className={classes.root}>

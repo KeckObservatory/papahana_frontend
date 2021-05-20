@@ -5,7 +5,6 @@ import { Theme } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import PublishIcon from '@material-ui/icons/Publish'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
-import DeleteIcon from '@material-ui/icons/Delete'
 import { mock_ob } from './mock_ob'
 import { useState } from 'react'
 import { useQueryParam, StringParam } from 'use-query-params'
@@ -13,6 +12,8 @@ import { api_call } from '../../api/utils'
 import OBForm from '../ob_form'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
+import DeleteDialog from './delete_dialog'
+import ObservationBlockSelecter from './ob_select'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -57,18 +58,18 @@ export interface Props {
    editable: boolean
 }
 
-
 export default function JsonBlockViewer(props: Props) {
     const classes = useStyles(); 
     const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
     const [ob, setOB] = useState(defaultState.ob)
-
     const getOB = (): void => {
         const query = `ob_id=${ob_id}`
         api_call(query, 'papahana_demo', 'get').then( (newOb: ObservationBlock) => {
             console.log('api result')
             console.log(newOb)
-            setOB(newOb)
+            if (newOb._id) {
+              setOB(newOb)
+            }
             },
             (error: any) => {
                 console.error(error)
@@ -85,15 +86,6 @@ export default function JsonBlockViewer(props: Props) {
         })
     }
 
-    const deleteOB = (): void => {
-        const query = `ob_id=${ob_id}`
-        console.log(`deleting ob ${ob_id}`)
-        api_call(query, 'papahana_demo', 'remove', ob).then ( (result: any) => {
-            console.log('delete result')
-            console.log(result)
-        })
-     }
-
     const copyOB = (): void => {
         const query = `ob_id=${ob_id}`
         console.log(`creating new ob from ob ${ob_id}`)
@@ -103,8 +95,22 @@ export default function JsonBlockViewer(props: Props) {
         })
     }
 
+    const deleteOB = (): void => {
+        const query = `ob_id=${ob_id}`
+        console.log(`deleting ob ${ob_id}`)
+        api_call(query, 'papahana_demo', 'remove', ob).then ( (result: any) => {
+            console.log('delete result')
+            console.log(result)
+        })
+        }
+
     const onEdit = (e: InteractionProps) => {
           setOB(e.updated_src as ObservationBlock);
+    }
+
+    const handleOBSelect = (id: string) => {
+      setOBID(id)
+      getOB()
     }
 
     const handleEdit = props.editable ? onEdit : false
@@ -112,14 +118,8 @@ export default function JsonBlockViewer(props: Props) {
     <Grid container className={classes.root}>
     <Grid item xs>
     <Paper className={classes.paper} elevation={3}>
+        <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id}/>
         <h3>Observation block</h3>
-        <TextField 
-          id="standard-basic"
-          label="OB ID"
-          type='string'
-          value={ob_id}
-          onChange={ (evt) => setOBID(evt.target.value)}
-        />
         <Tooltip title="Search for OB by ID">
           <IconButton aria-label="search" onClick={getOB}>
             <SearchIcon />
@@ -136,9 +136,10 @@ export default function JsonBlockViewer(props: Props) {
           </IconButton>
         </Tooltip>
         <Tooltip title="Delete OB by ID">
-          <IconButton area-label='remove' onClick={deleteOB} >
+          <DeleteDialog deleteOB={deleteOB} />
+          {/* <IconButton area-label='remove' onClick={deleteOB} >
             <DeleteIcon />
-          </IconButton>
+          </IconButton> */}
         </Tooltip>
         <ReactJson
         src={ob as object} 

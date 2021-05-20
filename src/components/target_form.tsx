@@ -80,13 +80,13 @@ const targetSchema: obt.JsonSchema = {
         title: "magnitude",
         items: {
             type: "object",
-            required: [ "band", "magnitude"],
+            required: [ "band", "mag"],
             properties: {
                 band: {
                     type: "string",
                     title: "band type"
                 },
-                magnitude: {
+                mag: {
                     type: "number",
                     title: "magnitude",
                     comment: "string",

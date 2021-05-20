@@ -14,27 +14,38 @@ import { Document } from './../typings/papahana'
 //     papahana_local: 'http://localhost:50000/v0/obsBlocks?'
 // }
 
-var BASE_URL = 'http://localhost:50000/v0/obsBlocks?'
+var BASE_URL = 'http://localhost:50000/v0/'
+var OB_URL = BASE_URL + 'obsBlocks?' 
+var CONTAINER_URL = BASE_URL + 'containers/items?'
+
 console.log(BASE_URL)
 console.log(process.env)
 const get = (resource: string, api_type: string): Promise<Document> => {
-    const url = `${BASE_URL}${resource}`
-    console.log(url)
+    const url = `${OB_URL}${resource}`
     return axios
         .get(url)
         .then(handleResponse)
         .catch(handleError);
 };
 
+export const get_ob_id_from_container = (container_id: string): Promise<Document> => {
+    const url = `${CONTAINER_URL}'container_id='${container_id}`
+    return axios
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+
 const post = (resource: string, api_type: string, model: object): Promise<any> => {
     return axios
-        .post(`${BASE_URL}${resource}`, model)
+        .post(`${OB_URL}${resource}`, model)
         .then(handleResponse)
         .catch(handleError);
 };
 
 const put = (resource: string, api_type: string, model: object): Promise<any> => {
-    const url = `${BASE_URL}${resource}`
+    const url = `${OB_URL}${resource}`
     console.log(`put url ${url}`)
     console.log(`model ${model}`)
     console.log(model)
@@ -46,7 +57,7 @@ const put = (resource: string, api_type: string, model: object): Promise<any> =>
 
 const remove = (resource: string, api_type: string ): Promise<any> => {
     return axios
-        .delete(`${BASE_URL}${resource}`)
+        .delete(`${OB_URL}${resource}`)
         .then(handleResponse)
         .catch(handleError);
 };
