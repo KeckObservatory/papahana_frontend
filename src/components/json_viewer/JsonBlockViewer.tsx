@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
-import { DropDown } from './ob_select'
+import DropDown from '../drop_down'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {

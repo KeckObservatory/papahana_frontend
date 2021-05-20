@@ -1,12 +1,10 @@
 import { makeStyles } from '@material-ui/styles';
 import { Theme } from '@material-ui/core/styles'
 import { mock_container_call, mock_sem_id_call } from '../../api/utils'
-import { useQueryParam, StringParam } from 'use-query-params'
+import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState } from 'react';
-import { FormControl, TextField } from '@material-ui/core'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import InputLabel from '@material-ui/core/InputLabel'
+import DropDown from '../drop_down'
+
 const useStyles = makeStyles( (theme: Theme) => ({
     formControl: {
         minWidth: 120,
@@ -42,36 +40,14 @@ const defaultState: State = {
    container_id: 'all',
 }
 
-interface MenuProps {
-    arr: string[]
-    handleChange: Function 
-    value: string | null | undefined
-    placeholder: string
-    label: string
-}
-
-export const DropDown = (props: MenuProps) => { 
-    const classes = useStyles()
-    return(
-    <FormControl className={classes.formControl}>
-    <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
-    <Select value={props.value} onChange={(event) => props.handleChange(event.target.value)}>
-        <MenuItem disabled value="">
-            <em>{props.placeholder}</em>
-        </MenuItem>
-        {props.arr.map((x,y) => <MenuItem value={x} key={y}>{x}</MenuItem>)}
-    </Select>
-    </FormControl>
-    )}
-
 export default function ObservationBlockSelecter(props: Props) {
     const classes = useStyles();
     const [obList, setOBList] = useState(defaultState.obList)
     const [semIdList, setSemIdList] = useState(defaultState.semIdList)
     const [containerIdList, setContainerIdList] = useState(defaultState.containerIdList)
 
-    const [container_id, setContainerId] = useQueryParam('container_id', StringParam)
-    const [sem_id, setSemId] = useQueryParam('sem_id', StringParam)
+    const [container_id, setContainerId] = useQueryParam('container_id', withDefault(StringParam, 'all'))
+    const [sem_id, setSemId] = useQueryParam('sem_id', withDefault(StringParam, 'all'))
 
     let obsList: string[] = []
 
