@@ -13,7 +13,7 @@ import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
-import DropDown from '../drop_down'
+import JsonViewTheme from './../json_view_theme'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -27,6 +27,10 @@ const useStyles = makeStyles( (theme: Theme) => ({
         width: theme.spacing(50),
         }
       },
+    buttonBlock: {
+      margin: theme.spacing(1),
+      display: 'inline-flex',
+    },
     paper: {
         padding: theme.spacing(3),
         margin: theme.spacing(1),
@@ -60,31 +64,6 @@ export interface Props {
    editable: boolean
 }
 
-interface ThemeSelectProps {
-  theme: string | ThemeKeys | null | undefined
-  setTheme: Function
-}
-
-export const JsonViewTheme = (props: ThemeSelectProps) => {
-
-  const keyList: ThemeKeys[] = [ 'apathy', 'apathy:inverted', 'ashes',
-  'bespin', 'brewer', 'bright:inverted', 'bright', 'chalk',
-  'codeschool', 'colors', 'eighties', 'embers', 'flat',
-  'google', 'grayscale', 'grayscale:inverted', 'greenscreen', 'harmonic',
-  'hopscotch', 'isotope', 'marrakesh', 'mocha', 'monokai', 'ocean',
-  'paraiso', 'pop', 'railscasts', 'rjv-default', 'shapeshifter', 'shapeshifter:inverted',
-  'solarized', 'summerfruit', 'summerfruit:inverted', 'threezerotwofour', 'tomorrow',
-  'tube', 'twilight' ] 
-  return(
-  <DropDown 
-  placeholder={'json theme'} 
-  arr={keyList} 
-  value={props.theme} 
-  handleChange={props.setTheme} 
-  label={'JSON Theme'}
-  />  
-  )
-}
 
 export default function JsonBlockViewer(props: Props) {
     const classes = useStyles(); 
@@ -92,7 +71,6 @@ export default function JsonBlockViewer(props: Props) {
     const [ob, setOB] = useState(defaultState.ob)
     const [theme, setTheme] = 
       useQueryParam('theme', withDefault(StringParam, props.theme as string))
-
 
     const getOB = (): void => {
         const query = `ob_id=${ob_id}`
@@ -152,11 +130,7 @@ export default function JsonBlockViewer(props: Props) {
     <Paper className={classes.paper} elevation={3}>
         <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id}/>
         <h3>Observation block</h3>
-        {/* <Tooltip title="Search for OB by ID">
-          <IconButton aria-label="search" onClick={getOB}>
-            <SearchIcon />
-          </IconButton>
-        </Tooltip> */}
+        <div className={classes.buttonBlock}>
         <Tooltip title="Update OB in form">
           <IconButton aria-label='replace' onClick={replaceOB}>
             <PublishIcon />
@@ -170,6 +144,7 @@ export default function JsonBlockViewer(props: Props) {
         <Tooltip title="Delete OB by ID">
           <DeleteDialog deleteOB={deleteOB} />
         </Tooltip>
+        </div>
         <JsonViewTheme
           theme={theme as ThemeKeys | null | undefined}
           setTheme={setTheme}
