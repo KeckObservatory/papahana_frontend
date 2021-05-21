@@ -12,7 +12,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import Tooltip from '@material-ui/core/Tooltip';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography'
-import { BooleanParam, useQueryParam } from 'use-query-params'
+import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
 import { ThemeKeys } from 'react-json-view';
 
 const useStyles = makeStyles(theme => ({
@@ -78,6 +78,15 @@ export function TopBar(props: any) {
         >
           Papahana Demo
         </Typography>
+        <Typography
+          component="h1"
+          variant="h6"
+          color="inherit"
+          noWrap
+          className={classes.title}
+        >
+          Welcome, Observer {props.observer_id}!
+        </Typography>
         <Tooltip title="Toggle on for dark mode">
           <Switch checked={props.darkState} onChange={props.handleThemeChange}/>
         </Tooltip>
@@ -104,8 +113,9 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
 
 export default function App() {
   const classes = useStyles();
-  const [ darkState, setDarkState ] = useQueryParam('darkState', BooleanParam);
-  if (darkState===undefined) { setDarkState(true) }
+  const [ darkState, setDarkState ] = useQueryParam('darkState', withDefault(BooleanParam, true));
+  const [observer_id ] =
+    useQueryParam('observer_id', withDefault(StringParam, '2003'))
   const [theme, jsonTheme] = handleTheme(darkState)
 
   const handleThemeChange = (): void => {
@@ -116,8 +126,8 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <div className={classes.root}>
-        <TopBar darkTheme={theme} handleThemeChange={handleThemeChange} />
-        <JsonBlockViewer theme={jsonTheme} />
+        <TopBar darkTheme={theme} observer_id={observer_id} handleThemeChange={handleThemeChange} />
+        <JsonBlockViewer observer_id={observer_id} theme={jsonTheme} />
       </div>
     </ThemeProvider>
   );

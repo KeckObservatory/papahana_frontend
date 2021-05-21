@@ -1,13 +1,12 @@
-import ReactJson, { ThemeKeys, InteractionProps, ThemeObject } from 'react-json-view'
+import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import {ObservationBlock} from '../../typings/papahana'
 import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import PublishIcon from '@material-ui/icons/Publish'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
-import { mock_ob } from './mock_ob'
 import { useState } from 'react'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
-import { api_call } from '../../api/utils'
+import { api_call, mock_ob_get } from '../../api/utils'
 import OBForm from '../ob_form'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
@@ -45,17 +44,8 @@ const useStyles = makeStyles( (theme: Theme) => ({
     }
 }))
 
-interface State {
-   ob: ObservationBlock 
-   theme: ThemeKeys | ThemeObject | undefined
-}
-
-const defaultState: State = {
-   ob: mock_ob, 
-   theme: 'bespin'
-}
-
 export interface Props {
+   observer_id: string
    theme: ThemeKeys | null | undefined
    iconStyle: 'circle' | 'triangle' | 'square'
    collapsed: number | boolean, 
@@ -64,20 +54,17 @@ export interface Props {
    editable: boolean
 }
 
-
 export default function JsonBlockViewer(props: Props) {
     const classes = useStyles(); 
     const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
-    const [ob, setOB] = useState(defaultState.ob)
+    const [ob, setOB] = useState({} as ObservationBlock)
     const [theme, setTheme] = 
       useQueryParam('theme', withDefault(StringParam, props.theme as string))
-
+    
     const getOB = (): void => {
-        const query = `ob_id=${ob_id}`
-        api_call(query, 'papahana_demo', 'get').then( (newOb: ObservationBlock) => {
-            console.log('api result')
-            console.log(newOb)
+        mock_ob_get(ob_id as string).then( ( newOb: ObservationBlock) => {
             if (newOb._id) {
+              console.log('setting mock ob')
               setOB(newOb)
             }
             },
@@ -128,7 +115,7 @@ export default function JsonBlockViewer(props: Props) {
     <Grid container className={classes.root}>
     <Grid item xs>
     <Paper className={classes.paper} elevation={3}>
-        <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id}/>
+        <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id}/>
         <h3>Observation block</h3>
         <div className={classes.buttonBlock}>
         <Tooltip title="Update OB in form">

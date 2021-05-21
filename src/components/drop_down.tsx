@@ -1,4 +1,4 @@
-import { FormControl, TextField } from '@material-ui/core'
+import { FormControl } from '@material-ui/core'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import InputLabel from '@material-ui/core/InputLabel'
@@ -29,14 +29,15 @@ interface MenuProps {
 
 const DropDown = (props: MenuProps) => { 
     const classes = useStyles()
+    const value = props.value ? props.value : "" // MenuItem Value cannot be undefined or null
     return(
     <FormControl className={classes.formControl}>
     <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
-    <Select value={props.value} onChange={(event) => props.handleChange(event.target.value)}>
+    <Select value={value} onChange={(event) => props.handleChange(event.target.value)}>
         <MenuItem disabled value="">
             <em>{props.placeholder}</em>
         </MenuItem>
-        {props.arr.map((x,y) => <MenuItem value={x} key={y}>{x}</MenuItem>)}
+        {props.arr.map((x,y) =>  <MenuItem value={x} key={y}>{x}</MenuItem>)}
     </Select>
     </FormControl>
     )}

@@ -7,7 +7,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { IconButton } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
-import { api_call } from '../../api/utils';
 
 interface Props {
     deleteOB: Function

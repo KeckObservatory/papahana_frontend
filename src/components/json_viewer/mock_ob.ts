@@ -72,6 +72,21 @@ export const mock_status: Status = {
     ]
 }
 
+export const mock_sem_id_list: string[] = [ '2021A', '2021B' ]
+
+export const mock_ob_id_list: string[] = [
+      "60a44a59415bce1d8a07e15c",
+      "60a44a59415bce1d8a07e15d",
+      "60a44a59415bce1d8a07e15e",
+      "60a44a59415bce1d8a07e15f",
+      "60a44a59415bce1d8a07e160"]
+
+export const mock_container_list: string[] = 
+   ["60a44a59415bce1d8a07e1c5",
+   "60a44a59415bce1d8a07e1c7",
+   "60a44a59415bce1d8a07e1c8",
+   "60a44a59415bce1d8a07e1ca",
+   "60a44a59415bce1d8a07e1cc"]
 
 export const mock_ob: ObservationBlock = {
   '_id': "1_mock",
