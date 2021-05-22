@@ -1,5 +1,5 @@
-import { KCWIAcquisition, KCWIScience, Status } from './../../typings/papahana.d';
-import { ObservationBlock, Signature, Target, Magnitude } from './../../typings/papahana'
+import { KCWIAcquisition, KCWIScience, Status } from '../typings/papahana';
+import { ObservationBlock, Signature, Target, Magnitude } from '../typings/papahana'
 
 export const mock_signature: Signature = {
         "pi_id": 55,

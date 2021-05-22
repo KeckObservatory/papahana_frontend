@@ -1,25 +1,25 @@
 // provider.js
 // get, push, put, delete
 
-import axios  from 'axios';
+import axios, { AxiosPromise } from 'axios';
 import { handleResponse, handleError } from './response';
-import { Document } from './../typings/papahana'
+import { Document, Semester } from './../typings/papahana'
 
 
 // Define your api url from any source.
 // Pulling from your .env file when on the server or from localhost when locally
 
-// const BASE_URL: any = {
-//     papahana_demo: 'https://vm-appserver.keck.hawaii.edu/api/ddoi/v0/obsBlocks?',
-//     papahana_local: 'http://localhost:50000/v0/obsBlocks?'
-// }
 
-var BASE_URL = 'http://localhost:50000/v0/'
+var PRODUCTION_URL = 'https://vm-appserver.keck.hawaii.edu/api/ddoi/v0/'
+var DEV_URL = 'http://localhost:50000/v0/obsBlocks?'
+var BASE_URL = process.env.NODE_ENV==='production'? PRODUCTION_URL : DEV_URL
 var OB_URL = BASE_URL + 'obsBlocks?' 
-var CONTAINER_URL = BASE_URL + 'containers/items?'
+var CONTAINER_URL = BASE_URL + 'containers/items'
+var SEMESTERS_URL = BASE_URL + 'semesterIds'
 
+console.log('backend url set to')
 console.log(BASE_URL)
-console.log(process.env)
+
 const get = (resource: string, api_type: string): Promise<Document> => {
     const url = `${OB_URL}${resource}`
     return axios
@@ -28,8 +28,25 @@ const get = (resource: string, api_type: string): Promise<Document> => {
         .catch(handleError);
 };
 
+export const get_semesters = (observer_id: string): Promise<Semester[]> => {
+    // 'http://vm-webtools.keck.hawaii.edu:50000/v0/semesterIds/?obs_id=2003'
+    const url = `${SEMESTERS_URL}/?obs_id=${observer_id}`
+    return axios
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
+
+export const get_containers = (sem_id: string, observer_id: string): Promise<Semester[]> => {
+    //  http://vm-webtools.keck.hawaii.edu:50001/v0/semesterIds/2020A_U169/containers?obs_id=2003
+    const url = `${SEMESTERS_URL}/sem_id/containers?obs_id=${observer_id}`
+    return axios
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
 export const get_ob_id_from_container = (container_id: string): Promise<Document> => {
-    const url = `${CONTAINER_URL}'container_id='${container_id}`
+    const url = `${CONTAINER_URL}'/?container_id='${container_id}`
     return axios
         .get(url)
         .then(handleResponse)

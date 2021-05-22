@@ -1,6 +1,20 @@
 import { KCWIScience } from './papahana.d';
 
+export interface Container {
+	_id: string,
+	semester: string,
+	name: string,
+	observation_blocks: string[],
+	comment?: string
+}
 
+export interface Semester {
+    _id: string
+    comment?: string
+    container_list: string[]
+    name: string
+    sem_id: string
+}
 export type Method = 'get' | 'put' | 'post' | 'remove'
 export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
