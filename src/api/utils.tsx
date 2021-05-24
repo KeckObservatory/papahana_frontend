@@ -47,8 +47,9 @@ export const make_container_list = (semesters: Semester[], sem_id: string): stri
         return semester.sem_id === sem_id
      }
      const semester = semesters.find( find_sem_id )
-     console.log(`semester selected: ${semester}`)
+     console.log(`semester selected`)
      if (semester) { 
+      console.log(semester)
       console.log(`adding ${semester.container_list.length} containers to drop down menu`)
       container_list = container_list.concat(semester.container_list)
      }

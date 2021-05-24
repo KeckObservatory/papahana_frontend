@@ -2,6 +2,7 @@ import { get_ob_list, get_container_list, get_sem_id_list } from './../../api/ut
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
+import { resolve } from 'node:url';
 
 export interface Props {
     observer_id: string
@@ -38,16 +39,17 @@ export default function ObservationBlockSelecter(props: Props) {
 
     const handle_sem_id_submit = (sid: string) => {
       setSemId(sid)        
-      get_container_list(sid, props.observer_id).then( (sid_lst: string[]) => {
-          setContainerIdList(sid_lst) // get new list of containers
-          const container_id = 'all'
-          setContainerId(container_id)
-          //get new list of ob_blocks for all containers under new sem_id
-          get_ob_list(sem_id, container_id, props.observer_id).then( (ob_lst: string[]) => {
-            console.log(`getting all ob ids for sem_id: ${sid}`)
-            setOBList(ob_lst)
-          })
-      })
+      reset_container_and_ob_select()
+      // get_container_list(sid, props.observer_id).then( (sid_lst: string[]) => {
+      //     setContainerIdList(sid_lst) // get new list of containers
+      //     const container_id = 'all'
+      //     setContainerId(container_id)
+      //     //get new list of ob_blocks for all containers under new sem_id
+      //     get_ob_list(sem_id, container_id, props.observer_id).then( (ob_lst: string[]) => {
+      //       console.log(`getting all ob ids for sem_id: ${sid}`)
+      //       setOBList(ob_lst)
+      //     })
+      // })
     }
 
     // get ob blocks from selected container id
@@ -65,29 +67,54 @@ export default function ObservationBlockSelecter(props: Props) {
             console.log(`setting semid list for observer ${props.observer_id}`)
             setSemIdList(lst)
         }).then( () => {
-        get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
-          console.log(`setting sem_id ${sem_id} containers for user ${props.observer_id}`)
-          setContainerIdList(lst)
-          if (lst.length>=1) {
-            console.log(`setting container to first item of list: ${lst[0]}`)
-            setContainerId(lst[0])
-          }
-        })
-        }).then( () => {
-            get_ob_list(sem_id, container_id, props.observer_id).then( (lst: string[]) => {
-              console.log(`getting obs ${lst.length} for container ${container_id} `)
-              setOBList(lst)
-              return lst
-            })
-            .then( (lst: string[]) => {
-              if (lst.length >= 1) {
-                console.log(`setting ob to first item of list: ${lst[0]}`)
-                props.handleOBSelect(lst[0])
-              }
-            })
-        })
+        // get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
+        //   console.log(`setting sem_id ${sem_id} containers for user ${props.observer_id}`)
+        //   setContainerIdList(lst)
+        //   if (lst.length>=1) {
+        //     console.log(`setting container to first item of list: ${lst[0]}`)
+        //     setContainerId(lst[0])
+        //   }
+        // })
+        // }).then( () => {
+        //     get_ob_list(sem_id, container_id, props.observer_id).then( (lst: string[]) => {
+        //       console.log(`getting obs ${lst.length} for container ${container_id} `)
+        //       setOBList(lst)
+        //       return lst
+        //     })
+        //     .then( (lst: string[]) => {
+        //       if (lst.length >= 1) {
+        //         console.log(`setting ob to first item of list: ${lst[0]}`)
+        //         props.handleOBSelect(lst[0])
+        //       }
+        //     })
+        // })
+        reset_container_and_ob_select()})
     }, [props.observer_id])
 
+    const reset_container_and_ob_select = () => {
+      console.log('resetting container and ob selet')
+      get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
+        console.log(`setting sem_id ${sem_id} containers for user ${props.observer_id}`)
+        setContainerIdList(lst)
+        if (lst.length>=1) {
+          console.log(`setting container to first item of list: ${lst[0]}`)
+          setContainerId(lst[0])
+        }
+      })
+      .then( () => {
+          get_ob_list(sem_id, container_id, props.observer_id).then( (lst: string[]) => {
+            console.log(`getting ob ${lst.length} for container ${container_id} `)
+            setOBList(lst)
+            return lst
+          })
+          .then( (lst: string[]) => {
+            if (lst.length >= 1) {
+              console.log(`setting ob to first item of list: ${lst[0]}`)
+              props.handleOBSelect(lst[0])
+            }
+          })
+      })
+    }
 
     const handle_ob_id_select = (id: string) => {
         console.log(`ob id selected: ${id}`)
