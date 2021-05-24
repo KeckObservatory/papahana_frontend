@@ -1,4 +1,4 @@
-import { mock_make_ob_list, mock_make_container_list, mock_make_sem_id_list } from '../../mocks/mock_utils'
+import { get_ob_list, get_container_list, get_sem_id_list } from './../../api/utils'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
@@ -39,7 +39,7 @@ export default function ObservationBlockSelecter(props: Props) {
     const handle_sem_id_submit = (sid: string) => {
       setSemId(sid)        
       //todo replace with proper api call
-      mock_make_container_list(sid).then( (lst: string[]) => {
+      get_container_list(sem_id, sid).then( (lst: string[]) => {
           setContainerIdList(lst)
       })
     }
@@ -51,19 +51,19 @@ export default function ObservationBlockSelecter(props: Props) {
       const allSemester = cid === 'all' && sem_id === 'all'
       if (allUsers) {
         //todo replace with proper api call
-        mock_make_ob_list(cid).then( (lst: string[]) => {
+        get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
           console.log(`getting all ob ids for user`)
           setOBList(lst)
         })
       }
       else if (allSemester) {
-        mock_make_ob_list(cid).then( (lst: string[]) => {
+        get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
           console.log(`getting all ob ids for semester`)
           setOBList(lst)
         })
       }
       else {
-        mock_make_ob_list(cid).then( (lst: string[]) => {
+        get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
           console.log('getting all ob ids for container')
           setOBList(lst)
         })
@@ -71,11 +71,11 @@ export default function ObservationBlockSelecter(props: Props) {
     }
 
     useEffect(() => { //run when props.observer_id changes
-        mock_make_sem_id_list(props.observer_id).then( (lst: string[]) => {
+        get_sem_id_list(props.observer_id).then( (lst: string[]) => {
             console.log(`setting semid list for observer ${props.observer_id}`)
             setSemIdList(lst)
         }).then( () => {
-        mock_make_container_list(sem_id).then( (lst: string[]) => {
+        get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
           console.log(`setting sem_id ${sem_id} containers for user ${props.observer_id}`)
           setContainerIdList(lst)
           if (lst.length>=1) {
@@ -84,7 +84,7 @@ export default function ObservationBlockSelecter(props: Props) {
           }
         })
         }).then( () => {
-            mock_make_ob_list(container_id).then( (lst: string[]) => {
+            get_ob_list(sem_id, container_id, props.observer_id).then( (lst: string[]) => {
               console.log(`getting obs ${lst.length} for container ${container_id} `)
               setOBList(lst)
               return lst

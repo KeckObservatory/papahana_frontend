@@ -1,13 +1,34 @@
 import { Method, SourceAPI, Document, Semester, Container } from "../typings/papahana";
-import { api_funcs } from './ApiRoot';
+import { api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 
+export const get_sem_id_list = (observer_id: string): Promise<string[]> => {
+   //make sem_id list from semesters
+   const promise = new Promise<string[]>( (resolve) => {
+      get_select_funcs.get_semesters(observer_id).then( (semesters: Semester[]) => {
+        resolve(make_sem_id_list(semesters))
+      })
+   })
+   return promise
+}
+
 export const make_sem_id_list = (semesters: Semester[]): string[] => {
-   let sem_ids: string[] = ['all']
+   //let sem_ids: string[] = ['all'] // not possible to have both 'all' sem_id and 'all' containers`
+   let sem_ids: string[] = []
    semesters.forEach( (sem: Semester) => {
      sem_ids.push(sem.sem_id)
    })
    return sem_ids 
+}
+
+export const get_container_list = (sem_id: string, observer_id: string): Promise<string[]> => {
+   //make container list from containers and sem_id
+   const promise = new Promise<string[]>( (resolve) => {
+      get_select_funcs.get_semesters(observer_id).then( (semesters: Semester[]) => {
+        resolve(make_container_list(semesters, sem_id))
+      })
+   })
+   return promise
 }
 
 export const make_container_list = (semesters: Semester[], sem_id: string): string[] => {
@@ -35,6 +56,15 @@ export const make_container_list = (semesters: Semester[], sem_id: string): stri
    return container_list 
 }
 
+export const get_ob_list = (sem_id: string, container_id: string, observer_id: string ): Promise<string[]> => {
+   //make container list from containers and sem_id
+   const promise = new Promise<string[]>( (resolve) => {
+      get_select_funcs.get_containers(sem_id, observer_id).then( (containers: Container[]) => {
+        resolve(make_ob_list(containers, container_id))
+      })
+   })
+   return promise
+}
 export const make_ob_list = (containers: Container[], container_id: string): string[] => {
    //populates ob_id list for given container_id
    let ob_list: string[] = []

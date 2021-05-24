@@ -39,10 +39,10 @@ export interface ObservationBlock extends Base {
 	target?: Target,
 	instrument?: Instruement,
 	version?: string,
-	science: Science[],
+	science?: Science | Science[],
 	acquisition?: Acquisition | KCWIAcquisition,
 	associations: string[],
-	observation_type: string[],
+	observation_type?: string[],
 	signature: Signature
 	priority?: number
 	status: Status 
@@ -80,7 +80,7 @@ export interface Dither extends Base {
 	'letter': string,
 }
 
-export type Science = DefaultScience | KCWIScience
+export type Science = KCWIScience
 
 export interface KCWIScience extends Base {
 	name: string,
@@ -112,7 +112,7 @@ export interface Signature extends Base {
 	instrument: string,
 	pi_id: number,
 	sem_id: string,
-	observer_ids: string[],
+	observer_ids?: string[],
 }
 
 export interface Target {
