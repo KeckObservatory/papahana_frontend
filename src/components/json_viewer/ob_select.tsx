@@ -22,7 +22,7 @@ const defaultState: State = {
    obList: ['a', 'b', 'c'],
    semIdList: ['2021A', '2021B', 'all'],
    containerIdList: ['1', '2', '3', 'all'],
-   sem_id: 'all',
+   sem_id: '2017A_U033',
    container_id: 'all',
 }
 
