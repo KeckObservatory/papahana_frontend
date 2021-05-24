@@ -50,7 +50,7 @@ const get_observation_blocks_from_container = (container_id: string): Promise<Ob
 };
 
 const get = (resource: string, api_type: string): Promise<ObservationBlock> => {
-    const url = `${OB_URL}${resource}`
+    const url = `${OB_URL}ob_id=${resource}`
     return axios
         .get(url)
         .then(handleResponse)
