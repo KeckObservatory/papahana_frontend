@@ -63,9 +63,10 @@ export default function JsonBlockViewer(props: Props) {
       useQueryParam('theme', withDefault(StringParam, props.theme as string))
     
     const getOB = (): void => {
-        mock_ob_get(ob_id as string).then( ( newOb: ObservationBlock) => {
+        api_call(ob_id as string, 'papahana_demo', 'get').then( (newOb: ObservationBlock ) => {
+        //mock_ob_get(ob_id as string).then( ( newOb: ObservationBlock) => {
             if (newOb._id) {
-              console.log('setting mock ob')
+              console.log('setting ob')
               setOB(newOb)
             }
             },

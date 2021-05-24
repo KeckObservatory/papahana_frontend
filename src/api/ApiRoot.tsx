@@ -4,7 +4,7 @@
 import axios, { AxiosPromise } from 'axios';
 import { handleResponse, handleError } from './response';
 import { Container, Document, ObservationBlock, Semester } from './../typings/papahana'
-import { mock_get_containers, mock_get_observation_block_from_controller, mock_get_semesters } from '../mocks/mock_utils';
+import { mock_get_containers, mock_get_observation_block_from_controller, mock_get_semesters, mock_ob_get } from '../mocks/mock_utils';
 
 
 // Define your api url from any source.
@@ -49,7 +49,7 @@ const get_observation_blocks_from_container = (container_id: string): Promise<Ob
         .catch(handleError);
 };
 
-const get = (resource: string, api_type: string): Promise<Document> => {
+const get = (resource: string, api_type: string): Promise<ObservationBlock> => {
     const url = `${OB_URL}${resource}`
     return axios
         .get(url)
@@ -90,7 +90,7 @@ export const get_select_funcs = {
 }
 
 export const api_funcs = {
-    get,
+    get: process.env.NODE_ENV === 'production'? get : mock_ob_get,
     post,
     put,
     remove,
