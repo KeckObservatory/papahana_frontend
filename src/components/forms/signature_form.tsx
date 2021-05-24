@@ -1,6 +1,6 @@
 import React from "react"
-import { Signature } from "../typings/papahana"
-import * as obt from '../typings/ob_json_form'
+import { Signature } from "./../../typings/papahana"
+import * as obt from './../../typings/ob_json_form'
 import { ISubmitEvent, UiSchema  } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import {useStyles, FormProps, log} from './ob_form'

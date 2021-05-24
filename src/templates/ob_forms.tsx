@@ -24,14 +24,6 @@ export const signatureSchema: JsonSchema = {
       type: "string",
       title: "instrument"
     },
-    observer_ids: {
-      type: "array",
-      title: "observers",
-      items: {
-        type: "string",
-      },
-      uniqueItems: true
-    },
     comment: {
       title: "comment",
       type: "string"

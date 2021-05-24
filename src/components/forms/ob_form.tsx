@@ -1,10 +1,10 @@
 import React  from "react";
-import { OBComponent, ObservationBlock } from "../typings/papahana";
+import { OBComponent, ObservationBlock } from "../../typings/papahana";
 import { Box, makeStyles, Theme } from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core'
-import * as obt from '../typings/ob_json_form'
+import * as obt from '../../typings/ob_json_form'
 import { UiSchema  } from "@rjsf/core";
 // import SignatureForm from "./signature_form";
 import TargetForm from "./target_form"

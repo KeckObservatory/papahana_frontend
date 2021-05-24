@@ -1,7 +1,7 @@
 
 import React from "react"
-import { Science } from "../typings/papahana"
-import * as obt from '../typings/ob_json_form'
+import { Science } from "../../typings/papahana"
+import * as obt from '../../typings/ob_json_form'
 import { ISubmitEvent, UiSchema  } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import {useStyles, FormProps, log} from './ob_form'
@@ -77,7 +77,7 @@ const scienceSchema: obt.JSProperty = {
       title: "number of sequence dithers",
     },
     cfg_cam_grating: gratingSchema,
-    cfg_cam_slicer: slicerSchema,
+    cfg_slicer: slicerSchema,
     comment: {
       title: "comment",
       type: "string",
@@ -96,7 +96,7 @@ const uiScienceSchema: UiSchema = {
         "inline": true
     },
   },
-  cfg_cam_slicer: {
+  cfg_slicer: {
     "ui:widget": "radio",
     "ui:options": {
         "inline": true
@@ -110,29 +110,33 @@ const uiScienceSchema: UiSchema = {
   }
 }
 
-const scienceArraySchema: obt.JsonSchema = {
-    type: 'object',
-    title: 'Science(s)',
-    properties: {
-      science: {
-        type: 'array',
-        title: 'science',
-        items: scienceSchema
-      }
-    }
-}
+// const scienceArraySchema: obt.JsonSchema = {
+//     type: 'object',
+//     title: 'Science(s)',
+//     properties: {
+//       science: {
+//         type: 'array',
+//         title: 'science',
+//         items: scienceSchema
+//       }
+//     }
+// }
 
-const uiScienceArraySchema: UiSchema = {
-    science: {
-        items: uiScienceSchema
-    }
-}
+// const uiScienceArraySchema: UiSchema = {
+//     science: {
+//         items: uiScienceSchema
+//     }
+// }
 
-const defaultScienceArrayProps = {
-  schema: scienceArraySchema,
-  uiSchema: uiScienceArraySchema
-}
+// const defaultScienceArrayProps = {
+//   schema: scienceArraySchema,
+//   uiSchema: uiScienceArraySchema
+// }
 
+const defaultScienceProps = {
+  schema: scienceSchema,
+  uiSchema: uiScienceSchema
+}
 
 export default function ScienceForm(props: FormProps) {
   const classes = useStyles()
@@ -156,4 +160,5 @@ return(
   </div>
 )}
 
-ScienceForm.defaultProps = defaultScienceArrayProps
+// ScienceForm.defaultProps = defaultScienceArrayProps
+ScienceForm.defaultProps = defaultScienceProps

@@ -1,9 +1,9 @@
 import React from "react"
-import { ObservationBlock } from "../typings/papahana"
+import { ObservationBlock } from "../../typings/papahana"
 import { ISubmitEvent } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import {useStyles, FormProps, log} from './ob_form'
-import * as ovf from './../templates/ob_forms'
+import * as ovf from './../../templates/ob_forms'
 
 
 const defaultSignatureProps = {
