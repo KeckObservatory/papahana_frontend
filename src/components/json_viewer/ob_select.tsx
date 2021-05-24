@@ -38,9 +38,15 @@ export default function ObservationBlockSelecter(props: Props) {
 
     const handle_sem_id_submit = (sid: string) => {
       setSemId(sid)        
-      get_container_list(sid, props.observer_id).then( (lst: string[]) => {
-          setContainerIdList(lst) // get new list of containers
-          get_ob_list(sid, 'all', props.observer_id) //get new list of ob_blocks for all containers under new sem_id
+      get_container_list(sid, props.observer_id).then( (sid_lst: string[]) => {
+          setContainerIdList(sid_lst) // get new list of containers
+          const container_id = 'all'
+          setContainerId(container_id)
+          //get new list of ob_blocks for all containers under new sem_id
+          get_ob_list(sem_id, container_id, props.observer_id).then( (ob_lst: string[]) => {
+            console.log(`getting all ob ids for sem_id: ${sid}`)
+            setOBList(ob_lst)
+          })
       })
     }
 
