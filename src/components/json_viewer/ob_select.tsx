@@ -19,9 +19,9 @@ interface State {
 
 
 const defaultState: State = {
-   obList: ['a', 'b', 'c'],
-   semIdList: ['2021A', '2021B', 'all'],
-   containerIdList: ['1', '2', '3', 'all'],
+   obList: [],
+   semIdList: [],
+   containerIdList: [],
    sem_id: '2017A_U033',
    container_id: 'all',
 }
@@ -38,39 +38,23 @@ export default function ObservationBlockSelecter(props: Props) {
 
     const handle_sem_id_submit = (sid: string) => {
       setSemId(sid)        
-      //todo replace with proper api call
-      get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
-          setContainerIdList(lst)
+      get_container_list(sid, props.observer_id).then( (lst: string[]) => {
+          setContainerIdList(lst) // get new list of containers
+          get_ob_list(sid, 'all', props.observer_id) //get new list of ob_blocks for all containers under new sem_id
       })
     }
 
     // get ob blocks from selected container id
     const handle_container_id_submit = (cid: string) => {
       setContainerId(cid)        
-      const allUsers = cid === 'all' && sem_id !== 'all'
-      const allSemester = cid === 'all' && sem_id === 'all'
-      if (allUsers) {
-        //todo replace with proper api call
-        get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
-          console.log(`getting all ob ids for user`)
-          setOBList(lst)
-        })
-      }
-      else if (allSemester) {
-        get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
-          console.log(`getting all ob ids for semester`)
-          setOBList(lst)
-        })
-      }
-      else {
-        get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
-          console.log('getting all ob ids for container')
-          setOBList(lst)
-        })
-      }
+      get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
+        console.log(`getting all ob ids for container: ${cid}`)
+        setOBList(lst)
+      })
     }
 
     useEffect(() => { //run when props.observer_id changes
+      console.log('use effect triggered')
         get_sem_id_list(props.observer_id).then( (lst: string[]) => {
             console.log(`setting semid list for observer ${props.observer_id}`)
             setSemIdList(lst)
