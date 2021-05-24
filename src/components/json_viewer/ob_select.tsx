@@ -39,7 +39,7 @@ export default function ObservationBlockSelecter(props: Props) {
     const handle_sem_id_submit = (sid: string) => {
       setSemId(sid)        
       //todo replace with proper api call
-      get_container_list(sem_id, sid).then( (lst: string[]) => {
+      get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
           setContainerIdList(lst)
       })
     }
