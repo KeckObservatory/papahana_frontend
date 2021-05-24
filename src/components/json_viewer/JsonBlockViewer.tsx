@@ -62,11 +62,10 @@ export default function JsonBlockViewer(props: Props) {
     const [theme, setTheme] = 
       useQueryParam('theme', withDefault(StringParam, props.theme as string))
     
-    const getOB = (): void => {
-        api_call(ob_id as string, 'papahana_demo', 'get').then( (newOb: ObservationBlock ) => {
-        //mock_ob_get(ob_id as string).then( ( newOb: ObservationBlock) => {
+    const getOB = (new_ob_id: string): void => {
+        api_call(new_ob_id as string, 'papahana_demo', 'get').then( (newOb: ObservationBlock ) => {
             if (newOb._id) {
-              console.log('setting ob')
+              console.log(`setting ob ${newOb._id}`)
               setOB(newOb)
             }
             },
@@ -107,9 +106,9 @@ export default function JsonBlockViewer(props: Props) {
           setOB(e.updated_src as ObservationBlock);
     }
 
-    const handleOBSelect = (id: string) => {
-      setOBID(id)
-      getOB()
+    const handleOBSelect = (new_ob_id: string) => {
+      setOBID(new_ob_id)
+      getOB(new_ob_id)
     }
 
     const handleEdit = props.editable ? onEdit : false
