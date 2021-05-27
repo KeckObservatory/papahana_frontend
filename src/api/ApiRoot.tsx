@@ -1,9 +1,9 @@
 // provider.js
 // get, push, put, delete
 
-import axios, { AxiosPromise } from 'axios';
+import axios from 'axios';
 import { handleResponse, handleError } from './response';
-import { Container, Document, ObservationBlock, Semester } from './../typings/papahana'
+import { Container, ObservationBlock, Semester } from './../typings/papahana'
 import { mock_get_containers, mock_get_observation_block_from_controller, mock_get_semesters, mock_ob_get } from '../mocks/mock_utils';
 
 

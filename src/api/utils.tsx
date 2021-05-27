@@ -1,7 +1,6 @@
-import { Method, SourceAPI, Document, Semester, Container } from "../typings/papahana";
+import { Method, SourceAPI, Document, Semester, Container, Scoby } from "../typings/papahana";
 import { api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
-import { stringify } from "query-string";
 
 export const get_sem_id_list = (observer_id: string): Promise<string[]> => {
    //make sem_id list from semesters
@@ -26,20 +25,20 @@ const create_sc_table = (semesters:Semester[]): [string, string][] => {
    return sem_cons
 }
 
-const create_scoby_table = async (sem_cons: [string, string][]): Promise<string[][]> => {
-      let rows: string[][] = []
+const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]> => {
+      let rows: Scoby[] = []
       sem_cons.forEach( async ( sem_con: [string, string] ) => {
          const [sem_id, cid] = sem_con
          const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
          obs.forEach( (ob: ObservationBlock) => {
-            const row = [sem_id, cid, ob._id, ob.signature.name ]
+            const row = { sem_id: sem_id, container_id: cid, ob_id: ob._id, name: ob.signature.name} as Scoby
             rows.push(row)
             })
       })
       return rows
       }
 
-export const make_scoby_table = (observer_id: string): Promise<string[][]> => {
+export const make_scoby_table = (observer_id: string): Promise<Scoby[]> => {
    return get_select_funcs.get_semesters(observer_id)
    .then( (semesters: Semester[]) => create_sc_table(semesters) )
    .then( (sem_cons: [string, string][]) => create_scoby_table(sem_cons) )

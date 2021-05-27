@@ -2,8 +2,6 @@ import { get_ob_list, get_container_list, get_sem_id_list } from './../../api/ut
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
-import { resolve } from 'node:url';
-import { createTempVariable } from 'typescript';
 
 export interface Props {
     observer_id: string
@@ -54,11 +52,12 @@ export default function ObservationBlockSelecter(props: Props) {
 
     useEffect(() => { //run when props.observer_id changes
       console.log('use effect triggered')
-        get_sem_id_list(props.observer_id).then( (lst: string[]) => {
+        get_sem_id_list(props.observer_id)
+        .then( (lst: string[]) => {
             console.log(`setting semid list for observer ${props.observer_id}`)
             setSemIdList(lst)
-        }).then( () => {
-        reset_container_and_ob_select()})
+        })
+        .then( () => { reset_container_and_ob_select()})
     }, [props.observer_id])
 
     const reset_container_and_ob_select = () => {

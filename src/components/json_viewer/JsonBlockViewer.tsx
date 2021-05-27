@@ -13,6 +13,7 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
+import BasicTable from '../table'
 
 const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -145,6 +146,9 @@ export default function JsonBlockViewer(props: Props) {
         enableClipboard={props.enableClipboard}
         onEdit={handleEdit}
         />
+    </Paper >
+    <Paper className={classes.paper} elevation={3}>
+      <BasicTable observer_id={props.observer_id}/>
     </Paper>
     </Grid>
     <Grid item xs={6}>
@@ -153,6 +157,8 @@ export default function JsonBlockViewer(props: Props) {
         ob={ob}
         setOB={setOB}/>
     </Paper>
+    </Grid>
+    <Grid item xs={6}>
     </Grid>
     </Grid>
     )

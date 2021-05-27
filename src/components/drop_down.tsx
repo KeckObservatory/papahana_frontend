@@ -27,7 +27,7 @@ interface MenuProps {
     label: string
 }
 
-const DropDown = (props: MenuProps) => { 
+const DropDown = (props: MenuProps): JSX.Element => { 
     const classes = useStyles()
     const value = props.value ? props.value : "" // MenuItem Value cannot be undefined or null
     return(
