@@ -35,11 +35,11 @@ export interface Status extends Base {
 }
 
 export interface Scoby {
-	row_id?: number
-	sem_id: string
-	container_id: string
-	ob_id: string
-    name: string
+	row_id?: string
+	sem_id?: string
+	container_id?: string
+	ob_id?: string
+    name?: string
 }
 
 export interface ObservationBlock extends Base {
