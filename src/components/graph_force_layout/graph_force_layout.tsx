@@ -1,13 +1,18 @@
 import * as React from 'react'
-import * as d3 from 'd3'
 import { Simulation, SimulationNodeDatum } from 'd3-force'
-import { Dispatch, SetStateAction, useEffect, useState } from 'react'
-import Links from './links'
-import Labels from './labels'
-import Nodes from './nodes'
+import { useEffect, useState } from 'react'
 import { D3Types, DispatchIdx } from '../../typings/d3_force'
 import { Scoby } from '../../typings/papahana'
 import { ForceGraph2D } from 'react-force-graph'
+import { useTheme } from '@material-ui/core'
+import { lightBlue, deepOrange} from '@material-ui/core/colors';
+import { Theme } from '@rjsf/material-ui'
+
+// const useStyles = makeStyles( (theme: Theme ) => {
+//     forceGraph: {
+//         linkColor: theme.palette.primary}
+// })
+
 
 interface Props {
     width: number
@@ -80,28 +85,30 @@ const add_to_nodes = (row: Scoby, nodes: D3Types.Node[], sets: OBSet): [ D3Types
     return [nodes, sets]
 }
 
-const add_to_links = (row: Scoby, links: D3Types.Link[]): D3Types.Link[] => {
+const add_to_links = (row: Scoby, links: D3Types.Link[], color?: string): D3Types.Link[] => {
     // each row adds two links sem_id -> container_id and container_id -> ob_id
     if (row.sem_id && row.container_id) {
-        const link: D3Types.Link = {
+        let link: D3Types.Link = {
             source: row.sem_id,
             target: row.container_id,
             value: 'sem_id to container_id'
         }
+        if (color) link['color'] = color;
         links.push(link)
     }
     if (row.container_id && row.ob_id) {
-        const link: D3Types.Link = {
+        let link: D3Types.Link = {
             source: row.container_id,
             target: row.ob_id,
             value: 'container_id to ob_id'
         }
+        if (color) link['color'] = color;
         links.push(link)
     }
     return links
 }
 
-const scoby_arr_to_data_object = (rows: Scoby[]): D3Types.DataObject => {
+const scoby_arr_to_data_object = (rows: Scoby[], linkColor: string = GREEN): D3Types.DataObject => {
     let nodes: D3Types.Node[] = []
     let links: D3Types.Link[] = []
     // book keeping for three arrays of unique sem_ids, ob_ids, and container_ids.
@@ -109,38 +116,40 @@ const scoby_arr_to_data_object = (rows: Scoby[]): D3Types.DataObject => {
     rows.forEach((row: Scoby) => {
         // add to node
         [nodes, sets] = add_to_nodes(row, nodes, sets)
-        links = add_to_links(row, links)
+        links = add_to_links(row, links, linkColor)
     })
     const dataObject: D3Types.DataObject = { nodes: nodes, links: links }
     return dataObject
 }
 
 export default function GraphForceLayout(props: Props) {
-    let simulation: Simulation<SimulationNodeDatum, undefined> | undefined = undefined
-
-    // EE: the clone data is needed to avoid:
-    // TypeError: Cannot add property index, object is not extensible
-
     const [clonedData, setClonedData] = useState({nodes: [], links: []} as D3Types.DataObject )
 
+    const theme = useTheme()
+    let linkColor: string = deepOrange[900] 
+    if (theme.palette.type === 'dark') {
+        linkColor = lightBlue[200] 
+    }
     useEffect(() => {
-        const dataObj = scoby_arr_to_data_object(props.data)
+        const dataObj = scoby_arr_to_data_object(props.data, linkColor)
         console.log('dataObj')
         console.log(dataObj)
         setClonedData(dataObj)
     }, [props])
 
+    const fillColor = (node: D3Types.Node): string => {
+        return node.fillColor
+    }
 
-
-    const initialScale = 1
-    const initialTranslate = [0, 0]
+    console.log(theme)
     return (
         <ForceGraph2D
         graphData={clonedData}
-        width={1000}
+        width={800}
         height={350}
         nodeId='name'
         nodeAutoColorBy="group"
+        linkWidth={1}
         />
     )
 }

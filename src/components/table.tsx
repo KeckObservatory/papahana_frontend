@@ -23,6 +23,7 @@ import ViewColumn from '@material-ui/icons/ViewColumn';
 import GraphForceLayout from './graph_force_layout/graph_force_layout'
 import { DispatchIdx } from './../typings/d3_force'
 
+
 const tableIcons: Icons = {
   Add: forwardRef((props: unknown, ref: any) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props: any, ref: any) => <Check {...props} ref={ref} />),
@@ -111,9 +112,6 @@ export default function BasicTable(props: Props) {
           newRows.push(scoby)
           idx++
         })
-        console.log('newRows:')
-        newRows = newRows // TODO remove after testing
-        console.log(newRows)
         setRows(newRows)
       })
   }, [props.observer_id])

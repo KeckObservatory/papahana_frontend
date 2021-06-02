@@ -99,11 +99,12 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
   const palletType = darkState ? "dark" : "light"
   const mainPrimaryColor = darkState ? '#cf7d34': lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
+  const linkColor = darkState ? lightBlue[500] : deepOrange[900]
   const theme = createMuiTheme({
     palette: {
       type: palletType,
       primary: { main: mainPrimaryColor},
-      secondary: {main: mainSecondaryColor}
+      secondary: {main: mainSecondaryColor},
     }
   })
   let jsonTheme = darkState ? 'bespin': 'summerfruit:inverted' as ThemeKeys
