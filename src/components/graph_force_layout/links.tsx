@@ -4,20 +4,25 @@ import * as React from 'react'
 import * as d3 from 'd3'
 import { useEffect } from 'react'
 
+const uuid = require('react-uuid')
+
 interface Props {
     links: D3Types.Link[]
 }
 
 interface LinkProps {
     link: D3Types.Link,
-    key: string
 }
 
 export function Link(props: LinkProps) {
-    const ref: SVGElement | undefined = undefined
-
+    // const ref: SVGElement | undefined = undefined
+    const ref = React.createRef<SVGLineElement>()
+    console.log('link ref')
+    console.log(ref)
+    console.log('links')
+    console.log(props.link)
     useEffect(() => {
-        if (ref) { d3.select(ref).data([props.link]) }
+        if (ref) { d3.select(ref.current).data([props.link]) }
     },
         [props.link])
 
@@ -54,9 +59,9 @@ export function Link(props: LinkProps) {
 
 export default function Links(props: Props) {
     console.log('Links props')
-    console.log(props)
-    const links = props.links.map((link: D3Types.Link, key: number) => {
-        return <Link key={`links=${key}`} link={link} />
+    console.log(props.links)
+    const links = props.links.map((link: D3Types.Link) => {
+        return <Link key={`links=${uuid()}`} link={link} />
     })
 
     return (<g className="links">{links}</g>)

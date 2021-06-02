@@ -5,8 +5,9 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import Links from './links'
 import Labels from './labels'
 import Nodes from './nodes'
-import { D3Types, DispatchIdx } from './../../typings/d3_force'
+import { D3Types, DispatchIdx } from '../../typings/d3_force'
 import { Scoby } from '../../typings/papahana'
+import { ForceGraph2D } from 'react-force-graph'
 
 interface Props {
     width: number
@@ -34,7 +35,8 @@ const PURPLE = '#bebada'
 const GREY = '#d9d9d9'
 
 const create_node = (x_id: keyof Scoby, nodeType: NodeType, row: Scoby): D3Types.Node => {
-    let name = nodeType === 'ob' ? row.name : row[x_id]
+    // let name = nodeType === 'ob' ? row.name : row[x_id]
+    let name = row[x_id]
     let radiusSize: number
     let fillColor: string
     switch (nodeType) {
@@ -56,6 +58,7 @@ const create_node = (x_id: keyof Scoby, nodeType: NodeType, row: Scoby): D3Types
         default: {
             radiusSize = 10;
             fillColor = GREY
+            break;
         }
     }
     const node: D3Types.Node = { name: name as string, group: nodeType, radiusSize: radiusSize, fillColor: fillColor }
@@ -117,122 +120,27 @@ export default function GraphForceLayout(props: Props) {
 
     // EE: the clone data is needed to avoid:
     // TypeError: Cannot add property index, object is not extensible
-    const dataObj = scoby_arr_to_data_object(props.data)
-    console.log('dataObj')
-    console.log(dataObj)
-    const [clonedData, setClonedData] = useState(dataObj)
 
+    const [clonedData, setClonedData] = useState({nodes: [], links: []} as D3Types.DataObject )
 
     useEffect(() => {
-        simulatePositions()
-        drawTicks()
-        addZoomCapabilities()
+        const dataObj = scoby_arr_to_data_object(props.data)
+        console.log('dataObj')
+        console.log(dataObj)
+        setClonedData(dataObj)
     }, [props])
 
 
-    const simulatePositions = () => {
-        simulation = d3
-            .forceSimulation()
-            .nodes(clonedData?.nodes as SimulationNodeDatum[])
-            .force(
-                'link',
-                d3
-                    .forceLink()
-                    .id((d) => {
-                        return (d as D3Types.Node).name
-                    })
-                    .distance(props.linkDistance)
-                    .strength(props.linkStrength)
-            )
-            .force('charge', d3.forceManyBody().strength(props.chargeStrength))
-            .force('center', d3.forceCenter(props.centerWidth, props.centerHeight))
-
-        // @ts-ignore
-        simulation.force('link').links(clonedData?.links)
-    }
-
-    const drawTicks = () => {
-        const nodes = d3.selectAll('.node')
-        const links = d3.selectAll('.link')
-        const labels = d3.selectAll('.label')
-
-        if (simulation) {
-            simulation.nodes(clonedData?.nodes as SimulationNodeDatum[]).on('tick', onTickHandler)
-        }
-
-        function onTickHandler() {
-            links
-                .attr('x1', (d) => {
-                    return (d as { source: D3Types.Point }).source.x
-                })
-                .attr('y1', (d) => {
-                    return (d as { source: D3Types.Point }).source.y
-                })
-                .attr('x2', (d) => {
-                    return (d as { target: D3Types.Point }).target.x
-                })
-                .attr('y2', (d) => {
-                    return (d as { target: D3Types.Point }).target.y
-                })
-            nodes
-                .attr('cx', (d) => {
-                    return (d as D3Types.Point).x
-                })
-                .attr('cy', (d) => {
-                    return (d as D3Types.Point).y
-                })
-            labels
-                .attr('x', (d) => {
-                    return (d as D3Types.Point).x + 5
-                })
-                .attr('y', (d) => {
-                    return (d as D3Types.Point).y + 5
-                })
-        }
-    }
-
-    const addZoomCapabilities = () => {
-        const container = d3.select('.container')
-        const zoom = d3
-            .zoom()
-            .scaleExtent([1, 8])
-            .translateExtent([
-                [100, 100],
-                [300, 300],
-            ])
-            .extent([
-                [100, 100],
-                [200, 200],
-            ])
-            .on('zoom', (event) => {
-                let { x, y, k } = event.transform
-                x = 0
-                y = 0
-                k *= 1
-                container.attr('transform', `translate(${x}, ${y})scale(${k})`).attr('width', props.width).attr('height', props.height)
-            })
-
-        // @ts-ignore
-        container.call(zoom)
-    }
-
-    const restartDrag = () => {
-        if (simulation) simulation.alphaTarget(0.2).restart()
-    }
-
-    const stopDrag = () => {
-        if (simulation) simulation.alphaTarget(0)
-    }
 
     const initialScale = 1
     const initialTranslate = [0, 0]
     return (
-        <svg className="container" x={0} y={0} width={props.width} height={props.height} transform={`translate(${initialTranslate[0]}, ${initialTranslate[1]})scale(${initialScale})`}>
-            <g>
-                <Links links={clonedData?.links as D3Types.Link[]} />
-                <Nodes nodes={clonedData?.nodes as D3Types.Node[]} restartDrag={restartDrag} stopDrag={stopDrag} />
-                <Labels nodes={clonedData?.nodes as D3Types.Node[]} onNodeSelected={props.onNodeSelected} />
-            </g>
-        </svg>
+        <ForceGraph2D
+        graphData={clonedData}
+        width={1000}
+        height={350}
+        nodeId='name'
+        nodeAutoColorBy="group"
+        />
     )
 }

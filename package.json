@@ -18,13 +18,16 @@
     "d3": "^6.7.0",
     "d3-force": "^2.1.1",
     "material-table": "^1.69.3",
+    "npm-force-resolutions": "^0.0.10",
     "query-string": "^7.0.0",
     "react": "^16.8.0",
     "react-dom": "^16.8.0",
+    "react-force-graph": "^1.41.5",
     "react-json-view": "^1.21.3",
     "react-jsonschema-form": "^1.8.1",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.3",
+    "react-uuid": "^1.0.2",
     "typescript": "^4.2.4",
     "use-query-params": "^1.2.2",
     "web-vitals": "^1.1.1"
@@ -33,7 +36,8 @@
     "start": "PORT=50001 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "preinstall": "npx npm-force-resolutions"
   },
   "eslintConfig": {
     "extends": [
@@ -52,6 +56,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "resolutions": {
+    "bezier-js": "4.0.3"
   },
   "devDependencies": {
     "@material-ui/core": "^4.11.4",

@@ -80,14 +80,14 @@ const GraphLayoutConditional = (props: GCProps) => {
   }
   return (
     <GraphForceLayout
-      width={650}
+      width={1000}
       height={350}
       data={props.rows} //todo: undo this when Graph is working!!!
       onNodeSelected={props.setSelectedIdx}
       linkDistance={80}
       linkStrength={1}
-      chargeStrength={-20}
-      centerWidth={350}
+      chargeStrength={-1}
+      centerWidth={500}
       centerHeight={170}
     />
   )
@@ -111,6 +111,8 @@ export default function BasicTable(props: Props) {
           newRows.push(scoby)
           idx++
         })
+        console.log('newRows:')
+        newRows = newRows // TODO remove after testing
         console.log(newRows)
         setRows(newRows)
       })
@@ -120,7 +122,6 @@ export default function BasicTable(props: Props) {
     if (!Array.isArray(rows)) {
       rows = [rows]
     }
-    console.log(rows)
     setFilteredRows(rows)
   }
 

@@ -3,6 +3,7 @@ import {Dispatch, SetStateAction} from 'react'
 export namespace D3Types {
     export type Node = {
       name: string
+      id?: string
       group: string 
       radiusSize: number
       fillColor: string

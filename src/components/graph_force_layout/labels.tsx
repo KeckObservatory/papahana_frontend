@@ -15,12 +15,12 @@ interface Props {
 }
 
 export const Label = (props: LabelProps) => {
-    const ref: SVGTextElement | undefined = undefined
+    // const ref: SVGTextElement | undefined = undefined
+    const ref = React.createRef<SVGTextElement>()
 
     useEffect(() => {
-        if (ref) { d3.select(ref).data([props.node]) }
-    },
-        [])
+        if (ref) { d3.select(ref.current).data([props.node]) }
+    })
 
     return (
         <text
