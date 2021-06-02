@@ -45,40 +45,32 @@ export default function ObservationBlockSelecter(props: Props) {
     const handle_container_id_submit = (cid: string) => {
       setContainerId(cid)        
       get_ob_list(sem_id, cid, props.observer_id).then( (lst: string[]) => {
-        console.log(`getting all ob ids for container: ${cid}`)
         setOBList(lst)
       })
     }
 
     useEffect(() => { //run when props.observer_id changes
-      console.log('use effect triggered')
         get_sem_id_list(props.observer_id)
         .then( (lst: string[]) => {
-            console.log(`setting semid list for observer ${props.observer_id}`)
             setSemIdList(lst)
         })
         .then( () => { reset_container_and_ob_select()})
     }, [props.observer_id])
 
     const reset_container_and_ob_select = () => {
-      console.log('resetting container and ob selet')
       get_container_list(sem_id, props.observer_id).then( (lst: string[]) => {
-        console.log(`setting sem_id ${sem_id} containers for user ${props.observer_id}`)
         setContainerIdList(lst)
         if (lst.length>=1) {
-          console.log(`setting container to first item of list: ${lst[0]}`)
           setContainerId(lst[0])
         }
       })
       .then( () => {
           get_ob_list(sem_id, container_id, props.observer_id).then( (lst: string[]) => {
-            console.log(`getting ob ${lst.length} for container ${container_id} `)
             setOBList(lst)
             return lst
           })
           .then( (lst: string[]) => {
             if (lst.length >= 1) {
-              console.log(`setting ob to first item of list: ${lst[0]}`)
               props.handleOBSelect(lst[0])
             }
           })
@@ -86,7 +78,6 @@ export default function ObservationBlockSelecter(props: Props) {
     }
 
     const handle_ob_id_select = (id: string) => {
-        console.log(`ob id selected: ${id}`)
         props.handleOBSelect(id)
     }
     return (

@@ -65,7 +65,6 @@ export default function JsonBlockViewer(props: Props) {
   const getOB = (new_ob_id: string): void => {
     api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
       if (newOb._id) {
-        console.log(`new ob_id from api result: ${newOb._id}`)
         setOB(newOb)
       }
     },

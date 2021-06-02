@@ -66,9 +66,6 @@ const post = (resource: string, api_type: string, model: object): Promise<any> =
 
 const put = (resource: string, api_type: string, model: object): Promise<any> => {
     const url = `${OB_URL}${resource}`
-    console.log(`put url ${url}`)
-    console.log(`model ${model}`)
-    console.log(model)
     return axios
         .put(url, model)
         .then(handleResponse)

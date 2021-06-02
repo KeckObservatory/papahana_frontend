@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { make_scoby_table } from '../api/utils';
 import { Scoby } from '../typings/papahana';
-import MaterialTable, { Icons, Action, MTableFilterRow } from 'material-table'
+import MaterialTable, { Icons, Action } from 'material-table'
 import { forwardRef } from 'react';
 
 import AddBox from '@material-ui/icons/AddBox';
@@ -98,11 +98,9 @@ export default function BasicTable(props: Props) {
   const classes = useStyles();
   const [rows, setRows] = useState(defaultState.rows)
   const [selectedIdx, setSelectedIdx] = useState(defaultState.selectedIdx)
-  // const [filteredRows, setFilteredRows] = useState({ FilterRow: (props: any) => <MTableFilterRow {...props} />, });
   const [filteredRows, setFilteredRows] = useState(defaultState.filteredRows);
 
   useEffect(() => { //run when props.observer_id changes
-    console.log('table use effect triggered')
     make_scoby_table(props.observer_id)
       .then((scoby_table: Scoby[]) => {
         let newRows: Scoby[] = []
@@ -113,6 +111,7 @@ export default function BasicTable(props: Props) {
           idx++
         })
         setRows(newRows)
+        setFilteredRows(newRows)
       })
   }, [props.observer_id])
 
@@ -120,6 +119,8 @@ export default function BasicTable(props: Props) {
     if (!Array.isArray(rows)) {
       rows = [rows]
     }
+    console.log('handleSelected')
+    console.log(rows)
     setFilteredRows(rows)
   }
 
@@ -150,6 +151,6 @@ export default function BasicTable(props: Props) {
         options={{ filtering: true, exportButton: true, selection: true }}
         actions={actions}
       />
-      <GraphLayoutConditional rows={rows} setSelectedIdx={setSelectedIdx} />
+      <GraphLayoutConditional rows={filteredRows} setSelectedIdx={setSelectedIdx} />
     </div>)
 }

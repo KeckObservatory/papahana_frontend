@@ -73,17 +73,13 @@ export const make_container_list = (semesters: Semester[], sem_id: string): stri
            cl = cl.concat(semester.container_list)
      })
      container_list = container_list.concat(Array.from(new Set(cl))) // remove duplicate containers across all sem_ids
-     console.log(`adding ${container_list.length} (all) containers to drop down menu`)
    }
    else { //todo: replace with appropriate api call for semester
      const find_sem_id = (semester: Semester): boolean  => {
         return semester.sem_id === sem_id
      }
      const semester = semesters.find( find_sem_id )
-     console.log(`semester selected`)
      if (semester) { 
-      console.log(semester)
-      console.log(`adding ${semester.container_list.length} containers to drop down menu`)
       container_list = container_list.concat(semester.container_list)
      }
    }
@@ -108,16 +104,13 @@ export const make_ob_list = (containers: Container[], container_id: string): str
            ol = ol.concat(container.observation_blocks)
      })
      ob_list = Array.from(new Set(ol)) // remove duplicate containers across all containers 
-     console.log(`adding ${ob_list.length} (all) ob to drop down menu`)
    }
    else { //todo: replace with appropriate api call for semester
      const find_container_id = (container: Container):boolean => {
         return container._id === container_id
      }
-     console.log(`container ${containers[0]._id} is ${container_id}?`)
      const container = containers.find( find_container_id ) as Container 
      if (container)  {
-       console.log(`adding ${container.observation_blocks.length} ob to drop down menu`)
        ob_list = container.observation_blocks
      }
    }
