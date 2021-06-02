@@ -66,7 +66,8 @@ const create_node = (x_id: keyof Scoby, nodeType: NodeType, row: Scoby, darkThem
     // let name = nodeType === 'ob' ? row.name : row[x_id]
     let name = row[x_id]
     let [ radiusSize, fillColor ] = size_and_color_node(nodeType, darkTheme)
-    const node: D3Types.Node = { name: name as string, group: nodeType, radiusSize: radiusSize, fillColor: fillColor }
+    let msg = `${nodeType}: ${name}`
+    const node: D3Types.Node = { name: name as string, msg: msg, group: nodeType, radiusSize: radiusSize, fillColor: fillColor }
     return node
 }
 
@@ -153,7 +154,8 @@ export default function GraphForceLayout(props: Props) {
         graphData={clonedData}
         width={props.width}
         height={props.height}
-        nodeId='name'
+        nodeId={'name'}
+        nodeLabel={'msg'}
         nodeColor='fillColor'
         linkWidth={1}
         />

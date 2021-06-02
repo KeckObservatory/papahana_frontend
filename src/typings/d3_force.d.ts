@@ -6,6 +6,7 @@ export namespace D3Types {
       group: string 
       radiusSize: number
       fillColor: string
+      msg?: string
     }
     export type Link = {
       color?: string
