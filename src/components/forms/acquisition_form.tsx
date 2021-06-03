@@ -6,7 +6,6 @@ import { ISubmitEvent, UiSchema  } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import {useStyles, FormProps, log} from './ob_form'
 
-
 const uiAcquisitionSchema: UiSchema = {
     version: {
       "ui:readonly": true,

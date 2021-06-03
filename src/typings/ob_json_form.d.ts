@@ -20,9 +20,9 @@ export interface OBJsonSchemaProperties {
 }
 
 export interface JsonSchema {
-  title: string
+  title?: string
   type: string
   required?: string[]
   items?: object,
-  properties: OBJsonSchemaProperties 
+  properties?: OBJsonSchemaProperties 
 }
