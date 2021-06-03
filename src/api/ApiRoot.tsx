@@ -42,7 +42,7 @@ const get_containers = (sem_id: string, observer_id: string): Promise<Container[
 
 const get_observation_blocks_from_container = (container_id: string): Promise<ObservationBlock[]> => {
     //  http://vm-webtools.keck.hawaii.edu:50000/v0/containers/items?container_id=60a4477aac7448cc67b63758
-    const url = `${CONTAINER_URL}'/?container_id='${container_id}`
+    const url = `${CONTAINER_URL}/?container_id=${container_id}`
     return axios
         .get(url)
         .then(handleResponse)
