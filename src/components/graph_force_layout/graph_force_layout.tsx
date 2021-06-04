@@ -26,14 +26,6 @@ interface OBSet {
 
 type NodeType = 'ob' | 'container' | 'sem'
 
-const GREEN = '#8dd3c7'
-const YELLOW = '#ffffb3'
-const PURPLE = '#bebada'
-const GREY = '#d9d9d9'
-const RED = '#fb8072'
-const PINK = "#fccde5"
-const ORANGE = '#fdb462'
-
 const size_and_color_node = (nodeType: NodeType, darkTheme: boolean): [number, string] => {
     let radiusSize: number
     let fillColor: string
@@ -138,10 +130,10 @@ export default function GraphForceLayout(props: Props) {
     const darkMode = theme.palette.type === 'dark'
     useEffect(() => {
         const dataObj = scoby_arr_to_data_object(props.data, darkMode)
-        console.log('props.data')
-        console.log(props.data)
-        console.log('dataObj')
-        console.log(dataObj)
+        // console.log('props.data')
+        // console.log(props.data)
+        // console.log('dataObj')
+        // console.log(dataObj)
         setClonedData(dataObj)
     }, [props])
 

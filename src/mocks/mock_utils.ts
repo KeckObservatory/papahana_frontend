@@ -10,7 +10,7 @@ import { ObservationBlock, Semester, Container, InstrumentPackage } from "../typ
 
 export const mock_get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
 const mockPromise = new Promise<InstrumentPackage>( (resolve) => {
-   resolve(mock_ob)
+   resolve(mock_kcwi_instrument_package)
 })
 return mockPromise
 }

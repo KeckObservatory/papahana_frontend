@@ -3,8 +3,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { make_scoby_table } from '../api/utils';
 import { Scoby } from '../typings/papahana';
 import MaterialTable, { Icons, Action } from 'material-table'
-import { forwardRef } from 'react';
-
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -25,23 +23,23 @@ import { DispatchIdx } from './../typings/d3_force'
 
 
 const tableIcons: Icons = {
-  Add: forwardRef((props: unknown, ref: any) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props: any, ref: any) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props: any, ref: any) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props: any, ref: any) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props: any, ref: any) => <ChevronRight {...props} ref={ref} />),
-  Edit: forwardRef((props: any, ref: any) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props: any, ref: any) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props: any, ref: any) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props: any, ref: any) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props: any, ref: any) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props: any, ref: any) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props: any, ref: any) => <ChevronLeft {...props} ref={ref} />),
-  ResetSearch: forwardRef((props: any, ref: any) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props: any, ref: any) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props: any, ref: any) => <ArrowDownward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props: any, ref: any) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props: any, ref: any) => <ViewColumn {...props} ref={ref} />)
+  Add: React.forwardRef((props: unknown, ref: any) => <AddBox {...props} ref={ref} />),
+  Check: React.forwardRef((props: any, ref: any) => <Check {...props} ref={ref} />),
+  Clear: React.forwardRef((props: any, ref: any) => <Clear {...props} ref={ref} />),
+  Delete: React.forwardRef((props: any, ref: any) => <DeleteOutline {...props} ref={ref} />),
+  DetailPanel: React.forwardRef((props: any, ref: any) => <ChevronRight {...props} ref={ref} />),
+  Edit: React.forwardRef((props: any, ref: any) => <Edit {...props} ref={ref} />),
+  Export: React.forwardRef((props: any, ref: any) => <SaveAlt {...props} ref={ref} />),
+  Filter: React.forwardRef((props: any, ref: any) => <FilterList {...props} ref={ref} />),
+  FirstPage: React.forwardRef((props: any, ref: any) => <FirstPage {...props} ref={ref} />),
+  LastPage: React.forwardRef((props: any, ref: any) => <LastPage {...props} ref={ref} />),
+  NextPage: React.forwardRef((props: any, ref: any) => <ChevronRight {...props} ref={ref} />),
+  PreviousPage: React.forwardRef((props: any, ref: any) => <ChevronLeft {...props} ref={ref} />),
+  ResetSearch: React.forwardRef((props: any, ref: any) => <Clear {...props} ref={ref} />),
+  Search: React.forwardRef((props: any, ref: any) => <Search {...props} ref={ref} />),
+  SortArrow: React.forwardRef((props: any, ref: any) => <ArrowDownward {...props} ref={ref} />),
+  ThirdStateCheck: React.forwardRef((props: any, ref: any) => <Remove {...props} ref={ref} />),
+  ViewColumn: React.forwardRef((props: any, ref: any) => <ViewColumn {...props} ref={ref} />)
 };
 
 const useStyles = makeStyles({

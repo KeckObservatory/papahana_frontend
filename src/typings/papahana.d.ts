@@ -25,10 +25,6 @@ export interface Base {
 	comment?: string
 }
 
-export interface Group extends Base {
-
-}
-
 export interface Status extends Base {
 	executions: string[]
 	state: string
@@ -117,7 +113,7 @@ export interface Observation extends Base {
 
 export interface Signature extends Base {
 	name: string,
-	instrument: string,
+	instrument: Instrument,
 	pi_id: number,
 	sem_id: string,
 	observer_ids?: string[],

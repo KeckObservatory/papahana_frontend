@@ -3,17 +3,17 @@ import { OBComponent, ObservationBlock, Instrument, InstrumentPackage } from "..
 import { Box, makeStyles, Theme } from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { AppBar } from '@material-ui/core'
-import * as obt from '../../typings/ob_json_form'
+import { AppBar } from '@material-ui/core';
+import * as obt from '../../typings/ob_json_form';
 import { UiSchema  } from "@rjsf/core";
 
-import TargetForm from "./target_form"
+import TargetForm from "./target_form";
 import AcquisitionForm from "./acquisition_form";
 import ScienceForm from "./science_form";
 import OverviewForm from "./overview_form";
 
-import { get_instrument_package } from './../../api/utils'
-import TemplateForm from './template_form'
+import { get_instrument_package } from './../../api/utils';
+import TemplateForm from './template_form';
 
 export const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -79,11 +79,12 @@ function TabPanel(props: any) {
 
 export default function OBForm(props: Props) {
   const classes = useStyles()
-  const [value, setValue] = React.useState(0);
-  const [instrumentPackage, setInstrumentPackage] = React.useState({} as InstrumentPackage)
+  let instrument: Instrument = props.ob.signature?.instrument
+  const [ value, setValue ] = React.useState(0);
+  const [ instrumentPackage, setInstrumentPackage ] = React.useState<InstrumentPackage | undefined>(undefined)
 
   useEffect(() => {
-    const instrument = props.ob.instrument
+    instrument = props.ob.signature?.instrument
     if (instrument) {
       get_instrument_package(instrument).then( (instPak: InstrumentPackage) => {
         setInstrumentPackage(instPak)
@@ -93,7 +94,7 @@ export default function OBForm(props: Props) {
       }
       )
     }
-  }, [])
+  }, [props.ob])
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
@@ -119,22 +120,26 @@ export default function OBForm(props: Props) {
         <TargetForm ob={props.ob} setOB={props.setOB} />
       </TabPanel>
       <TabPanel value={value} index={2}>
-        <AcquisitionForm ob={props.ob} setOB={props.setOB} />
-        <TemplateForm 
-        ob={props.ob} 
-        setOB={props.setOB} 
-        templates={instrumentPackage.templates.acquisition}
-        type={'acq'}
-        />
+        {/* <AcquisitionForm ob={props.ob} setOB={props.setOB} /> */}
+        { instrumentPackage? 
+          <TemplateForm 
+          ob={props.ob} 
+          setOB={props.setOB} 
+          templates={instrumentPackage.templates.acquisition}
+          type={'acq'}
+          /> : <h1> Loading </h1>
+        }
       </TabPanel>
       <TabPanel value={value} index={3}>
-        <ScienceForm ob={props.ob} setOB={props.setOB} />
+        {/* <ScienceForm ob={props.ob} setOB={props.setOB} /> */}
+        { instrumentPackage? 
         <TemplateForm 
         ob={props.ob} 
         setOB={props.setOB} 
         templates={instrumentPackage.templates.science}
         type={'sci'}
-        />
+        /> : <h1> Loading </h1>
+        }
       </TabPanel>
     </div>
   )
