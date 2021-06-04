@@ -1,16 +1,19 @@
-import React  from "react";
-import { OBComponent, ObservationBlock } from "../../typings/papahana";
+import React, { useEffect }  from "react";
+import { OBComponent, ObservationBlock, Instrument, InstrumentPackage } from "../../typings/papahana";
 import { Box, makeStyles, Theme } from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core'
 import * as obt from '../../typings/ob_json_form'
 import { UiSchema  } from "@rjsf/core";
-// import SignatureForm from "./signature_form";
+
 import TargetForm from "./target_form"
 import AcquisitionForm from "./acquisition_form";
 import ScienceForm from "./science_form";
 import OverviewForm from "./overview_form";
+
+import { get_instrument_package } from './../../api/utils'
+import TemplateForm from './template_form'
 
 export const useStyles = makeStyles( (theme: Theme) => ({
     root: {
@@ -34,7 +37,7 @@ export const createUISchema = (formData: OBComponent, schema: obt.JsonSchema, ti
   // Generate a UI schema based on complete form schema of a complete OB component
   let uiSchema = {} as UiSchema
   // first define readonly values
-  for (const [key, property] of Object.entries(schema.properties)) {
+  for (const [key, property] of Object.entries(schema.properties as object)) {
     uiSchema[key] = {}  
     if (property.readonly) {
       uiSchema[key]["ui:readonly"] = true
@@ -75,8 +78,22 @@ function TabPanel(props: any) {
 }
 
 export default function OBForm(props: Props) {
-  const classes = useStyles() 
+  const classes = useStyles()
   const [value, setValue] = React.useState(0);
+  const [instrumentPackage, setInstrumentPackage] = React.useState({} as InstrumentPackage)
+
+  useEffect(() => {
+    const instrument = props.ob.instrument
+    if (instrument) {
+      get_instrument_package(instrument).then( (instPak: InstrumentPackage) => {
+        setInstrumentPackage(instPak)
+      },
+      (error: any) => {
+        console.error(error)
+      }
+      )
+    }
+  }, [])
   const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
     setValue(newValue);
   };
@@ -103,9 +120,21 @@ export default function OBForm(props: Props) {
       </TabPanel>
       <TabPanel value={value} index={2}>
         <AcquisitionForm ob={props.ob} setOB={props.setOB} />
+        <TemplateForm 
+        ob={props.ob} 
+        setOB={props.setOB} 
+        templates={instrumentPackage.templates.acquisition}
+        type={'acq'}
+        />
       </TabPanel>
       <TabPanel value={value} index={3}>
         <ScienceForm ob={props.ob} setOB={props.setOB} />
+        <TemplateForm 
+        ob={props.ob} 
+        setOB={props.setOB} 
+        templates={instrumentPackage.templates.science}
+        type={'sci'}
+        />
       </TabPanel>
     </div>
   )

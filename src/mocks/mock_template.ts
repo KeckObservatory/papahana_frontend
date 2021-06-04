@@ -1,3 +1,4 @@
+import { InstrumentPackage, Template } from './../typings/papahana.d';
 import * as obt from './../typings/ob_json_form'
 
 const kcwi_acq_direct_template_properties: obt.OBJsonSchemaProperties = {
@@ -167,7 +168,7 @@ const kcwi_ifu_sci_stare_schema: obt.JSProperty = {
 	}
 }
 
-const kcwi_ifu_sci_dither_template = {
+const kcwi_ifu_sci_dither_template: Template = {
         "name": "KCWI_ifu_sci_dither",
         "instrument": "KCWI",
         "type": "sci",
@@ -175,7 +176,7 @@ const kcwi_ifu_sci_dither_template = {
 	"schema": kcwi_ifu_sci_dither_schema
 }
 
-const kcwi_ifu_sci_stare_template = {
+const kcwi_ifu_sci_stare_template: Template = {
         "name" : "KCWI_ifu_sci_stare",
         "instrument" : "KCWI",
         "type" : "sci",
@@ -183,7 +184,7 @@ const kcwi_ifu_sci_stare_template = {
         "schema": kcwi_ifu_sci_stare_schema
 }
 
-const kcwi_ifu_acq_direct_template = {
+const kcwi_ifu_acq_direct_template: Template = {
         "name": "KCWI_ifu_acq_direct",
         "instrument": "KCWI",
         "type": "acq",
@@ -196,7 +197,7 @@ const kcwi_ifu_acq_direct_template = {
 //TODO: Fill with separate template
 const kcwi_ifu_acq_offsetStar_template = kcwi_ifu_acq_direct_template 
 
-const kcwi_config_template = {
+const kcwi_config_template: Template  = {
         "name": "KCWI_config",
         "instrument": "KCWI",
         "type": "config",
@@ -204,7 +205,7 @@ const kcwi_config_template = {
         "schema": kcwi_config_schema
 }
 
-export const KCWI_Instrument_Package = {
+export const mock_kcwi_instrument_package: InstrumentPackage = {
     "instrument": "KCWI",
     "version": "0.1",
     "modes": ["ifu", "img"],
@@ -224,7 +225,7 @@ export const KCWI_Instrument_Package = {
         }
     ],
     "templates":{
-        "acquisition": [ kcwi_ifu_acq_direct_template, , kcwi_ifu_acq_offsetStar_template ],
+        "acquisition": [ kcwi_ifu_acq_direct_template, kcwi_ifu_acq_offsetStar_template ],
         "science": [ kcwi_ifu_sci_stare_template, kcwi_ifu_sci_dither_template ],
         "configuration": [ kcwi_config_template ]
     },

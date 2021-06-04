@@ -1,4 +1,4 @@
-import { Method, SourceAPI, Document, Semester, Container, Scoby } from "../typings/papahana";
+import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage } from "../typings/papahana";
 import { api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 
@@ -11,6 +11,16 @@ export const get_sem_id_list = (observer_id: string): Promise<string[]> => {
    })
    return promise
 }
+
+export const get_instrument_package = ( instrument: Instrument ): Promise<InstrumentPackage> => {
+   const promise = new Promise<InstrumentPackage>( (resolve) => {
+      get_select_funcs.get_instrument_package(instrument).then( (instrumentPackage: InstrumentPackage) => {
+        resolve(instrumentPackage)
+      })
+   })
+   return promise
+}
+
 
 const create_sc_table = (semesters:Semester[]): [string, string][] => {
    let sem_cons: [string, string][] = []

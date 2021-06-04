@@ -1,4 +1,4 @@
-import { KCWIScience } from './papahana.d';
+import { KCWIScience, InstrumentPackage } from './papahana.d';
 
 export interface Container {
 	_id: string,
@@ -148,3 +148,39 @@ export interface Magnitude extends Base {
 	mag: number,
 }
 
+
+export type InstrumentPackage = KCWIInstrumentPackage
+
+interface KCWIInstrumentPackage extends Base {
+  instrument: Instrument
+  version: string
+  modes: string[]
+  cameras: Cameras[]
+  templates: InstrumentPackageTemplates
+}
+
+export type CameraName = "BLUE" | "RED"
+export type CameraItentifier = "CAM1" | "CAM2"
+
+export interface Cameras extends object {
+  name: CameraName 
+  type: string
+  identifier: CameraIdentifier
+  detector: string
+}
+
+export interface InstrumentPackageTemplates {
+  [key: string]: Template[] 
+}
+
+export type TemplateType = "acq" | "sci" | "config"
+
+export interface Template {
+  name: string,
+  instrument: Instrument,
+  type: TemplateType,
+  schema: JsonSchema
+  version: number
+  wrap?: string
+  rotmode?: string
+}

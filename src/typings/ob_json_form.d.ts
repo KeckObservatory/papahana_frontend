@@ -26,3 +26,4 @@ export interface JsonSchema {
   items?: object,
   properties?: OBJsonSchemaProperties 
 }
+
