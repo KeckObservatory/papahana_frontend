@@ -1,4 +1,4 @@
-import { KCWIScience, InstrumentPackage } from './papahana.d';
+import { KCWIScience, InstrumentPackage, Acquisition } from './papahana.d';
 
 export interface Container {
 	_id: string,
@@ -43,8 +43,8 @@ export interface ObservationBlock extends Base {
 	target?: Target,
 	instrument?: Instruement,
 	version?: string,
-	science?: Science | Science[],
-	acquisition?: Acquisition | KCWIAcquisition,
+	science?: Science[],
+	acquisition: Acquisition,
 	associations: string[],
 	observation_type?: string[],
 	signature: Signature
@@ -52,7 +52,10 @@ export interface ObservationBlock extends Base {
 	status: Status 
 }
 
-export interface Acquisition extends Base {
+export type Acquisition = DefaultAcquisition | KCWIAcquisition
+
+export interface DefaultAcquisition extends Base {
+	name: string,
 	instrumental_setup: string,
 	acquisition_method: string,
 	guider_selection?: string,

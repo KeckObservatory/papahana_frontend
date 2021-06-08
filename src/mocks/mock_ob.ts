@@ -120,14 +120,14 @@ const mock_science: KCWIScience = {
 export const mock_ob: ObservationBlock = {
       "_id": "60a44779ac7448cc67b636ff",
       "associations": [
-        "KCWI_config",
-        "KCWI_ifu_acq_direct",
+        "rzdrz",
+        "kstbtt",
         "fjmnt"
       ],
       "comment": "I?ve made a huge tiny mistake.",
       "acquisition": mock_acquisition,
       "priority": 20.00236677111804,
-      "science": mock_science, 
+      "science": [mock_science], 
       "signature": mock_signature,
       "status": mock_status,
       "version": "0.1"

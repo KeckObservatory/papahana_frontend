@@ -1,5 +1,5 @@
 import React, { useEffect }  from "react";
-import { OBComponent, ObservationBlock, Instrument, InstrumentPackage } from "../../typings/papahana";
+import { OBComponent, ObservationBlock, Instrument, InstrumentPackage, Science, Acquisition } from "../../typings/papahana";
 import { Box, makeStyles, Theme } from "@material-ui/core";
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
@@ -63,6 +63,8 @@ interface Props {
     setOB: Function
 }
 
+type FormData = Science[] | Acquisition | undefined
+
 export const log = (type: any) => console.log.bind(console, type);
 
 export function a11yProps(index: any) {
@@ -99,6 +101,20 @@ export default function OBForm(props: Props) {
     setValue(newValue);
   };
 
+  const setOBPortions = ( dataForm: FormData, type: keyof ObservationBlock) => {
+    let newOB = {...props.ob}
+    newOB[type] = dataForm
+    props.setOB(newOB)
+  }
+
+  const setAcquisition = ( acq: Acquisition ) => {
+    setOBPortions(acq, 'acquisition')
+  }
+
+  const setScience = (sci: Science[]) => {
+    setOBPortions(sci, 'science')
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
@@ -123,10 +139,10 @@ export default function OBForm(props: Props) {
         {/* <AcquisitionForm ob={props.ob} setOB={props.setOB} /> */}
         { instrumentPackage? 
           <TemplateForm 
-          ob={props.ob} 
-          setOB={props.setOB} 
+          dataForm={props.ob.acquisition} 
+          sendToOB={setAcquisition} 
           templates={instrumentPackage.templates.acquisition}
-          type={'acq'}
+          type={'acqisition' as keyof ObservationBlock}
           /> : <h1> Loading </h1>
         }
       </TabPanel>
@@ -134,10 +150,10 @@ export default function OBForm(props: Props) {
         {/* <ScienceForm ob={props.ob} setOB={props.setOB} /> */}
         { instrumentPackage? 
         <TemplateForm 
-        ob={props.ob} 
-        setOB={props.setOB} 
+        dataForm={props.ob.science} 
+        sendToOB={setAcquisition} 
         templates={instrumentPackage.templates.science}
-        type={'sci'}
+        type={'science'}
         /> : <h1> Loading </h1>
         }
       </TabPanel>

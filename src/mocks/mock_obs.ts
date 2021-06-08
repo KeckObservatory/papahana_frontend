@@ -11,7 +11,18 @@ export const mock_observation_blocks: ObservationBlock[] = [
       ],
       "comment": "I?ve made a huge tiny mistake.",
       "priority": 20.00236677111804,
-      "science": {
+
+      "acquisition": {
+        "guider_gs_dec": 42.93914644025938,
+        "guider_gs_mode": "User",
+        "guider_gs_ra": 12.148353538469799,
+        "guider_po": "IFU",
+        "name": "KCWI_ifu_acq_direct",
+        "script": "KCWI_ifu_acq_direct",
+        "version": "0.1"
+      },
+
+      "science": [{
         "cfg_cam_cwave": 8723,
         "cfg_cam_grating": "BH1",
         "cfg_slicer": "Large",
@@ -21,7 +32,7 @@ export const mock_observation_blocks: ObservationBlock[] = [
         "det2_nexp": 69,
         "name": "invalid",
         "version": "0.1"
-      },
+      }],
       "signature": {
         "instrument": "KCWI",
         "name": "standard stars #5",
@@ -36,6 +47,7 @@ export const mock_observation_blocks: ObservationBlock[] = [
           "2018-01-23 13:52:17",
           "2018-08-27 14:39:17"
         ],
+
         "state": "completed"
       },
       "version": "0.1"
@@ -51,6 +63,16 @@ export const mock_observation_blocks: ObservationBlock[] = [
       ],
       "comment": "I am one of the few honest people I have ever known.",
       "priority": 40.88159693151091,
+      "acquisition": {
+        "guider_gs_dec": 42.93914644025938,
+        "guider_gs_mode": "User",
+        "guider_gs_ra": 12.148353538469799,
+        "guider_po": "IFU",
+        "name": "KCWI_ifu_acq_direct",
+        "script": "KCWI_ifu_acq_direct",
+        "version": "0.1"
+      },
+
       "signature": {
         "instrument": "KCWI",
         "name": "standard stars #1",
@@ -99,7 +121,16 @@ export const mock_observation_blocks: ObservationBlock[] = [
       ],
       "comment": "I don?t understand the question and I won?t respond to it.",
       "priority": 78.04319845411808,
-      "science": {
+      "acquisition": {
+        "guider_gs_dec": 42.93914644025938,
+        "guider_gs_mode": "User",
+        "guider_gs_ra": 12.148353538469799,
+        "guider_po": "IFU",
+        "name": "KCWI_ifu_acq_direct",
+        "script": "KCWI_ifu_acq_direct",
+        "version": "0.1"
+      },
+      "science": [{
         "cfg_cam_cwave": 8488,
         "cfg_cam_grating": "BM",
         "cfg_slicer": "Medium",
@@ -109,7 +140,7 @@ export const mock_observation_blocks: ObservationBlock[] = [
         "det2_nexp": 7,
         "name": "undefined",
         "version": "0.1"
-      },
+      }],
       "signature": {
         "instrument": "KCWI",
         "name": "standard stars #3",
@@ -142,7 +173,7 @@ export const mock_observation_blocks: ObservationBlock[] = [
         "zidkz"
       ],
       "priority": 11.193813405942398,
-      "science": {
+      "science": [{
         "cfg_cam_cwave": 8077,
         "cfg_cam_grating": "RM",
         "cfg_slicer": "Small",
@@ -152,7 +183,7 @@ export const mock_observation_blocks: ObservationBlock[] = [
         "det2_nexp": 58,
         "name": "undefined",
         "version": "0.1"
-      },
+      }],
       "signature": {
         "instrument": "KCWI",
         "name": "standard stars #9",
@@ -202,7 +233,7 @@ export const mock_observation_blocks: ObservationBlock[] = [
         "vvmns"
       ],
       "priority": 56.782896270336295,
-      "science": {
+      "science": [{
         "cfg_cam_cwave": 9817,
         "cfg_cam_grating": "RL",
         "cfg_slicer": "Medium",
@@ -211,6 +242,15 @@ export const mock_observation_blocks: ObservationBlock[] = [
         "det2_exptime": 884,
         "det2_nexp": 49,
         "name": "progressing",
+        "version": "0.1"
+      }],
+      "acquisition": {
+        "guider_gs_dec": 42.93914644025938,
+        "guider_gs_mode": "User",
+        "guider_gs_ra": 12.148353538469799,
+        "guider_po": "IFU",
+        "name": "KCWI_ifu_acq_direct",
+        "script": "KCWI_ifu_acq_direct",
         "version": "0.1"
       },
       "signature": {
