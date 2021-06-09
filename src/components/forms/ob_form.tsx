@@ -6,7 +6,6 @@ import Tab from '@material-ui/core/Tab';
 import { AppBar } from '@material-ui/core';
 import * as obt from '../../typings/ob_json_form';
 import { UiSchema  } from "@rjsf/core";
-
 import TargetForm from "./target_form";
 import AcquisitionForm from "./acquisition_form";
 import ScienceForm from "./science_form";

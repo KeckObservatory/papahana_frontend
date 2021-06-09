@@ -14,6 +14,7 @@ import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
 import BasicTable from '../table'
+import Aladin from './../aladin'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -150,14 +151,17 @@ export default function JsonBlockViewer(props: Props) {
           <BasicTable observer_id={props.observer_id} />
         </Paper>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={3}>
         <Paper className={classes.widepaper}>
           <OBForm
             ob={ob}
             setOB={setOB} />
         </Paper>
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={3}>
+        <Paper className={classes.paper}>
+          <Aladin />
+        </Paper>
       </Grid>
     </Grid>
   )

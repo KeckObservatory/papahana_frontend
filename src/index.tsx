@@ -10,13 +10,14 @@ import { QueryParamProvider } from 'use-query-params';
 const history = createBrowserHistory();
 
 ReactDOM.render(
-  // <React.StrictMode>
-    <Router {...{history}}>
-    <QueryParamProvider ReactRouterRoute={Route}>
-    <App />
-    </QueryParamProvider>
+  <div>
+    <Router {...{ history }}>
+      <QueryParamProvider ReactRouterRoute={Route}>
+        <App />
+      </QueryParamProvider>
     </Router>,
-  // </React.StrictMode>,
+  </div>
+  ,
   document.getElementById('root')
 );
 
