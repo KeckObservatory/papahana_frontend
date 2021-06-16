@@ -15,7 +15,7 @@ import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
 import BasicTable from '../table'
 import Aladin from './../aladin'
-
+import FormGrid from './../form_grid/form_grid'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     textAlign: 'left',
@@ -35,14 +35,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   paper: {
     padding: theme.spacing(3),
     margin: theme.spacing(1),
+    width: "100%",
     elevation: 3,
   },
   widepaper: {
     padding: theme.spacing(3),
     margin: theme.spacing(1),
-    minWidth: theme.spacing(50),
-    maxWidth: 'min-content',
-    elevation: 3
+    elevation: 3,
+    minWidth: theme.spacing(150)
+  },
+  DnDGrid: {
+    minWidth: theme.spacing(200)
   }
 }))
 
@@ -113,8 +116,8 @@ export default function JsonBlockViewer(props: Props) {
 
   const handleEdit = props.editable ? onEdit : false
   return (
-    <Grid container className={classes.root}>
-      <Grid item xs>
+    <Grid container spacing={3} className={classes.root}>
+      <Grid item xs={3}>
         <Paper className={classes.paper} elevation={3}>
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
           <h3>Observation block</h3>
@@ -147,22 +150,25 @@ export default function JsonBlockViewer(props: Props) {
             onEdit={handleEdit}
           />
         </Paper >
-        <Paper className={classes.paper} elevation={3}>
+        {/* <Paper className={classes.paper} elevation={3}>
           <BasicTable observer_id={props.observer_id} />
-        </Paper>
+        </Paper> */}
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={8}>
         <Paper className={classes.widepaper}>
-          <OBForm
+          <FormGrid 
             ob={ob}
             setOB={setOB} />
+          {/* <OBForm
+            ob={ob}
+            setOB={setOB} /> */}
         </Paper>
       </Grid>
-      <Grid item xs={3}>
+      {/* <Grid item xs={3}>
         <Paper className={classes.paper}>
           <Aladin />
         </Paper>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }
