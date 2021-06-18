@@ -7,15 +7,15 @@ import FileCopyIcon from '@material-ui/icons/FileCopy'
 import { useState } from 'react'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
-import OBForm from '../forms/ob_form'
+// import OBForm from '../forms/ob_form'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
-import BasicTable from '../table'
-import Aladin from './../aladin'
-import FormGrid from './../form_grid/form_grid'
+// import BasicTable from '../table'
+// import Aladin from './../aladin'
+import RGLFormGrid from '../form_grid/rgl_form_grid'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     textAlign: 'left',
@@ -156,14 +156,14 @@ export default function JsonBlockViewer(props: Props) {
       </Grid>
       <Grid item xs={8}>
         <Paper className={classes.widepaper}>
-          <FormGrid 
+          <RGLFormGrid 
             ob={ob}
             setOB={setOB} />
           {/* <OBForm
             ob={ob}
             setOB={setOB} /> */}
         </Paper>
-      </Grid>
+        </Grid>
       {/* <Grid item xs={3}>
         <Paper className={classes.paper}>
           <Aladin />

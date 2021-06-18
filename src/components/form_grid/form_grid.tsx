@@ -8,8 +8,12 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 import GridLayout, { Layout, WidthProvider } from 'react-grid-layout';
 import { IconButton } from '@material-ui/core';
+import AspectRatio from '@material-ui/icons/AspectRatio'
+import { withSize } from 'react-sizeme';
 
-const AutoGridLayout = WidthProvider(GridLayout)
+//const AutoGridLayout = WidthProvider(GridLayout)
+const withHeightWidth = withSize({monitorHeight: true, monitorWidth: true})
+const AutoGridLayout = withHeightWidth(GridLayout)
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -23,23 +27,38 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-interface AccordianProps {
+interface Size {
+    width: number,
+    height: number
+}
+
+interface withHeightWidthProps {
+    size?: Size
+}
+
+interface AccordianProps extends withHeightWidthProps {
     id: string
     handleExpand: Function
     label: string
 }
 
-const Accordian = (props: AccordianProps) => {
+const Accordian = withHeightWidth((props: AccordianProps) => {
     const classes = useStyles()
     const ref = useRef(null)
-
     const handleOpenClose = (e: any) => {
         setTimeout(() => { // wait for animation
-            const curr = ref.current as any
-            const height = curr.clientHeight
-            props.handleExpand(props.id, height)
+            // const curr = ref.current as any
+            // const height = curr.clientHeight
+            props.handleExpand(props.id, props.size?.height)
         }, 300)
     }
+
+    const handleClick = (e: any) => {
+        console.log('drag clicked')
+        e.stopPropagation()
+
+    }
+
     return (<Accordion ref={ref}
         onChange={handleOpenClose}
 
@@ -50,11 +69,9 @@ const Accordian = (props: AccordianProps) => {
             id="panel1a-header"
             aria-label="Expand"
         >
-            <div className="dragme">
-                <IconButton aria-label='copy'>
+                <IconButton className="dragme" aria-label='open' onClick={handleClick}>
                     <OpenWithIcon />
                 </IconButton>
-            </div>
             <Typography className={classes.heading}>Accordion {props.label}</Typography>
         </AccordionSummary>
         <AccordionDetails>
@@ -64,22 +81,23 @@ const Accordian = (props: AccordianProps) => {
             </Typography>
         </AccordionDetails>
     </Accordion>)
-}
+})
 
 const getLayouts = () => {
     const layouts: Layout[] = [
-        { i: 'acquisition', x: 0, y: 0, w: 2, h: 2 },
-        { i: 'science1', x: 2, y: 0, w: 2, h: 2 },
-        { i: 'science2', x: 4, y: 0, w: 2, h: 2 },
-        { i: 'target', x: 0, y: 3, w: 2, h: 2 }
+        { i: 'acquisition', x: 0, y: 0, w: 1, h: 1 },
+        { i: 'science1', x: 1, y: 0, w: 1, h: 1 },
+        { i: 'science2', x: 2, y: 0, w: 1, h: 1 },
+        { i: 'target', x: 0, y: 1, w: 1, h: 1 }
     ]
     return layouts
 }
 
 export default function FormGrid(props: any) {
     const initLayout = getLayouts() //TODO: get layouts
-    const rowHeight: number = 35
+    const rowHeight: number = 55
 
+    console.log('setting layout to default')
     const [layout, setLayout] = useState(initLayout)
     const templates = ['acquisition', 'science1', 'science2', 'target']
 
@@ -87,8 +105,16 @@ export default function FormGrid(props: any) {
         return Math.ceil(height / rowHeight)
     }
 
-    const handleResize = (id: string, newHeight: number) => {
-        console.log('resize event triggered')
+    const emitResized = ()=> {
+        console.log('emitting resize event')
+        let evt = document.createEvent("HTMLEvents");
+        evt.initEvent('resize', true, false);
+        window.dispatchEvent(evt);
+        console.log(evt)
+    }
+
+    const handleExpand = (id: string, newHeight: number) => {
+        console.log('accordian expanded')
         console.log(id)
         console.log(newHeight)
         const newRowHeight = calcRowHeight(newHeight)
@@ -102,20 +128,43 @@ export default function FormGrid(props: any) {
         })
         console.log(newLayout)
         console.log(`setting new Layout height`)
-
         setLayout(newLayout)
+        emitResized()
+    }
+
+
+    const handleResize = ( layout: Layout[], oldItem: Layout, newItem: Layout,
+        placeholder: Layout,
+        event: MouseEvent,
+        element: HTMLElement,
+    ):void => {
+        console.log('resize triggered')
+        console.log(layout)
+        console.log(oldItem)
+        console.log(newItem)
+        console.log(placeholder)
+        console.log(event)
+        console.log(element)
+    }
+
+    const handleLayoutChange = (layout: Layout[]) => {
+        console.log('layout changed event')
     }
 
     return (
+        <div style={{position: "relative"}}>
         <AutoGridLayout
             className="layout"
             layout={layout}
-            cols={6}
+            cols={3}
             rowHeight={rowHeight}
             width={1200}
             draggableHandle=".dragme"
             compactType="vertical"
-            isBounded={true}
+            //preventCollision={true}
+            //isBounded={true}
+            onLayoutChange={handleLayoutChange}
+            onResizeStop={handleResize}
             resizeHandles={['se']}
             resizeHandle={<ResizeHandle />}
             containerPadding={[5, 5]}
@@ -127,11 +176,12 @@ export default function FormGrid(props: any) {
                     }
                     }
                 >
-                    <Accordian label={id} id={id} handleExpand={handleResize} />
+                    <Accordian label={id} id={id} handleExpand={handleExpand} />
                 </div>
             )
             )}
         </AutoGridLayout>
+        </div>
     )
 }
 
@@ -145,11 +195,17 @@ const ResizeHandle = React.forwardRef((props: any, ref: any) => {
           position: "absolute",
           width: "20px",
           height: "20px",
-          backgroundColor: "red",
           bottom: 0,
           right: 0,
           cursor: "se-resize"
+        }}>
+        <IconButton aria-label="resize"
+        onClick={ e => {
+            e.stopPropagation()
         }}
-      />
+        >
+            <AspectRatio></AspectRatio>
+        </IconButton>
+        </div>
     );
   });
