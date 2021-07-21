@@ -135,7 +135,7 @@ export const uiOverviewSchema: UiSchema = {
   }
 }
 
-const uiAcquisitionSchema: UiSchema = {
+export const uiAcquisitionSchema: UiSchema = {
     version: {
       "ui:readonly": true,
       "ui:hidden": true

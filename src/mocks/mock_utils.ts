@@ -1,4 +1,4 @@
-import { Instrument, ObservationBlock } from './../typings/papahana.d';
+import { Instrument, ObservationBlock, Template } from './../typings/papahana.d';
 // import { mock_kcwi_instrument_package } from './mock_template';
 
 // import { mock_observation_blocks } from './mock_obs'
@@ -18,6 +18,14 @@ const mockPromise = new Promise<InstrumentPackage>( (resolve) => {
    resolve(ip)
 })
 return mockPromise
+}
+
+export const mock_get_template = (name: string): Promise<Template[]> => {
+   const mockPromise = new Promise<Template[]>( (resolve) => {
+      const template = mock_templates.find(t => t.metadata.name === name) as any 
+      resolve([template])
+   })
+   return mockPromise
 }
 
 export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {

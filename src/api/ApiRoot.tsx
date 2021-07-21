@@ -3,8 +3,8 @@
 
 import axios from 'axios';
 import { handleResponse, handleError } from './response';
-import { Container, ObservationBlock, Semester, Instrument, InstrumentPackage } from './../typings/papahana'
-import { mock_get_instrument_package, mock_get_containers, mock_get_observation_block_from_controller, mock_get_semesters, mock_ob_get } from '../mocks/mock_utils';
+import { Container, ObservationBlock, Semester, Instrument, InstrumentPackage, Template } from './../typings/papahana'
+import { mock_get_instrument_package, mock_get_template, mock_get_containers, mock_get_observation_block_from_controller, mock_get_semesters, mock_ob_get } from '../mocks/mock_utils';
 
 
 // Define your api url from any source.
@@ -18,6 +18,7 @@ var OB_URL = BASE_URL + 'obsBlocks?'
 var CONTAINER_URL = BASE_URL + 'containers/items'
 var SEMESTERS_URL = BASE_URL + 'semesterIds'
 var INSTRUMENT_URL = BASE_URL + '/instrumentPackages'
+var TEMPLATE_URL = BASE_URL + '/templates'
 
 console.log('backend url set to')
 console.log(BASE_URL)
@@ -35,6 +36,16 @@ const get_semesters = (observer_id: string): Promise<Semester[]> => {
 const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
     // 'http://vm-webtools.keck.hawaii.edu:50000/v0/instrumentPackages/KCWI'
     const url = `${INSTRUMENT_URL}/${instrument}`
+    return axios
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
+
+
+const get_template = (name: string): Promise<Template[]> => {
+    // 'http://vm-webtools.keck.hawaii.edu:50000/v0/templates?name=KCWI_ifu_acq_offsetStar
+    const url = `${TEMPLATE_URL}?name=${name}`
     return axios
         .get(url)
         .then(handleResponse)
@@ -91,6 +102,7 @@ const remove = (resource: string, api_type: string ): Promise<any> => {
 
 
 export const get_select_funcs = {
+    get_template: process.env.NODE_ENV === 'production'? get_template : mock_get_template,
     get_semesters: process.env.NODE_ENV === 'production'? get_semesters : mock_get_semesters,
     get_containers: process.env.NODE_ENV === 'production'? get_containers : mock_get_containers,
     get_observation_blocks_from_container: process.env.NODE_ENV === 'production'? get_observation_blocks_from_container : mock_get_observation_block_from_controller,

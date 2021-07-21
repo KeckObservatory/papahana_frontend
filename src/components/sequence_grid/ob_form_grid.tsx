@@ -96,6 +96,7 @@ export default function RGLFormGrid(props: FormGridProps) {
                 const formChild = createForm(componentName, formData)
                 return createAccordianDiv(lo, formChild)
             })
+            console.log('inside RGLFormGrid. init accoridan items')
             console.log(newAccordItems[0])
             setTimeout(() => {
                 setAccordItems(newAccordItems)

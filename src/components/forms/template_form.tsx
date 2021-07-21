@@ -1,12 +1,17 @@
 
 
 import React, { } from "react"
-import { ObservationBlock, Template, OBComponent, OBComponentNames, TemplateParameter } from "../../typings/papahana"
+import { Template, OBComponent, OBComponentNames, TemplateParameter } from "../../typings/papahana"
 import { ISubmitEvent } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { makeStyles, Theme } from "@material-ui/core";
+import * as sch from './schemas'
+import { get_template } from "../../api/utils";
+import { UiSchema } from "react-jsonschema-form";
+
+
 export const useStyles = makeStyles( (theme: Theme) => ({
   root: {
       textAlign: 'left',
@@ -26,27 +31,53 @@ export const useStyles = makeStyles( (theme: Theme) => ({
 
 interface Props {
     formData?: OBComponent,
-    updateOB: Function
+    updateOB: Function,
     componentName: OBComponentNames 
 }
 export const log = (type: any) => console.log.bind(console, type);
 
-const getUiSchemaAndTemplate = ( componentName: OBComponentNames ): [object, Template ]=> {
+const getUiSchema = (componentName: OBComponentNames): UiSchema => {
+  let uiSchema: UiSchema 
   switch(componentName) { 
-      case 'science': { 
+      case 'sequences': { 
+        uiSchema = sch.uiScienceSchema
         break;
       } 
       case 'acquisition': { 
+        uiSchema = sch.uiAcquisitionSchema
         break;
       } 
-      case 'signature': { 
+      default: {
+        console.log(`componentName ${componentName} not found`)
+        uiSchema = {}
         break;
-      } 
-      case 'target': { 
-        break;
-      } 
+      }
   } 
-  return [{}, {} as Template] 
+  return uiSchema
+}
+
+const getUiSchemaAndTemplate = async ( templateName: string, componentName: OBComponentNames ): Promise<[object, Template ]> => {
+  console.log('getting uiSchema and Template')
+  console.log(componentName)
+  let template: Template[] = await get_template(templateName)
+  let uiSchema: object
+  switch(componentName) { 
+      case 'sequences': { 
+        uiSchema = sch.uiScienceSchema
+        break;
+      } 
+      case 'acquisition': { 
+        uiSchema = sch.uiAcquisitionSchema
+        break;
+      } 
+      default: {
+        console.log(`componentName ${componentName} not found`)
+        uiSchema = {}
+        break;
+      }
+  } 
+
+  return [uiSchema, template[0]]
 }
 
 
@@ -72,6 +103,8 @@ const parameter_to_schema_properties = ( key:string, param: TemplateParameter): 
 
 const template_to_schema = ( template: Template ): JSONSchema7 => {
   let schema: Partial<JsonSchema> = {}
+  console.log('inside template_to_schema')
+  console.log(template)
   schema.title = template.metadata.ui_name
   schema.type = 'object'
   let required: string[] = []
@@ -90,9 +123,15 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
 export default function TemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
 
-  const [uiSchema, initTemplate]: [object, Template] = getUiSchemaAndTemplate(props.componentName)
-  const schema = template_to_schema(initTemplate)
-  const [ template, setTemplate ] = React.useState(initTemplate)
+  let uiSchema = sch.uiTargetSchema; 
+  const [schema, setSchema] = React.useState(sch.targetSchema as JSONSchema7)
+  if (props.componentName !== 'target') {
+    const templateName = props.formData.metadata.name as string
+    uiSchema = getUiSchema(props.componentName)
+    get_template(templateName).then( (templates: Template[]) => {
+      setSchema((templates[0] as JSONSchema7))
+    }, )
+  }
 
   const handleChange = ( evt: ISubmitEvent<OBComponent>): void => {
     let newFormData = {...evt.formData}  
@@ -103,8 +142,8 @@ export default function TemplateForm(props: Props): JSX.Element {
 return(
   <div className={classes.root}>
   <Form className={classes.form} 
-        schema={schema }
-        uiSchema={uiSchema}
+        schema={schema}
+        uiSchema={uiSchema as any}
         formData={props.formData}
         onChange={handleChange}
         onError={log("errors")} />

@@ -1,4 +1,4 @@
-import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage } from "../typings/papahana";
+import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template } from "../typings/papahana";
 import { api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 
@@ -16,6 +16,15 @@ export const get_instrument_package = ( instrument: Instrument ): Promise<Instru
    const promise = new Promise<InstrumentPackage>( (resolve) => {
       get_select_funcs.get_instrument_package(instrument).then( (instrumentPackage: InstrumentPackage) => {
         resolve(instrumentPackage)
+      })
+   })
+   return promise
+}
+
+export const get_template = ( name: string ): Promise<Template[]> => {
+   const promise = new Promise<Template[]>( ( resolve ) => {
+      get_select_funcs.get_template( name ).then( (templates: Template[] ) => {
+         resolve(templates)
       })
    })
    return promise

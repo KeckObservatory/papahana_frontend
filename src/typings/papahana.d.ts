@@ -20,7 +20,7 @@ export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBComponent = Target | Acquisition | Science[] | Signature
-export type OBComponentNames = 'acquisition' | 'science' | 'target' | 'signature' | 'target' | 'sequences'
+export type OBComponentNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
 
 export type OBComponent = Science[] | Acquisition | Target | undefined
 export type OBType = 'science' | 'engineering' | 'calibration'
@@ -144,15 +144,8 @@ export interface Observation extends Base {
 	associations: string[],
 }
 
-export interface Signature extends Base {
-	name: string,
-	instrument: Instrument,
-	pi_id: number,
-	sem_id: string,
-	observer_ids?: string[],
-}
-
 export interface Target {
+
 	name: string,
 	ra: string,
 	dec: string,
