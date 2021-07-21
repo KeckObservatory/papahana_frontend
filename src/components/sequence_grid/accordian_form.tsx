@@ -24,7 +24,7 @@ interface AccordianProps extends withHeightWidthProps {
     id: string
     handleExpand: Function
     name: string
-    formChild: JSX.Element;
+    children?: React.ReactNode
 }
 
 
@@ -100,7 +100,7 @@ export const Accordian = withSize({monitorHeight: true})((props: AccordianProps)
                 <Typography variant={"h6"} className={classes.heading}>{props.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-                {props.formChild}
+                {props.children}
             </AccordionDetails>
         </Accordion>)
 })

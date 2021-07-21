@@ -10,9 +10,12 @@ export interface JSProperty {
   comment?: string
   required?: array
   uniqueItems?: boolean
+  default?: number | string | null | undefined
   enum?: array
   items?: Items | JsonSchema
   properties?: OBJsonSchemaProperties
+  minimum?: string | number | undefined
+  maximum?: string | number | undefined
 }
 
 export interface OBJsonSchemaProperties {
@@ -20,10 +23,11 @@ export interface OBJsonSchemaProperties {
 }
 
 export interface JsonSchema {
-  title?: string
-  type: string
-  required?: string[]
-  items?: object,
-  properties?: OBJsonSchemaProperties 
+  title?: string;
+  type: string;
+  required?: any;
+  items?: object;
+  properties?: OBJsonSchemaProperties; 
+  [key: string]: string | any;
 }
 

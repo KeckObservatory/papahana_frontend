@@ -19,8 +19,11 @@ export type Method = 'get' | 'put' | 'post' | 'remove'
 export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
-export type OBComponent = Target | Acquisition | Observation | Signature
+export type OBComponent = Target | Acquisition | Science[] | Signature
+export type OBComponentNames = 'acquisition' | 'science' | 'target' | 'signature' | 'target' | 'sequences'
 
+export type OBComponent = Science[] | Acquisition | Target | undefined
+export type OBType = 'science' | 'engineering' | 'calibration'
 export interface Base {
 	comment?: string
 }
@@ -38,18 +41,29 @@ export interface Scoby {
     name?: string
 }
 
+export interface OBMetadata {
+	name: string;
+	version: string | number;
+	priority: number;
+	ob_type: OBType; 
+	pi_id: number;
+	sem_id: string;
+	instrument: Instrument;
+	comment: string
+}
+
+
 export interface ObservationBlock extends Base {
 	_id: string,
-	target?: Target,
-	instrument?: Instruement,
-	version?: string,
-	science?: Science[],
-	acquisition: Acquisition,
-	associations: string[],
-	observation_type?: string[],
-	signature: Signature
-	priority?: number
-	status: Status 
+	metadata: OBMetadata;
+	target?: Target;
+	associations: string[];
+	time_constraints: string[] | string[][];
+	comment: string;
+	sequences?: Science[];
+	acquisition: Acquisition;
+	associations: string[];
+	status: Status;
 }
 
 export type Acquisition = DefaultAcquisition | KCWIAcquisition
@@ -89,18 +103,34 @@ export interface Dither extends Base {
 
 export type Science = KCWIScience
 
-export interface KCWIScience extends Base {
+export interface KCWIScienceParameters {
+    [key: string]: number | string | Slicer | Grating | any
+	// det1_exptime: number,
+	// det1_nexp: number,
+	// det2_exptime: number,
+	// det2_nexp: number,
+	// seq_ditarray?: Dither,
+	// seq_ndither?: number,
+	// cfg_cam_grating: Grating,
+	// cfg_cam_cwave: number,
+	// cfg_slicer: Slicer
+}
+
+export interface Metadata {
 	name: string,
 	version: string,
-	det1_exptime: number,
-	det1_nexp: number,
-	det2_exptime: number,
-	det2_nexp: number,
-	seq_ditarray?: Dither,
-	seq_ndither?: number,
-	cfg_cam_grating: Grating,
-	cfg_cam_cwave: number,
-	cfg_slicer: Slicer
+	ui_name: string,
+	instrument: Instrument,
+    template_type: string,
+	script: string
+}
+
+export interface ScienceMetadata extends Metadata {
+}
+
+export interface KCWIScience extends Base {
+	metadata: ScienceMetadata;
+	parameters: KCWIScienceParameters;
 }
 
 export interface DefaultScience extends Base{
@@ -152,10 +182,11 @@ export type InstrumentPackage = KCWIInstrumentPackage
 
 interface KCWIInstrumentPackage extends Base {
   instrument: Instrument
-  version: string
+  version: string | number
   modes: string[]
   cameras: Cameras[]
   templates: InstrumentPackageTemplates
+  configuration_parameters: object[]
 }
 
 export type CameraName = "BLUE" | "RED"
@@ -168,18 +199,33 @@ export interface Cameras extends object {
   detector: string
 }
 
+export interface TemplateEntry {
+	name: string;
+	version: string
+}
+
 export interface InstrumentPackageTemplates {
-  [key: string]: Template[] 
+  [key: string]: TemplateEntry[] 
 }
 
 export type TemplateType = "acq" | "sci" | "config"
 
+export interface TemplateMetadata extends Metadata {
+
+}
+
+export interface TemplateParameter {
+  ui_name: string;
+  option: string;
+  allowed: string[] | number[];
+  default: string | number | null;
+  type: string;
+  optionality: string;
+}
+
 export interface Template {
-  name: string,
-  instrument: Instrument,
-  type: TemplateType,
-  schema: JsonSchema
-  version: number
-  wrap?: string
-  rotmode?: string
+	_id: string;
+	metadata: TemplateMetadata;
+	parameters: {[key: string]: TemplateParameter};
+    name: string,
 }

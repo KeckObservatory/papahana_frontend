@@ -1,16 +1,7 @@
-import React from "react"
-import { Target } from "./../../typings/papahana"
-import * as obt from './../../typings/ob_json_form'
-import { ISubmitEvent, UiSchema  } from "@rjsf/core";
-import Form from '@rjsf/material-ui'
-import {useStyles, FormProps, log} from './ob_form'
+import { UiSchema } from "react-jsonschema-form"
+import { JsonSchema } from "../../typings/ob_json_form"
 
-
-const uiTargetSchema: UiSchema = {
-
-}
-
-const targetSchema: obt.JsonSchema = {
+export const targetSchema: JsonSchema = {
   title: "Target",
   type: "object",
   required: ["name", "ra", "dec",
@@ -105,33 +96,85 @@ const targetSchema: obt.JsonSchema = {
   }
 }
 
-export default function TargetForm(props: FormProps) {
-  const classes = useStyles()
-  log(props.ob.target)
-  const setTarget = (tgt: Target) => {
-    let newOb = {...props.ob}
-    newOb.target = tgt
-    props.setOB(newOb)
-  }
-    const handleSubmit = ( evt: ISubmitEvent<Target>): void => {
-    setTarget(evt.formData)
-  }
-return(
-  <div className={classes.root}>
-  <Form className={classes.form} 
-        schema={props.schema}
-        uiSchema={props.uiSchema}
-        formData={props.ob.target}
-        onChange={handleSubmit}
-        onSubmit={handleSubmit}
-        onError={log("errors")} />
-  </div>
-)}
+export const uiTargetSchema: UiSchema = { }
 
-
-const defaultTargetProps = {
-  schema: targetSchema,
-  uiSchema: uiTargetSchema
+export const uiStatusSchema: UiSchema = {
+  executions: {
+    "ui:readonly": true,
+    "ui:widget": "hidden"
+  },
+  state: {
+    "ui:readonly": true,
+  }
 }
 
-TargetForm.defaultProps = defaultTargetProps
+export const uiSignatureSchema: UiSchema = {
+  pi_id: {
+    "ui:readonly": true,
+    "ui:widget": "hidden"
+  },
+  comment: {
+    "ui:widget": "textarea",
+    "ui:options": {
+      rows: 2
+    },
+  }
+}
+export const uiOverviewSchema: UiSchema = {
+  version: {
+    "ui:readonly": true,
+    "ui:widget": "hidden"
+  },
+  signature: uiSignatureSchema,
+  status: uiStatusSchema,
+  comment: {
+    "ui:widget": "textarea",
+    "ui:options": {
+      rows: 2
+    },
+  }
+}
+
+const uiAcquisitionSchema: UiSchema = {
+    version: {
+      "ui:readonly": true,
+      "ui:hidden": true
+    },
+    guider_po: {
+        "ui:widget": "radio",
+        "ui:options": {
+          "inline": true
+        }
+      },
+    guider_gs_mode: {
+        "ui:widget": "radio",
+        "ui:options": {
+          "inline": true
+        }
+      },
+}
+
+export const uiScienceSchema: UiSchema = {
+  version: {
+    "ui:readonly": true,
+    "ui:widget": "hidden"
+  },
+  cfg_cam_grating: {
+    "ui:widget": "radio",
+    "ui:options": {
+        "inline": true
+    },
+  },
+  cfg_slicer: {
+    "ui:widget": "radio",
+    "ui:options": {
+        "inline": true
+    }
+  },
+  comment: {
+    "ui:widget": "textarea",
+    "ui:options": {
+      rows: 2
+    },
+  }
+}

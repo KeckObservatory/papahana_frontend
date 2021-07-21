@@ -13,6 +13,7 @@
 
 # environment variables
 .env
+.vscode/
 
 # misc
 .DS_Store

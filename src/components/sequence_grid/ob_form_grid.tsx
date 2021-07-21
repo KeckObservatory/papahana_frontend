@@ -1,12 +1,15 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React from 'react'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
 import { Accordian } from './accordian_form';
-import TemplateForm from './../forms/template_form';
+import TemplateForm from '../forms/template_form';
+import { ObservationBlock, OBComponent, OBComponentNames } from '../../typings/papahana';
 
-const rowHeight: number = 45 
+const rowHeight: number = 45
 const AutoGridLayout = WidthProvider(RGL)
+
+const obComponentNames: OBComponentNames[] = ['acquisition', 'science', 'signature', 'target']
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -46,9 +49,9 @@ const initLayout = (items: string[]): Layout[] => {
 }
 
 interface FormGridProps {
-    compactType: CompactType
-    queries: string[]
-    setQueries: Function
+    compactType: CompactType;
+    ob: ObservationBlock;
+    setOB: Function;
 }
 
 const defaultProps = {
@@ -59,13 +62,23 @@ const calcRowHeight = (height: number): number => {
     return Math.ceil(height / rowHeight)
 }
 
-const createForm = (lo: Layout): JSX.Element => {
-    return <div><p>filler untill better form fits</p></div> 
+
+
+const parseSequence = (sq: OBComponent) => {
+
 }
 
 export default function RGLFormGrid(props: FormGridProps) {
+
     const classes = useStyles()
-    let layout = initLayout(props.queries)
+
+    const templateTypes: string[] = obComponentNames.map((componentName: OBComponentNames) => {
+        if (componentName in props.ob) {
+            return componentName
+        }
+    }) as string[]
+
+    let layout = initLayout(templateTypes)
     layout = sortLayoutItems(layout, props.compactType)
     const defaultRowHeight = calcRowHeight(rowHeight)
 
@@ -78,19 +91,29 @@ export default function RGLFormGrid(props: FormGridProps) {
             console.log(layout)
 
             const newAccordItems = layout.map((lo: Layout) => {
-                    const formChild = createForm(lo)
-                    return createAccordianDiv(lo, formChild)
-                }
-                )
-            console.log( newAccordItems[0])
+                const componentName = lo.i as OBComponentNames 
+                const formData = props.ob[componentName as keyof ObservationBlock ] as OBComponent
+                const formChild = createForm(componentName, formData)
+                return createAccordianDiv(lo, formChild)
+            })
+            console.log(newAccordItems[0])
             setTimeout(() => {
                 setAccordItems(newAccordItems)
             }, 300);
         }
     }, [])
-    // if (layout.length > 0) {
-    //     layout = resolveCollision(layout, layout[0], defaultRowHeight, layout[0].y, 'y') // push other items down
-    // }
+    
+
+    const createForm = (componentName: OBComponentNames, formData: OBComponent): JSX.Element => {
+        return <TemplateForm updateOB={updateOB} componentName={componentName} formData={formData} />
+    }
+
+    const updateOB = (componentName: OBComponentNames, formData: OBComponent) => {
+        console.log(`component: ${componentName} getting updated`)
+        let newOB = {...props.ob} as ObservationBlock | any 
+        newOB[ componentName as keyof ObservationBlock ] = formData        
+        props.setOB(newOB)
+    }
 
     let myRef = React.useRef(null)
 
@@ -110,13 +133,15 @@ export default function RGLFormGrid(props: FormGridProps) {
         }
     }
 
-    const createAccordianDiv = (lo: Layout, formChild: JSX.Element ) => {
+    const createAccordianDiv = (lo: Layout, formChild: JSX.Element) => {
         return (
             <div data-grid={lo} className={classes.cell} key={lo.i} draggable={true}
                 onDragStart={(e: any) => { e.dataTransfer.setData('text/plain', '') }
                 }
             >
-                <Accordian name={lo.i} id={lo.i} handleExpand={handleExpand} formChild={formChild} />
+                <Accordian name={lo.i} id={lo.i} handleExpand={handleExpand}>
+                  {formChild}
+                </Accordian>
             </div>
         )
     }
@@ -134,7 +159,7 @@ export default function RGLFormGrid(props: FormGridProps) {
     return (
         <div className={classes.templateAccordian} style={{ position: "relative" }}>
             <AutoGridLayout
-                ref = {myRef}
+                ref={myRef}
                 className="layout"
                 cols={1}
                 rowHeight={rowHeight}

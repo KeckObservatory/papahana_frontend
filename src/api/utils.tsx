@@ -41,7 +41,7 @@ const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]
          const [sem_id, cid] = sem_con
          const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
          obs.forEach( (ob: ObservationBlock) => {
-            const row = { sem_id: sem_id, container_id: cid, ob_id: ob._id, name: ob.signature.name} as Scoby
+            const row = { sem_id: sem_id, container_id: cid, ob_id: ob._id, name: ob.metadata.name} as Scoby
             rows.push(row)
             })
       })

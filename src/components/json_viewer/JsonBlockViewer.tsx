@@ -15,7 +15,7 @@ import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
 // import BasicTable from '../table'
 // import Aladin from './../aladin'
-import RGLFormGrid from '../form_grid/rgl_form_grid'
+import RGLFormGrid from '../sequence_grid/ob_form_grid'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     textAlign: 'left',
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     elevation: 3,
     minWidth: theme.spacing(150)
   },
-  DnDGrid: {
+  dndGrid: {
     minWidth: theme.spacing(200)
   }
 }))
@@ -158,6 +158,7 @@ export default function JsonBlockViewer(props: Props) {
         <Paper className={classes.widepaper}>
           <RGLFormGrid 
             ob={ob}
+            compactType={'vertical'}
             setOB={setOB} />
           {/* <OBForm
             ob={ob}

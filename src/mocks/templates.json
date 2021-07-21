@@ -1,0 +1,393 @@
+[
+	{
+		"_id" : "60ca8be7be14cb54bd4ef3ee",
+		"metadata" : {
+			"name" : "KCWI_ifu_acq_offsetStar",
+			"ui_name" : "KCWI direct",
+			"instrument" : "KCWI",
+			"template_type" : "acquisition",
+			"version" : 0.1,
+			"script" : "KCWI_ifu_acq_direct"
+		},
+		"parameters" : {
+			"wrap" : {
+				"ui_name" : "Rotator Wrap Position",
+				"option" : "list",
+				"allowed" : [
+					"south",
+					"north",
+					"auto"
+				],
+				"default" : "auto",
+				"optionality" : "optional",
+				"type" : "string"
+			},
+			"rotmode" : {
+				"ui_name" : "Rotator Mode",
+				"option" : "list",
+				"allowed" : [
+					"PA",
+					"stationary",
+					"vertical_angle"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string"
+			},
+			"guider_po" : {
+				"ui_name" : "Pointing origin",
+				"option" : "list",
+				"allowed" : [
+					"REF",
+					"IFU"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string"
+			},
+			"ra_offset" : {
+				"ui_name" : "The offset from coordinates to get to the target",
+				"option" : "range",
+				"allowed" : [
+					0,
+					2000
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "float"
+			},
+			"dec_offset" : {
+				"ui_name" : "The offset from coordinates to get to the target",
+				"option" : "range",
+				"allowed" : [
+					0,
+					2000
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "float"
+			},
+			"guider_gs_ra" : {
+				"ui_name" : "Guide Star Right Ascension",
+				"option" : "range",
+				"allowed" : [
+					0,
+					24
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "string"
+			},
+			"guider_gs_dec" : {
+				"ui_name" : "Guide Star Declination",
+				"option" : "range",
+				"allowed" : [
+					-90,
+					90
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "string"
+			},
+			"guider_gs_mode" : {
+				"ui_name" : "Guide Star Selection Mode",
+				"option" : "list",
+				"allowed" : [
+					"auto",
+					"operator",
+					"user"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string"
+			}
+		}
+	},
+	{
+		"_id" : "60ca8be7be14cb54bd4ef3ef",
+		"metadata" : {
+			"name" : "KCWI_ifu_acq_direct",
+			"ui_name" : "KCWI direct",
+			"instrument" : "KCWI",
+			"template_type" : "acquisition",
+			"version" : 0.1,
+			"script" : "KCWI_ifu_acq_direct"
+		},
+		"parameters" : {
+			"wrap" : {
+				"ui_name" : "Rotator Wrap Position",
+				"option" : "list",
+				"allowed" : [
+					"south",
+					"north",
+					"auto"
+				],
+				"default" : "auto",
+				"optionality" : "optional",
+				"type" : "string"
+			},
+			"rotmode" : {
+				"ui_name" : "Rotator Mode",
+				"option" : "list",
+				"allowed" : [
+					"PA",
+					"stationary",
+					"vertical_angle"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string"
+			},
+			"guider_po" : {
+				"ui_name" : "Pointing origin",
+				"option" : "list",
+				"allowed" : [
+					"REF",
+					"IFU"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string"
+			},
+			"ra_offset" : {
+				"ui_name" : "The offset from coordinates to get to the target",
+				"option" : "range",
+				"allowed" : [
+					0,
+					2000
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "float"
+			},
+			"dec_offset" : {
+				"ui_name" : "The offset from coordinates to get to the target",
+				"option" : "range",
+				"allowed" : [
+					0,
+					2000
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "float"
+			},
+			"guider_gs_ra" : {
+				"ui_name" : "Guide Star Right Ascension",
+				"option" : "range",
+				"allowed" : [
+					0,
+					24
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "string"
+			},
+			"guider_gs_dec" : {
+				"ui_name" : "Guide Star Declination",
+				"option" : "range",
+				"allowed" : [
+					-90,
+					90
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "string"
+			},
+			"guider_gs_mode" : {
+				"ui_name" : "Guide Star Selection Mode",
+				"option" : "list",
+				"allowed" : [
+					"auto",
+					"operator",
+					"user"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string"
+			}
+		}
+	},
+	{
+		"_id" : "60ca8be7be14cb54bd4ef3f0",
+		"metadata" : {
+			"name" : "KCWI_ifu_sci_stare",
+			"ui_name" : "KCWI stare",
+			"instrument" : "KCWI",
+			"template_type" : "science",
+			"version" : 0.1,
+			"script" : "KCWI_ifu_sci_stare"
+		},
+		"parameters" : {
+			"det1_exptime" : {
+				"ui_name" : "Blue exposure time",
+				"option" : "range",
+				"allowed" : [
+					0,
+					3600
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float"
+			},
+			"det1_nexp" : {
+				"ui_name" : "Blue number of exposures",
+				"option" : "range",
+				"allowed" : [
+					0,
+					3600
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer"
+			},
+			"det2_exptime" : {
+				"ui_name" : "Red exposure time",
+				"option" : "range",
+				"allowed" : [
+					0,
+					3600
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "float"
+			},
+			"det2_nexp" : {
+				"ui_name" : "Blue number of exposures",
+				"option" : "range",
+				"allowed" : [
+					0,
+					3600
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "integer"
+			}
+		}
+	},
+	{
+		"_id" : "60ca8be7be14cb54bd4ef3f1",
+		"metadata" : {
+			"name" : "KCWI_ifu_sci_dither",
+			"ui_name" : "KCWI dither",
+			"instrument" : "KCWI",
+			"template_type" : "science",
+			"version" : 0.1,
+			"script" : "KCWI_ifu_sci_stare"
+		},
+		"parameters" : {
+			"det1_exptime" : {
+				"ui_name" : "Blue exposure time for individual exposures",
+				"option" : "range",
+				"allowed" : [
+					0,
+					3600
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float"
+			},
+			"det1_nexp" : {
+				"ui_name" : "Blue number of exposures per dither position",
+				"option" : "range",
+				"allowed" : [
+					0,
+					100
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer"
+			},
+			"det2_exptime" : {
+				"ui_name" : "Red exposure time for individual exposures",
+				"option" : "range",
+				"allowed" : [
+					0,
+					3600
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "float"
+			},
+			"det2_nexp" : {
+				"ui_name" : "Blue number of exposures per dither position",
+				"option" : "range",
+				"allowed" : [
+					0,
+					100
+				],
+				"default" : null,
+				"optionality" : "optional",
+				"type" : "integer"
+			},
+			"seq_ndither" : {
+				"ui_name" : "Number of dither positions",
+				"option" : "range",
+				"allowed" : [
+					0,
+					100
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer"
+			},
+			"seq_ditarray" : {
+				"ui_name" : "Dither Pattern",
+				"option" : "list",
+				"default" : null,
+				"optionality" : "required",
+				"type" : "array",
+				"allowed" : [
+					{
+						"ra" : {
+							"ui_name" : "Right Ascension Offset",
+							"option" : "range",
+							"allowed" : [
+								-4000,
+								4000
+							],
+							"default" : null,
+							"optionality" : "required",
+							"type" : "float"
+						}
+					},
+					{
+						"dec" : {
+							"ui_name" : "Declination Offset",
+							"option" : "range",
+							"allowed" : [
+								-4000,
+								4000
+							],
+							"default" : null,
+							"optionality" : "required",
+							"type" : "float"
+						}
+					},
+					{
+						"position" : {
+							"ui_name" : "Telescope Position",
+							"option" : "list",
+							"allowed" : [
+								"T",
+								"S",
+								"O"
+							],
+							"default" : null,
+							"optionality" : "required",
+							"type" : "string"
+						}
+					},
+					{
+						"guided" : {
+							"ui_name" : "Guided",
+							"option" : "boolean",
+							"default" : true,
+							"optionality" : "required",
+							"type" : "boolean"
+						}
+					}
+				]
+			}
+		}
+	}
+]
