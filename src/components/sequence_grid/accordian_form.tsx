@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef } from 'react'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -9,6 +9,7 @@ import OpenWithIcon from '@material-ui/icons/OpenWith';
 import { withSize } from 'react-sizeme'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { ObservationBlock } from "../../typings/papahana"
+import { setState } from 'react-jsonschema-form/lib/utils';
 
 export type FormNames = keyof ObservationBlock 
 
@@ -25,6 +26,7 @@ interface AccordianProps extends withHeightWidthProps {
     handleExpand: Function
     name: string
     children?: React.ReactNode
+    expanded?: boolean
 }
 
 
@@ -59,10 +61,13 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export const Accordian = withSize({monitorHeight: true})((props: AccordianProps) => {
+const withHeight = withSize({monitorHeight: true}) 
+
+
+export const Accordian = withHeight((props: AccordianProps) => {
+    const defaultExpanded = true
     const classes = useStyles()
     const ref = useRef(null)
-    console.log(props)
 
     React.useEffect( () => {
         if (ref) {
@@ -74,17 +79,18 @@ export const Accordian = withSize({monitorHeight: true})((props: AccordianProps)
         }
     }, [])
 
-    const handleOpenClose = (e: any) => {
+    const handleOpenClose = (e: any, expanded: boolean) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
             const height = curr.clientHeight
-            props.handleExpand(props.id, height)
-        }, 300)
+            console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
+            props.handleExpand(props.id, height, expanded)
+        }, 900)
     }
 
     return (
         <Accordion className={classes.cell} ref={ref}
-            defaultExpanded={true}
+            defaultExpanded={defaultExpanded}
             onChange={handleOpenClose}
         >
             <AccordionSummary

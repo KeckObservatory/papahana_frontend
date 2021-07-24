@@ -4,12 +4,12 @@ import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
 import { Accordian } from './accordian_form';
 import TemplateForm from '../forms/template_form';
-import { ObservationBlock, OBComponent, OBComponentNames } from '../../typings/papahana';
+import { ObservationBlock, OBComponentNames, OBComponent } from '../../typings/papahana';
 
 const rowHeight: number = 45
 const AutoGridLayout = WidthProvider(RGL)
 
-const obComponentNames: OBComponentNames[] = ['acquisition', 'science', 'signature', 'target']
+const obComponentNames: OBComponentNames[] = ['acquisition', 'sequences', 'target']
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -62,23 +62,37 @@ const calcRowHeight = (height: number): number => {
     return Math.ceil(height / rowHeight)
 }
 
-
-
-const parseSequence = (sq: OBComponent) => {
-
+const parseOB = (ob: ObservationBlock) => {
+    // return the components that will generate forms
+    let forms: { [k: string]: any } = {}
+    Object.keys(ob).forEach((cn: string) => {
+        if (obComponentNames.indexOf(cn as any) > -1) {
+            if (cn === 'sequences') {
+                const seq = ob.sequences as any
+                for (let idx = 0; idx < seq.length; idx++) {
+                    const sci_name = 'science_' + JSON.stringify(idx) as string
+                    forms[sci_name] = seq[idx]
+                }
+            }
+            else {
+                forms[cn] = ob[cn as keyof ObservationBlock]
+            }
+        }
+    })
+    return forms
 }
+
 
 export default function RGLFormGrid(props: FormGridProps) {
 
     const classes = useStyles()
+    const forms = parseOB(props.ob)
+    const formNames = Object.keys(forms)
+    console.log(`templateTypes in ob ${formNames}`)
 
-    const templateTypes: string[] = obComponentNames.map((componentName: OBComponentNames) => {
-        if (componentName in props.ob) {
-            return componentName
-        }
-    }) as string[]
+    let layout = initLayout(formNames)
 
-    let layout = initLayout(templateTypes)
+    console.log(`layout has ${layout.length}`)
     layout = sortLayoutItems(layout, props.compactType)
     const defaultRowHeight = calcRowHeight(rowHeight)
 
@@ -86,24 +100,27 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     React.useEffect(() => {
         if (layout.length > 0) {
-            console.log('resolving collisions')
-            layout = resolveCollision(layout, layout[0], defaultRowHeight, layout[0].y, 'y') // push other items down
-            console.log(layout)
-
-            const newAccordItems = layout.map((lo: Layout) => {
-                const componentName = lo.i as OBComponentNames 
-                const formData = props.ob[componentName as keyof ObservationBlock ] as OBComponent
-                const formChild = createForm(componentName, formData)
-                return createAccordianDiv(lo, formChild)
-            })
             console.log('inside RGLFormGrid. init accoridan items')
+            const newAccordItems = refreshLayout(layout)
             console.log(newAccordItems[0])
             setTimeout(() => {
                 setAccordItems(newAccordItems)
             }, 300);
         }
     }, [])
-    
+
+
+    const refreshLayout = (layout: any) => {
+        console.log('resolving collisions')
+        layout = resolveCollision(layout, layout[0], defaultRowHeight, layout[0].y, 'y') // push other items down
+        const accordItems = layout.map((lo: Layout) => {
+            const componentName = lo.i as OBComponentNames
+            const formData = forms[componentName as keyof ObservationBlock] as OBComponent
+            const formChild = createForm(componentName, formData)
+            return createAccordianDiv(lo, formChild)
+        })
+        return accordItems
+    }
 
     const createForm = (componentName: OBComponentNames, formData: OBComponent): JSX.Element => {
         return <TemplateForm updateOB={updateOB} componentName={componentName} formData={formData} />
@@ -111,15 +128,20 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     const updateOB = (componentName: OBComponentNames, formData: OBComponent) => {
         console.log(`component: ${componentName} getting updated`)
-        let newOB = {...props.ob} as ObservationBlock | any 
-        newOB[ componentName as keyof ObservationBlock ] = formData        
+        let newOB = { ...props.ob } as ObservationBlock | any
+        newOB[componentName as keyof ObservationBlock] = formData
         props.setOB(newOB)
     }
 
     let myRef = React.useRef(null)
 
-    const handleExpand = (id: string, newHeight: number) => {
-        const newRowHeight = calcRowHeight(newHeight)
+    const handleExpand = (id: string, newHeight: number, expanded=true) => {
+        let newRowHeight = 1
+        console.log(`expanded: ${expanded}`)
+        if (expanded) {
+            newRowHeight = calcRowHeight(newHeight)
+        }
+        console.log(`id: ${id} newRowHeight: ${newRowHeight}`)
         let newItem = getLayoutItem(layout, id)
         layout = layout.filter((item: Layout) => {
             return !item.i.includes(id)
@@ -141,7 +163,7 @@ export default function RGLFormGrid(props: FormGridProps) {
                 }
             >
                 <Accordian name={lo.i} id={lo.i} handleExpand={handleExpand}>
-                  {formChild}
+                    {formChild}
                 </Accordian>
             </div>
         )
@@ -162,16 +184,15 @@ export default function RGLFormGrid(props: FormGridProps) {
             <AutoGridLayout
                 ref={myRef}
                 className="layout"
-                cols={1}
+                cols={3}
                 rowHeight={rowHeight}
                 draggableHandle=".dragme"
-                verticalCompact={true}
-                compactType={props.compactType}
+                // compactType={props.compactType}
                 isBounded={true}
                 autoSize={true}
                 resizeHandles={['se']}
                 // measureBeforeMount
-                onResize={handleResize}
+                onResize={ handleResize }
                 containerPadding={[0, 0]}
             >
                 {accordItems}

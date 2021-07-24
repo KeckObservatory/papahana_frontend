@@ -122,6 +122,8 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
 
 export default function TemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
+  console.log(`inside template form. props: ${props.componentName}`)
+  console.log(props.formData)
 
   let uiSchema = sch.uiTargetSchema; 
   const [schema, setSchema] = React.useState(sch.targetSchema as JSONSchema7)
