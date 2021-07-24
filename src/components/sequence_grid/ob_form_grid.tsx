@@ -7,6 +7,7 @@ import TemplateForm from '../forms/template_form';
 import { ObservationBlock, OBComponentNames, OBComponent } from '../../typings/papahana';
 
 const rowHeight: number = 45
+const nCols: number = 3
 const AutoGridLayout = WidthProvider(RGL)
 
 const obComponentNames: OBComponentNames[] = ['acquisition', 'sequences', 'target']
@@ -43,7 +44,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const initLayout = (items: string[]): Layout[] => {
     let layouts = items.map((item: string, idx: number) => {
-        return { i: item, x: 0, y: idx, w: 1, h: 1 } as Layout
+           const row = Math.floor(idx / 3)
+           const col = idx % 3
+        return { i: item, x: col, y: row, w: 1, h: 1 } as Layout
     })
     return layouts
 }
@@ -107,7 +110,7 @@ export default function RGLFormGrid(props: FormGridProps) {
                 setAccordItems(newAccordItems)
             }, 300);
         }
-    }, [])
+    }, [props.ob])
 
 
     const refreshLayout = (layout: any) => {
@@ -138,10 +141,9 @@ export default function RGLFormGrid(props: FormGridProps) {
     const handleExpand = (id: string, newHeight: number, expanded=true) => {
         let newRowHeight = 1
         console.log(`expanded: ${expanded}`)
-        if (expanded) {
+        if (expanded) { //assumes animation completed
             newRowHeight = calcRowHeight(newHeight)
         }
-        console.log(`id: ${id} newRowHeight: ${newRowHeight}`)
         let newItem = getLayoutItem(layout, id)
         layout = layout.filter((item: Layout) => {
             return !item.i.includes(id)
@@ -149,6 +151,7 @@ export default function RGLFormGrid(props: FormGridProps) {
         newItem.h = newRowHeight
         layout.push(newItem)
         layout = sortLayoutItems(layout, props.compactType)
+        console.log(layout)
         layout = resolveCollision(layout, newItem, newRowHeight, newItem.y, 'y') // push other items down
         if (myRef) { // update the AutoGridLayout by using a ref 
             const mf = myRef.current as any
@@ -179,21 +182,33 @@ export default function RGLFormGrid(props: FormGridProps) {
         console.log("resized triggered")
     }
 
+
+    const handleLayoutChange = (layout: Layout[]
+    ) => {
+        console.log("layout triggered")
+        console.log(layout)
+
+        const mf = myRef.current as any
+        mf.setState({ layout: JSON.parse(JSON.stringify(layout)), rowHeight: rowHeight })
+
+    }
+
     return (
         <div className={classes.templateAccordian} style={{ position: "relative" }}>
             <AutoGridLayout
                 ref={myRef}
                 className="layout"
-                cols={3}
+                cols={nCols}
                 rowHeight={rowHeight}
                 draggableHandle=".dragme"
                 // compactType={props.compactType}
                 isBounded={true}
-                autoSize={true}
+                // autoSize={true}
                 resizeHandles={['se']}
                 // measureBeforeMount
                 onResize={ handleResize }
                 containerPadding={[0, 0]}
+                onLayoutChange={ handleLayoutChange }
             >
                 {accordItems}
                 {/* {layout.map((lo: Layout) => (

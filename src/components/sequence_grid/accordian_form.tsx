@@ -36,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             position: 'relative',
-            justifyContent: 'center'
+            justifyContent: 'center',
         },
         heading: {
             fontWeight: theme.typography.fontWeightRegular,
@@ -56,8 +56,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         accordianSummary: {
             height: theme.spacing(3),
-            padding: theme.spacing(0)
-        }
+            padding: theme.spacing(0),
+        },
     }),
 );
 
@@ -65,7 +65,8 @@ const withHeight = withSize({monitorHeight: true})
 
 
 export const Accordian = withHeight((props: AccordianProps) => {
-    const defaultExpanded = true
+    const transitionTime: number = 100 //ms
+    const defaultExpanded: boolean = true
     const classes = useStyles()
     const ref = useRef(null)
 
@@ -85,13 +86,14 @@ export const Accordian = withHeight((props: AccordianProps) => {
             const height = curr.clientHeight
             console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
             props.handleExpand(props.id, height, expanded)
-        }, 900)
+        }, transitionTime)
     }
 
     return (
         <Accordion className={classes.cell} ref={ref}
             defaultExpanded={defaultExpanded}
             onChange={handleOpenClose}
+            TransitionProps={{timeout: transitionTime}}
         >
             <AccordionSummary
                 className={classes.accordianSummary}
@@ -105,7 +107,7 @@ export const Accordian = withHeight((props: AccordianProps) => {
                 </IconButton>
                 <Typography variant={"h6"} className={classes.heading}>{props.name}</Typography>
             </AccordionSummary>
-            <AccordionDetails>
+            <AccordionDetails >
                 {props.children}
             </AccordionDetails>
         </Accordion>)
