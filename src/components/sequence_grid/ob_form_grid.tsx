@@ -43,12 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 const initLayout = (items: string[]): Layout[] => {
-    let layouts = items.map((item: string, idx: number) => {
+    console.log('creating initial layout')
+    let lo = items.map((item: string, idx: number) => {
            const row = Math.floor(idx / 3)
            const col = idx % 3
         return { i: item, x: col, y: row, w: 1, h: 1 } as Layout
     })
-    return layouts
+    return lo
 }
 
 interface FormGridProps {
@@ -65,7 +66,7 @@ const calcRowHeight = (height: number): number => {
     return Math.ceil(height / rowHeight)
 }
 
-const parseOB = (ob: ObservationBlock) => {
+const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
     let forms: { [k: string]: any } = {}
     Object.keys(ob).forEach((cn: string) => {
@@ -85,38 +86,40 @@ const parseOB = (ob: ObservationBlock) => {
     return forms
 }
 
-
 export default function RGLFormGrid(props: FormGridProps) {
 
     const classes = useStyles()
+    const defaultRowHeight = calcRowHeight(rowHeight)
+    let myRef = React.useRef(null)
+
     const forms = parseOB(props.ob)
     const formNames = Object.keys(forms)
     console.log(`templateTypes in ob ${formNames}`)
+    let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
+    init_layout = sortLayoutItems(init_layout, props.compactType)
+    console.log(init_layout)
 
-    let layout = initLayout(formNames)
-
-    console.log(`layout has ${layout.length}`)
-    layout = sortLayoutItems(layout, props.compactType)
-    const defaultRowHeight = calcRowHeight(rowHeight)
+    
+    // const [layout, setLayout] = React.useState([] as Layout[])
+    // setLayout(init_layout)
 
     const [accordItems, setAccordItems] = React.useState<JSX.Element[]>([])
-
+    
+    const [layout, setLayout] = React.useState(init_layout)
+    
     React.useEffect(() => {
-        if (layout.length > 0) {
+        if (layout) {
             console.log('inside RGLFormGrid. init accoridan items')
-            const newAccordItems = refreshLayout(layout)
-            console.log(newAccordItems[0])
-            setTimeout(() => {
-                setAccordItems(newAccordItems)
-            }, 300);
+            const newAccordItems = makeAccordItems(layout, forms)
+            setAccordItems(newAccordItems)
         }
-    }, [props.ob])
+    }, [ props.ob, layout ])
 
 
-    const refreshLayout = (layout: any) => {
+    const makeAccordItems = (lo: Layout[], forms: Partial<ObservationBlock>) => {
         console.log('resolving collisions')
-        layout = resolveCollision(layout, layout[0], defaultRowHeight, layout[0].y, 'y') // push other items down
-        const accordItems = layout.map((lo: Layout) => {
+        lo = resolveCollision(lo, lo[0], defaultRowHeight, lo[0].y, 'y') // push other items down
+        const accordItems = lo.map((lo: Layout) => {
             const componentName = lo.i as OBComponentNames
             const formData = forms[componentName as keyof ObservationBlock] as OBComponent
             const formChild = createForm(componentName, formData)
@@ -136,7 +139,6 @@ export default function RGLFormGrid(props: FormGridProps) {
         props.setOB(newOB)
     }
 
-    let myRef = React.useRef(null)
 
     const handleExpand = (id: string, newHeight: number, expanded=true) => {
         let newRowHeight = 1
@@ -145,17 +147,22 @@ export default function RGLFormGrid(props: FormGridProps) {
             newRowHeight = calcRowHeight(newHeight)
         }
         let newItem = getLayoutItem(layout, id)
-        layout = layout.filter((item: Layout) => {
+
+        //get new layout
+        let nlayout = layout.filter((item: Layout) => {
             return !item.i.includes(id)
         })
         newItem.h = newRowHeight
-        layout.push(newItem)
-        layout = sortLayoutItems(layout, props.compactType)
+        nlayout.push(newItem)
+        nlayout = sortLayoutItems(nlayout, props.compactType)
         console.log(layout)
-        layout = resolveCollision(layout, newItem, newRowHeight, newItem.y, 'y') // push other items down
+        nlayout = resolveCollision(nlayout, newItem, newRowHeight, newItem.y, 'y') // push other items down
+
         if (myRef) { // update the AutoGridLayout by using a ref 
             const mf = myRef.current as any
-            mf.setState({ layout: JSON.parse(JSON.stringify(layout)), rowHeight: rowHeight })
+            mf.setState({ layout: JSON.parse(JSON.stringify(nlayout)), rowHeight: rowHeight })
+            setLayout(JSON.parse(JSON.stringify(nlayout)))
+            //layout = nlayout
         }
     }
 
@@ -172,25 +179,14 @@ export default function RGLFormGrid(props: FormGridProps) {
         )
     }
 
-    const handleResize = (layout: Layout[],
-        oldItem: Layout,
-        newItem: Layout,
-        placeholder: Layout,
-        event: MouseEvent,
-        element: HTMLElement
+    const handleLayoutChange = (nlayout: Layout[]
     ) => {
-        console.log("resized triggered")
-    }
-
-
-    const handleLayoutChange = (layout: Layout[]
-    ) => {
-        console.log("layout triggered")
-        console.log(layout)
-
+        console.log("match auto grid layout with ob form layout triggered")
+        console.log(nlayout)
         const mf = myRef.current as any
-        mf.setState({ layout: JSON.parse(JSON.stringify(layout)), rowHeight: rowHeight })
-
+        // layout = nlayout
+        setLayout(JSON.parse(JSON.stringify(nlayout)))
+        // mf.setState({ layout: JSON.parse(JSON.stringify(layout)), rowHeight: rowHeight })
     }
 
     return (
@@ -203,18 +199,11 @@ export default function RGLFormGrid(props: FormGridProps) {
                 draggableHandle=".dragme"
                 // compactType={props.compactType}
                 isBounded={true}
-                // autoSize={true}
                 resizeHandles={['se']}
-                // measureBeforeMount
-                onResize={ handleResize }
                 containerPadding={[0, 0]}
                 onLayoutChange={ handleLayoutChange }
             >
                 {accordItems}
-                {/* {layout.map((lo: Layout) => (
-                    createAccordianDiv(lo)
-                )
-                )} */}
             </AutoGridLayout>
         </div>
     )

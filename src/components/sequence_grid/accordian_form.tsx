@@ -6,7 +6,6 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { IconButton } from '@material-ui/core';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
-import { withSize } from 'react-sizeme'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { ObservationBlock } from "../../typings/papahana"
 import { setState } from 'react-jsonschema-form/lib/utils';
@@ -61,10 +60,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const withHeight = withSize({monitorHeight: true}) 
-
-
-export const Accordian = withHeight((props: AccordianProps) => {
+export const Accordian = (props: AccordianProps) => {
     const transitionTime: number = 100 //ms
     const defaultExpanded: boolean = true
     const classes = useStyles()
@@ -111,4 +107,4 @@ export const Accordian = withHeight((props: AccordianProps) => {
                 {props.children}
             </AccordionDetails>
         </Accordion>)
-})
+}

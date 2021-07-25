@@ -5,11 +5,11 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import { IconButton } from '@material-ui/core';
+import { IconButton, Tooltip } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete'
 
 interface Props {
-    deleteOB: Function
+  deleteOB: Function
 }
 
 export default function DeleteDialog(props: Props) {
@@ -22,15 +22,18 @@ export default function DeleteDialog(props: Props) {
   const handleClose = (confirmDelete: boolean) => {
     setOpen(false);
     if (confirmDelete) {
-        props.deleteOB()
+      props.deleteOB()
     }
   };
 
   return (
     <div>
-       <IconButton color='primary' area-label='remove' onClick={handleClickOpen} >
-         <DeleteIcon />
-       </IconButton>
+
+      <Tooltip title="Delete OB by ID">
+        <IconButton color='primary' area-label='remove' onClick={handleClickOpen} >
+          <DeleteIcon />
+        </IconButton>
+      </Tooltip>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -40,15 +43,15 @@ export default function DeleteDialog(props: Props) {
         <DialogTitle id="alert-dialog-title">{"Use Google's location service?"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Are you sure you want to delete this OB?  
+            Are you sure you want to delete this OB?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={ () => { handleClose(false)} } color="primary">
-            No 
+          <Button onClick={() => { handleClose(false) }} color="primary">
+            No
           </Button>
-          <Button onClick={ () => { handleClose(true)} } color="primary" autoFocus>
-            Yes 
+          <Button onClick={() => { handleClose(true) }} color="primary" autoFocus>
+            Yes
           </Button>
         </DialogActions>
       </Dialog>

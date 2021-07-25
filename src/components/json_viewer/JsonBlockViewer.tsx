@@ -132,9 +132,7 @@ export default function JsonBlockViewer(props: Props) {
                 <FileCopyIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Delete OB by ID">
-              <DeleteDialog deleteOB={deleteOB} />
-            </Tooltip>
+            <DeleteDialog deleteOB={deleteOB} />
           </div>
           <JsonViewTheme
             theme={theme as ThemeKeys | null | undefined}
