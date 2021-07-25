@@ -108,10 +108,14 @@ export default function RGLFormGrid(props: FormGridProps) {
     const [layout, setLayout] = React.useState(init_layout)
     
     React.useEffect(() => {
-        if (layout) {
+        console.log(`useEffect layout length: ${layout.length}`)
+        if (layout.length > 0) {
             console.log('inside RGLFormGrid. init accoridan items')
             const newAccordItems = makeAccordItems(layout, forms)
             setAccordItems(newAccordItems)
+        }
+        else { //edge case where sometimes layout isn't set properly
+            setLayout(init_layout)
         }
     }, [ props.ob, layout ])
 
