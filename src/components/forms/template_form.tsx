@@ -125,14 +125,19 @@ export default function TemplateForm(props: Props): JSX.Element {
   const [schema, setSchema] = React.useState({} as JSONSchema7)
   const uiSchema = getUiSchema(props.componentName)
   let formData: {[key: string]: any} = {}
+  if (props.componentName === 'target') {
+      formData = props.obComponent
+  }
+  else {
+      const seq = props.obComponent as OBSequence
+      formData = seq.parameters
+  }
   React.useEffect(() => {
     if (props.componentName === 'target') {
       setSchema(sch.targetSchema as JSONSchema7)
-      formData = props.obComponent
     }
     else {
       const seq = props.obComponent as OBSequence
-      const formData = seq.parameters
       var md = seq.metadata
       if (md) {
         get_template(md.name).then( (templates: Template) => {
