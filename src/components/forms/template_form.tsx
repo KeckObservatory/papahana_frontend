@@ -88,22 +88,19 @@ const to_schema_type = ( tpl_param: string): string => {
 const template_parameter_to_schema_properties = ( key:string, param: TemplateParameter): OBJsonSchemaProperties => {
   let property: Partial<JSProperty> = {}
   property.title = key
-  Object.entries(param).forEach( ( key, value ) => {
-    property.title = param.ui_name
-    property.type = to_schema_type(param.type)
-    if (param.default) {
-      property.default = param.default
-    }
-    property.readonly = false // todo: need to verify if this will allways be the case
-    if (param.option === "range") {
-      property.minimum = param.allowed[0]
-      property.maximum = param.allowed[1]
-    }
-    if (param.option === "list") {
-      property.enum = param.allowed
-    }
-
-  })
+  property.title = param.ui_name
+  property.type = to_schema_type(param.type)
+  if (param.default) {
+    property.default = param.default
+  }
+  property.readonly = false // todo: need to verify if this will allways be the case
+  if (param.option === "range") {
+    property.minimum = param.allowed[0]
+    property.maximum = param.allowed[1]
+  }
+  if (param.option === "list") {
+    property.enum = param.allowed
+  }
   return property
 }
 
@@ -115,7 +112,7 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
   let properties = {} as Partial<OBJsonSchemaProperties>
   Object.entries(template.parameters).forEach( ( [key, param]) => {
     const prop = template_parameter_to_schema_properties( key as keyof TemplateParameter, param)
-    if (prop.optionality === 'required') required.push(key)
+    if (param.optionality === 'required') required.push(key)
     properties[key] = prop
   })
   schema.properties = properties
@@ -126,7 +123,9 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
 export default function TemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const formData  = props.obComponent.properties
+  const formData  = props.obComponent.parameters
+  console.log('in template form. Form data:')
+  console.log(formData)
   const uiSchema = getUiSchema(props.componentName)
   React.useEffect(() => {
     if (props.componentName === 'target') {

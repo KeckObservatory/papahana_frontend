@@ -6,7 +6,7 @@ import { Accordian } from './accordian_form';
 import TemplateForm from '../forms/template_form';
 import { ObservationBlock, OBComponentNames, OBComponent } from '../../typings/papahana';
 
-const rowHeight: number = 45
+const ROW_HEIGHT: number = 45
 const nCols: number = 3
 const AutoGridLayout = WidthProvider(RGL)
 
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
         cell: {
             margin: theme.spacing(0),
             padding: theme.spacing(0),
-            minHeight: rowHeight
+            minHeight: ROW_HEIGHT 
         },
         templateAccordian: {
             padding: theme.spacing(0),
@@ -62,7 +62,7 @@ const defaultProps = {
 }
 
 const calcRowHeight = (height: number): number => {
-    return Math.ceil(height / rowHeight)
+    return Math.ceil(height / ROW_HEIGHT)
 }
 
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
@@ -87,12 +87,11 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
 
 export default function RGLFormGrid(props: FormGridProps) {
     const classes = useStyles()
-    const defaultRowHeight = calcRowHeight(rowHeight)
+    const defaultRowHeight = calcRowHeight(ROW_HEIGHT)
     let myRef = React.useRef(null)
 
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
     const formNames = Object.keys(obComponents)
-    let cellsExpanded = false  // cells initialized
     let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
@@ -103,21 +102,30 @@ export default function RGLFormGrid(props: FormGridProps) {
     const [accordItems, setAccordItems] = React.useState<JSX.Element[]>([])
     
     const [layout, setLayout] = React.useState(init_layout)
-    
+
+
+    // After component rendered
     React.useEffect(() => {
-        console.log(`layout length ${layout.length}`)
+        console.log(`init layout ${JSON.stringify(layout)}`)
         if (layout.length > 0) {
-            // console.log('inside RGLFormGrid. init accoridan items')
             const newAccordItems = makeAccordItems(layout, obComponents)
+            console.log('setting accord items')
             setAccordItems(newAccordItems)
             const mf = myRef.current as any
+            console.log(`myRef.layout ${mf.layout}`)
             mf.setState({ layout: JSON.parse(JSON.stringify(layout))})
         }
-        else { //edge case where sometimes layout isn't set properly. (may not be needed anymore)
-            //setLayout(init_layout)
-        }
+    }, [])
+
+    React.useEffect(() => {
+        console.log(`ob and/or layout changed to ${JSON.stringify(layout)}`)
+        // console.log('inside RGLFormGrid. init accoridan items')
+        const newAccordItems = makeAccordItems(layout, obComponents)
+        setAccordItems(newAccordItems)
+        const mf = myRef.current as any
+        mf.setState({ layout: JSON.parse(JSON.stringify(layout))})
         
-    }, [ props.ob, layout ])
+    }, [ props.ob ])
 
 
     const makeAccordItems = (lo: Layout[], obComps: Partial<ObservationBlock>) => {
@@ -132,21 +140,29 @@ export default function RGLFormGrid(props: FormGridProps) {
         return accordItems
     }
 
-    const createForm = (componentName: OBComponentNames, obComponent: OBComponent): JSX.Element => {
-        return <TemplateForm updateOB={updateOB} componentName={componentName} obComponent={obComponent} />
-    }
 
     const updateOB = (componentName: OBComponentNames, formData: OBComponent) => {
         console.log(`component: ${componentName} getting updated`)
-        let newOB = { ...props.ob } as ObservationBlock | any
-        newOB[componentName as keyof ObservationBlock] = formData
+        console.log(formData)
+        console.log(props.ob)
+
+        if (Object.keys(formData).length > 0 ) {
+        const oldComponent = props.ob[componentName as keyof ObservationBlock] as OBComponent
+        let newComponent = { ...oldComponent } as ObservationBlock | any
+        console.log(newComponent)
+        let newOb = {...props.ob}
+        Object.entries(formData).forEach( ([key, value ]) => {
+            newComponent.parameters[key] = value
+        })
+        newOb[componentName as keyof ObservationBlock] = newComponent 
         // props.setOB(newOB)
+        }
     }
 
-    const handleExpand = (id: string, newHeight: number, expanded: boolean, init=false) => {
-        let newRowHeight = 1
+    const handleExpand = (id: string, cellHeight: number, expanded: boolean, init=false) => {
+        let newCellHeight = 1
         if (expanded) { //assumes animation completed
-            newRowHeight = calcRowHeight(newHeight)
+            newCellHeight = calcRowHeight(cellHeight)
         }
         let newItem = getLayoutItem(layout, id)
 
@@ -154,18 +170,30 @@ export default function RGLFormGrid(props: FormGridProps) {
         let nlayout = layout.filter((item: Layout) => {
             return !item.i.includes(id)
         })
-        newItem.h = newRowHeight
+        newItem.h = newCellHeight
         nlayout.push(newItem)
         nlayout = sortLayoutItems(nlayout, props.compactType)
-        nlayout = resolveCollision(nlayout, newItem, newRowHeight, newItem.y, 'y') // push other items down
-        if (myRef && !init) { // update the AutoGridLayout by using a ref 
-            console.log(`expanded: ${expanded}`)
+        nlayout = resolveCollision(nlayout, newItem, newCellHeight, newItem.y, 'y') // push other items down
+
+        if (myRef) { // update the AutoGridLayout by using a ref 
+            console.log(`${id} expanded: ${expanded}`)
             console.log(layout)
             const mf = myRef.current as any
             mf.setState({ layout: JSON.parse(JSON.stringify(nlayout))})
             setLayout(JSON.parse(JSON.stringify(nlayout)))
-            //layout = nlayout
         }
+    }
+
+    const handleLayoutChange = (nlayout: Layout[]) => {
+        // console.log("match auto grid layout with ob form layout triggered")
+        //todo: handle init case
+        console.log(`layout changed to ${JSON.stringify(nlayout)}`)
+        console.log(nlayout)
+        setLayout(JSON.parse(JSON.stringify(nlayout)))
+    }
+
+    const createForm = (componentName: OBComponentNames, obComponent: OBComponent): JSX.Element => {
+        return <TemplateForm updateOB={updateOB} componentName={componentName} obComponent={obComponent} />
     }
 
     const createAccordianDiv = (lo: Layout, formChild: JSX.Element) => {
@@ -181,24 +209,13 @@ export default function RGLFormGrid(props: FormGridProps) {
         )
     }
 
-    const handleLayoutChange = (nlayout: Layout[]) => {
-        // console.log("match auto grid layout with ob form layout triggered")
-        //todo: handle init case
-        if (cellsExpanded) {
-          console.log('layout changed')
-          console.log(nlayout)
-          setLayout(JSON.parse(JSON.stringify(nlayout)))
-        }
-        cellsExpanded = true // waits to update layout until all accordians have rendered
-    }
-
     return (
         <div className={classes.templateAccordian} style={{ position: "relative" }}>
             <AutoGridLayout
                 ref={myRef}
                 className="layout"
                 cols={nCols}
-                rowHeight={rowHeight}
+                rowHeight={ROW_HEIGHT}
                 draggableHandle=".dragme"
                 compactType={props.compactType}
                 // autoSize={true}

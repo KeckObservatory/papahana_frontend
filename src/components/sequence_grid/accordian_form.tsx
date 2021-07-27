@@ -70,9 +70,9 @@ export const Accordian = (props: AccordianProps) => {
         if (ref) {
             setTimeout( () => {
                 const curr = ref.current as any
-                //console.log('initHeight:')
-                //console.log(curr.clientHeight)
-                props.handleExpand(props.id, curr.clientHeight, defaultExpanded, true)
+                const init = true
+                console.log(`${props.id} initHeight: ${curr.clientHeight}`)
+                props.handleExpand(props.id, curr.clientHeight, defaultExpanded, init)
             }, 30 + transitionTime)
         }
     }, [])
@@ -82,7 +82,7 @@ export const Accordian = (props: AccordianProps) => {
             const curr = ref.current as any
             const height = curr.clientHeight
             console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
-            props.handleExpand(props.id, height, expanded )
+            props.handleExpand(props.id, height, expanded, false)
         }, 30+transitionTime)
     }
 
@@ -99,7 +99,12 @@ export const Accordian = (props: AccordianProps) => {
                 id="panel1a-header"
                 aria-label="Expand"
             >
-                <IconButton className="dragme" aria-label='open'>
+                <IconButton 
+                  className="dragme"
+                  aria-label='open'
+                  onClick={(event) => event.stopPropagation()}
+                  onFocus={(event) => event.stopPropagation()}
+                >
                     <OpenWithIcon />
                 </IconButton>
                 <Typography variant={"h6"} className={classes.heading}>{props.name}</Typography>
