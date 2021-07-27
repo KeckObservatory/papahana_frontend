@@ -104,7 +104,6 @@ export function resolveCollision( layout: Layout[], item: Layout, newDim: number
 
   item[axis] = moveToCoord;
   newLayout[itemIndex] = item
-  console.log(`new layout ${JSON.stringify(newLayout)}`)
   return newLayout
 }
   

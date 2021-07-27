@@ -21,10 +21,14 @@ export const get_instrument_package = ( instrument: Instrument ): Promise<Instru
    return promise
 }
 
-export const get_template = ( name: string ): Promise<Template[]> => {
-   const promise = new Promise<Template[]>( ( resolve ) => {
+export const get_template = ( name: string ): Promise<Template> => {
+   const promise = new Promise<Template>( ( resolve ) => {
       get_select_funcs.get_template( name ).then( (templates: Template[] ) => {
-         resolve(templates)
+         if (templates.length===1){
+            resolve(templates[0])
+         }
+      }).catch(err => {
+         console.log(`get_template err: ${err}`)
       })
    })
    return promise

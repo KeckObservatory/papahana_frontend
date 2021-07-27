@@ -7,14 +7,13 @@ import FileCopyIcon from '@material-ui/icons/FileCopy'
 import { useState } from 'react'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
-// import OBForm from '../forms/ob_form'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
 // import BasicTable from '../table'
-// import Aladin from './../aladin'
+import Aladin from './../aladin'
 import RGLFormGrid from '../sequence_grid/ob_form_grid'
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -114,7 +113,24 @@ export default function JsonBlockViewer(props: Props) {
     getOB(new_ob_id)
   }
 
+  const renderRGL = (ob: ObservationBlock) => {
+    const empty = Object.keys(ob).length > 0 
+    if (empty) {
+      console.log('rendering RGLFormGrid')
+      return (
+          <RGLFormGrid 
+            ob={ob}
+            compactType={'vertical'}
+            setOB={setOB} />
+      ) 
+    }
+    else {
+      return <h1>Loading...</h1> 
+    }
+  }
+
   const handleEdit = props.editable ? onEdit : false
+
   return (
     <Grid container spacing={3} className={classes.root}>
       <Grid item xs={3}>
@@ -154,20 +170,14 @@ export default function JsonBlockViewer(props: Props) {
       </Grid>
       <Grid item xs={8}>
         <Paper className={classes.widepaper}>
-          <RGLFormGrid 
-            ob={ob}
-            compactType={'vertical'}
-            setOB={setOB} />
-          {/* <OBForm
-            ob={ob}
-            setOB={setOB} /> */}
+          {renderRGL(ob)}
         </Paper>
         </Grid>
-      {/* <Grid item xs={3}>
+      <Grid item xs={3}>
         <Paper className={classes.paper}>
           <Aladin />
         </Paper>
-      </Grid> */}
+      </Grid>
     </Grid>
   )
 }

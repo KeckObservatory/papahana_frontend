@@ -61,18 +61,19 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export const Accordian = (props: AccordianProps) => {
-    const transitionTime: number = 100 //ms
-    const defaultExpanded: boolean = true
+    const transitionTime: number = 0 //ms
+    const defaultExpanded: boolean = true 
     const classes = useStyles()
     const ref = useRef(null)
 
     React.useEffect( () => {
         if (ref) {
-            console.log('initHeight:')
-            const curr = ref.current as any
-            console.log(props.size)
-            console.log(curr.clientHeight)
-            props.handleExpand(props.id, curr.clientHeight)
+            setTimeout( () => {
+                const curr = ref.current as any
+                //console.log('initHeight:')
+                //console.log(curr.clientHeight)
+                props.handleExpand(props.id, curr.clientHeight, defaultExpanded, true)
+            }, 30 + transitionTime)
         }
     }, [])
 
@@ -81,8 +82,8 @@ export const Accordian = (props: AccordianProps) => {
             const curr = ref.current as any
             const height = curr.clientHeight
             console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
-            props.handleExpand(props.id, height, expanded)
-        }, transitionTime)
+            props.handleExpand(props.id, height, expanded )
+        }, 30+transitionTime)
     }
 
     return (
