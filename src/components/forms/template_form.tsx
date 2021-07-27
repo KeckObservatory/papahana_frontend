@@ -1,7 +1,7 @@
 
 
 import React, { } from "react"
-import { Template, OBComponent, OBComponentNames, TemplateParameter } from "../../typings/papahana"
+import { Template, OBComponent, OBComponentNames, TemplateParameter, OBSequence } from "../../typings/papahana"
 import { ISubmitEvent } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
@@ -123,16 +123,17 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
 export default function TemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const formData  = props.obComponent.parameters
-  console.log('in template form. Form data:')
-  console.log(formData)
   const uiSchema = getUiSchema(props.componentName)
+  let formData: {[key: string]: any} = {}
   React.useEffect(() => {
     if (props.componentName === 'target') {
       setSchema(sch.targetSchema as JSONSchema7)
+      formData = props.obComponent
     }
     else {
-      var md = props.obComponent.metadata
+      const seq = props.obComponent as OBSequence
+      const formData = seq.parameters
+      var md = seq.metadata
       if (md) {
         get_template(md.name).then( (templates: Template) => {
           const sch = template_to_schema(templates)
@@ -155,7 +156,7 @@ return(
   <div className={classes.root}>
   <Form className={classes.form} 
         schema={schema}
-        //uiSchema={uiSchema as any}
+        uiSchema={uiSchema as any}
         formData={formData}
         onChange={handleChange}
         onError={log("errors")} />

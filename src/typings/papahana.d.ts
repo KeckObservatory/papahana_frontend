@@ -1,5 +1,3 @@
-import { KCWIScience, InstrumentPackage, Acquisition } from './papahana.d';
-
 export interface Container {
 	_id: string,
 	semester: string,
@@ -19,10 +17,10 @@ export type Method = 'get' | 'put' | 'post' | 'remove'
 export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
-export type OBComponent = Target | Acquisition | Science[] | Signature
+export type OBSequence = Acquisition | Science
+export type OBComponent = Target | OBSequence 
 export type OBComponentNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
 
-export type OBComponent = Science[] | Acquisition | Target | undefined
 export type OBType = 'science' | 'engineering' | 'calibration'
 export interface Base {
 	comment?: string
@@ -68,15 +66,18 @@ export interface ObservationBlock extends Base {
 
 export type Acquisition = DefaultAcquisition | KCWIAcquisition
 
-export interface DefaultAcquisition extends Base {
-	name: string,
-	instrumental_setup: string,
-	acquisition_method: string,
-	guider_selection?: string,
-	ao_modes?: string[],
-	offset_stars?: string[],
-	slitmasks?: string[],
-	position_angles: string[],
+export interface AcquisitionMetadata extends Metadata {
+
+}
+
+export interface BaseSequence extends Base {
+	metadata: Metadata;
+	parameters: { [key:string]: any }
+}
+
+export interface DefaultAcquisition extends BaseSequence{
+    metadata: AcquisitionMetadata;
+	template_id: string;
 }
 
 export type GSMode = 'Automatic' | 'Operator' | 'User'
@@ -85,11 +86,15 @@ export type Slicer = 'Small' | 'Medium' | 'Large'
 export type Grating = 'BL' | 'BM' | 'BH1' | 'BH2' | 'RL' | 'RM' | 'RH1' | 'RH2'
 export type Instrument = 'KCWI' | 'DEIMOS' | 'MOSFIRE'
 
-export interface KCWIAcquisition extends Base {
-	name: string
-	version: string
-	script: string,
-	guider_po: PO,
+export interface KCWIAcquisition extends BaseSequence {
+	parameters: KCWIAcquisitionParameters
+}
+
+export interface KCWIAcquisitionParameters extends Base {
+	guider_po: string,
+	wrap: string,
+	ra_offset: number,
+	dec_offset
 	guider_gs_ra: number,
 	guider_gs_dec: number,
 	guider_gs_mode: GSMode
@@ -105,15 +110,6 @@ export type Science = KCWIScience
 
 export interface KCWIScienceParameters {
     [key: string]: number | string | Slicer | Grating | any
-	// det1_exptime: number,
-	// det1_nexp: number,
-	// det2_exptime: number,
-	// det2_nexp: number,
-	// seq_ditarray?: Dither,
-	// seq_ndither?: number,
-	// cfg_cam_grating: Grating,
-	// cfg_cam_cwave: number,
-	// cfg_slicer: Slicer
 }
 
 export interface Metadata {
@@ -125,7 +121,14 @@ export interface Metadata {
 	script: string
 }
 
-export interface ScienceMetadata extends Metadata {
+export interface SequenceMetadata {
+	[key: string]: any
+}
+
+export interface ScienceMetadata extends SequenceMetadata {
+}
+
+export interface AcquisitionMetadata extends SequenceMetadata {
 }
 
 export interface KCWIScience extends Base {
@@ -145,7 +148,6 @@ export interface Observation extends Base {
 }
 
 export interface Target {
-
 	name: string,
 	ra: string,
 	dec: string,
@@ -217,7 +219,7 @@ export interface TemplateParameter {
 }
 
 export interface Template {
-	_id: string;
+	template_id: string;
 	metadata: TemplateMetadata;
 	parameters: {[key: string]: TemplateParameter};
     name: string,

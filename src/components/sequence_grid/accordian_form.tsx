@@ -71,7 +71,7 @@ export const Accordian = (props: AccordianProps) => {
             setTimeout( () => {
                 const curr = ref.current as any
                 const init = true
-                console.log(`${props.id} initHeight: ${curr.clientHeight}`)
+                //console.log(`${props.id} initHeight: ${curr.clientHeight}`)
                 props.handleExpand(props.id, curr.clientHeight, defaultExpanded, init)
             }, 30 + transitionTime)
         }
@@ -81,7 +81,7 @@ export const Accordian = (props: AccordianProps) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
             const height = curr.clientHeight
-            console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
+            //console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
             props.handleExpand(props.id, height, expanded, false)
         }, 30+transitionTime)
     }

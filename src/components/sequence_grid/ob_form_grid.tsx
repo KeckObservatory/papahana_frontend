@@ -4,7 +4,7 @@ import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
 import { Accordian } from './accordian_form';
 import TemplateForm from '../forms/template_form';
-import { ObservationBlock, OBComponentNames, OBComponent } from '../../typings/papahana';
+import { ObservationBlock, OBComponentNames, OBComponent, Science, BaseSequence, OBSequence } from '../../typings/papahana';
 
 const ROW_HEIGHT: number = 45
 const nCols: number = 3
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) =>
         cell: {
             margin: theme.spacing(0),
             padding: theme.spacing(0),
-            minHeight: ROW_HEIGHT 
+            minHeight: ROW_HEIGHT
         },
         templateAccordian: {
             padding: theme.spacing(0),
@@ -44,8 +44,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const initLayout = (items: string[]): Layout[] => {
     let lo = items.map((item: string, idx: number) => {
-           const row = Math.floor(idx / 3)
-           const col = idx % 3
+        const row = Math.floor(idx / 3)
+        const col = idx % 3
         return { i: item, x: col, y: row, w: 1, h: 1 } as Layout
     })
     return lo
@@ -95,12 +95,12 @@ export default function RGLFormGrid(props: FormGridProps) {
     let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
-    
+
     // const [layout, setLayout] = React.useState([] as Layout[])
     // setLayout(init_layout)
 
     const [accordItems, setAccordItems] = React.useState<JSX.Element[]>([])
-    
+
     const [layout, setLayout] = React.useState(init_layout)
 
 
@@ -113,7 +113,7 @@ export default function RGLFormGrid(props: FormGridProps) {
             setAccordItems(newAccordItems)
             const mf = myRef.current as any
             console.log(`myRef.layout ${mf.layout}`)
-            mf.setState({ layout: JSON.parse(JSON.stringify(layout))})
+            mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
         }
     }, [])
 
@@ -123,9 +123,9 @@ export default function RGLFormGrid(props: FormGridProps) {
         const newAccordItems = makeAccordItems(layout, obComponents)
         setAccordItems(newAccordItems)
         const mf = myRef.current as any
-        mf.setState({ layout: JSON.parse(JSON.stringify(layout))})
-        
-    }, [ props.ob ])
+        mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
+
+    }, [props.ob])
 
 
     const makeAccordItems = (lo: Layout[], obComps: Partial<ObservationBlock>) => {
@@ -140,26 +140,53 @@ export default function RGLFormGrid(props: FormGridProps) {
         return accordItems
     }
 
+    const updateOBSequence = (componentName: string, ob: ObservationBlock, formData: OBSequence):ObservationBlock => {
+        let newOb = { ...ob }
+        //get science idx from name
+        const idx = JSON.parse(componentName.substring(componentName.indexOf('_') + 1))
+        let seq = ob?.sequences as Science[]
+        Object.entries(formData).forEach(([key, value]) => {
+            seq[idx].parameters[key] = value
+        })
+        newOb.sequences = seq
+        return newOb 
+    }
 
-    const updateOB = (componentName: OBComponentNames, formData: OBComponent) => {
+    const updateOBComponent = (componentName: string, ob: ObservationBlock, formData: {[key: string]: any}): ObservationBlock => {
+        let component = ob[componentName as keyof ObservationBlock] as BaseSequence 
+        let params = component.parameters 
+        // let params = newComponent.parameters
+        Object.entries(formData).forEach(([key, value]) => {
+            params[key] = value
+        })
+        component.parameters = params
+        ob[componentName as keyof ObservationBlock] = component as any 
+        return ob as ObservationBlock
+    }
+
+
+    const updateOB = (componentName: OBComponentNames, formData: OBSequence) => {
         console.log(`component: ${componentName} getting updated`)
         console.log(formData)
         console.log(props.ob)
 
-        if (Object.keys(formData).length > 0 ) {
-        const oldComponent = props.ob[componentName as keyof ObservationBlock] as OBComponent
-        let newComponent = { ...oldComponent } as ObservationBlock | any
-        console.log(newComponent)
-        let newOb = {...props.ob}
-        Object.entries(formData).forEach( ([key, value ]) => {
-            newComponent.parameters[key] = value
-        })
-        newOb[componentName as keyof ObservationBlock] = newComponent 
-        // props.setOB(newOB)
+        if (Object.keys(formData).length > 0) {
+            const oldComponent = props.ob[componentName as keyof ObservationBlock] as OBComponent
+            let newComponent = { ...oldComponent }
+            console.log(newComponent)
+            let newOb = { ...props.ob }
+            //handle sequences
+            if (componentName.includes('science')) {
+                newOb = updateOBSequence(componentName, newOb, formData)
+            }
+            else {
+                newOb = updateOBComponent(componentName, newOb, formData)
+            }
+            props.setOB(newOb)
         }
     }
 
-    const handleExpand = (id: string, cellHeight: number, expanded: boolean, init=false) => {
+    const handleExpand = (id: string, cellHeight: number, expanded: boolean, init = false) => {
         let newCellHeight = 1
         if (expanded) { //assumes animation completed
             newCellHeight = calcRowHeight(cellHeight)
@@ -179,7 +206,7 @@ export default function RGLFormGrid(props: FormGridProps) {
             console.log(`${id} expanded: ${expanded}`)
             console.log(layout)
             const mf = myRef.current as any
-            mf.setState({ layout: JSON.parse(JSON.stringify(nlayout))})
+            mf.setState({ layout: JSON.parse(JSON.stringify(nlayout)) })
             setLayout(JSON.parse(JSON.stringify(nlayout)))
         }
     }
@@ -222,7 +249,7 @@ export default function RGLFormGrid(props: FormGridProps) {
                 isBounded={true}
                 resizeHandles={['se']}
                 containerPadding={[5, 5]}
-                onLayoutChange={ handleLayoutChange }
+                onLayoutChange={handleLayoutChange}
             >
                 {accordItems}
             </AutoGridLayout>
