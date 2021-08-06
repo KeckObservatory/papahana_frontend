@@ -13,7 +13,6 @@ const useStyles = makeStyles( (theme: Theme) => ({
         flexWrap: 'wrap',
         '& > *': {
         margin: theme.spacing(1),
-        width: "100%",
         }
       },
     }
@@ -22,7 +21,7 @@ const useStyles = makeStyles( (theme: Theme) => ({
 interface MenuProps {
     arr: string[]
     handleChange: Function 
-    value: string | null | undefined
+    value?: string | null | undefined
     placeholder: string
     label: string
 }

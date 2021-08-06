@@ -117,15 +117,16 @@ export default function RGLFormGrid(props: FormGridProps) {
         }
     }, [])
 
-    React.useEffect(() => {
-        console.log(`ob and/or layout changed to ${JSON.stringify(layout)}`)
-        // console.log('inside RGLFormGrid. init accoridan items')
-        const newAccordItems = makeAccordItems(layout, obComponents)
-        setAccordItems(newAccordItems)
-        const mf = myRef.current as any
-        mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
+    //TODO use this to check if OB size changes, or if there are new components
+    // React.useEffect(() => {
+    //     console.log(`ob and/or layout changed to ${JSON.stringify(layout)}`)
+    //     // console.log('inside RGLFormGrid. init accoridan items')
+    //     const newAccordItems = makeAccordItems(layout, obComponents)
+    //     setAccordItems(newAccordItems)
+    //     const mf = myRef.current as any
+    //     mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
 
-    }, [props.ob])
+    // }, [props.ob])
 
 
     const makeAccordItems = (lo: Layout[], obComps: Partial<ObservationBlock>) => {

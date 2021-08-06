@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         height: theme.spacing(4),
         textAlign: 'center',
         backgroundColor: theme.palette.primary.main,
-        width: '50%'
+        width: '80%'
     },
 }))
 interface Props {

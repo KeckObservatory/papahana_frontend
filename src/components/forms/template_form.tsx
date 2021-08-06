@@ -131,13 +131,10 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
   })
   schema.properties = properties
   schema.required = required
-  console.log('schema created')
-  console.log(schema)
   return schema as JSONSchema7
 }
 
 export default function TemplateForm(props: Props): JSX.Element {
-  console.log(`creating ${props.componentName} template`)
   const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
   const uiSchema = getUiSchema(props.componentName)

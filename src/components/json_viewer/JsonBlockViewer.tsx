@@ -1,5 +1,5 @@
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
-import { ObservationBlock } from '../../typings/papahana'
+import { Instrument, ObservationBlock } from '../../typings/papahana'
 import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import PublishIcon from '@material-ui/icons/Publish'
@@ -14,6 +14,7 @@ import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
 import Aladin from './../aladin'
 import RGLFormGrid from '../sequence_grid/ob_form_grid'
+import TemplateSelection from './template_selection'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -30,6 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   buttonBlock: {
     margin: theme.spacing(1),
     display: 'inline-flex',
+  },
+  templateSelect: {
   },
   paper: {
     padding: theme.spacing(3),
@@ -59,6 +62,7 @@ export interface Props {
 }
 
 export default function JsonBlockViewer(props: Props) {
+  const instrument: Instrument = 'KCWI'
   const classes = useStyles();
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   const [ob, setOB] = useState({} as ObservationBlock)
@@ -114,18 +118,18 @@ export default function JsonBlockViewer(props: Props) {
   }
 
   const renderRGL = (ob: ObservationBlock) => {
-    const empty = Object.keys(ob).length > 0 
+    const empty = Object.keys(ob).length > 0
     if (empty) {
       console.log('rendering RGLFormGrid')
       return (
-          <RGLFormGrid 
-            ob={ob}
-            compactType={'vertical'}
-            setOB={setOB} />
-      ) 
+        <RGLFormGrid
+          ob={ob}
+          compactType={'vertical'}
+          setOB={setOB} />
+      )
     }
     else {
-      return <h1>Loading...</h1> 
+      return <h1>Loading...</h1>
     }
   }
 
@@ -135,8 +139,10 @@ export default function JsonBlockViewer(props: Props) {
     <Grid container spacing={3} className={classes.root}>
       <Grid item xs={3}>
         <Paper className={classes.paper} elevation={3}>
+
+          <h3>Observation Block Selection</h3>
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
-          <h3>Observation block</h3>
+          <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
             <Tooltip title="Update OB in form">
               <IconButton aria-label='replace' onClick={replaceOB}>
@@ -150,10 +156,20 @@ export default function JsonBlockViewer(props: Props) {
             </Tooltip>
             <DeleteDialog deleteOB={deleteOB} />
           </div>
+
+          <Tooltip title="Add template to Selected OB">
+            <div className={classes.templateSelect}>
+              <TemplateSelection instrument={instrument} />
+            </div>
+          </Tooltip>
+          <Tooltip title="Change the color theme of the OB JSON display">
+          <div>
           <JsonViewTheme
             theme={theme as ThemeKeys | null | undefined}
             setTheme={setTheme}
           />
+          </div>
+          </Tooltip>
           <ReactJson
             src={ob as object}
             theme={theme as ThemeKeys | undefined}
@@ -172,7 +188,7 @@ export default function JsonBlockViewer(props: Props) {
         <Paper className={classes.widepaper}>
           {renderRGL(ob)}
         </Paper>
-        </Grid>
+      </Grid>
       <Grid item xs={3}>
         <Paper className={classes.paper}>
           <Aladin />
