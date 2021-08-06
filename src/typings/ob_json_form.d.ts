@@ -13,6 +13,7 @@ export interface JSProperty {
   default?: number | string | null | undefined
   enum?: array
   items?: Items | JsonSchema
+  additionalItems?: Items | JsonSchema | undefined
   properties?: OBJsonSchemaProperties
   minimum?: string | number | undefined
   maximum?: string | number | undefined

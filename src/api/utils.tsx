@@ -87,6 +87,14 @@ export const get_container_list = (sem_id: string, observer_id: string): Promise
    return promise
 }
 
+export const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
+   //make container given sem_id and observer_id 
+   const promise = new Promise<Container[]>( (resolve) => {
+      resolve(get_select_funcs.get_containers(sem_id, observer_id))
+   })
+   return promise
+}
+
 export const make_container_list = (semesters: Semester[], sem_id: string): string[] => {
    //populates container_list for sem_id
    let container_list: string[] = ['all']

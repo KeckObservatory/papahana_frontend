@@ -1,5 +1,4 @@
 import React from "react"
-import { setSyntheticTrailingComments } from "typescript"
 
 interface Props {
 
@@ -7,14 +6,7 @@ interface Props {
 export default function Aladin(props: Props)  {
 
     const scriptloaded = () => {
-        console.log('script loaded. setting aladin')
         const win: any = window
-        console.log(window)
-        const initOptions = {
-            survey: 'P/DSS2/color',
-            fov: 60,
-            showSimbadPointerControl: true
-        }
         let aladin = win.A.aladin('#aladin-lite-div', { survey: 'P/DSS2/color', fov:60 })
         aladin.setFov(1)
     }

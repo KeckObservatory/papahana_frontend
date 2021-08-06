@@ -338,7 +338,7 @@
 				"type" : "array",
 				"allowed" : [
 					{
-						"ra" : {
+						"ra_offset" : {
 							"ui_name" : "Right Ascension Offset",
 							"option" : "range",
 							"allowed" : [
@@ -351,7 +351,7 @@
 						}
 					},
 					{
-						"dec" : {
+						"dec_offset" : {
 							"ui_name" : "Declination Offset",
 							"option" : "range",
 							"allowed" : [

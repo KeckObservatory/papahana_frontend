@@ -5,7 +5,7 @@ import { Template, OBComponent, OBComponentNames, TemplateParameter, OBSequence 
 import { ISubmitEvent } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
-import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
+import { Items, JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { makeStyles, Theme } from "@material-ui/core";
 import * as sch from './schemas'
 import { get_template } from "../../api/utils";
@@ -85,9 +85,8 @@ const to_schema_type = ( tpl_param: string): string => {
   return type
 }
 
-const template_parameter_to_schema_properties = ( key:string, param: TemplateParameter): OBJsonSchemaProperties => {
+const template_parameter_to_schema_properties = ( param: TemplateParameter): OBJsonSchemaProperties => {
   let property: Partial<JSProperty> = {}
-  property.title = key
   property.title = param.ui_name
   property.type = to_schema_type(param.type)
   if (param.default) {
@@ -95,11 +94,26 @@ const template_parameter_to_schema_properties = ( key:string, param: TemplatePar
   }
   property.readonly = false // todo: need to verify if this will allways be the case
   if (param.option === "range") {
-    property.minimum = param.allowed[0]
-    property.maximum = param.allowed[1]
+    property.minimum = param.allowed[0] as any
+    property.maximum = param.allowed[1] as any
   }
   if (param.option === "list") {
     property.enum = param.allowed
+  }
+  if (property.type === 'array') {
+    let dschema = {} as any //todo make this a function
+    dschema.title = 'dither item'
+    dschema.type = 'object'
+    dschema.properties = {}
+    param.allowed.forEach( (param: any) => { 
+      const dkey = Object.keys(param)[0]
+      const dvalue = param[dkey]
+      dschema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
+    })
+    dschema.required = Object.keys(dschema.properties)
+    property.items = dschema 
+    
+    //property.enum = undefined 
   }
   return property
 }
@@ -111,16 +125,19 @@ const template_to_schema = ( template: Template ): JSONSchema7 => {
   let required: string[] = []
   let properties = {} as Partial<OBJsonSchemaProperties>
   Object.entries(template.parameters).forEach( ( [key, param]) => {
-    const prop = template_parameter_to_schema_properties( key as keyof TemplateParameter, param)
+    const prop = template_parameter_to_schema_properties(param)
     if (param.optionality === 'required') required.push(key)
     properties[key] = prop
   })
   schema.properties = properties
   schema.required = required
+  console.log('schema created')
+  console.log(schema)
   return schema as JSONSchema7
 }
 
 export default function TemplateForm(props: Props): JSX.Element {
+  console.log(`creating ${props.componentName} template`)
   const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
   const uiSchema = getUiSchema(props.componentName)
@@ -128,7 +145,7 @@ export default function TemplateForm(props: Props): JSX.Element {
   if (props.componentName === 'target') {
       formData = props.obComponent
   }
-  else {
+  if (props.componentName === 'sequences') {
       const seq = props.obComponent as OBSequence
       formData = seq.parameters
   }

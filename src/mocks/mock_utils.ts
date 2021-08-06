@@ -30,7 +30,8 @@ export const mock_get_template = (name: string): Promise<Template[]> => {
 
 export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {
 const mockPromise = new Promise<ObservationBlock>( (resolve) => {
-   resolve(mock_obs[0] as ObservationBlock | any )
+   const idx = Math.floor( Math.random() * mock_obs.length )
+   resolve(mock_obs[idx] as ObservationBlock | any )
 })
 return mockPromise
 }
@@ -42,9 +43,12 @@ export const mock_get_semesters = (observer_id: string): Promise<Semester[]> => 
    return mockPromise
 }
 
-export const mock_get_containers = (sem_id: string): Promise<Container[]> => {
+export const mock_get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
    const mockPromise = new Promise<Container[]>((resolve) => {
-      resolve(mock_containers as Container | any)
+      const sem_id_containers = mock_containers.filter( (container: Container) => {
+         return container.sem_id===sem_id 
+      }) as Container[]
+      resolve(sem_id_containers)
    })
    return mockPromise
 }

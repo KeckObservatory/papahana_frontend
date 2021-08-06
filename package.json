@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@naisutech/react-tree": "^2.0.11",
     "@rjsf/core": "^2.5.1",
     "@rjsf/material-ui": "^2.5.1",
     "@testing-library/jest-dom": "^5.11.10",

@@ -12,9 +12,9 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from './../json_view_theme'
-// import BasicTable from '../table'
 import Aladin from './../aladin'
 import RGLFormGrid from '../sequence_grid/ob_form_grid'
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     textAlign: 'left',

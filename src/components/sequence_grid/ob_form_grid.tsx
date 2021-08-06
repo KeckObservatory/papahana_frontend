@@ -203,8 +203,6 @@ export default function RGLFormGrid(props: FormGridProps) {
         nlayout = resolveCollision(nlayout, newItem, newCellHeight, newItem.y, 'y') // push other items down
 
         if (myRef) { // update the AutoGridLayout by using a ref 
-            console.log(`${id} expanded: ${expanded}`)
-            console.log(layout)
             const mf = myRef.current as any
             mf.setState({ layout: JSON.parse(JSON.stringify(nlayout)) })
             setLayout(JSON.parse(JSON.stringify(nlayout)))
@@ -212,10 +210,6 @@ export default function RGLFormGrid(props: FormGridProps) {
     }
 
     const handleLayoutChange = (nlayout: Layout[]) => {
-        // console.log("match auto grid layout with ob form layout triggered")
-        //todo: handle init case
-        console.log(`layout changed to ${JSON.stringify(nlayout)}`)
-        console.log(nlayout)
         setLayout(JSON.parse(JSON.stringify(nlayout)))
     }
 

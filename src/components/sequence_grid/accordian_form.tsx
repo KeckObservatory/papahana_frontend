@@ -8,7 +8,6 @@ import { IconButton } from '@material-ui/core';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { ObservationBlock } from "../../typings/papahana"
-import { setState } from 'react-jsonschema-form/lib/utils';
 
 export type FormNames = keyof ObservationBlock 
 
@@ -75,7 +74,7 @@ export const Accordian = (props: AccordianProps) => {
                 props.handleExpand(props.id, curr.clientHeight, defaultExpanded, init)
             }, 30 + transitionTime)
         }
-    }, [])
+    }, [props, defaultExpanded])
 
     const handleOpenClose = (e: any, expanded: boolean) => {
         setTimeout(() => { // wait for animation

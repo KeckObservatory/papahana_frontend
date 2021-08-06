@@ -1,6 +1,6 @@
 export interface Container {
 	_id: string,
-	semester: string,
+	sem_id: string,
 	name: string,
 	observation_blocks: string[],
 	comment?: string
@@ -212,7 +212,7 @@ export interface TemplateMetadata extends Metadata {
 export interface TemplateParameter {
   ui_name: string;
   option: string;
-  allowed: string[] | number[];
+  allowed: string[] | number[] | object[];
   default: string | number | null;
   type: string;
   optionality: string;
