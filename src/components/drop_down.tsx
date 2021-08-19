@@ -20,10 +20,15 @@ const useStyles = makeStyles( (theme: Theme) => ({
 
 interface MenuProps {
     arr: string[]
+    disabledArr?: boolean[]
     handleChange: Function 
     value?: string | null | undefined
     placeholder: string
     label: string
+}
+
+const MakeMenuItem = (value: string, key: number, disabled=false) => {
+    return <MenuItem disabled={disabled} value={value} key={key}>{value}</MenuItem>
 }
 
 const DropDown = (props: MenuProps): JSX.Element => { 
@@ -36,7 +41,10 @@ const DropDown = (props: MenuProps): JSX.Element => {
         <MenuItem disabled value="">
             <em>{props.placeholder}</em>
         </MenuItem>
-        {props.arr.map((x,y) =>  <MenuItem value={x} key={y}>{x}</MenuItem>)}
+        {props.arr.map((x,idx) =>  { 
+            const disabled = props.disabledArr? props.disabledArr[idx] : false 
+            return MakeMenuItem(x, idx, disabled) 
+        })}
     </Select>
     </FormControl>
     )}

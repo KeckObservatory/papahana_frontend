@@ -1,6 +1,6 @@
 [
 	{
-		"_id" : "611ade1bcca705b10e6f6474",
+		"_id" : ObjectId("611ade1bcca705b10e6f6474"),
 		"metadata" : {
 			"name" : "KCWI_ifu_acq_offsetStar",
 			"ui_name" : "KCWI direct",
@@ -104,7 +104,7 @@
 		}
 	},
 	{
-		"_id" : "611ade1bcca705b10e6f6475",
+		"_id" : ObjectId("611ade1bcca705b10e6f6475"),
 		"metadata" : {
 			"name" : "KCWI_ifu_acq_direct",
 			"ui_name" : "KCWI direct",
@@ -208,7 +208,7 @@
 		}
 	},
 	{
-		"_id" : "611ade1bcca705b10e6f6476",
+		"_id" : ObjectId("611ade1bcca705b10e6f6476"),
 		"metadata" : {
 			"name" : "KCWI_ifu_sci_stare",
 			"ui_name" : "KCWI stare",
@@ -265,7 +265,7 @@
 		}
 	},
 	{
-		"_id" : "611ade1bcca705b10e6f6477",
+		"_id" : ObjectId("611ade1bcca705b10e6f6477"),
 		"metadata" : {
 			"name" : "KCWI_ifu_sci_dither",
 			"ui_name" : "KCWI dither",
@@ -391,7 +391,7 @@
 		}
 	},
 	{
-		"_id" : "611ade1bcca705b10e6f6478",
+		"_id" : ObjectId("611ade1bcca705b10e6f6478"),
 		"metadata" : {
 			"name" : "sidereal_target",
 			"ui_name" : "Sidereal Target",
@@ -544,7 +544,7 @@
 		}
 	},
 	{
-		"_id" : "611ade1bcca705b10e6f6479",
+		"_id" : ObjectId("611ade1bcca705b10e6f6479"),
 		"metadata" : {
 			"name" : "non_sidereal_target",
 			"ui_name" : "Non-Sidereal Target",
@@ -713,7 +713,7 @@
 		}
 	},
 	{
-		"_id" : "611ade1bcca705b10e6f647a",
+		"_id" : ObjectId("611ade1bcca705b10e6f647a"),
 		"metadata" : {
 			"name" : "multi_object_target",
 			"ui_name" : "Multi-Object Spectroscopy Target",

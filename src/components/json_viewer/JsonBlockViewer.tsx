@@ -1,10 +1,10 @@
+import React, { useEffect, useState } from 'react'
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import { Instrument, ObservationBlock } from '../../typings/papahana'
 import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import PublishIcon from '@material-ui/icons/Publish'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
-import { useState } from 'react'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
 import Grid from '@material-ui/core/Grid'
@@ -68,9 +68,15 @@ export default function JsonBlockViewer(props: Props) {
   const [ob, setOB] = useState({} as ObservationBlock)
   const [theme, setTheme] =
     useQueryParam('theme', withDefault(StringParam, props.theme as string))
+  let obSequences = Object.keys(ob)
 
+  useEffect(() => {
+    obSequences = Object.keys(ob)
+  }, [ob])
+  
   const getOB = (new_ob_id: string): void => {
     api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
+
       if (newOb._id) {
         setOB(newOb)
       }
@@ -159,7 +165,7 @@ export default function JsonBlockViewer(props: Props) {
 
           <Tooltip title="Add template to Selected OB">
             <div className={classes.templateSelect}>
-              <TemplateSelection instrument={instrument} />
+              <TemplateSelection instrument={instrument} obSequences={obSequences} />
             </div>
           </Tooltip>
           <Tooltip title="Change the color theme of the OB JSON display">
@@ -189,11 +195,11 @@ export default function JsonBlockViewer(props: Props) {
           {renderRGL(ob)}
         </Paper>
       </Grid>
-      <Grid item xs={3}>
+      {/* <Grid item xs={3}>
         <Paper className={classes.paper}>
           <Aladin />
         </Paper>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }
