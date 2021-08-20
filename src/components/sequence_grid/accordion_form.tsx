@@ -1,4 +1,4 @@
-import React, { useRef } from 'react'
+import React, { useState, useRef } from 'react'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
@@ -21,7 +21,7 @@ interface withHeightWidthProps {
 }
 interface AccordianProps extends withHeightWidthProps {
     id: string
-    handleExpand: Function
+    handleResize: Function
     name: string
     children?: React.ReactNode
     expanded?: boolean
@@ -59,30 +59,31 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-export const Accordian = (props: AccordianProps) => {
+export const AccordionForm = (props: AccordianProps) => {
     const transitionTime: number = 0 //ms
     const defaultExpanded: boolean = true 
     const classes = useStyles()
     const ref = useRef(null)
+    const [height, setHeight] = useState(0)
 
     React.useEffect( () => {
         if (ref) {
             setTimeout( () => {
                 const curr = ref.current as any
                 const init = true
-                //console.log(`${props.id} initHeight: ${curr.clientHeight}`)
-                props.handleExpand(props.id, curr.clientHeight, defaultExpanded, init)
-            }, 30 + transitionTime)
+                console.log(`${props.id} initHeight: ${curr.clientHeight}`)
+                props.handleResize(props.id, curr.clientHeight, defaultExpanded, init)
+            }, 90 + transitionTime)
         }
     }, [props, defaultExpanded])
 
     const handleOpenClose = (e: any, expanded: boolean) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
-            const height = curr.clientHeight
-            //console.log(`expanded: ${expanded} height of ${props.id}: ${height}`)
-            props.handleExpand(props.id, height, expanded, false)
-        }, 30+transitionTime)
+            setHeight(curr.clientHeight) // carefull, height takes time to set
+            console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
+            props.handleResize(props.id, curr.clientHeight, expanded, false)
+        }, 90+transitionTime)
     }
 
     return (

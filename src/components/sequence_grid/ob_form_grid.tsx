@@ -2,7 +2,7 @@ import React from 'react'
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
-import { Accordian } from './accordian_form';
+import { AccordionForm } from './accordion_form';
 import TemplateForm from '../forms/template_form';
 import { ObservationBlock, OBComponentNames, OBComponent, Science, BaseSequence, OBSequence } from '../../typings/papahana';
 
@@ -95,12 +95,7 @@ export default function RGLFormGrid(props: FormGridProps) {
     let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
-
-    // const [layout, setLayout] = React.useState([] as Layout[])
-    // setLayout(init_layout)
-
     const [accordItems, setAccordItems] = React.useState<JSX.Element[]>([])
-
     const [layout, setLayout] = React.useState(init_layout)
 
 
@@ -116,18 +111,6 @@ export default function RGLFormGrid(props: FormGridProps) {
             mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
         }
     }, [])
-
-    //TODO use this to check if OB size changes, or if there are new components
-    // React.useEffect(() => {
-    //     console.log(`ob and/or layout changed to ${JSON.stringify(layout)}`)
-    //     // console.log('inside RGLFormGrid. init accoridan items')
-    //     const newAccordItems = makeAccordItems(layout, obComponents)
-    //     setAccordItems(newAccordItems)
-    //     const mf = myRef.current as any
-    //     mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
-
-    // }, [props.ob])
-
 
     const makeAccordItems = (lo: Layout[], obComps: Partial<ObservationBlock>) => {
         // console.log('resolving collisions')
@@ -166,15 +149,12 @@ export default function RGLFormGrid(props: FormGridProps) {
     }
 
 
-    const updateOB = (componentName: OBComponentNames, formData: OBSequence) => {
-        console.log(`component: ${componentName} getting updated`)
-        console.log(formData)
-        console.log(props.ob)
+    const updateOB = (componentName: OBComponentNames, formData: OBSequence, newHeight?: number) => {
+        console.log(`component: ${componentName} getting updated.`)
+        console.log(`component height: ${newHeight}.`)
 
         if (Object.keys(formData).length > 0) {
             const oldComponent = props.ob[componentName as keyof ObservationBlock] as OBComponent
-            let newComponent = { ...oldComponent }
-            console.log(newComponent)
             let newOb = { ...props.ob }
             //handle sequences
             if (componentName.includes('science')) {
@@ -187,21 +167,19 @@ export default function RGLFormGrid(props: FormGridProps) {
         }
     }
 
-    const handleExpand = (id: string, cellHeight: number, expanded: boolean, init = false) => {
-        let newCellHeight = 1
-        if (expanded) { //assumes animation completed
-            newCellHeight = calcRowHeight(cellHeight)
-        }
-        let newItem = getLayoutItem(layout, id)
+    const handleResize = (componentName: OBComponentNames, newHeight: number, resize: boolean, init:boolean = false) => {
+        const newCellHeight = resize? calcRowHeight(newHeight) : 1 
+        let newItem = getLayoutItem(layout, componentName)
 
         //get new layout
         let nlayout = layout.filter((item: Layout) => {
-            return !item.i.includes(id)
+            return !item.i.includes(componentName)
         })
+
         newItem.h = newCellHeight
         nlayout.push(newItem)
-        nlayout = sortLayoutItems(nlayout, props.compactType)
-        nlayout = resolveCollision(nlayout, newItem, newCellHeight, newItem.y, 'y') // push other items down
+        nlayout = sortLayoutItems([...nlayout], props.compactType)
+        nlayout = resolveCollision([...nlayout], newItem, newCellHeight, newItem.y, 'y') // push other items down
 
         if (myRef) { // update the AutoGridLayout by using a ref 
             const mf = myRef.current as any
@@ -224,9 +202,9 @@ export default function RGLFormGrid(props: FormGridProps) {
                 onDragStart={(e: any) => { e.dataTransfer.setData('text/plain', '') }
                 }
             >
-                <Accordian name={lo.i} id={lo.i} handleExpand={handleExpand}>
+                <AccordionForm name={lo.i} id={lo.i} handleResize={handleResize}>
                     {formChild}
-                </Accordian>
+                </AccordionForm>
             </div>
         )
     }
