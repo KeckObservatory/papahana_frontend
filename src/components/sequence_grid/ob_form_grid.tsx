@@ -150,7 +150,7 @@ export default function RGLFormGrid(props: FormGridProps) {
 
 
     const updateOB = (componentName: OBComponentNames, formData: OBSequence, newHeight?: number) => {
-        console.log(`component: ${componentName} getting updated.`)
+        // console.log(`component: ${componentName} getting updated.`)
         if (newHeight) { handleResize(componentName, newHeight, true, false) }
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
@@ -195,7 +195,7 @@ export default function RGLFormGrid(props: FormGridProps) {
     }
 
     const createForm = (id: string, obComponent: OBComponent ): JSX.Element => {
-        return <TemplateForm id={id} updateOB={updateOB} handleResize={handleResize} obComponent={obComponent} />
+        return <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
     }
 
     const createAccordianDiv = (lo: Layout, formChild: JSX.Element) => {

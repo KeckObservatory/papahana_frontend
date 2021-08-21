@@ -32,7 +32,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   obComponent: OBComponent
   updateOB: Function
-  handleResize: Function
   id: string
 }
 export const log = (type: any) => console.log.bind(console, type);
