@@ -116,9 +116,9 @@ export default function RGLFormGrid(props: FormGridProps) {
         // console.log('resolving collisions')
         lo = resolveCollision(lo, lo[0], defaultRowHeight, lo[0].y, 'y') // push other items down
         const accordItems = lo.map((lo: Layout) => {
-            const componentName = lo.i as OBComponentNames
-            const obComponent = obComps[componentName as keyof ObservationBlock] as OBComponent
-            const formChild = createForm(componentName, obComponent)
+            const id = lo.i as OBComponentNames
+            const obComponent = obComps[id as keyof ObservationBlock] as OBComponent
+            const formChild = createForm(id, obComponent)
             return createAccordianDiv(lo, formChild)
         })
         return accordItems
@@ -151,10 +151,8 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     const updateOB = (componentName: OBComponentNames, formData: OBSequence, newHeight?: number) => {
         console.log(`component: ${componentName} getting updated.`)
-        console.log(`component height: ${newHeight}.`)
-
+        if (newHeight) { handleResize(componentName, newHeight, true, false) }
         if (Object.keys(formData).length > 0) {
-            const oldComponent = props.ob[componentName as keyof ObservationBlock] as OBComponent
             let newOb = { ...props.ob }
             //handle sequences
             if (componentName.includes('science')) {
@@ -178,8 +176,12 @@ export default function RGLFormGrid(props: FormGridProps) {
 
         newItem.h = newCellHeight
         nlayout.push(newItem)
+        // console.log('nlayout before')
+        // console.log(nlayout)
         nlayout = sortLayoutItems([...nlayout], props.compactType)
         nlayout = resolveCollision([...nlayout], newItem, newCellHeight, newItem.y, 'y') // push other items down
+        // console.log('after')
+        // console.log(nlayout)
 
         if (myRef) { // update the AutoGridLayout by using a ref 
             const mf = myRef.current as any
@@ -192,8 +194,8 @@ export default function RGLFormGrid(props: FormGridProps) {
         setLayout(JSON.parse(JSON.stringify(nlayout)))
     }
 
-    const createForm = (componentName: OBComponentNames, obComponent: OBComponent): JSX.Element => {
-        return <TemplateForm updateOB={updateOB} componentName={componentName} obComponent={obComponent} />
+    const createForm = (id: string, obComponent: OBComponent ): JSX.Element => {
+        return <TemplateForm id={id} updateOB={updateOB} handleResize={handleResize} obComponent={obComponent} />
     }
 
     const createAccordianDiv = (lo: Layout, formChild: JSX.Element) => {

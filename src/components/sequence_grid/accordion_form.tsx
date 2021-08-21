@@ -71,9 +71,9 @@ export const AccordionForm = (props: AccordianProps) => {
             setTimeout( () => {
                 const curr = ref.current as any
                 const init = true
-                console.log(`${props.id} initHeight: ${curr.clientHeight}`)
+                // console.log(`${props.id} initHeight: ${curr.clientHeight}`)
                 props.handleResize(props.id, curr.clientHeight, defaultExpanded, init)
-            }, 90 + transitionTime)
+            }, 30 + transitionTime)
         }
     }, [props, defaultExpanded])
 
@@ -81,9 +81,9 @@ export const AccordionForm = (props: AccordianProps) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
             setHeight(curr.clientHeight) // carefull, height takes time to set
-            console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
+            // console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
             props.handleResize(props.id, curr.clientHeight, expanded, false)
-        }, 90+transitionTime)
+        }, 30+transitionTime)
     }
 
     return (

@@ -30,25 +30,26 @@ export const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 interface Props {
-  obComponent: OBComponent,
-  updateOB: Function,
-  componentName: OBComponentNames
+  obComponent: OBComponent
+  updateOB: Function
+  handleResize: Function
+  id: string
 }
 export const log = (type: any) => console.log.bind(console, type);
 
-const getUiSchema = (componentName: OBComponentNames): UiSchema => {
+const getUiSchema = (id: string): UiSchema => {
   let uiSchema: UiSchema
-  if (componentName === 'target') {
+  if (id === 'target') {
     uiSchema = sch.uiTargetSchema
   }
-  else if (componentName === 'acquisition') {
+  else if (id === 'acquisition') {
     uiSchema = sch.uiAcquisitionSchema
   }
-  else if (componentName.includes('science')) {
+  else if (id.includes('science')) {
     uiSchema = sch.uiScienceSchema
   }
   else {
-    console.log(`componentName ${componentName} has undefined schema`)
+    console.log(`component ${id} has undefined schema`)
     uiSchema = {}
   }
   return uiSchema
@@ -137,23 +138,25 @@ const template_to_schema = (template: Template): JSONSchema7 => {
 export default function TemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const uiSchema = getUiSchema(props.componentName)
+  const uiSchema = getUiSchema(props.id)
   let formData: { [key: string]: any } = {}
   const ref = React.useRef(null)
 
-  if (props.componentName === 'target') {
+  if (props.id === 'target') {
     formData = props.obComponent
   }
-  if (props.componentName === 'sequences') {
+  if (props.id === 'sequences') {
     const seq = props.obComponent as OBSequence
     formData = seq.parameters
   }
 
-  // const [height, setHeight] = React.useState(0)
-  let height = 0
+  let height = 0 //monitor the height of the form
 
   React.useEffect(() => {
-    if (props.componentName === 'target') {
+    const curr = ref.current as any;
+    height = curr.clientHeight;
+
+    if (props.id === 'target') {
       setSchema(sch.targetSchema as JSONSchema7)
     }
     else {
@@ -170,27 +173,18 @@ export default function TemplateForm(props: Props): JSX.Element {
     }
   }, [])
 
-  React.useEffect(() => {
-    console.log(`template form ${props.componentName} height changed to ${height}`)
-    // props.handleResize(props.componentName, height, true)
-  }, [height])
-
-
   const handleChange = (evt: ISubmitEvent<OBComponent>): void => {
     const curr = ref.current as any
-    console.log('form changed')
-    console.log(curr.clientHeight)
-    console.log('updating form')
+    //todo how to tell if change is from array size changing
+    // console.log('form changed')
+    // console.log(evt)
+    // console.log(`height ${height} vs current height of ${curr.clientHeight}`)
+    // console.log('updating form')
     let newFormData = { ...evt.formData }
-    if (curr && height !== curr.clientHeight) {
-      props.updateOB(props.componentName, newFormData, curr.clientHeight)
-      height = curr.clientHeight
-      // setHeight(curr.clientHeight)
-    }
-    else{
-
-      props.updateOB(props.componentName, newFormData)
-    }
+    // check if form changed heights
+    let newHeight: number = height!==curr.clientHeight? curr.clientHeight : undefined
+    props.updateOB(props.id, newFormData, newHeight)
+    height = curr.clientHeight
   }
 
 
