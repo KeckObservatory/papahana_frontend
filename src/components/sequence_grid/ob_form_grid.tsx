@@ -91,26 +91,44 @@ export default function RGLFormGrid(props: FormGridProps) {
     let myRef = React.useRef(null)
 
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
-    const formNames = Object.keys(obComponents)
+    let formNames = Object.keys(obComponents)
     let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
     const [accordItems, setAccordItems] = React.useState<JSX.Element[]>([])
     const [layout, setLayout] = React.useState(init_layout)
 
+    const renderAccordItems = (new_layout: any) => {
+        if (new_layout.length > 0) {
+            const newAccordItems = makeAccordItems(new_layout, obComponents)
+            setAccordItems(newAccordItems)
+        }
+    }
 
     // After component rendered
     React.useEffect(() => {
-        console.log(`init layout ${JSON.stringify(layout)}`)
-        if (layout.length > 0) {
-            const newAccordItems = makeAccordItems(layout, obComponents)
-            console.log('setting accord items')
-            setAccordItems(newAccordItems)
-            const mf = myRef.current as any
-            console.log(`myRef.layout ${mf.layout}`)
-            mf.setState({ layout: JSON.parse(JSON.stringify(layout)) })
-        }
+        renderAccordItems(layout)
+        const mf = myRef.current as any
+        mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
     }, [])
+
+    // Add new sequence to component
+    React.useEffect(() => {
+        const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
+        const newFormNames = Object.keys(obComponents)
+        if (newFormNames.length > formNames.length) {
+            formNames = newFormNames
+            let new_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
+            setLayout(JSON.parse(JSON.stringify(new_layout)))
+            // console.log(`new layout ${JSON.stringify(new_layout)}`)
+            new_layout = sortLayoutItems(new_layout, props.compactType)
+            renderAccordItems(new_layout)
+            const mf = myRef.current as any
+            mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
+        }
+
+    }, [props.ob])
+
 
     const makeAccordItems = (lo: Layout[], obComps: Partial<ObservationBlock>) => {
         // console.log('resolving collisions')
@@ -124,7 +142,7 @@ export default function RGLFormGrid(props: FormGridProps) {
         return accordItems
     }
 
-    const updateOBSequence = (componentName: string, ob: ObservationBlock, formData: OBSequence):ObservationBlock => {
+    const updateOBSequence = (componentName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
         let newOb = { ...ob }
         //get science idx from name
         const idx = JSON.parse(componentName.substring(componentName.indexOf('_') + 1))
@@ -133,24 +151,23 @@ export default function RGLFormGrid(props: FormGridProps) {
             seq[idx].parameters[key] = value
         })
         newOb.sequences = seq
-        return newOb 
+        return newOb
     }
 
-    const updateOBComponent = (componentName: string, ob: ObservationBlock, formData: {[key: string]: any}): ObservationBlock => {
-        let component = ob[componentName as keyof ObservationBlock] as BaseSequence 
-        let params = component.parameters 
+    const updateOBComponent = (componentName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
+        let component = ob[componentName as keyof ObservationBlock] as BaseSequence
+        let params = component.parameters
         // let params = newComponent.parameters
         Object.entries(formData).forEach(([key, value]) => {
             params[key] = value
         })
         component.parameters = params
-        ob[componentName as keyof ObservationBlock] = component as any 
+        ob[componentName as keyof ObservationBlock] = component as any
         return ob as ObservationBlock
     }
 
 
     const updateOB = (componentName: OBComponentNames, formData: OBSequence, newHeight?: number) => {
-        // console.log(`component: ${componentName} getting updated.`)
         if (newHeight) { handleResize(componentName, newHeight, true, false) }
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
@@ -165,11 +182,16 @@ export default function RGLFormGrid(props: FormGridProps) {
         }
     }
 
-    const handleResize = (componentName: OBComponentNames, newHeight: number, resize: boolean, init:boolean = false) => {
-        const newCellHeight = resize? calcRowHeight(newHeight) : 1 
+    const handleResize = (componentName: OBComponentNames, newHeight: number, resize: boolean, init: boolean = false) => {
+        const newCellHeight = resize ? calcRowHeight(newHeight) : 1
         let newItem = getLayoutItem(layout, componentName)
+        newItem = newItem.i ? newItem : { h: newItem.h, w: 1, x: 0, y: 0, i: componentName }
 
         //get new layout
+        // console.log(`handling resize for ${componentName}`)
+        // console.log('nlayout before')
+        // console.log(layout)
+        // console.log(newItem)
         let nlayout = layout.filter((item: Layout) => {
             return !item.i.includes(componentName)
         })
@@ -194,7 +216,7 @@ export default function RGLFormGrid(props: FormGridProps) {
         setLayout(JSON.parse(JSON.stringify(nlayout)))
     }
 
-    const createForm = (id: string, obComponent: OBComponent ): JSX.Element => {
+    const createForm = (id: string, obComponent: OBComponent): JSX.Element => {
         return <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
     }
 

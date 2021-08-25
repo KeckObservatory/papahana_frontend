@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
-import { Instrument, ObservationBlock } from '../../typings/papahana'
+import { Instrument, OBComponentNames, OBSequence, ObservationBlock } from '../../typings/papahana'
 import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import PublishIcon from '@material-ui/icons/Publish'
@@ -123,6 +123,20 @@ export default function JsonBlockViewer(props: Props) {
     getOB(new_ob_id)
   }
 
+  const addSeq = (seq: OBSequence) => {
+    console.log(`adding sequence to ob`)
+    console.log(seq)
+    let newOB = {...ob} as any
+  const tmplType = seq.metadata.template_type
+  if (tmplType.includes('science') && ob.sequences) {
+    newOB.sequences?.push(seq)
+  }
+  else {
+    newOB[tmplType as OBComponentNames] = seq
+  }
+  setOB(newOB)
+  }
+
   const renderRGL = (ob: ObservationBlock) => {
     const empty = Object.keys(ob).length > 0
     if (empty) {
@@ -165,7 +179,7 @@ export default function JsonBlockViewer(props: Props) {
 
           <Tooltip title="Add template to Selected OB">
             <div className={classes.templateSelect}>
-              <TemplateSelection instrument={instrument} obSequences={obSequences} />
+              <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={obSequences} />
             </div>
           </Tooltip>
           <Tooltip title="Change the color theme of the OB JSON display">

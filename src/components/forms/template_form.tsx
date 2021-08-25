@@ -1,5 +1,3 @@
-
-
 import React, { } from "react"
 import { Template, OBComponent, OBComponentNames, TemplateParameter, OBSequence } from "../../typings/papahana"
 import { ISubmitEvent } from "@rjsf/core";
