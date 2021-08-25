@@ -29,6 +29,16 @@ const parse_template_arr = (arr: TemplateEntry[]): string[] => {
     )
 }
 
+const add_targets = (tList: string[], dList: boolean[], obSequences: string[]):void  => {
+    //todo: get list of targets from api
+    const targetTemplates = ['sidereal_target','non_sidereal_target', 'multi_object_target' ]
+    targetTemplates.forEach( (tgtName: string) => {
+        tList.push(tgtName)
+        const disabled = obSequences.includes('target')
+        dList.push(disabled)
+    })
+}
+
 const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[]] => {
     let tList: string[] = []
     let dList: boolean[] = []
@@ -38,6 +48,7 @@ const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequ
         tList = tList.concat(templateNames)
         dList = dList.concat(disabled)
     })
+    add_targets(tList, dList, obSequences)
     return [tList, dList]
 }
 
