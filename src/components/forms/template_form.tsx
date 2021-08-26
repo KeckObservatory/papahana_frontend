@@ -138,11 +138,13 @@ export default function TemplateForm(props: Props): JSX.Element {
   const uiSchema = getUiSchema(props.id)
   let formData: { [key: string]: any } = {}
   const ref = React.useRef(null)
+  console.log('props id')
+  console.log(props.id)
 
   if (props.id === 'target') {
     formData = props.obComponent
   }
-  if (props.id === 'sequences') {
+  else {
     const seq = props.obComponent as OBSequence
     formData = seq.parameters
   }
@@ -192,7 +194,7 @@ export default function TemplateForm(props: Props): JSX.Element {
         uiSchema={uiSchema as any}
         formData={formData}
         onChange={handleChange}
-        onError={log("errors")} />
+        onError={log("errors")} ><div></div></Form>
     </div>
   )
 }

@@ -29,8 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
             minHeight: ROW_HEIGHT
         },
         templateAccordian: {
-            padding: theme.spacing(0),
-            margin: theme.spacing(0),
+            padding: theme.spacing(1),
+            margin: theme.spacing(1),
             alignItems: 'center',
             backgroundColor: theme.palette.divider,
         },
@@ -86,7 +86,6 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
 }
 
 export default function RGLFormGrid(props: FormGridProps) {
-    console.log(props.ob)
     const classes = useStyles()
     const defaultRowHeight = calcRowHeight(ROW_HEIGHT)
     let myRef = React.useRef(null)
@@ -94,7 +93,7 @@ export default function RGLFormGrid(props: FormGridProps) {
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
     let formNames = Object.keys(obComponents)
     let sequenceLength = props.ob.sequences?.length
-    let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
+    let init_layout = initLayout(formNames) 
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
     const [accordItems, setAccordItems] = React.useState<JSX.Element[]>([])
@@ -109,11 +108,10 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     // After component rendered
     React.useEffect(() => {
+        formNames = Object.keys(obComponents)
+        sequenceLength = props.ob.sequences?.length
         renderAccordItems(layout)
         const mf = myRef.current as any
-        console.log(`setting layout`)
-        console.log(layout)
-        console.log(mf)
         mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
     }, [])
 
@@ -122,19 +120,24 @@ export default function RGLFormGrid(props: FormGridProps) {
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         const newFormNames = Object.keys(obComponents)
         const newSequenceLength = props.ob.sequences?.length
-        const seqChanged = newFormNames.length > formNames.length || newSequenceLength == sequenceLength
-        console.log(`ob seq changed? ${seqChanged}`)
-        if (seqChanged) {
+
+        //todo: distinguish between form edit and new sequence
+        let seqChanged = newFormNames.length > formNames.length || newSequenceLength !== sequenceLength
+        console.log(seqChanged)
+        console.log('formNames')
+        console.log(formNames)
+        // if (seqChanged) {
+        if (true) {
             formNames = newFormNames
             sequenceLength = newSequenceLength
 
             let new_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
             setLayout(JSON.parse(JSON.stringify(new_layout)))
-            // console.log(`new layout ${JSON.stringify(new_layout)}`)
             new_layout = sortLayoutItems(new_layout, props.compactType)
             renderAccordItems(new_layout)
             const mf = myRef.current as any
-            mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
+            console.log(new_layout)
+            mf?.setState({ layout: JSON.parse(JSON.stringify(new_layout)) })
         }
     }, [props.ob])
 
@@ -193,8 +196,16 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     const deleteSequence = (seqName: OBSeqNames, idx?: number) => {
         const newOB = { ...props.ob } as any
-        if (Number.isInteger(idx)) { 
-            newOB[seqName] = newOB[seqName].splice(idx, 1)
+        const deleteElem = Number.isInteger(idx)
+        if (deleteElem) {
+            const newSeq = newOB[seqName].splice(idx, 1)
+            const deleteArr = newOB[seqName].length < 1
+            if (deleteArr) {
+                delete newOB[seqName]
+            }
+            else {
+                newOB[seqName] = newSeq
+            }
         }
         else {
             delete newOB[seqName]
@@ -247,7 +258,7 @@ export default function RGLFormGrid(props: FormGridProps) {
             console.log(`sequence ${lo.i} getting deleted`)
             if (lo.i.includes('science')) {
                 const idx = parseInt(lo.i.split('_')[1], 10) as number
-                deleteSequence('sequences' as OBSeqNames , idx)
+                deleteSequence('sequences' as OBSeqNames, idx)
             }
             else {
                 deleteSequence(lo.i as OBSeqNames)
@@ -267,6 +278,7 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     return (
         <div className={classes.templateAccordian} style={{ position: "relative" }}>
+            { layout.length>0 &&
             <AutoGridLayout
                 ref={myRef}
                 className="layout"
@@ -282,6 +294,7 @@ export default function RGLFormGrid(props: FormGridProps) {
             >
                 {accordItems}
             </AutoGridLayout>
+}
         </div>
     )
 }

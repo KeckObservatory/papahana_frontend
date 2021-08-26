@@ -71,8 +71,11 @@ export default function TemplateSelection(props: Props) {
     }, [props.instrument])
 
     useEffect(() => {
-        console.log('inside ts ob sequence change')
+        console.log('inside template selection ob sequence change')
         const [tList, dList] = create_drop_down_list(templates, props.obSequences)
+        console.log(props.obSequences)
+        console.log(tList)
+        console.log(dList)
         setTemplateList(tList)
         setDisabledArr(dList)
     }, [props.obSequences])

@@ -131,6 +131,9 @@ export default function JsonBlockViewer(props: Props) {
   if (tmplType.includes('science') && ob.sequences) {
     newOB.sequences?.push(seq)
   }
+  else if (tmplType.includes('science') && !ob.sequences) {
+    newOB['sequences'] = [seq]
+  }
   else {
     newOB[tmplType as OBSeqNames] = seq
   }
