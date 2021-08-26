@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
-import { Instrument, OBComponentNames, OBSequence, ObservationBlock } from '../../typings/papahana'
+import { Instrument, OBSeqNames, OBSequence, ObservationBlock } from '../../typings/papahana'
 import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import PublishIcon from '@material-ui/icons/Publish'
@@ -132,7 +132,7 @@ export default function JsonBlockViewer(props: Props) {
     newOB.sequences?.push(seq)
   }
   else {
-    newOB[tmplType as OBComponentNames] = seq
+    newOB[tmplType as OBSeqNames] = seq
   }
   setOB(newOB)
   }

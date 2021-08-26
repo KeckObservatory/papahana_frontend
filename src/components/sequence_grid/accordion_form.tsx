@@ -4,12 +4,14 @@ import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { IconButton } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete'
+import { IconButton, Tooltip } from '@material-ui/core';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import { ObservationBlock } from "../../typings/papahana"
+import { DeleteSequenceButton } from './delete_sequence_button'
 
-export type FormNames = keyof ObservationBlock 
+export type FormNames = keyof ObservationBlock
 
 interface Size {
     width: number,
@@ -22,13 +24,14 @@ interface withHeightWidthProps {
 interface AccordianProps extends withHeightWidthProps {
     id: string
     handleResize: Function
+    handleDelete: Function
     name: string
     children?: React.ReactNode
     expanded?: boolean
 }
 
 
-const rowHeight: number = 45 
+const rowHeight: number = 45
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -61,14 +64,14 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const AccordionForm = (props: AccordianProps) => {
     const transitionTime: number = 0 //ms
-    const defaultExpanded: boolean = true 
+    const defaultExpanded: boolean = true
     const classes = useStyles()
     const ref = useRef(null)
     const [height, setHeight] = useState(0)
 
-    React.useEffect( () => {
+    React.useEffect(() => {
         if (ref) {
-            setTimeout( () => {
+            setTimeout(() => {
                 const curr = ref.current as any
                 const init = true
                 // console.log(`${props.id} initHeight: ${curr.clientHeight}`)
@@ -77,20 +80,21 @@ export const AccordionForm = (props: AccordianProps) => {
         }
     }, [props, defaultExpanded])
 
+
     const handleOpenClose = (e: any, expanded: boolean) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
             setHeight(curr.clientHeight) // carefull, height takes time to set
             // console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
             props.handleResize(props.id, curr.clientHeight, expanded, false)
-        }, 30+transitionTime)
+        }, 30 + transitionTime)
     }
 
     return (
         <Accordion className={classes.cell} ref={ref}
             defaultExpanded={defaultExpanded}
             onChange={handleOpenClose}
-            TransitionProps={{timeout: transitionTime}}
+            TransitionProps={{ timeout: transitionTime }}
         >
             <AccordionSummary
                 className={classes.accordianSummary}
@@ -99,14 +103,17 @@ export const AccordionForm = (props: AccordianProps) => {
                 id="panel1a-header"
                 aria-label="Expand"
             >
-                <IconButton 
-                  className="dragme"
-                  aria-label='open'
-                  onClick={(event) => event.stopPropagation()}
-                  onFocus={(event) => event.stopPropagation()}
-                >
-                    <OpenWithIcon />
-                </IconButton>
+                <Tooltip title="Drag form">
+                    <IconButton
+                        className="dragme"
+                        aria-label='open'
+                        onClick={(event) => event.stopPropagation()}
+                        onFocus={(event) => event.stopPropagation()}
+                    >
+                        <OpenWithIcon />
+                    </IconButton>
+                </Tooltip>
+                <DeleteSequenceButton handleDelete={props.handleDelete} />
                 <Typography variant={"h6"} className={classes.heading}>{props.name}</Typography>
             </AccordionSummary>
             <AccordionDetails >

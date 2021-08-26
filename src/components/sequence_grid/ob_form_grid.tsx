@@ -4,13 +4,13 @@ import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
 import { AccordionForm } from './accordion_form';
 import TemplateForm from '../forms/template_form';
-import { ObservationBlock, OBComponentNames, OBComponent, Science, BaseSequence, OBSequence } from '../../typings/papahana';
+import { ObservationBlock, OBSeqNames, OBComponent, Science, BaseSequence, OBSequence } from '../../typings/papahana';
 
 const ROW_HEIGHT: number = 45
 const nCols: number = 3
 const AutoGridLayout = WidthProvider(RGL)
 
-const obComponentNames: OBComponentNames[] = ['acquisition', 'sequences', 'target']
+const obComponentNames: OBSeqNames[] = ['acquisition', 'sequences', 'target']
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -86,12 +86,14 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
 }
 
 export default function RGLFormGrid(props: FormGridProps) {
+    console.log(props.ob)
     const classes = useStyles()
     const defaultRowHeight = calcRowHeight(ROW_HEIGHT)
     let myRef = React.useRef(null)
 
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
     let formNames = Object.keys(obComponents)
+    let sequenceLength = props.ob.sequences?.length
     let init_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
@@ -109,6 +111,9 @@ export default function RGLFormGrid(props: FormGridProps) {
     React.useEffect(() => {
         renderAccordItems(layout)
         const mf = myRef.current as any
+        console.log(`setting layout`)
+        console.log(layout)
+        console.log(mf)
         mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
     }, [])
 
@@ -116,8 +121,13 @@ export default function RGLFormGrid(props: FormGridProps) {
     React.useEffect(() => {
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         const newFormNames = Object.keys(obComponents)
-        if (newFormNames.length > formNames.length) {
+        const newSequenceLength = props.ob.sequences?.length
+        const seqChanged = newFormNames.length > formNames.length || newSequenceLength == sequenceLength
+        console.log(`ob seq changed? ${seqChanged}`)
+        if (seqChanged) {
             formNames = newFormNames
+            sequenceLength = newSequenceLength
+
             let new_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
             setLayout(JSON.parse(JSON.stringify(new_layout)))
             // console.log(`new layout ${JSON.stringify(new_layout)}`)
@@ -126,7 +136,6 @@ export default function RGLFormGrid(props: FormGridProps) {
             const mf = myRef.current as any
             mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
         }
-
     }, [props.ob])
 
 
@@ -134,7 +143,7 @@ export default function RGLFormGrid(props: FormGridProps) {
         // console.log('resolving collisions')
         lo = resolveCollision(lo, lo[0], defaultRowHeight, lo[0].y, 'y') // push other items down
         const accordItems = lo.map((lo: Layout) => {
-            const id = lo.i as OBComponentNames
+            const id = lo.i as OBSeqNames
             const obComponent = obComps[id as keyof ObservationBlock] as OBComponent
             const formChild = createForm(id, obComponent)
             return createAccordianDiv(lo, formChild)
@@ -142,10 +151,10 @@ export default function RGLFormGrid(props: FormGridProps) {
         return accordItems
     }
 
-    const updateOBSequence = (componentName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
+    const updateOBSequence = (seqName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
         let newOb = { ...ob }
         //get science idx from name
-        const idx = JSON.parse(componentName.substring(componentName.indexOf('_') + 1))
+        const idx = JSON.parse(seqName.substring(seqName.indexOf('_') + 1))
         let seq = ob?.sequences as Science[]
         Object.entries(formData).forEach(([key, value]) => {
             seq[idx].parameters[key] = value
@@ -154,46 +163,59 @@ export default function RGLFormGrid(props: FormGridProps) {
         return newOb
     }
 
-    const updateOBComponent = (componentName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
-        let component = ob[componentName as keyof ObservationBlock] as BaseSequence
+    const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
+        let component = ob[seqName as keyof ObservationBlock] as BaseSequence
         let params = component.parameters
         // let params = newComponent.parameters
         Object.entries(formData).forEach(([key, value]) => {
             params[key] = value
         })
         component.parameters = params
-        ob[componentName as keyof ObservationBlock] = component as any
+        ob[seqName as keyof ObservationBlock] = component as any
         return ob as ObservationBlock
     }
 
 
-    const updateOB = (componentName: OBComponentNames, formData: OBSequence, newHeight?: number) => {
-        if (newHeight) { handleResize(componentName, newHeight, true, false) }
+    const updateOB = (seqName: OBSeqNames, formData: OBSequence, newHeight?: number) => {
+        if (newHeight) { handleResize(seqName, newHeight, true, false) }
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
             //handle sequences
-            if (componentName.includes('science')) {
-                newOb = updateOBSequence(componentName, newOb, formData)
+            if (seqName.includes('science')) {
+                newOb = updateOBSequence(seqName, newOb, formData)
             }
             else {
-                newOb = updateOBComponent(componentName, newOb, formData)
+                newOb = updateOBComponent(seqName, newOb, formData)
             }
             props.setOB(newOb)
         }
     }
 
-    const handleResize = (componentName: OBComponentNames, newHeight: number, resize: boolean, init: boolean = false) => {
+    const deleteSequence = (seqName: OBSeqNames, idx?: number) => {
+        const newOB = { ...props.ob } as any
+        if (Number.isInteger(idx)) { 
+            newOB[seqName] = newOB[seqName].splice(idx, 1)
+        }
+        else {
+            delete newOB[seqName]
+        }
+        console.log(`seqName is getting removed ${seqName}, array to remove ${idx}`)
+        console.log(newOB)
+        props.setOB(newOB)
+    }
+
+    const handleResize = (seqName: OBSeqNames, newHeight: number, resize: boolean, init: boolean = false) => {
         const newCellHeight = resize ? calcRowHeight(newHeight) : 1
-        let newItem = getLayoutItem(layout, componentName)
-        newItem = newItem.i ? newItem : { h: newItem.h, w: 1, x: 0, y: 0, i: componentName }
+        let newItem = getLayoutItem(layout, seqName)
+        newItem = newItem.i ? newItem : { h: newItem.h, w: 1, x: 0, y: 0, i: seqName }
 
         //get new layout
-        // console.log(`handling resize for ${componentName}`)
+        // console.log(`handling resize for ${seqName}`)
         // console.log('nlayout before')
         // console.log(layout)
         // console.log(newItem)
         let nlayout = layout.filter((item: Layout) => {
-            return !item.i.includes(componentName)
+            return !item.i.includes(seqName)
         })
 
         newItem.h = newCellHeight
@@ -221,12 +243,22 @@ export default function RGLFormGrid(props: FormGridProps) {
     }
 
     const createAccordianDiv = (lo: Layout, formChild: JSX.Element) => {
+        const handleDelete = () => {
+            console.log(`sequence ${lo.i} getting deleted`)
+            if (lo.i.includes('science')) {
+                const idx = parseInt(lo.i.split('_')[1], 10) as number
+                deleteSequence('sequences' as OBSeqNames , idx)
+            }
+            else {
+                deleteSequence(lo.i as OBSeqNames)
+            }
+        }
         return (
             <div data-grid={lo} className={classes.cell} key={lo.i} draggable={true}
                 onDragStart={(e: any) => { e.dataTransfer.setData('text/plain', '') }
                 }
             >
-                <AccordionForm name={lo.i} id={lo.i} handleResize={handleResize}>
+                <AccordionForm handleDelete={handleDelete} name={lo.i} id={lo.i} handleResize={handleResize}>
                     {formChild}
                 </AccordionForm>
             </div>

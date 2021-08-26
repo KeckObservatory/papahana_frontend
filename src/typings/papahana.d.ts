@@ -19,7 +19,7 @@ export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
 export type OBComponent = Target | OBSequence 
-export type OBComponentNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
+export type OBSeqNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
 
 export type OBType = 'science' | 'engineering' | 'calibration'
 export interface Base {
