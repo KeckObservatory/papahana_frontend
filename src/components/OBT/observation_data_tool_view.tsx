@@ -12,9 +12,11 @@ import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from '../json_view_theme'
-import Aladin from './aladin'
+// import Aladin from './aladin'
 import RGLFormGrid from './sequence_grid/ob_form_grid'
 import TemplateSelection from './template_selection'
+import useBoop from './../../hooks/boop'
+import { animated } from 'react-spring'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -64,6 +66,7 @@ export interface Props {
 export default function OBTView(props: Props) {
   const instrument: Instrument = 'KCWI'
   const classes = useStyles();
+  const [boopStyle, triggerBoop] = useBoop({})
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   const [ob, setOB] = useState({} as ObservationBlock)
   const [theme, setTheme] =
@@ -73,7 +76,7 @@ export default function OBTView(props: Props) {
   useEffect(() => {
     obSequences = Object.keys(ob)
   }, [ob])
-  
+
   const getOB = (new_ob_id: string): void => {
     api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
 
@@ -124,18 +127,18 @@ export default function OBTView(props: Props) {
   }
 
   const addSeq = (seq: OBSequence) => {
-    let newOB = {...ob} as any
-  const tmplType = seq.metadata.template_type
-  if (tmplType.includes('science') && ob.sequences) {
-    newOB.sequences?.push(seq)
-  }
-  else if (tmplType.includes('science') && !ob.sequences) {
-    newOB['sequences'] = [seq]
-  }
-  else {
-    newOB[tmplType as OBSeqNames] = seq
-  }
-  setOB(newOB)
+    let newOB = { ...ob } as any
+    const tmplType = seq.metadata.template_type
+    if (tmplType.includes('science') && ob.sequences) {
+      newOB.sequences?.push(seq)
+    }
+    else if (tmplType.includes('science') && !ob.sequences) {
+      newOB['sequences'] = [seq]
+    }
+    else {
+      newOB[tmplType as OBSeqNames] = seq
+    }
+    setOB(newOB)
   }
 
   const renderRGL = (ob: ObservationBlock) => {
@@ -164,11 +167,15 @@ export default function OBTView(props: Props) {
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
           <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
-            <Tooltip title="Update OB in form">
-              <IconButton aria-label='replace' onClick={replaceOB}>
-                <PublishIcon />
+
+            <Tooltip title="Upload OB to database">
+              <IconButton aria-label='replace' onClick={replaceOB} >
+                <animated.button onMouseEnter={triggerBoop} style={boopStyle}>
+                  <PublishIcon />
+                </animated.button>
               </IconButton>
             </Tooltip>
+
             <Tooltip title="Copy OB to new OB">
               <IconButton aria-label='copy' onClick={copyOB}>
                 <FileCopyIcon />
@@ -183,12 +190,12 @@ export default function OBTView(props: Props) {
             </div>
           </Tooltip>
           <Tooltip title="Change the color theme of the OB JSON display">
-          <div>
-          <JsonViewTheme
-            theme={theme as ThemeKeys | null | undefined}
-            setTheme={setTheme}
-          />
-          </div>
+            <div>
+              <JsonViewTheme
+                theme={theme as ThemeKeys | null | undefined}
+                setTheme={setTheme}
+              />
+            </div>
           </Tooltip>
           <ReactJson
             src={ob as object}
