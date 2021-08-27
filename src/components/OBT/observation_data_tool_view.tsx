@@ -11,9 +11,9 @@ import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
-import JsonViewTheme from './../json_view_theme'
-import Aladin from './../aladin'
-import RGLFormGrid from '../sequence_grid/ob_form_grid'
+import JsonViewTheme from '../json_view_theme'
+import Aladin from './aladin'
+import RGLFormGrid from './sequence_grid/ob_form_grid'
 import TemplateSelection from './template_selection'
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -61,7 +61,7 @@ export interface Props {
   editable: boolean
 }
 
-export default function JsonBlockViewer(props: Props) {
+export default function OBTView(props: Props) {
   const instrument: Instrument = 'KCWI'
   const classes = useStyles();
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
@@ -124,8 +124,6 @@ export default function JsonBlockViewer(props: Props) {
   }
 
   const addSeq = (seq: OBSequence) => {
-    console.log(`adding sequence to ob`)
-    console.log(seq)
     let newOB = {...ob} as any
   const tmplType = seq.metadata.template_type
   if (tmplType.includes('science') && ob.sequences) {
@@ -143,7 +141,6 @@ export default function JsonBlockViewer(props: Props) {
   const renderRGL = (ob: ObservationBlock) => {
     const empty = Object.keys(ob).length > 0
     if (empty) {
-      console.log('rendering RGLFormGrid')
       return (
         <RGLFormGrid
           ob={ob}
@@ -221,7 +218,7 @@ export default function JsonBlockViewer(props: Props) {
   )
 }
 
-JsonBlockViewer.defaultProps = {
+OBTView.defaultProps = {
   theme: 'bespin',
   iconStyle: 'circle',
   collapsed: 1,

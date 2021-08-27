@@ -1,4 +1,4 @@
-import { get_ob_list, get_container_list, get_sem_id_list } from './../../api/utils'
+import { get_ob_list, get_container_list, get_sem_id_list } from '../../api/utils'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'

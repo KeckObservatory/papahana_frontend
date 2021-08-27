@@ -1,14 +1,13 @@
-import React, { useState, useRef } from 'react'
+import React, { useRef } from 'react'
 import Accordion from '@material-ui/core/Accordion';
 import AccordionSummary from '@material-ui/core/AccordionSummary';
 import AccordionDetails from '@material-ui/core/AccordionDetails';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import DeleteIcon from '@material-ui/icons/Delete'
 import { IconButton, Tooltip } from '@material-ui/core';
 import OpenWithIcon from '@material-ui/icons/OpenWith';
 import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
-import { ObservationBlock } from "../../typings/papahana"
+import { ObservationBlock } from "../../../typings/papahana"
 import { DeleteSequenceButton } from './delete_sequence_button'
 
 export type FormNames = keyof ObservationBlock
@@ -67,7 +66,6 @@ export const AccordionForm = (props: AccordianProps) => {
     const defaultExpanded: boolean = true
     const classes = useStyles()
     const ref = useRef(null)
-    const [height, setHeight] = useState(0)
 
     React.useEffect(() => {
         if (ref) {
@@ -84,7 +82,6 @@ export const AccordionForm = (props: AccordianProps) => {
     const handleOpenClose = (e: any, expanded: boolean) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
-            setHeight(curr.clientHeight) // carefull, height takes time to set
             // console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
             props.handleResize(props.id, curr.clientHeight, expanded, false)
         }, 30 + transitionTime)

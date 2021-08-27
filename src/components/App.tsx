@@ -1,7 +1,7 @@
 import React  from 'react';
 import { makeStyles } from "@material-ui/core"
 import './App.css';
-import JsonBlockViewer from './json_viewer/JsonBlockViewer'
+import OBTView from './OBT/observation_data_tool_view'
 import Switch from "@material-ui/core/Switch"
 import { createMuiTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -127,7 +127,7 @@ export default function App() {
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <div className={classes.root}>
         <TopBar darkTheme={theme} observer_id={observer_id} handleThemeChange={handleThemeChange} />
-        <JsonBlockViewer observer_id={observer_id} theme={jsonTheme} />
+        <OBTView observer_id={observer_id} theme={jsonTheme} />
       </div>
     </ThemeProvider>
   );

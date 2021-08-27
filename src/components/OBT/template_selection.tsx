@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core'
 import MenuItem from '@material-ui/core/MenuItem';
 import ListSubheader from '@material-ui/core/ListSubheader';
-import DropDown from './../drop_down'
+import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -60,7 +60,6 @@ export default function TemplateSelection(props: Props) {
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
 
     useEffect(() => {
-        console.log('inside ts instrument change')
         get_instrument_package(props.instrument)
             .then((ip: InstrumentPackage) => {
                 const [tList, dList] = create_drop_down_list(ip.templates, props.obSequences)
@@ -71,18 +70,13 @@ export default function TemplateSelection(props: Props) {
     }, [props.instrument])
 
     useEffect(() => {
-        console.log('inside template selection ob sequence change')
         const [tList, dList] = create_drop_down_list(templates, props.obSequences)
-        console.log(props.obSequences)
-        console.log(tList)
-        console.log(dList)
         setTemplateList(tList)
         setDisabledArr(dList)
     }, [props.obSequences])
 
 
     const handleChange = (templateName: string) => {
-        console.log(`${templateName}`)
         get_template(templateName).then((template: Template) => {
             let seq = {
                 'metadata': template.metadata,

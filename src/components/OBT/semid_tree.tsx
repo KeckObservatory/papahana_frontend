@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { Container } from '../../typings/papahana';
 import Tree, { Node, NodeId, Leaf } from '@naisutech/react-tree';
-import { get_containers } from './../../api/utils'
+import { get_containers } from '../../api/utils'
 import { makeStyles } from '@material-ui/styles'
 import { Theme } from '@material-ui/core/styles'
 import { Button } from '@material-ui/core';

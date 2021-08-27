@@ -138,8 +138,6 @@ export default function TemplateForm(props: Props): JSX.Element {
   const uiSchema = getUiSchema(props.id)
   let formData: { [key: string]: any } = {}
   const ref = React.useRef(null)
-  console.log('props id')
-  console.log(props.id)
 
   if (props.id === 'target') {
     formData = props.obComponent

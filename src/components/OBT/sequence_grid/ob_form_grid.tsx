@@ -3,8 +3,8 @@ import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
 import { AccordionForm } from './accordion_form';
-import TemplateForm from '../forms/template_form';
-import { ObservationBlock, OBSeqNames, OBComponent, Science, BaseSequence, OBSequence } from '../../typings/papahana';
+import TemplateForm from '../../forms/template_form';
+import { ObservationBlock, OBSeqNames, OBComponent, Science, BaseSequence, OBSequence } from '../../../typings/papahana';
 
 const ROW_HEIGHT: number = 45
 const nCols: number = 3
@@ -108,8 +108,6 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     // After component rendered
     React.useEffect(() => {
-        formNames = Object.keys(obComponents)
-        sequenceLength = props.ob.sequences?.length
         renderAccordItems(layout)
         const mf = myRef.current as any
         mf?.setState({ layout: JSON.parse(JSON.stringify(layout)) })
@@ -123,27 +121,21 @@ export default function RGLFormGrid(props: FormGridProps) {
 
         //todo: distinguish between form edit and new sequence
         let seqChanged = newFormNames.length > formNames.length || newSequenceLength !== sequenceLength
-        console.log(seqChanged)
-        console.log('formNames')
-        console.log(formNames)
         // if (seqChanged) {
         if (true) {
             formNames = newFormNames
             sequenceLength = newSequenceLength
-
             let new_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
             setLayout(JSON.parse(JSON.stringify(new_layout)))
             new_layout = sortLayoutItems(new_layout, props.compactType)
             renderAccordItems(new_layout)
             const mf = myRef.current as any
-            console.log(new_layout)
             mf?.setState({ layout: JSON.parse(JSON.stringify(new_layout)) })
         }
     }, [props.ob])
 
 
     const makeAccordItems = (lo: Layout[], obComps: Partial<ObservationBlock>) => {
-        // console.log('resolving collisions')
         lo = resolveCollision(lo, lo[0], defaultRowHeight, lo[0].y, 'y') // push other items down
         const accordItems = lo.map((lo: Layout) => {
             const id = lo.i as OBSeqNames
@@ -201,17 +193,19 @@ export default function RGLFormGrid(props: FormGridProps) {
             const newSeq = newOB[seqName].splice(idx, 1)
             const deleteArr = newOB[seqName].length < 1
             if (deleteArr) {
+                console.log('deleting empty sequences array')
                 delete newOB[seqName]
             }
             else {
-                newOB[seqName] = newSeq
+                newOB[seqName].splice(idx, 1)
+                console.log('new array sequence')
+                console.log(newOB[seqName])
             }
         }
         else {
+            console.log('deleting non array item')
             delete newOB[seqName]
         }
-        console.log(`seqName is getting removed ${seqName}, array to remove ${idx}`)
-        console.log(newOB)
         props.setOB(newOB)
     }
 
@@ -255,7 +249,6 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     const createAccordianDiv = (lo: Layout, formChild: JSX.Element) => {
         const handleDelete = () => {
-            console.log(`sequence ${lo.i} getting deleted`)
             if (lo.i.includes('science')) {
                 const idx = parseInt(lo.i.split('_')[1], 10) as number
                 deleteSequence('sequences' as OBSeqNames, idx)
