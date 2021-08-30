@@ -92,7 +92,7 @@ export default function RGLFormGrid(props: FormGridProps) {
 
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
     let formNames = Object.keys(obComponents)
-    let sequenceLength = props.ob.sequences?.length
+    const [sciLen, setSciLen] = React.useState(props.ob.sequences?.length)
     let init_layout = initLayout(formNames) 
     init_layout = sortLayoutItems(init_layout, props.compactType)
 
@@ -117,14 +117,21 @@ export default function RGLFormGrid(props: FormGridProps) {
     React.useEffect(() => {
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         const newFormNames = Object.keys(obComponents)
-        const newSequenceLength = props.ob.sequences?.length
+        const newSciLen = props.ob.sequences?.length
 
-        //todo: distinguish between form edit and new sequence
-        let seqChanged = newFormNames.length > formNames.length || newSequenceLength !== sequenceLength
+        //todo: distinguish between form edit and new sequence and form size change
+        const newForm = newFormNames.length !== layout.length 
+        const newScience = newSciLen !== sciLen 
+        let seqChanged = newForm || newScience
+        console.log(`new form length: ${newFormNames.length} current: ${layout.length}`)
+        console.log(layout)
+        console.log(`new Science Length: ${newSciLen} current: ${sciLen}`)
+        console.log(`new form: ${newForm} ${newScience} reset layout? ${seqChanged}`)
+
         // if (seqChanged) {
         if (true) {
             formNames = newFormNames
-            sequenceLength = newSequenceLength
+            setSciLen(newSciLen)
             let new_layout = initLayout(formNames) //todo: findout why useState is sometimes doesn't return anything
             setLayout(JSON.parse(JSON.stringify(new_layout)))
             new_layout = sortLayoutItems(new_layout, props.compactType)
@@ -190,13 +197,14 @@ export default function RGLFormGrid(props: FormGridProps) {
         const newOB = { ...props.ob } as any
         const deleteElem = Number.isInteger(idx)
         if (deleteElem) {
-            const newSeq = newOB[seqName].splice(idx, 1)
             const deleteArr = newOB[seqName].length < 1
             if (deleteArr) {
                 console.log('deleting empty sequences array')
                 delete newOB[seqName]
             }
             else {
+                console.log(` removing ${idx} from seq`)
+                console.log(...newOB[seqName])
                 newOB[seqName].splice(idx, 1)
                 console.log('new array sequence')
                 console.log(newOB[seqName])
