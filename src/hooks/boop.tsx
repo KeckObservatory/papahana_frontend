@@ -27,7 +27,7 @@ interface SpringStyle {
   transform?: SpringValue<string>;
 };
 
-type Boop = (args: Args) => [SpringStyle, () => void];
+type Boop = (args: Args) => [SpringStyle, any];
 
 const useBoop: Boop = ({
   x = 0,
@@ -41,8 +41,8 @@ const useBoop: Boop = ({
   sx = scale || 1,
   sy = scale || 1,
   sz = scale || 1,
-  skewX = 10,
-  skewY = 10,
+  skewX = 0,
+  skewY = 0,
   timing = 150,
   springConfig = {
     tension: 300,
@@ -52,6 +52,8 @@ const useBoop: Boop = ({
 } = {}) => {
   const [isBooped, setIsBooped] = useState(false);
   const [isTriggered, setIsTriggered] = useState(false);
+  const [loop, setLoop] = useState( null as any );
+
   const style: SpringStyle = useSpring({
     transform: isBooped
       ? `translate3D(${x}px, ${y}px, ${z}px)
@@ -65,21 +67,32 @@ const useBoop: Boop = ({
     config: springConfig,
   });
 
-  const trigger = useCallback(() => {
-      setIsTriggered(true);
-  }, []);
+  const trigger = (triggered: boolean=true) => {
+    console.log(`setting to triggered to`)
+    console.log(triggered)
+    setIsTriggered(triggered);
+  };
 
   useEffect(() => {
-    if (!isTriggered) return;
-    const timeoutId = window.setTimeout(() => {
-      setIsBooped(true);
-      setIsTriggered(false);
-    }, delay);
-    return () => window.clearTimeout(timeoutId);
+
+    if (isTriggered) {
+      console.log('setting interval')
+      setLoop(
+        setInterval(
+        () => setIsBooped(true),
+        1000
+      )
+      )
+    }
+    else {
+      console.log('clearing interval')
+      clearInterval(loop)
+    };
   }, [isTriggered, delay]);
 
   useEffect(() => {
     if (!isBooped) return;
+    console.log('booping')
     const timeoutId = window.setTimeout(() => setIsBooped(false), timing);
     return () => window.clearTimeout(timeoutId);
   }, [isBooped, timing]);

@@ -79,7 +79,6 @@ export default function OBTView(props: Props) {
 
   const getOB = (new_ob_id: string): void => {
     api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
-
       if (newOb._id) {
         setOB(newOb)
       }
@@ -118,6 +117,7 @@ export default function OBTView(props: Props) {
   }
 
   const onEdit = (e: InteractionProps) => {
+    triggerBoop(true)
     setOB(e.updated_src as ObservationBlock);
   }
 
@@ -138,6 +138,7 @@ export default function OBTView(props: Props) {
     else {
       newOB[tmplType as OBSeqNames] = seq
     }
+    triggerBoop(true)
     setOB(newOB)
   }
 
@@ -145,10 +146,12 @@ export default function OBTView(props: Props) {
     const empty = Object.keys(ob).length > 0
     if (empty) {
       return (
-        <RGLFormGrid
+        <RGLFormGrid 
           ob={ob}
           compactType={'vertical'}
-          setOB={setOB} />
+          setOB={(newOb: ObservationBlock) => { 
+            triggerBoop(true)
+            setOB(newOb)}} />
       )
     }
     else {
@@ -169,11 +172,9 @@ export default function OBTView(props: Props) {
           <div className={classes.buttonBlock}>
 
             <Tooltip title="Upload OB to database">
-              <IconButton aria-label='replace' onClick={replaceOB} >
-                <animated.button onMouseEnter={triggerBoop} style={boopStyle}>
-                  <PublishIcon />
-                </animated.button>
-              </IconButton>
+              <animated.button aria-label='upload' onClick={() => triggerBoop(false)} style={boopStyle}>
+                <PublishIcon />
+              </animated.button>
             </Tooltip>
 
             <Tooltip title="Copy OB to new OB">

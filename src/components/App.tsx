@@ -3,7 +3,7 @@ import { makeStyles } from "@material-ui/core"
 import './App.css';
 import OBTView from './OBT/observation_data_tool_view'
 import Switch from "@material-ui/core/Switch"
-import { createMuiTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
+import { createTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { lightBlue, deepOrange, deepPurple} from '@material-ui/core/colors';
 import AppBar from '@material-ui/core/AppBar';
@@ -99,7 +99,7 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
   const palletType = darkState ? "dark" : "light"
   const mainPrimaryColor = darkState ? '#cf7d34': lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
-  const theme = createMuiTheme({
+  const theme = createTheme({
     palette: {
       type: palletType,
       primary: { main: mainPrimaryColor},
