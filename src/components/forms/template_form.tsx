@@ -5,7 +5,7 @@ import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import { Items, JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { makeStyles, Theme } from "@material-ui/core";
-import * as sch from './schemas'
+import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { UiSchema } from "react-jsonschema-form";
 
@@ -37,13 +37,13 @@ export const log = (type: any) => console.log.bind(console, type);
 const getUiSchema = (id: string): UiSchema => {
   let uiSchema: UiSchema
   if (id === 'target') {
-    uiSchema = sch.uiTargetSchema
+    uiSchema = schemas.uiTargetSchema
   }
   else if (id === 'acquisition') {
-    uiSchema = sch.uiAcquisitionSchema
+    uiSchema = schemas.uiAcquisitionSchema
   }
   else if (id.includes('science')) {
-    uiSchema = sch.uiScienceSchema
+    uiSchema = schemas.uiScienceSchema
   }
   else {
     console.log(`component ${id} has undefined schema`)
@@ -99,19 +99,17 @@ const template_parameter_to_schema_properties = (param: TemplateParameter): OBJs
     property.enum = param.allowed
   }
   if (property.type === 'array') {
-    let dschema = {} as any //todo make this a function
-    dschema.title = 'dither item'
-    dschema.type = 'object'
-    dschema.properties = {}
+    let schema = {} as any //todo make this a function
+    schema.title = 'dither item'
+    schema.type = 'object'
+    schema.properties = {}
     param.allowed.forEach((param: any) => {
       const dkey = Object.keys(param)[0]
       const dvalue = param[dkey]
-      dschema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
+      schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
     })
-    dschema.required = Object.keys(dschema.properties)
-    property.items = dschema
-
-    //property.enum = undefined 
+    schema.required = Object.keys(schema.properties)
+    property.items = schema
   }
   return property
 }
@@ -154,7 +152,7 @@ export default function TemplateForm(props: Props): JSX.Element {
     height = curr.clientHeight;
 
     if (props.id === 'target') {
-      setSchema(sch.targetSchema as JSONSchema7)
+      setSchema(schemas.targetSchema as JSONSchema7)
     }
     else {
       const seq = props.obComponent as OBSequence
