@@ -63,17 +63,24 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export const AccordionForm = (props: AccordianProps) => {
     const transitionTime: number = 0 //ms
-    const defaultExpanded: boolean = true
+    const defaultExpanded: boolean = true 
     const classes = useStyles()
     const ref = useRef(null)
+
+
+    React.useEffect(() => {
+        if (ref) {
+            const curr = ref.current as any
+            props.handleResize(props.id, curr.clientHeight, defaultExpanded)
+        }
+    }, [])
 
     React.useEffect(() => {
         if (ref) {
             setTimeout(() => {
                 const curr = ref.current as any
-                const init = true
                 // console.log(`${props.id} initHeight: ${curr.clientHeight}`)
-                props.handleResize(props.id, curr.clientHeight, defaultExpanded, init)
+                props.handleResize(props.id, curr.clientHeight, defaultExpanded)
             }, 30 + transitionTime)
         }
     }, [props, defaultExpanded])
@@ -83,7 +90,7 @@ export const AccordionForm = (props: AccordianProps) => {
         setTimeout(() => { // wait for animation
             const curr = ref.current as any
             // console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
-            props.handleResize(props.id, curr.clientHeight, expanded, false)
+            props.handleResize(props.id, curr.clientHeight, expanded)
         }, 30 + transitionTime)
     }
 

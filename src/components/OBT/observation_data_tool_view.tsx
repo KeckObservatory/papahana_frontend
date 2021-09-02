@@ -5,6 +5,7 @@ import { IconButton, Paper, makeStyles } from '@material-ui/core'
 import { Theme } from '@material-ui/core/styles'
 import PublishIcon from '@material-ui/icons/Publish'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
+import AddIcon from '@material-ui/icons/Add'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
 import Grid from '@material-ui/core/Grid'
@@ -89,14 +90,6 @@ export default function OBTView(props: Props) {
     )
   }
 
-  const replaceOB = (): void => {
-    const query = `ob_id=${ob_id}`
-    console.log('replacing ob with edited ob')
-    api_call(query, 'papahana_demo', 'put', ob).then((result: any) => {
-      console.log('put result')
-      console.log(result)
-    })
-  }
 
   const copyOB = (): void => {
     const query = `ob_id=${ob_id}`
@@ -142,6 +135,18 @@ export default function OBTView(props: Props) {
     setOB(newOB)
   }
 
+  const createOB = () => {
+    const newOB = {} as ObservationBlock
+    triggerBoop(true)
+    setOB(newOB)
+    const query = ``
+    api_call(query, 'papahana_demo', 'post', newOB).then((result: any) => {
+      console.log('put result')
+      console.log(result)
+    })
+
+  }
+
   const renderRGL = (ob: ObservationBlock) => {
     const empty = Object.keys(ob).length > 0
     if (empty) {
@@ -175,6 +180,12 @@ export default function OBTView(props: Props) {
               <animated.button aria-label='upload' onClick={() => triggerBoop(false)} style={boopStyle}>
                 <PublishIcon />
               </animated.button>
+            </Tooltip>
+
+            <Tooltip title="Create blank OB">
+              <IconButton aria-label='create' onClick={createOB}>
+                <AddIcon />
+              </IconButton>
             </Tooltip>
 
             <Tooltip title="Copy OB to new OB">

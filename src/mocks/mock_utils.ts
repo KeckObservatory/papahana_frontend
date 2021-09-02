@@ -7,7 +7,7 @@ import { mock_semesters } from './mock_semesters'
 import { Semester, Container, InstrumentPackage } from "../typings/papahana";
 import {default as mock_obs} from './ob.json'
 import {default as mock_templates} from './templates.json'
-import {default as mock_containers} from './containers.json'
+import {default as mock_containers} from './containers-demo.json'
 import {default as mock_instrument_packages} from './instrument_packages.json'
 
 
