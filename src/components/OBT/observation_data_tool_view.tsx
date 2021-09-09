@@ -14,10 +14,11 @@ import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from './ob_select'
 import JsonViewTheme from '../json_view_theme'
 // import Aladin from './aladin'
-import RGLFormGrid from './sequence_grid/ob_form_grid'
+//import RGLFormGrid from './sequence_grid/ob_form_grid.tsx'
 import TemplateSelection from './template_selection'
 import useBoop from './../../hooks/boop'
 import { animated } from 'react-spring'
+import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -46,6 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   widepaper: {
     padding: theme.spacing(3),
     margin: theme.spacing(1),
+    height: '500px',
     elevation: 3,
     minWidth: theme.spacing(150)
   },
@@ -151,9 +153,8 @@ export default function OBTView(props: Props) {
     const empty = Object.keys(ob).length > 0
     if (empty) {
       return (
-        <RGLFormGrid 
+        <OBBeautifulDnD 
           ob={ob}
-          compactType={'vertical'}
           setOB={(newOb: ObservationBlock) => { 
             triggerBoop(true)
             setOB(newOb)}} />

@@ -17,12 +17,12 @@ interface Size {
     height: number
 }
 
+
 interface withHeightWidthProps {
     size?: Size
 }
 interface AccordianProps extends withHeightWidthProps {
     id: string
-    handleResize: Function
     handleDelete: Function
     name: string
     children?: React.ReactNode
@@ -61,6 +61,7 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+
 export const AccordionForm = (props: AccordianProps) => {
     const transitionTime: number = 0 //ms
     const defaultExpanded: boolean = true 
@@ -68,36 +69,11 @@ export const AccordionForm = (props: AccordianProps) => {
     const ref = useRef(null)
 
 
-    React.useEffect(() => {
-        if (ref) {
-            const curr = ref.current as any
-            props.handleResize(props.id, curr.clientHeight, defaultExpanded)
-        }
-    }, [])
 
-    React.useEffect(() => {
-        if (ref) {
-            setTimeout(() => {
-                const curr = ref.current as any
-                // console.log(`${props.id} initHeight: ${curr.clientHeight}`)
-                props.handleResize(props.id, curr.clientHeight, defaultExpanded)
-            }, 30 + transitionTime)
-        }
-    }, [props, defaultExpanded])
-
-
-    const handleOpenClose = (e: any, expanded: boolean) => {
-        setTimeout(() => { // wait for animation
-            const curr = ref.current as any
-            // console.log(`component ${props.name} ${props.id} expanded: ${expanded} height of ${props.id}: ${height}`)
-            props.handleResize(props.id, curr.clientHeight, expanded)
-        }, 30 + transitionTime)
-    }
 
     return (
         <Accordion className={classes.cell} ref={ref}
             defaultExpanded={defaultExpanded}
-            onChange={handleOpenClose}
             TransitionProps={{ timeout: transitionTime }}
         >
             <AccordionSummary
