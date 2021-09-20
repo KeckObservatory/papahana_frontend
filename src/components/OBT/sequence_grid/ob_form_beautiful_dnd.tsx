@@ -9,7 +9,6 @@ import "./styles.css";
 import { mergeClasses } from '@material-ui/styles';
 
 const ROW_HEIGHT = 45;
-
 const OB_NAMES: OBSeqNames[] = ['acquisition', 'sequences', 'target']
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -17,6 +16,28 @@ const useStyles = makeStyles((theme: Theme) =>
         root: {
             display: 'flex',
             justifyContent: 'space-between'
+        },
+        droppableDragging: {
+            background: theme.palette.divider,
+            padding: grid,
+            minWidth: '350px'
+        },
+        droppable: {
+            background: theme.palette.sucess,
+            padding: grid,
+            minWidth: '350px'
+        },
+        accordian: {
+            userSelect: "none",
+            padding: grid * 2,
+            margin: `0 0 ${grid}px 0`,
+            background: theme.palette.sucess,
+        },
+        accordianDragging: {
+            userSelect: "none",
+            padding: grid * 2,
+            margin: `0 0 ${grid}px 0`,
+            background: theme.palette.primary,
         },
         heading: {
             fontWeight: theme.typography.fontWeightRegular,
@@ -40,18 +61,11 @@ const useStyles = makeStyles((theme: Theme) =>
         }
     }),
 );
-// fake data generator
-const getItems = (count, offset = 0) =>
-    Array.from({ length: count }, (v, k) => k).map(k => ({
-        id: `item-${k + offset}-${new Date().getTime()}`,
-        content: `item ${k + offset}`
-    }));
 
 const reorder = (list, startIndex, endIndex) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
     result.splice(endIndex, 0, removed);
-
     return result;
 };
 
@@ -73,7 +87,7 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const getItemStyle = (isDragging, draggableStyle) => ({
+const get_item_style = (isDragging, draggableStyle) => ({
     // some basic styles to make the items look a bit nicer
     userSelect: "none",
     padding: grid * 2,
@@ -86,11 +100,6 @@ const getItemStyle = (isDragging, draggableStyle) => ({
     ...draggableStyle
 });
 
-const getListStyle = isDraggingOver => ({
-    background: isDraggingOver ? "lightblue" : "lightgrey",
-    padding: grid,
-    width: 250
-});
 
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
@@ -115,17 +124,18 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
 
 const handleDelete = () => { }
 
-const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element) => {
+const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc: any) => {
+    const className = snapshot.isDragging ? {...provided.draggableProps, ...acc.accDrag} : acc.acc
     return (
-
         <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            style={getItemStyle(
-                snapshot.isDragging,
-                provided.draggableProps.style
-            )}
+            className={className}
+            // style={get_item_style(
+            //     snapshot.isDragging,
+            //     provided.draggableProps.style
+            // )}
         >
             <AccordionForm
                 name={key}
@@ -138,21 +148,7 @@ const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element) => 
     )
 }
 
-const FormItem = (item, provided, snapshot) => {
-    return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "space-around"
-            }}
-        >
-            {item.content}
-        </div>
-    )
-}
-
-
-const create_draggable = (keyValue, index, updateOB) => {
+const create_draggable = (keyValue, index, updateOB, acc) => {
     const [key, component] = keyValue
     const form = createForm(key, component, updateOB)
     return (
@@ -161,7 +157,7 @@ const create_draggable = (keyValue, index, updateOB) => {
             draggableId={key}
             index={index}
         >
-            {(provided, snapshot) => createAccordianDiv(provided, snapshot, key, form)}
+            {(provided, snapshot) => createAccordianDiv(provided, snapshot, key, form, acc)}
         </Draggable>
     )
 }
@@ -290,9 +286,7 @@ export const OBBeautifulDnD = (props) => {
         }
     }
 
-
-
-
+    const acc = {acc: classes.accordian, accDrag: classes.accordianDragging}
     return (
         <div clasName={classes.root}>
             <div style={{ display: "flex" }}>
@@ -301,12 +295,12 @@ export const OBBeautifulDnD = (props) => {
                         <Droppable key={ind} droppableId={`${ind}`}>
                             {(provided, snapshot) => (
                                 <div
+                                    className={snapshot.isDraggingOver ? classes.droppableDragging : classes.droppable}
                                     ref={provided.innerRef}
-                                    style={getListStyle(snapshot.isDraggingOver)}
                                     {...provided.droppableProps}
                                 >
                                     {keyValueArr.map((keyValue, index) => (
-                                        create_draggable(keyValue, index, updateOB)
+                                        create_draggable(keyValue, index, updateOB, acc)
                                     ))}
                                     {provided.placeholder}
                                 </div>

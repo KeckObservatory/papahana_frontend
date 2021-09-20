@@ -154,6 +154,7 @@ export default function OBTView(props: Props) {
     if (empty) {
       return (
         <OBBeautifulDnD 
+          className={classes.dndGrid}
           ob={ob}
           setOB={(newOb: ObservationBlock) => { 
             triggerBoop(true)
