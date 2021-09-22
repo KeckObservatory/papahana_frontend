@@ -11,24 +11,21 @@ import { api_call } from '../../api/utils'
 import Grid from '@material-ui/core/Grid'
 import Tooltip from '@material-ui/core/Tooltip'
 import DeleteDialog from './delete_dialog'
-import ObservationBlockSelecter from './ob_select'
+import ObservationBlockSelecter from '../OBSelect/ob_select'
 import JsonViewTheme from '../json_view_theme'
-// import Aladin from './aladin'
-//import RGLFormGrid from './sequence_grid/ob_form_grid.tsx'
 import TemplateSelection from './template_selection'
 import useBoop from './../../hooks/boop'
 import { animated } from 'react-spring'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
+  grid: {
     textAlign: 'left',
-    paddingTop: theme.spacing(10),
     margin: theme.spacing(1),
     display: 'flex',
     flexWrap: 'wrap',
     '& > *': {
-      margin: theme.spacing(1),
+      margin: theme.spacing(0),
       width: theme.spacing(50),
     }
   },
@@ -39,20 +36,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   templateSelect: {
   },
   paper: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     margin: theme.spacing(1),
     width: "100%",
     elevation: 3,
   },
   widepaper: {
-    padding: theme.spacing(3),
+    padding: theme.spacing(2),
     margin: theme.spacing(1),
-    height: '500px',
+    // height: '500px',
     elevation: 3,
-    minWidth: theme.spacing(150)
+    minWidth: theme.spacing(140)
   },
   dndGrid: {
-    minWidth: theme.spacing(200)
+    minWidth: theme.spacing(140)
   }
 }))
 
@@ -169,27 +166,23 @@ export default function OBTView(props: Props) {
   const handleEdit = props.editable ? onEdit : false
 
   return (
-    <Grid container spacing={3} className={classes.root}>
-      <Grid item xs={3}>
+    <Grid container spacing={3} className={classes.grid}>
+      <Grid item xs={6}>
         <Paper className={classes.paper} elevation={3}>
-
           <h3>Observation Block Selection</h3>
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
           <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
-
             <Tooltip title="Upload OB to database">
               <animated.button aria-label='upload' onClick={() => triggerBoop(false)} style={boopStyle}>
                 <PublishIcon />
               </animated.button>
             </Tooltip>
-
             <Tooltip title="Create blank OB">
               <IconButton aria-label='create' onClick={createOB}>
                 <AddIcon />
               </IconButton>
             </Tooltip>
-
             <Tooltip title="Copy OB to new OB">
               <IconButton aria-label='copy' onClick={copyOB}>
                 <FileCopyIcon />
@@ -221,20 +214,12 @@ export default function OBTView(props: Props) {
             onEdit={handleEdit}
           />
         </Paper >
-        {/* <Paper className={classes.paper} elevation={3}>
-          <BasicTable observer_id={props.observer_id} />
-        </Paper> */}
       </Grid>
-      <Grid item xs={8}>
+      <Grid item >
         <Paper className={classes.widepaper}>
           {renderRGL(ob)}
         </Paper>
       </Grid>
-      {/* <Grid item xs={3}>
-        <Paper className={classes.paper}>
-          <Aladin />
-        </Paper>
-      </Grid> */}
     </Grid>
   )
 }

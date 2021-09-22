@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { SpringValue, useSpring } from 'react-spring';
 
 interface Args {
@@ -74,7 +74,6 @@ const useBoop: Boop = ({
   };
 
   useEffect(() => {
-
     if (isTriggered) {
       console.log('setting interval')
       setLoop(

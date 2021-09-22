@@ -288,7 +288,7 @@ export const OBBeautifulDnD = (props) => {
 
     const acc = {acc: classes.accordian, accDrag: classes.accordianDragging}
     return (
-        <div clasName={classes.root}>
+        <div className={classes.root}>
             <div style={{ display: "flex" }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {state.map((keyValueArr, ind) => (
