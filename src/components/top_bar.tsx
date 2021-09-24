@@ -1,15 +1,15 @@
 import React  from 'react';
-import { makeStyles } from "@material-ui/core"
+import { makeStyles } from "@mui/styles"
 
-import AppBar from '@material-ui/core/AppBar';
-import Switch from "@material-ui/core/Switch"
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Tooltip from '@material-ui/core/Tooltip';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography'
+import AppBar from '@mui/material/AppBar';
+import Switch from "@mui/material/Switch"
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import Tooltip from '@mui/material/Tooltip';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: any) => ({
   root: { 
     position: "absolute",
     display: "flex"

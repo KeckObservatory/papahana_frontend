@@ -1,10 +1,10 @@
 import React from 'react';
-import { makeStyles } from "@material-ui/core"
+import { makeStyles } from "@mui/styles"
 import './App.css';
 import OBTView from './OBT/observation_data_tool_view'
-import { createTheme, ThemeProvider, Theme } from "@material-ui/core/styles";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import { lightBlue, deepOrange, deepPurple } from '@material-ui/core/colors';
+import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { lightBlue, deepOrange, deepPurple } from '@mui/material/colors';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
 import { ThemeKeys } from 'react-json-view'
 import { TopBar } from './top_bar' 
@@ -12,7 +12,7 @@ import { ModuleMenu } from './module_menu'
 
 
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: any) => ({
   root: {
     display: "flex"
   },
@@ -50,7 +50,7 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
   const theme = createTheme({
     palette: {
-      type: palletType,
+      mode: palletType,
       primary: { main: mainPrimaryColor },
       secondary: { main: mainSecondaryColor },
     }

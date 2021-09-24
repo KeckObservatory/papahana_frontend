@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import { Instrument, OBSeqNames, OBSequence, ObservationBlock } from '../../typings/papahana'
-import { IconButton, Paper, makeStyles } from '@material-ui/core'
-import { Theme } from '@material-ui/core/styles'
-import PublishIcon from '@material-ui/icons/Publish'
-import FileCopyIcon from '@material-ui/icons/FileCopy'
-import AddIcon from '@material-ui/icons/Add'
+import { IconButton, Paper } from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+import PublishIcon from '@mui/icons-material/Publish'
+import FileCopyIcon from '@mui/icons-material/FileCopy'
+import AddIcon from '@mui/icons-material/Add'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
-import Grid from '@material-ui/core/Grid'
-import Tooltip from '@material-ui/core/Tooltip'
+import Grid from '@mui/material/Grid'
+import Tooltip from '@mui/material/Tooltip'
 import DeleteDialog from './delete_dialog'
 import ObservationBlockSelecter from '../OBSelect/ob_select'
 import JsonViewTheme from '../json_view_theme'
@@ -55,7 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export interface Props {
   observer_id: string
-  theme: ThemeKeys | null | undefined
+  theme: any | null | undefined
   iconStyle: 'circle' | 'triangle' | 'square'
   collapsed: number | boolean,
   collapseStringsAfter: number | false

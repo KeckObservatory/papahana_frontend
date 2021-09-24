@@ -1,11 +1,11 @@
 //@ts-nocheck
 import React, { useEffect, useState } from 'react'
-import { makeStyles } from '@material-ui/core'
+import { makeStyles } from '@mui/styles'
 import { ObservationBlock } from "../../typings/papahana"
-import { Theme } from '@material-ui/core/styles'
+import { Theme } from '@mui/material/styles'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme: any) => ({
     droppableDragging: {
         background: theme.palette.divider,
         margin: theme.spacing(1),

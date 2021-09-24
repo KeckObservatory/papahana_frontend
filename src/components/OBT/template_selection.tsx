@@ -2,14 +2,14 @@ import React from 'react';
 import { get_instrument_package } from '../../api/utils'
 import { useState, useEffect } from 'react';
 import { Instrument, InstrumentPackage, InstrumentPackageTemplates, ObservationBlock, Template, TemplateEntry } from '../../typings/papahana';
-import { makeStyles } from '@material-ui/styles'
-import { Theme } from '@material-ui/core'
-import MenuItem from '@material-ui/core/MenuItem';
-import ListSubheader from '@material-ui/core/ListSubheader';
+import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material'
+import MenuItem from '@mui/material/MenuItem';
+import ListSubheader from '@mui/material/ListSubheader';
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme: any) => ({
     root: {
         width: '100%',
     }

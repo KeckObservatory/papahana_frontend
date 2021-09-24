@@ -2,11 +2,11 @@ import React, { useEffect } from 'react';
 import { Container } from '../../typings/papahana';
 import Tree, { Node, NodeId, Leaf } from '@naisutech/react-tree';
 import { get_containers } from '../../api/utils'
-import { makeStyles } from '@material-ui/styles'
-import { Theme } from '@material-ui/core/styles'
-import { Button } from '@material-ui/core';
+import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
+import { Button } from '@mui/material';
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles((theme: any) => ({
     root: {
         margin: theme.spacing(1),
         display: 'flex',

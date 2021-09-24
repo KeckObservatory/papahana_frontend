@@ -4,7 +4,7 @@
 import axios from 'axios';
 import { handleResponse, handleError } from './response';
 import { Container, ObservationBlock, Semester, Instrument, InstrumentPackage, Template } from './../typings/papahana'
-import { mock_get_instrument_package, mock_get_template, mock_get_containers, mock_get_observation_block_from_controller, mock_get_semesters, mock_ob_get } from '../mocks/mock_utils';
+import { mock_get_instrument_package, mock_get_template, mock_get_containers, mock_get_observation_block_from_container, mock_get_semesters, mock_ob_get } from '../mocks/mock_utils';
 
 
 // Define your api url from any source.
@@ -105,7 +105,7 @@ export const get_select_funcs = {
     get_template: process.env.NODE_ENV === 'production'? get_template : mock_get_template,
     get_semesters: process.env.NODE_ENV === 'production'? get_semesters : mock_get_semesters,
     get_containers: process.env.NODE_ENV === 'production'? get_containers : mock_get_containers,
-    get_observation_blocks_from_container: process.env.NODE_ENV === 'production'? get_observation_blocks_from_container : mock_get_observation_block_from_controller,
+    get_observation_blocks_from_container: process.env.NODE_ENV === 'production'? get_observation_blocks_from_container : mock_get_observation_block_from_container,
     get_instrument_package: process.env.NODE_ENV === 'production'? get_instrument_package : mock_get_instrument_package
 }
 

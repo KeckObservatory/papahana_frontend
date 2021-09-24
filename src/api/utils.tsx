@@ -66,7 +66,33 @@ export const make_scoby_table = (observer_id: string): Promise<Scoby[]> => {
    .then( (semesters: Semester[]) => create_sc_table(semesters) )
    .then( (sem_cons: [string, string][]) => create_scoby_table(sem_cons) )
    }
- 
+
+export const get_obs_from_semester = async ( observer_id: string, sem_id: string): Promise<any> => {
+
+   const container_obs = await get_select_funcs.get_semesters(observer_id) 
+   .then( (semesters: Semester[]) => {
+      const semester = semesters.find( (elem: any) => elem.sem_id === sem_id)
+      if(!semester) { 
+        console.log(`semid ${sem_id} not found for observer_id`);
+        return []
+      }
+      return create_sc_table([semester])})
+   .then((sem_cons: [string, string][]) => { 
+      const container_obs: any = {}
+      sem_cons.forEach( async (sem_cid: [string, string]) => {
+          const cid = sem_cid[1]
+          const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
+          container_obs[cid] = obs
+      })
+      return container_obs
+   })
+
+   const promise = new Promise<string[]>( (resolve) => {
+        resolve(container_obs)
+   })
+   return promise
+
+}
 
 export const make_sem_id_list = (semesters: Semester[]): string[] => {
    //let sem_ids: string[] = ['all'] // not possible to have both 'all' sem_id and 'all' containers`

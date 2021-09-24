@@ -3,15 +3,16 @@ import TemplateForm from '../../forms/template_form';
 import { AccordionForm } from './accordion_form';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React from "react";
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
+import { Theme, createStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 
 import "./styles.css";
-import { mergeClasses } from '@material-ui/styles';
+import { mergeClasses } from '@mui/styles';
 
 const ROW_HEIGHT = 45;
 const OB_NAMES: OBSeqNames[] = ['acquisition', 'sequences', 'target']
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: any) =>
     createStyles({
         root: {
             display: 'flex',

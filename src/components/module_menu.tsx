@@ -1,15 +1,14 @@
 import React from 'react';
-import { makeStyles } from "@material-ui/core"
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
-import Box from '@material-ui/core/Box';
-import AppBar from '@material-ui/core/AppBar';
-import SkyView from './PlanningTool/sky_view';
+import { makeStyles } from "@mui/styles"
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
 import OBTView from './OBT/observation_data_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { PlanningToolView } from './PlanningTool/planning_tool_view';
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: any) => ({
     moduleMain: {
         width: '100%'
     },
@@ -94,7 +93,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                 <OBTView observer_id={props.observer_id} theme={props.jsonTheme} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <PlanningToolView/>
+                <PlanningToolView observer_id={props.observer_id}/>
             </TabPanel>
         </ div >
     )

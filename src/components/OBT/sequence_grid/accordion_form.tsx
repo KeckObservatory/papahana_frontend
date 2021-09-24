@@ -1,12 +1,13 @@
 import React, { useRef } from 'react'
-import Accordion from '@material-ui/core/Accordion';
-import AccordionSummary from '@material-ui/core/AccordionSummary';
-import AccordionDetails from '@material-ui/core/AccordionDetails';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { IconButton, Tooltip } from '@material-ui/core';
-import OpenWithIcon from '@material-ui/icons/OpenWith';
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IconButton, Tooltip } from '@mui/material';
+import OpenWithIcon from '@mui/icons-material/OpenWith';
+import { Theme, createStyles } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles'
 import { ObservationBlock } from "../../../typings/papahana"
 import { DeleteSequenceButton } from './delete_sequence_button'
 
@@ -32,8 +33,7 @@ interface AccordianProps extends withHeightWidthProps {
 
 const rowHeight: number = 45
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
+const useStyles = makeStyles((theme: Theme) => ({
         root: {
             position: 'relative',
             justifyContent: 'center',
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) =>
             padding: theme.spacing(0),
         },
     }),
-);
+)
 
 
 export const AccordionForm = (props: AccordianProps) => {

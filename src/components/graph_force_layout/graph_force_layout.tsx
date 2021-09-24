@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { D3Types, DispatchIdx } from '../../typings/d3_force'
 import { Scoby } from '../../typings/papahana'
 import { ForceGraph2D } from 'react-force-graph'
-import { useTheme } from '@material-ui/core'
+import { useTheme } from '@mui/material'
 import * as d3 from 'd3-scale-chromatic'
 
 interface Props {

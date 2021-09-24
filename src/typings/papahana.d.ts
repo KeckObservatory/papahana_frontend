@@ -55,7 +55,6 @@ export interface ObservationBlock extends Base {
 	_id: string,
 	metadata: OBMetadata;
 	target?: Target;
-	associations: string[];
 	time_constraints: string[] | string[][];
 	comment: string;
 	sequences?: Science[];

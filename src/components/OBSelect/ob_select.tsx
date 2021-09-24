@@ -2,7 +2,7 @@ import { get_ob_list, get_container_list, get_sem_id_list } from '../../api/util
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
-import { Paper } from '@material-ui/core'
+import { Paper } from '@mui/material'
 import SemidTree from './semid_tree'
 
 export interface Props {

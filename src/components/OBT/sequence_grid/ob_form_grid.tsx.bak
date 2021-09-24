@@ -1,5 +1,5 @@
 import React from 'react'
-import { Theme, createStyles, makeStyles } from '@material-ui/core/styles'
+import { Theme, createStyles, makeStyles } from '@mui/material/styles'
 import RGL, { Layout, WidthProvider } from 'react-grid-layout';
 import { CompactType, getLayoutItem, resolveCollision, sortLayoutItems } from './react-grid-layout-utils';
 import { AccordionForm } from './accordion_form';
@@ -12,7 +12,7 @@ const AutoGridLayout = WidthProvider(RGL)
 
 const obComponentNames: OBSeqNames[] = ['acquisition', 'sequences', 'target']
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles((theme: any) =>
     createStyles({
         root: {
             position: 'relative',

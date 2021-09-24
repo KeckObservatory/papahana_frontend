@@ -1,11 +1,11 @@
-import { FormControl } from '@material-ui/core'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
-import InputLabel from '@material-ui/core/InputLabel'
-import { Theme } from '@material-ui/core/styles'
-import { makeStyles } from '@material-ui/styles';
+import { FormControl } from '@mui/material'
+import Select from '@mui/material/Select'
+import MenuItem from '@mui/material/MenuItem'
+import InputLabel from '@mui/material/InputLabel'
+import { Theme } from '@mui/material/styles'
+import { makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles( (theme: Theme) => ({
+const useStyles = makeStyles( (theme: any) => ({
     formControl: {
         minWidth: 120,
         margin: theme.spacing(1),

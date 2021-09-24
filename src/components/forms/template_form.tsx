@@ -1,16 +1,16 @@
 import React, { } from "react"
-import { Template, OBComponent, OBSeqNames, TemplateParameter, OBSequence } from "../../typings/papahana"
+import { Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
 import { ISubmitEvent } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
-import { Items, JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
-import { makeStyles, Theme } from "@material-ui/core";
+import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
+import { makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { UiSchema } from "react-jsonschema-form";
 
 
-export const useStyles = makeStyles((theme: Theme) => ({
+export const useStyles = makeStyles( (theme: any) => ({
   root: {
     textAlign: 'left',
     margin: theme.spacing(0),
