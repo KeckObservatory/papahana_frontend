@@ -7,12 +7,12 @@ import { Theme, createStyles } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
 
 import "./styles.css";
-import { mergeClasses } from '@mui/styles';
+import { mergeClasses } from '@mui/material/styles';
 
 const ROW_HEIGHT = 45;
 const OB_NAMES: OBSeqNames[] = ['acquisition', 'sequences', 'target']
 
-const useStyles = makeStyles((theme: any) =>
+const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
             display: 'flex',

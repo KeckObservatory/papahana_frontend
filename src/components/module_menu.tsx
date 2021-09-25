@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme: any) => ({
         // padding: theme.spacing(2),
     },
     items: {
-        marginTop: theme.spacing(12),
+        // marginTop: theme.spacing(12),
         position: "relative",
         // height: '100%',
         display: "flex"

@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, Tooltip } from '@mui/material';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
-import { Theme, createStyles } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
+import { Theme } from '@mui/material/styles'
 import { ObservationBlock } from "../../../typings/papahana"
 import { DeleteSequenceButton } from './delete_sequence_button'
 
@@ -17,7 +17,6 @@ interface Size {
     width: number,
     height: number
 }
-
 
 interface withHeightWidthProps {
     size?: Size
@@ -41,21 +40,22 @@ const useStyles = makeStyles((theme: Theme) => ({
         heading: {
             fontWeight: theme.typography.fontWeightRegular,
             fontSize: '1.25rem',
-            marginTop: theme.spacing(1)
+            marginTop: theme.spacing(1),
         },
         cell: {
             margin: theme.spacing(0),
             padding: theme.spacing(0),
-            minHeight: rowHeight
+            minHeight: rowHeight,
+            backgroundColor: 'grey',
         },
         templateAccordian: {
             padding: theme.spacing(0),
             margin: theme.spacing(0),
             alignItems: 'center',
-            backgroundColor: theme.palette.divider,
         },
         accordianSummary: {
             height: theme.spacing(3),
+            backgroundColor: theme.palette.divider,
             padding: theme.spacing(0),
         },
     }),
@@ -68,11 +68,8 @@ export const AccordionForm = (props: AccordianProps) => {
     const classes = useStyles()
     const ref = useRef(null)
 
-
-
-
     return (
-        <Accordion className={classes.cell} ref={ref}
+        <Accordion sx={{backgroundColor: 'divider'}} ref={ref}
             defaultExpanded={defaultExpanded}
             TransitionProps={{ timeout: transitionTime }}
         >
@@ -94,10 +91,11 @@ export const AccordionForm = (props: AccordianProps) => {
                     </IconButton>
                 </Tooltip>
                 <DeleteSequenceButton handleDelete={props.handleDelete} />
-                <Typography variant={"h6"} className={classes.heading}>{props.name}</Typography>
+                <Typography variant={"h6"} className={classes.heading}>{props.name.toUpperCase()}</Typography>
             </AccordionSummary>
             <AccordionDetails >
                 {props.children}
             </AccordionDetails>
-        </Accordion>)
+        </Accordion>
+        )
 }

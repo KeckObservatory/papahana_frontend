@@ -72,7 +72,8 @@
     "bezier-js": "4.0.3"
   },
   "devDependencies": {
-    "@mui/icons-material-material": "^5.0.1",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
     "@types/d3": "^6.7.0",

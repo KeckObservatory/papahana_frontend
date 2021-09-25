@@ -2,7 +2,7 @@ import React from 'react';
 import { makeStyles } from "@mui/styles"
 import './App.css';
 import OBTView from './OBT/observation_data_tool_view'
-import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
+import { createTheme, createStyles, ThemeProvider, Theme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { lightBlue, deepOrange, deepPurple } from '@mui/material/colors';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
@@ -17,28 +17,28 @@ const useStyles = makeStyles((theme: any) => ({
     display: "flex"
   },
   toolbar: {
-    paddingRight: theme.spacing(2),
-    paddingLeft: theme.spacing(5)
+    paddingRight: '8px',
+    paddingLeft: '40px' 
   },
   toolbarIcon: {
     display: "flex",
     alignItems: "center",
     justifyContent: "flex-end",
     padding: "0 8px",
-    ...theme.mixins.toolbar
+    // ...theme.mixins.toolbar
   },
   menuButton: {
-    marginRight: theme.spacing(4)
+    marginRight: '16px' 
   },
-  appBarSpacer: theme.mixins.toolbar,
+  // appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
     overflow: "auto"
   },
   container: {
-    paddingTop: theme.spacing(9),
-    paddingBottom: theme.spacing(4)
+    paddingTop: '27px',
+    paddingBottom: '16px' 
   },
   fixedHeight: { height: 240 }
 }));

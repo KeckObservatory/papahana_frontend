@@ -14,10 +14,16 @@ const useStyles = makeStyles((theme: any) => ({
         display: 'flex',
         width: '100%',
     },
+    // paper: {
+    //     padding: theme.spacing(2),
+    //     margin: theme.spacing(1),
+    //     width: theme.spacing(50),
+    //     elevation: 3,
+    // },
     paper: {
-        padding: theme.spacing(2),
-        margin: theme.spacing(1),
-        width: theme.spacing(50),
+        padding: '8px',
+        margin: '4px',
+        width: '200px',
         elevation: 3,
     },
     droppableDragging: {
@@ -181,7 +187,10 @@ export const OBQueue = (props: Props) => {
 
     console.log('state is:')
     console.log(state)
-
+    if (state===undefined){
+        return <div>Loading...</div>
+    }
+    else {
     return (
         <Grid container spacing={1} >
             <DragDropContext onDragEnd={onDragEnd}>
@@ -212,4 +221,5 @@ export const OBQueue = (props: Props) => {
             </DragDropContext>
         </Grid>
     )
+}
 }

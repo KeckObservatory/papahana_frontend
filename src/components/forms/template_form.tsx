@@ -1,6 +1,6 @@
 import React, { } from "react"
 import { Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
-import { ISubmitEvent } from "@rjsf/core";
+import { withTheme, ISubmitEvent } from "@rjsf/core";
 import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
@@ -8,7 +8,6 @@ import { makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { UiSchema } from "react-jsonschema-form";
-
 
 export const useStyles = makeStyles( (theme: any) => ({
   root: {
@@ -19,7 +18,7 @@ export const useStyles = makeStyles( (theme: any) => ({
   },
   form: {
     margin: theme.spacing(0),
-    padding: theme.spacing(0)
+    padding: theme.spacing(0),
   },
   tab: {
     minWidth: theme.spacing(15),

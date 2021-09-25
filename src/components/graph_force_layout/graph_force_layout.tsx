@@ -127,7 +127,7 @@ export default function GraphForceLayout(props: Props) {
     const [clonedData, setClonedData] = useState({nodes: [], links: []} as D3Types.DataObject )
 
     const theme = useTheme()
-    const darkMode = theme.palette.type === 'dark'
+    const darkMode = true 
     useEffect(() => {
         const dataObj = scoby_arr_to_data_object(props.data, darkMode)
         // console.log('props.data')

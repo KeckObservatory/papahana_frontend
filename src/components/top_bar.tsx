@@ -23,7 +23,12 @@ const useStyles = makeStyles((theme: any) => ({
   toolbar: {
     paddingRight: theme.spacing(2),
     paddingLeft: theme.spacing(5) 
-  },}))
+  },
+  switch: {
+    color: theme.palette.primary,
+    backgroundColor: theme.palette.secondary
+  },
+}))
 
 
 export function TopBar(props: any) {
@@ -62,7 +67,10 @@ export function TopBar(props: any) {
           Welcome, Observer {props.observer_id}!
         </Typography>
         <Tooltip title="Toggle on for dark mode">
-          <Switch checked={props.darkState} onChange={props.handleThemeChange}/>
+          <Switch 
+            color="secondary"
+            checked={props.darkState} 
+            onChange={props.handleThemeChange}/>
         </Tooltip>
       </Toolbar>
     </AppBar>

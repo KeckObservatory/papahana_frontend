@@ -8,6 +8,7 @@ import { makeStyles } from '@mui/styles';
 const useStyles = makeStyles( (theme: any) => ({
     formControl: {
         minWidth: 120,
+        width: '100%',
         margin: theme.spacing(1),
         display: 'flex',
         flexWrap: 'wrap',
