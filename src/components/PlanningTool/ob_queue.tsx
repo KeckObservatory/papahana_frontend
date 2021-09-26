@@ -123,103 +123,87 @@ const reorder = (list: Array<any>, startIndex: number, endIndex: number) => {
     return result;
 };
 
-const formatProps = (props: Props) => {
-    const obItems: any = {
-        avlObs: {
-            title: "Available OBs/Containers",
-            tooltip: "Observation Blocks/containers available for selected semester",
-            obs: props.avlObs,
-            setObs: props.setAvlObs
-        },
-        selObs: {
-            title: "Selected OBs/Containers",
-            tooltip: "Observation Block/containers in selected queue",
-            obs: props.selObs,
-            setObs: props.setSelObs
-        }
-    }
-    return obItems
-}
 
 export const OBQueue = (props: Props) => {
 
-    const classes = useStyles()
-    const [state, setState] = React.useState({} as any);
+    const classes = useStyles();
+    const avlTitle= "Available OBs/Containers"
+    const avlTooltip= "Observation Blocks/containers available for selected semester"
+    const selTitle="Selected OBs/Containers"
+    const selTooltip= "Observation Block/containers in selected queue"
 
     useEffect(() => {
-        const obItems = formatProps(props)
-        console.log('new obItems')
-        console.log(obItems)
-        setState(obItems.selItems)
     }, [props])
 
     useEffect(() => {
-        const obItems = formatProps(props)
-        console.log('init obItems')
-        console.log(obItems)
     }, [])
 
     const onDragEnd = (result: any) => {
-
         const { source, destination } = result;
         if (!destination) return;
-        const sKey: string = source.droppableId;
-        const dKey: string = destination.droppableId;
+        const sKey: 'selObs' | 'avlObs' = source.droppableId;
+        const dKey: 'selObs' | 'avlObs' = destination.droppableId;
 
-        var newState = state
         if (sKey === dKey) { //shuffling items around
-            let newObs = [...state[dKey].obs]
+            let newObs = [...props[dKey]]
             newObs = reorder(newObs, source.index, destination.index)
-            newState[dKey].obs = newObs
-            setState(newState);
+            if (sKey === 'selObs') {
+                props.setSelObs(newObs)
+            }
+            else {
+                props.setAvlObs(newObs)
+            }
+            // setState(newState);
         } else { // new item in state
-            const result = move(state[sKey].obs, state[dKey].obs, source, destination);
-            newState[sKey].obs = result[sKey];
-            newState[dKey].obs = result[dKey];
-            setState(newState);
-        }
-        const selectedOBDest = dKey.includes('selObs')
-        if (selectedOBDest) {
-            console.log('selected OB changed')
-            props.setSelObs(newState.selObs.obs)
+            const result = move(props[sKey], props[dKey], source, destination);
+            if (sKey === 'selObs') {
+                props.setSelObs(result[sKey])
+                props.setAvlObs(result[dKey])
+            }
+            else {
+                props.setSelObs(result[dKey])
+                props.setAvlObs(result[sKey])
+            }
         }
     }
 
-    console.log('state is:')
-    console.log(state)
-    if (state===undefined){
-        return <div>Loading...</div>
+    const create_droppable = (obs: any, key: string, tooltip: string, title: string) => {
+        return (
+            <Paper className={classes.paper} elevation={3}>
+                <Tooltip title={tooltip}>
+                    <h2>{title}</h2>
+                </Tooltip>
+                <Droppable key={key} droppableId={key}>
+                    {(provided: any, snapshot: any) => {
+                        return (
+                            <div
+                                className={snapshot.isDraggingOver
+                                    ? classes.droppableDragging : classes.droppable}
+                                ref={provided.innerRef}
+                                {...provided.droppableProps}
+                            >
+                                {obs !== undefined &&
+                                    obs.map((item: any, idx: number) => {
+                                        return (create_draggable(item, idx))
+                                    })
+                                }
+                                {provided.placeholder}
+                            </div>)
+                    }}
+                </Droppable>
+            </Paper >
+        )
     }
-    else {
     return (
         <Grid container spacing={1} >
             <DragDropContext onDragEnd={onDragEnd}>
-                {Object.entries(state).map(([key, keyValueArr]: [string, any], jdx) => (
-                    <Grid className={classes.cell} item xs={6}>
-                        <Paper className={classes.paper} elevation={3}>
-                            <Tooltip title={keyValueArr.tooltip}>
-                                <h2>{keyValueArr.title}</h2>
-                            </Tooltip>
-                            <Droppable key={key} droppableId={key}>
-                                {(provided: any, snapshot: any) => {
-                                    return (
-                                        <div
-                                            className={snapshot.isDraggingOver ? classes.droppableDragging : classes.droppable}
-                                            ref={provided.innerRef}
-                                            {...provided.droppableProps}
-                                        >
-                                            {keyValueArr.obs.map((item: any, idx: number) => {
-                                                return (create_draggable(item, idx))
-                                            })}
-                                            {provided.placeholder}
-                                        </div>)
-                                }}
-                            </Droppable>
-                        </Paper >
-                    </Grid>
-                ))}
+                <Grid className={classes.cell} item xs={6}>
+                    {create_droppable(props.avlObs, 'avlObs', avlTooltip, avlTitle)}
+                </Grid>
+                <Grid className={classes.cell} item xs={6}>
+                    {create_droppable(props.selObs, 'selObs', selTooltip ,selTitle)}
+                </Grid>
             </DragDropContext>
         </Grid>
     )
-}
 }
