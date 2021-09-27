@@ -39,6 +39,14 @@ export interface Scoby {
     name?: string
 }
 
+export interface OBCell {
+	target?: Target;
+	id: string;
+	name: string;
+	type: 'ob' | 'container'
+	cid?: string
+}
+
 export interface OBMetadata {
 	name: string;
 	version: string | number;
@@ -150,6 +158,8 @@ export interface Target {
 	name: string,
 	ra: string,
 	dec: string,
+	ra_deg?: number,
+	dec_deg?: number,
 	equinox: number,
 	frame: string,
 	ra_offset: number,

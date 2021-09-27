@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { get_obs_from_semester, get_sem_id_list } from '../../api/utils'
-import { ObservationBlock } from '../../typings/papahana'
+import { OBCell, ObservationBlock } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
@@ -40,8 +40,8 @@ interface Props {
 }
 
 interface State {
-    selObs:  any; //todo: define cell type
-    avlObs:  any;
+    selObs:  OBCell[]; 
+    avlObs:  OBCell[];
     sem_id: string 
     semIdList: string[]
 }
@@ -63,9 +63,12 @@ const container_obs_to_cells = (container_obs: any) => {
         const cidCell = {id: cid, type: 'container'}
         cells.push(cidCell)
         obs.forEach( (ob: ObservationBlock, idx: number) => {
-            const obCell: any = {cid: cid, name: ob.metadata.name, type: 'ob', id: uid}
+            const obCell: OBCell = {cid: cid,
+                name: ob.metadata.name,
+                type: 'ob',
+                id: JSON.stringify(uid)}
             const tgt = ob.target
-            if(tgt) ob['target'] = tgt
+            if(tgt) obCell['target'] = tgt
             cells.push(obCell)
             uid+=1
         })
@@ -86,25 +89,32 @@ export const PlanningToolView = (props: Props) => {
     useEffect( () => {
         get_obs_from_semester(props.observer_id, sem_id).then( (container_obs: any) => {
             const cells = container_obs_to_cells(container_obs)
-            console.log('got cells to add')
-            console.log(cells)
+            // console.log('got cells to add')
+            // console.log(cells)
             setAvlObs(cells)
         })
     }, [])
 
 
     useEffect( () => {
-        console.log('selected obs is now')
-        console.log(selObs)
+        // console.log('selected obs is now')
+        // console.log(selObs)
     }, [selObs])
+
+
+    useEffect( () => {
+        // console.log('available obs is now')
+        // console.log(avlObs)
+    }, [avlObs])
 
     useEffect( () => {
         console.log('sem_id changed')
         get_obs_from_semester(props.observer_id, sem_id).then( (container_obs: any) => {
             const cells = container_obs_to_cells(container_obs)
-            console.log('got cells to add')
-            console.log(cells)
+            // console.log('got cells to add')
+            // console.log(cells)
             setAvlObs(cells)
+            setSelObs([])
         })
         }, [sem_id] )
 
@@ -116,7 +126,7 @@ export const PlanningToolView = (props: Props) => {
     }, [props.observer_id])
 
     const handleSemIdSubmit = (new_sem_id: string) => {
-        console.log('submit button pressed')
+        // console.log('submit button pressed')
         setSemId(new_sem_id)
     }
 
@@ -145,7 +155,7 @@ export const PlanningToolView = (props: Props) => {
                     <Tooltip title="View selected OB target charts here">
                         <h2>Sky View</h2>
                     </Tooltip>
-                    <SkyView />
+                    <SkyView selObs={selObs}/>
                 </Paper >
             </Grid>
         </Grid>

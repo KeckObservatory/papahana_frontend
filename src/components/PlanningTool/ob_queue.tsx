@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@mui/styles'
-import { ObservationBlock } from "../../typings/papahana"
+import { ObservationBlock, OBCell } from "../../typings/papahana"
 import { Theme } from '@mui/material/styles'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
@@ -46,9 +46,9 @@ const useStyles = makeStyles((theme: any) => ({
 
 interface Props {
     sem_id: string;
-    avlObs: ObservationBlock[] | number[] | string[];
+    avlObs: OBCell[];
     setAvlObs: Function;
-    selObs: ObservationBlock[] | number[] | string[];
+    selObs: OBCell[];
     setSelObs: Function;
 }
 
@@ -74,25 +74,27 @@ const CreateDiv = (props: CreateDivProps) => {
     )
 }
 
-const create_draggable = (item: any, idx: number) => {
-    let [id, type] = [item.id, item.type]
-
-    if (id === undefined) id = item //develop
-    if (type === undefined) type = 'dev cell' //develop
-    console.log('id, type')
-    console.log(id)
-    console.log(type)
+const create_draggable = (obCell: OBCell, idx: number) => {
     return (
         <Draggable
-            key={id}
-            draggableId={id}
+            key={obCell.id}
+            draggableId={obCell.id}
             index={idx}
         >
             {(provided, snapshot) => CreateDiv(
                 {
                     provided: provided,
                     snapshot: snapshot,
-                    formChild: (<span>id {id} type {type}</span>)
+                    formChild: (
+                        <div>
+                            <p>
+                                OB name: {obCell.name}
+                            </p>
+                            <p>
+                                Type: {obCell.type}
+                            </p>
+                        </div>
+                    )
                 })
             }
         </Draggable>
@@ -183,8 +185,8 @@ export const OBQueue = (props: Props) => {
                                 {...provided.droppableProps}
                             >
                                 {obs !== undefined &&
-                                    obs.map((item: any, idx: number) => {
-                                        return (create_draggable(item, idx))
+                                    obs.map((obCell: OBCell, idx: number) => {
+                                        return (create_draggable(obCell, idx))
                                     })
                                 }
                                 {provided.placeholder}
