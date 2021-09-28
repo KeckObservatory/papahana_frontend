@@ -24,7 +24,11 @@ const useStyles = makeStyles((theme: any) => ({
         // marginTop: theme.spacing(12),
         position: "relative",
         // height: '100%',
+        width: '100%',
         display: "flex"
+    },
+    panel: {
+        width: '100%',
     }
 }))
 
@@ -46,7 +50,7 @@ const TabPanel = (props: TabPanelProps) => {
             {...other}
         >
         {value === index && (
-        <Box p={3}>
+        <Box className={classes.panel} p={3}>
           {children}
         </Box>
       )}

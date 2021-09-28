@@ -16,12 +16,14 @@ const useStyles = makeStyles((theme: any) => ({
         textAlign: 'left',
         margin: theme.spacing(1),
         display: 'flex',
-        width: '100%',
+        // width: '100%',
+        maxWidth: theme.spacing(190),
     },
     paper: {
         padding: theme.spacing(2),
         margin: theme.spacing(1),
-        minWidth: theme.spacing(70),
+        minWidth: theme.spacing(120),
+        maxWidth: theme.spacing(150),
         elevation: 3,
     },
     widepaper: {
@@ -29,7 +31,7 @@ const useStyles = makeStyles((theme: any) => ({
         margin: theme.spacing(1),
         // height: '500px',
         elevation: 3,
-        minWidth: theme.spacing(100)
+        minWidth: theme.spacing(60)
     },
     cell: {
     },
@@ -89,23 +91,9 @@ export const PlanningToolView = (props: Props) => {
     useEffect( () => {
         get_obs_from_semester(props.observer_id, sem_id).then( (container_obs: any) => {
             const cells = container_obs_to_cells(container_obs)
-            // console.log('got cells to add')
-            // console.log(cells)
             setAvlObs(cells)
         })
     }, [])
-
-
-    useEffect( () => {
-        // console.log('selected obs is now')
-        // console.log(selObs)
-    }, [selObs])
-
-
-    useEffect( () => {
-        // console.log('available obs is now')
-        // console.log(avlObs)
-    }, [avlObs])
 
     useEffect( () => {
         console.log('sem_id changed')
@@ -151,7 +139,7 @@ export const PlanningToolView = (props: Props) => {
                         />
             </Grid>
             <Grid item xs={4}>
-                <Paper className={classes.paper} elevation={3}>
+                <Paper className={classes.widepaper} elevation={3}>
                     <Tooltip title="View selected OB target charts here">
                         <h2>Sky View</h2>
                     </Tooltip>

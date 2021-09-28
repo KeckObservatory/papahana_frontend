@@ -23,7 +23,8 @@ const useStyles = makeStyles((theme: any) => ({
     paper: {
         padding: '8px',
         margin: '4px',
-        width: '200px',
+        minWidth: theme.spacing(20),
+        width: '95%',
         elevation: 3,
     },
     droppableDragging: {
@@ -37,7 +38,6 @@ const useStyles = makeStyles((theme: any) => ({
         margin: theme.spacing(1),
         padding: theme.spacing(0),
         minHeight: theme.spacing(5),
-        // minWidth: '150px',
     },
     cell: {
         width: '45%'
