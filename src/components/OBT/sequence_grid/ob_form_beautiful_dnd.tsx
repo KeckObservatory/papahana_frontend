@@ -88,20 +88,6 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 };
 const grid = 8;
 
-const get_item_style = (isDragging, draggableStyle) => ({
-    // some basic styles to make the items look a bit nicer
-    userSelect: "none",
-    padding: grid * 2,
-    margin: `0 0 ${grid}px 0`,
-
-    // change background colour if dragging
-    background: isDragging ? "lightgreen" : "grey",
-
-    // styles we need to apply on draggables
-    ...draggableStyle
-});
-
-
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
     let forms: { [k: string]: any } = {}
@@ -122,7 +108,6 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     return forms
 }
 
-
 const handleDelete = () => { }
 
 const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc: any) => {
@@ -133,10 +118,6 @@ const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc
             {...provided.draggableProps}
             {...provided.dragHandleProps}
             className={className}
-            // style={get_item_style(
-            //     snapshot.isDragging,
-            //     provided.draggableProps.style
-            // )}
         >
             <AccordionForm
                 name={key}
@@ -205,7 +186,6 @@ const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element
     return <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
 }
 
-
 const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
     let newOb = { ...ob }
     //get science idx from name
@@ -237,7 +217,6 @@ const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [k
     return ob as ObservationBlock
 }
 
-
 export const OBBeautifulDnD = (props) => {
     const classes = useStyles()
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
@@ -246,6 +225,14 @@ export const OBBeautifulDnD = (props) => {
     const evenChunks = true
     obItems = chunkify(obItems, nColumns, evenChunks)
     const [state, setState] = React.useState(obItems);
+
+    React.useEffect(() => {
+        console.log(`ob changed. setting grid items`)
+        const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
+        let obItems = Object.entries(obComponents)
+        obItems = chunkify(obItems, nColumns, evenChunks)
+        setState(obItems)
+    }, [props.ob])
 
     const updateOB = (seqName: OBSeqNames, formData: OBSequence, newHeight?: number) => {
         // if (newHeight) { handleResize(seqName, newHeight, true) }

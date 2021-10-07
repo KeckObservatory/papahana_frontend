@@ -79,9 +79,6 @@ export default function ObservationBlockSelecter(props: Props) {
       })
   }
 
-  const handle_ob_id_select = (id: string) => {
-    props.handleOBSelect(id)
-  }
   return (
     <div>
       <DropDown
@@ -92,7 +89,7 @@ export default function ObservationBlockSelecter(props: Props) {
         label={'Semester ID'}
       />
       <Paper>
-        <SemidTree observer_id={props.observer_id} sem_id={sem_id} ob_selected={handle_ob_id_select} />
+        <SemidTree observer_id={props.observer_id} sem_id={sem_id} handleOBSelect={props.handleOBSelect} />
       </Paper>
     </div>
   )

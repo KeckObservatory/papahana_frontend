@@ -40,6 +40,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(2),
     margin: theme.spacing(1),
     width: "100%",
+    // maxWidth: "50%",
     elevation: 3,
   },
   widepaper: {
@@ -73,6 +74,12 @@ export default function OBTView(props: Props) {
   const [theme, setTheme] =
     useQueryParam('theme', withDefault(StringParam, props.theme as string))
   let obSequences = Object.keys(ob)
+
+
+  useEffect(() => {
+    handleOBSelect('0000') //remove if not demo
+    
+  }, [])
 
   useEffect(() => {
     obSequences = Object.keys(ob)
@@ -114,9 +121,10 @@ export default function OBTView(props: Props) {
     setOB(e.updated_src as ObservationBlock);
   }
 
-  const handleOBSelect = (new_ob_id: string) => {
-    setOBID(new_ob_id)
-    getOB(new_ob_id)
+  const handleOBSelect = (ob_id: string) => {
+    console.log(`setting selected ob to ${ob_id}`)
+    setOBID(ob_id)
+    getOB(ob_id)
   }
 
   const addSeq = (seq: OBSequence) => {
@@ -168,7 +176,7 @@ export default function OBTView(props: Props) {
 
   return (
     <Grid container spacing={3} className={classes.grid}>
-      <Grid item xs={6}>
+      <Grid item xs={3}>
         <Paper className={classes.paper} elevation={3}>
           <h3>Observation Block Selection</h3>
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />

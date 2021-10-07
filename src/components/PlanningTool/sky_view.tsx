@@ -29,14 +29,14 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
 
     const x = d3.scaleLinear()
         .domain([Math.min(...az)-10, Math.max(...az)+10])
-        .range([0, width]);
+        .range([width, 0]);
     svg.append("g")
         .attr("transform", `translate(0, ${height})`)
         .call(d3.axisBottom(x));
 
     const y = d3.scaleLinear()
         .domain([Math.min(...alt)-10, Math.max(...alt)+10])
-        .range([height, 0]);
+        .range([0, height]);
     svg.append("g")
         .call(d3.axisLeft(y));
 

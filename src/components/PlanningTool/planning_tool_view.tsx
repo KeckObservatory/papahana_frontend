@@ -63,7 +63,7 @@ const container_obs_to_cells = (container_obs: any) => {
         const cid = cid_obs[0]
         const obs = cid_obs[1].splice(0,1,1)
         const cidCell = {id: cid, type: 'container'}
-        cells.push(cidCell)
+        //cells.push(cidCell) //ignore containers for now
         obs.forEach( (ob: ObservationBlock, idx: number) => {
             const obCell: OBCell = {cid: cid,
                 name: ob.metadata.name,

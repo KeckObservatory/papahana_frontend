@@ -10,16 +10,16 @@ import { mock_get_instrument_package, mock_get_template, mock_get_containers, mo
 // Define your api url from any source.
 // Pulling from your .env file when on the server or from localhost when locally
 
-
+const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT==='production'? true : false
+console.log(`is PRODUCTION? set to ${IS_PRODUCTION}`) 
 var PRODUCTION_URL = 'https://vm-appserver.keck.hawaii.edu/api/ddoi/v0/' //use on server (npm build)
-var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start)
-var BASE_URL = process.env.NODE_ENV==='production'? PRODUCTION_URL : DEV_URL
+var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
+var BASE_URL = IS_PRODUCTION ? PRODUCTION_URL : DEV_URL // sets for production vs dev
 var OB_URL = BASE_URL + 'obsBlocks?' 
 var CONTAINER_URL = BASE_URL + 'containers/items'
 var SEMESTERS_URL = BASE_URL + 'semesterIds'
 var INSTRUMENT_URL = BASE_URL + '/instrumentPackages'
 var TEMPLATE_URL = BASE_URL + '/templates'
-
 console.log('backend url set to')
 console.log(BASE_URL)
 
@@ -102,15 +102,15 @@ const remove = (resource: string, api_type: string ): Promise<any> => {
 
 
 export const get_select_funcs = {
-    get_template: process.env.NODE_ENV === 'production'? get_template : mock_get_template,
-    get_semesters: process.env.NODE_ENV === 'production'? get_semesters : mock_get_semesters,
-    get_containers: process.env.NODE_ENV === 'production'? get_containers : mock_get_containers,
-    get_observation_blocks_from_container: process.env.NODE_ENV === 'production'? get_observation_blocks_from_container : mock_get_observation_block_from_container,
-    get_instrument_package: process.env.NODE_ENV === 'production'? get_instrument_package : mock_get_instrument_package
+    get_template: IS_PRODUCTION ? get_template : mock_get_template,
+    get_semesters: IS_PRODUCTION ? get_semesters : mock_get_semesters,
+    get_containers: IS_PRODUCTION ? get_containers : mock_get_containers,
+    get_observation_blocks_from_container: IS_PRODUCTION ? get_observation_blocks_from_container : mock_get_observation_block_from_container,
+    get_instrument_package: IS_PRODUCTION ? get_instrument_package : mock_get_instrument_package
 }
 
 export const api_funcs = {
-    get: process.env.NODE_ENV === 'production'? get : mock_ob_get,
+    get: IS_PRODUCTION ? get : mock_ob_get,
     post,
     put,
     remove,

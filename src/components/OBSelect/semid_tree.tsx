@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: any) => ({
 interface Props {
     observer_id: string;
     sem_id: string;
-    ob_selected: Function;
+    handleOBSelect: Function;
 }
 
 
@@ -114,6 +114,7 @@ export default function SemidTree(props: Props) {
         const elem = find_item_by_id(containers, nodeId)
         if (elem) {
             console.log(`${JSON.stringify(elem)} is an ob. selecting.`)
+            props.handleOBSelect(elem)
         }
     }
 

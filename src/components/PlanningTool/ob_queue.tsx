@@ -155,7 +155,6 @@ export const OBQueue = (props: Props) => {
             else {
                 props.setAvlObs(newObs)
             }
-            // setState(newState);
         } else { // new item in state
             const result = move(props[sKey], props[dKey], source, destination);
             if (sKey === 'selObs') {
