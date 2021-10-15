@@ -89,9 +89,8 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
         .style("padding", "10px")
         .style("visibility", "hidden")
         .style('pointer-events', 'none')
-        .style("color", "white")
-
-    const txt = (d: Data) => `target is ${d.tgt} with ${d.type} ${d.value} ${d.units}`
+        .style('display', 'none')
+        // .style("color", "white")
 
     const ruler = svg.append('rect')
         .attr('x', 0)
@@ -118,12 +117,16 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
                 minuteFormatted + morning;
     }
 
+
+    // var graph1 = svg.append('g').attr('class', 'texts').style("visibility", "visible")
+
     const moveRuler = (event: any) => {
         const [xp, yp] = d3.pointer(event, svg.node())
         const xpoint = xScale.invert(xp)
 
         var d: any
-        var keys: any[] = []
+        var keys: string[] = []
+        var keyData: any[] = []
         for (const idx in myData) {
             const i = bisectDate(myData[idx], xpoint, 1)
             const d0 = myData[idx][i - 1]
@@ -135,41 +138,70 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
                 .style('opacity', 1);
 
             const c = colors(d.tgt)
-            const style:string = `{
-                width: 10px;
-                height: 10px;
-                margin-right: 8px;
-                border-radius: 2px;
-                background-color:${ c }
-                color:${ c }
-              }`
-                
-            const key =`<li style=${style}>
-                        <span  style=${ style }"></span>
-                        <span  style=${ style }>${ d.tgt }:</span>
-                        <span style=${ style }>${ d3.format( ',.3f' )( d.value ) }</span>
+            const txt =  d3.format( ',.3f' )( d.value ) 
+            const key =`<li>
+                        <circle class="span-${d.tgt}" style="background-color: ${c}"></circle>
+                        <span>${d.tgt }</span>
+                        <span >${txt}</span>
                         </li>` 
+            const k: any = {time: d.time, color: c, txt: d.tgt, value: Math.round(d.value * 1000) / 1000}
+            keyData.push(k)
             keys.push(key)
         }
 
-            tooltip
-                .style("opacity", 1)
-                .style("top", (event.pageY - 120) + "px")
-                .style("left", (event.pageX - 150) + "px")
-                .style("display", "inline-block")
-                .style("visibility", "visible")
-                .html(`
-                <div>
-                  <h4>${ formatDate(d.time)}</h4>
-                  <ul>
-                    ${ keys.join('') }
-                  </ul>
-                </div>
-              `)
+        // var texts = graph1
+        // .selectAll('texts')
+        // .data(keyData)
+        // .enter().append("text")
+        // .attr("class", "lineLabel")
+        // .style("top", (event.pageY - 250) + "px")
+        // .style("left", (event.pageX - 200) + "px")
 
-            ruler
-                .attr('x', xScale(d.time))
-                .style('opacity', 1);
+        // var tspans = texts.selectAll('texts')
+        //     .data(keyData)
+        //     .enter()
+        //     .append('tspan')
+
+        //     .style("display", "inline-block")
+        //     .style("opacity", 1)
+        //     .style("visibility", "visible")
+        //     .style('fill', function(d: any) { return d.color; })
+        //     .style('font-weight', '600')
+        //     .text(function(d: any) { console.log(d); return d.txt });
+
+        tooltip
+            .style("opacity", 1)
+            .style("visibility", "visible")
+            .style("top", (event.pageY - 10) + "px")
+            .style("left", (event.pageX - 10) + "px")
+            .style('font-size', '20px')
+            .style("display", "inline-block")
+            .html(`
+            <div>
+                <h4>${ formatDate(d.time)}</h4>
+            </div>
+            `)
+            .selectAll("mylegend")
+            .data(keyData)
+            .enter() //for each line, list out name and value
+            .append('div')
+            .style( 'background-color' ,(d: any) => d.color)
+            .html( (d: any) => {
+                return d.txt + ': ' + d.value
+
+            })
+            // .html(`
+            // <div>
+            //     <h4>${ formatDate(d.time)}</h4>
+            //     <ul>
+            //     ${ keys.join(``) }
+            //     </ul>
+            // </div>
+            // `)
+
+        ruler
+            .attr('x', xScale(d.time))
+            .style('opacity', 1);
 
     }
 
@@ -180,6 +212,8 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
             .style('opacity', 0);
         d3.selectAll('.label')
             .style('opacity', 0);
+        // d3.selectAll('.texts')
+        //     .style('opacity', 0);
         tooltip
             .style("opacity", 0)
     }
@@ -192,10 +226,7 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
         .data(myData)
         .join('path')
         .attr('class', 'chart-lines')
-        // Using our line generator here
-            .attr('d', line.curve(d3.curveNatural))
-        // Every data point in the array has a name key
-        // so we just grab the one from d[0]
+        .attr('d', line.curve(d3.curveNatural))
         .style('stroke', (d: any | Data[]) => colors(d[0].tgt))
         .style('stroke-width', 2)
         .style('fill', 'transparent')
