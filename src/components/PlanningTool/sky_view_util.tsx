@@ -2,24 +2,42 @@ import * as dayjs from 'dayjs'
 import * as SunCalc from 'suncalc'
 
 const HT_OFFSET = 600 // hawaii time offset from ut time [minutes]
-const KECK_LONG = -155.4747 // Keck Observatory longitude west of Greenwich [deg]
+export const KECK_LONG = 360 - 155.4747 // Keck Observatory longitude west of Greenwich [deg]
 const KECK_LAT = 19.8260 //[deg]
 
-const date_to_juld = (date: Date) => {
-    return Math.floor( date.getTime()/864000 ) - (HT_OFFSET / 1440 ) + 2440587.5
+export const date_to_juld = (date: Date) => {
+    return date.getTime()/86400000 + 2440587.5
 }
 
-const get_gmt = (date?: Date) => {
+export const get_gmt = (date?: Date) => {
     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
     12.1 & 12.4*/
     if (!date) date = new Date()
     const JD = date_to_juld(date)
-    const T = ( JD - 2_451_545.0 ) / 36_525 // 12.1
-    const Theta0 = 280.46061837 
+    const T = ( JD - 2451545.0 ) / 36525 // 12.1
+    const Theta0 = 280.460_618_37 
                    + 360.98564736629 * (JD - 2451545.0) 
                    + T * T * 0.000387933 
                    - T * T * T / 38710000 // 12.4
-    return Theta0
+
+    let gmt = Theta0 % 360 
+    if (gmt < 0) gmt += 360
+    return gmt 
+}
+
+export const get_gmt_bak = (date?: Date) => {
+    /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
+    12.1 & 12.3*/
+    if (!date) date = new Date()
+    const JD = date_to_juld(date)
+    const T = ( JD - 2_451_545.0 ) / 36_525 // 12.1
+    const Theta0 = 100.46061837 + 8640184.812855 * T 
+    + .000387933 * T * T 
+    - T * T * T / 38_710_000 // 12.4
+
+    let gmt = Theta0 % 360 
+    if (gmt < 0) gmt += 360
+    return gmt 
 }
 
 export const hours_to_deg = (time: string, dec = false) => {
@@ -28,8 +46,7 @@ export const hours_to_deg = (time: string, dec = false) => {
     let sign = 1
     if (hours[0] === '+') hours = hours.substring(1);
     if (hours[0] === '-') hours = hours.substring(1); sign=-1
-    console.log([sign, hours, min, sec])
-    const deg = 360 * sign * (parseInt(hours, 10) / 24
+    const deg = 15 * sign * (parseInt(hours, 10) 
         + parseInt(min, 10) / 60
         + parseInt(sec, 10) / 60)
     // const deg = 360 * sign * (JSON.parse(hours) / 24
@@ -48,9 +65,9 @@ const tand = (deg: number): number => {
     return Math.tan(Math.PI/180 * deg)
 }
 
-export const ra_dec_to_az_alt = (ra: number, dec: number, date?: Date): [number, number] => {
+export const ra_dec_to_az_alt_bak = (ra: number, dec: number, date?: Date): [number, number] => {
     if (!date) date = new Date()
-    const hourAngle = (get_gmt(date) - (Math.PI/2 * KECK_LONG) - ra) % 360
+    const hourAngle = get_gmt(date) - KECK_LONG - ra
     const sinAlt =  sind(dec) * sind(KECK_LAT) 
             + cosd(dec) * cosd(KECK_LAT) * cosd(hourAngle)
     const alt = Math.asin(sinAlt)
@@ -61,15 +78,27 @@ export const ra_dec_to_az_alt = (ra: number, dec: number, date?: Date): [number,
     return [ (180 / Math.PI * az ) % 360, ( 180 / Math.PI * alt ) ]
 }
 
+export const ra_dec_to_az_alt = (ra: number, dec: number, date?: Date): [number, number] => {
+    /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
+    13.3 & 13.4*/
+    if (!date) date = new Date()
+    const hourAngle = get_gmt(date) - KECK_LONG - ra 
+    const tanAzNum =  sind(hourAngle)  
+    const tanAzDen =  cosd(hourAngle) * sind(KECK_LAT) - tand(dec) * cosd(KECK_LAT)
+    const az = Math.atan2(tanAzNum, tanAzDen) //radians
+    const sinEl = sind(KECK_LAT) * sind(dec) + cosd(KECK_LAT) * cosd(dec) * cosd(hourAngle) 
+    const el = Math.asin(sinEl) // radians
+    return [ (180 / Math.PI * az ), ( 180 / Math.PI * el ) ]
+}
+
 const linspace = (start: number, end: number, nLen: number, endpoint=true) => {
-    const div = endpoint ? (nLen-1) : nLen;
     const step = (end - start) / nLen;
     return Array.from( {length: nLen}, (_, idx) => start + step * idx)
 }
 
 const addHours = (date: Date, hours: number): Date => {
     const newDate = new Date(date.getTime())
-    newDate.setTime(date.getTime() + hours*60*60*1000)
+    newDate.setTime(date.getTime() + hours*3600000)
     return newDate
 }
 
@@ -84,7 +113,7 @@ export const get_nadir = () => {
 }
 
 export const get_times = (nadir: Date, nPoints: number=20) => {
-  const deltaNadir = linspace(-5, 5, nPoints)
+  const deltaNadir = linspace(-6, 6, nPoints)
   let times: Date[] = []
   deltaNadir.forEach( (hour: number) => {
       times.push(addHours(nadir, hour))
@@ -102,8 +131,8 @@ export const get_target_traj = (ra: number, dec: number,  times: Date[]): [numbe
 }
 
 export const get_air_mass = (ra: number, dec: number, times: Date[]) => {
-  const [alt, az]= get_target_traj(ra, dec, times)
-  const airmass = alt.map( (a: number) => 1/sind(a))
+  const azAlt = get_target_traj(ra, dec, times)
+  const airmass = azAlt.map( (a: [number, number]) => { return 1/sind(90 - a[1]) })
   return airmass
 }
 

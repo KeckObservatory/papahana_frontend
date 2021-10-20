@@ -29,9 +29,9 @@ const useStyles = makeStyles((theme: any) => ({
     widepaper: {
         padding: theme.spacing(2),
         margin: theme.spacing(1),
-        // height: '500px',
+        height: '700px',
         elevation: 3,
-        minWidth: theme.spacing(60)
+        width: theme.spacing(120)
     },
     cell: {
     },

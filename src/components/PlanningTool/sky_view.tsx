@@ -3,53 +3,140 @@ import React from 'react';
 import { useD3 } from '../../hooks/useD3'
 import * as d3 from 'd3'
 import { OBCell, Target } from '../../typings/papahana'
-import { ra_dec_to_az_alt, get_nadir, hours_to_deg, get_target_traj, get_times } from './sky_view_util'
+import * as dayjs from 'dayjs'
+import { date_to_juld, KECK_LONG, get_gmt, ra_dec_to_az_alt, get_nadir, hours_to_deg, get_target_traj, get_times, get_air_mass } from './sky_view_util'
 
 interface Data { time: Date, value: number, type: string, tgt?: string, units?: string }
 
-const format_traj = (trace: [number, number][], times: Date[], tgt: string, units?: string): Data[] => {
+const format_values = (values: [], times: Date[], tgt: string, units?: string): Data[] => {
     let data: Data[] = []
     for (let idx = 0; idx < times.length; idx++) {
-        const d: Data = { time: times[idx], value: trace[idx][1], units: units, type: 'trajectory', tgt: tgt }
+        const d: Data = { time: times[idx], value: values[idx], units: units, type: 'trajectory', tgt: tgt }
         data.push(d)
     }
     return data
 }
 
-const skyview = (svg: any, height: number, width: number, targets: Target[]) => {
-    let [ra, dec, alt, az]: number[][] = [[], [], [], []]
+const check_calc = (nadir: Date) => { 
+    console.log('nadir', nadir)
+    console.log('juld', date_to_juld(nadir))
+    console.log('gst', get_gmt(nadir))
+    console.log('lst', get_gmt(nadir) - KECK_LONG)
+    let [ra, dec] = ["17:31:16", "+33:27:43"] as any[]
+    ra = hours_to_deg(ra)
+    dec = hours_to_deg(dec)
+    console.log('ra', ra)
+    console.log('dec', dec)
+}
+
+const make_data = (targets: Target[]) => {
+    let [ra, dec, alt, az, airMass]: number[][] = [[], [], [], [], []]
     // let myData: Data[] = [] 
 
     const nadir = get_nadir()
+    check_calc(nadir)
 
+    const times = get_times(nadir, 105)
     let myData: Data[][] = []
     let mergedData: Data[] = []
 
     targets.forEach((target: Target) => {
         ra.push(target.ra_deg as number)
         dec.push(target.dec_deg as number)
-        const times = get_times(nadir, 25)
         const azAlt = ra_dec_to_az_alt(target.ra_deg as number, target.dec_deg as number, nadir)
         az.push(azAlt[0])
         alt.push(azAlt[1])
-        const traj = get_target_traj(target.ra_deg as number, target.dec_deg as number, times)
-        const fTraj = format_traj(traj, times, target.name, 'degrees')
-        mergedData = [...mergedData, ...fTraj]
-        myData.push(fTraj)
-    })
+        let traj = get_target_traj(target.ra_deg as number, target.dec_deg as number, times) as any
+        traj = traj.map( (azAlt: any) => azAlt[1])
+        let am = get_air_mass(target.ra_deg as number, target.dec_deg as number, times) as any
+        const data = format_values(am, times, target.name, 'degrees')
+        // const data = format_traj(traj, times, target.name, 'degrees')
+        mergedData = [...mergedData, ...data]
+        myData.push(data)
 
-    if (ra.length <= 0) return
+    })
+    return myData
+}
+
+
+const add_axes = (svg: any, xScale: any, yScale: any, width: number, height: number,
+                  xOffset: number, xTxtOffset: number, yOffset: number, yTxtOffset: number, 
+                  yLabel="Value [ ]") => { 
+  // Add the x Axis
+  const xAxisGenerator = d3.axisBottom(xScale).ticks(12)
+  const xAxis = svg.append("g")
+
+  xAxis.call(xAxisGenerator)
+      .attr("transform", "translate(0," + xOffset + ")")
+    //   .style("color", "white")
+      .style("font-size","1rem")
+
+  // text label for the x axis
+  svg.append("text")             
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           xTxtOffset + ")")
+      .style("text-anchor", "middle")
+      .text("Date")
+      .style("font-size","1rem")
+      .style("fill", "white");
+
+  // Add the y Axis
+
+  const yAxisGenerator = d3.axisLeft(yScale)
+  const yAxis = svg.append("g")
+
+  yAxis
+  .attr("transform", "translate(" + yOffset + ", 0)")
+      .style("color", "white")
+      .style("font-size","1rem")
+      .call(yAxisGenerator)
+
+  // text label for the y axis
+  svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 + yTxtOffset)
+      .attr("x",0 - (height / 2))
+      .style("text-anchor", "middle")
+      .text(yLabel)   
+      .style("fill", "white")
+      .style("font-size","1rem");
+}
+
+const formatDate = (date: Date ) =>{
+    var year = date.getFullYear(),
+        month = date.getMonth() + 1, // months are zero indexed
+        day = date.getDate(),
+        hour = date.getHours(),
+        minute = date.getMinutes(),
+        second = date.getSeconds(),
+        hourFormatted = hour % 12 || 12, // hour returned in 24 hour format
+        minuteFormatted = minute < 10 ? "0" + minute : minute,
+        morning = hour < 12 ? "am" : "pm";
+
+    return month + "/" + day + "/" + year + " " + hourFormatted + ":" +
+            minuteFormatted + morning;
+}
+
+const skyview = (svg: any, outerHeight: number, outerWidth: number,
+     marginLeft: number, marginRight: number,
+     marginTop: number, marginBottom: number, targets: Target[]) => {
+    const myData = make_data(targets)
+    if (myData.length <= 0) return
     const startDate = myData[0][0].time
     const endDate = myData[0][myData[0].length - 1].time
     const values = myData.flat().map(d => d.value)
     const yMin: number = d3.min(values) as number
     const yMax: number = d3.max(values) as number
 
+    const height = outerHeight - marginTop - marginBottom
+    const width = outerWidth - marginRight - marginLeft
+
     const xScale = d3.scaleTime([startDate, endDate],
-        [0, width]
+        [marginLeft, width]
     )
-    const yScale = d3.scaleLinear([yMin, yMax],
-        [height, 0]
+    const yScale = d3.scaleLinear([yMin-1, yMax+1],
+        [height, marginTop]
     )
 
     let tdx = 0
@@ -68,6 +155,7 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
         .x((d: any | Data) => xScale(d.time))
         .y((d: any | Data) => yScale(d.value))
 
+    //dots appear over line when cursored over
     for (const i in myData) {
         svg.append('circle')
             .attr('class', 'marker ' + myData[i][0].tgt)
@@ -78,8 +166,10 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
             .style('opacity', 0)
     }
 
+    //tooltip with legend appears when cursor is on canvas
     const tooltip = d3.select("body")
         .append("h1")
+        .attr('class', 'tooltip')
         .style("position", "absolute")
         .style("background-color", "#515151")
         .style("border-width", "1px")
@@ -90,8 +180,8 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
         .style("visibility", "hidden")
         .style('pointer-events', 'none')
         .style('display', 'none')
-        // .style("color", "white")
 
+    //vertical line is drawn offset from cursor
     const ruler = svg.append('rect')
         .attr('x', 0)
         .attr('y', 0)
@@ -102,35 +192,18 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
         .attr('opacity', 0)
 
     var bisectDate = d3.bisector(function(d: any) { return d.time; }).left;
-    const formatDate = (date: Date ) =>{
-        var year = date.getFullYear(),
-            month = date.getMonth() + 1, // months are zero indexed
-            day = date.getDate(),
-            hour = date.getHours(),
-            minute = date.getMinutes(),
-            second = date.getSeconds(),
-            hourFormatted = hour % 12 || 12, // hour returned in 24 hour format
-            minuteFormatted = minute < 10 ? "0" + minute : minute,
-            morning = hour < 12 ? "am" : "pm";
-    
-        return month + "/" + day + "/" + year + " " + hourFormatted + ":" +
-                minuteFormatted + morning;
-    }
-
-
-    // var graph1 = svg.append('g').attr('class', 'texts').style("visibility", "visible")
 
     const moveRuler = (event: any) => {
         const [xp, yp] = d3.pointer(event, svg.node())
         const xpoint = xScale.invert(xp)
 
         var d: any
-        var keys: string[] = []
         var keyData: any[] = []
         for (const idx in myData) {
             const i = bisectDate(myData[idx], xpoint, 1)
             const d0 = myData[idx][i - 1]
             const d1 = myData[idx][i]
+            if(!d1) continue
             d = xpoint.getTime() - d0.time.getTime() > d1.time.getTime() - xpoint.getTime() ? d1 : d0;
             svg.selectAll('.marker.' + myData[idx][0].tgt)
                 .attr('cx', xScale(d.time))
@@ -138,42 +211,15 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
                 .style('opacity', 1);
 
             const c = colors(d.tgt)
-            const txt =  d3.format( ',.3f' )( d.value ) 
-            const key =`<li>
-                        <circle class="span-${d.tgt}" style="background-color: ${c}"></circle>
-                        <span>${d.tgt }</span>
-                        <span >${txt}</span>
-                        </li>` 
             const k: any = {time: d.time, color: c, txt: d.tgt, value: Math.round(d.value * 1000) / 1000}
             keyData.push(k)
-            keys.push(key)
         }
-
-        // var texts = graph1
-        // .selectAll('texts')
-        // .data(keyData)
-        // .enter().append("text")
-        // .attr("class", "lineLabel")
-        // .style("top", (event.pageY - 250) + "px")
-        // .style("left", (event.pageX - 200) + "px")
-
-        // var tspans = texts.selectAll('texts')
-        //     .data(keyData)
-        //     .enter()
-        //     .append('tspan')
-
-        //     .style("display", "inline-block")
-        //     .style("opacity", 1)
-        //     .style("visibility", "visible")
-        //     .style('fill', function(d: any) { return d.color; })
-        //     .style('font-weight', '600')
-        //     .text(function(d: any) { console.log(d); return d.txt });
 
         tooltip
             .style("opacity", 1)
             .style("visibility", "visible")
             .style("top", (event.pageY - 10) + "px")
-            .style("left", (event.pageX - 10) + "px")
+            .style("left", (event.pageX + 10) + "px")
             .style('font-size', '20px')
             .style("display", "inline-block")
             .html(`
@@ -188,16 +234,7 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
             .style( 'background-color' ,(d: any) => d.color)
             .html( (d: any) => {
                 return d.txt + ': ' + d.value
-
             })
-            // .html(`
-            // <div>
-            //     <h4>${ formatDate(d.time)}</h4>
-            //     <ul>
-            //     ${ keys.join(``) }
-            //     </ul>
-            // </div>
-            // `)
 
         ruler
             .attr('x', xScale(d.time))
@@ -212,8 +249,6 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
             .style('opacity', 0);
         d3.selectAll('.label')
             .style('opacity', 0);
-        // d3.selectAll('.texts')
-        //     .style('opacity', 0);
         tooltip
             .style("opacity", 0)
     }
@@ -226,17 +261,30 @@ const skyview = (svg: any, height: number, width: number, targets: Target[]) => 
         .data(myData)
         .join('path')
         .attr('class', 'chart-lines')
-        .attr('d', line.curve(d3.curveNatural))
+        .attr('d', line.curve(d3.curveBasis))
         .style('stroke', (d: any | Data[]) => colors(d[0].tgt))
         .style('stroke-width', 2)
+
         .style('fill', 'transparent')
 
+    // add the axes
+    // axes go on last
+    const xOffset = height 
+    const xTxtOffset = xOffset + 40
+    const yOffset = marginLeft 
+    const yTxtOffset = yOffset - 60
+    const valueTxt = "Alt [deg]"
+    add_axes(svg, xScale, yScale, width, height, xOffset, xTxtOffset, yOffset, yTxtOffset, valueTxt) 
 }
 
 interface Props {
-    height: number
-    width: number
+    outerHeight: number
+    outerWidth: number
     selObs: OBCell[]
+    marginLeft: number;
+    marginRight: number;
+    marginTop: number;
+    marginBottom: number;
 }
 
 
@@ -259,16 +307,15 @@ export default function SkyView(props: Props) {
 
 
 
-    const ref = useD3((svg: any) => { skyview(svg, props.height, props.width, targets) })
+    let ref = useD3((svg: any) => { skyview(svg, props.outerHeight, props.outerWidth,
+         props.marginLeft, props.marginRight, props.marginTop, props.marginBottom,targets) })
 
     return (
         <svg
             ref={ref as any}
             style={{
-                height: props.height,
-                width: props.width,
-                marginRight: "0px",
-                marginLeft: "0px",
+                height: props.outerHeight,
+                width: props.outerWidth,
             }}
         >
         </svg>
@@ -276,6 +323,10 @@ export default function SkyView(props: Props) {
 }
 
 SkyView.defaultProps = {
-    width: 450,
-    height: 500,
+    outerWidth: 1000,
+    outerHeight: 625,
+    marginRight: 0,
+    marginLeft: 120,
+    marginTop: 0,
+    marginBottom: 60,
 }
