@@ -41,17 +41,18 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     width: "100%",
     // maxWidth: "50%",
-    elevation: 3,
+    elevation: 5,
   },
   widepaper: {
     padding: theme.spacing(2),
     margin: theme.spacing(1),
     // height: '500px',
-    elevation: 3,
+    elevation: 5,
     minWidth: theme.spacing(140)
   },
   dndGrid: {
-    minWidth: theme.spacing(140)
+    minWidth: theme.spacing(140),
+    elevation: 5,
   }
 }))
 

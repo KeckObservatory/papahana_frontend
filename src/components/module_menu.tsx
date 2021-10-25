@@ -6,7 +6,7 @@ import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import OBTView from './OBT/observation_data_tool_view';
 import { ThemeKeys } from 'react-json-view';
-import { PlanningToolView } from './PlanningTool/planning_tool_view';
+import { SelectionToolView } from './SelectionTool/selection_tool_view';
 
 const useStyles = makeStyles((theme: any) => ({
     moduleMain: {
@@ -97,7 +97,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                 <OBTView observer_id={props.observer_id} theme={props.jsonTheme} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <PlanningToolView observer_id={props.observer_id}/>
+                <SelectionToolView observer_id={props.observer_id}/>
             </TabPanel>
         </ div >
     )

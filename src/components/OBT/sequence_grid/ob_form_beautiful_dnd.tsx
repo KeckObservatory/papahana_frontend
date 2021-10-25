@@ -32,7 +32,6 @@ const useStyles = makeStyles((theme: Theme) =>
             userSelect: "none",
             padding: grid * 2,
             margin: `0 0 ${grid}px 0`,
-            background: theme.palette.sucess,
         },
         accordianDragging: {
             userSelect: "none",
@@ -48,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) =>
         cell: {
             margin: theme.spacing(0),
             padding: theme.spacing(0),
-            minHeight: ROW_HEIGHT
+            minHeight: ROW_HEIGHT,
         },
         templateAccordian: {
             padding: theme.spacing(1),

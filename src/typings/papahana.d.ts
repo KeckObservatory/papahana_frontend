@@ -44,6 +44,8 @@ export interface OBCell {
 	id: string;
 	name: string;
 	type: 'ob' | 'container'
+	ra?: string;
+	dec?: string;
 	cid?: string
 }
 

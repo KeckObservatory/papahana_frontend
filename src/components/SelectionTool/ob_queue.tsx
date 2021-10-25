@@ -74,6 +74,20 @@ const CreateDiv = (props: CreateDivProps) => {
     )
 }
 
+const DragDiv = (obCell: OBCell) => {
+    return(
+                        <div>
+                            <p>
+                                OB name: {obCell.name}
+                            </p>
+                            <p>
+                                Type: {obCell.type}
+                            </p>
+                            {obCell.ra && <p> Ra: {obCell.ra} Dec: {obCell.dec} </p>}
+                        </div>
+    )
+}
+
 const create_draggable = (obCell: OBCell, idx: number) => {
     return (
         <Draggable
@@ -85,16 +99,8 @@ const create_draggable = (obCell: OBCell, idx: number) => {
                 {
                     provided: provided,
                     snapshot: snapshot,
-                    formChild: (
-                        <div>
-                            <p>
-                                OB name: {obCell.name}
-                            </p>
-                            <p>
-                                Type: {obCell.type}
-                            </p>
-                        </div>
-                    )
+                    formChild: DragDiv(obCell)
+                    
                 })
             }
         </Draggable>

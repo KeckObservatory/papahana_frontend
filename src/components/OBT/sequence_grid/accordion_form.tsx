@@ -9,7 +9,7 @@ import OpenWithIcon from '@mui/icons-material/OpenWith';
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import { ObservationBlock } from "../../../typings/papahana"
-import { DeleteSequenceButton } from './delete_sequence_button'
+import { DeleteComponentButton } from './delete_component_button'
 
 export type FormNames = keyof ObservationBlock
 
@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
             margin: theme.spacing(0),
             padding: theme.spacing(0),
             minHeight: rowHeight,
-            backgroundColor: 'grey',
+            // backgroundColor: 'grey',
         },
         templateAccordian: {
             padding: theme.spacing(0),
@@ -90,7 +90,7 @@ export const AccordionForm = (props: AccordianProps) => {
                         <OpenWithIcon />
                     </IconButton>
                 </Tooltip>
-                <DeleteSequenceButton handleDelete={props.handleDelete} />
+                <DeleteComponentButton handleDelete={props.handleDelete} />
                 <Typography variant={"h6"} className={classes.heading}>{props.name.toUpperCase()}</Typography>
             </AccordionSummary>
             <AccordionDetails >

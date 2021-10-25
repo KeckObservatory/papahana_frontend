@@ -12,10 +12,12 @@ interface Props {
 handleDelete: Function
 }
 
-export const DeleteSequenceButton = (props: Props) => {
+export const DeleteComponentButton = (props: Props) => {
 
 
     const [open, setOpen] = React.useState(false);
+    const title = "Delete Component"
+    const msg = "Are you sure you want to delete this component?" 
 
     const handleClickOpen = (event: any) => {
         event.stopPropagation()
@@ -34,7 +36,7 @@ export const DeleteSequenceButton = (props: Props) => {
 
     return (
         <div>
-            <Tooltip title="Delete sequence">
+            <Tooltip title={title}>
                 <IconButton
                     className="deleteme"
                     aria-label='delete'
@@ -50,10 +52,10 @@ export const DeleteSequenceButton = (props: Props) => {
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >
-                <DialogTitle id="alert-dialog-title">{"Delete Sequence"}</DialogTitle>
+                <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-description">
-                        Are you sure you want to delete this sequence?
+                        {msg}
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
