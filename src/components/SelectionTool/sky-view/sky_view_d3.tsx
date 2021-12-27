@@ -126,6 +126,17 @@ const init_static_lines = (svg: any,
                 .style("visibility", "visible")
                 .style('opacity', 1);
     })
+
+
+    svg.append('rect')
+        .attr('x', xScale(startDate))
+        .attr('y', yScale(30))
+        .attr('height', 2)
+        .attr('width', width)
+        .attr('class', 'druler')
+        .style('stroke', 'lightgray')
+        .style("visibility", "visible")
+        .style('opacity', 1);
     // const URL = "https://www.keck.hawaii.edu/software/db_api/metrics.php?date=" + dateStr 
     // const values = ["dusk_12deg", "dusk_18deg", "dawn_12deg", "dawn_18deg"]
     // console.log(URL)

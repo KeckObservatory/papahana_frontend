@@ -1,13 +1,16 @@
 import React, { } from "react"
 import { Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
 import { withTheme, ISubmitEvent } from "@rjsf/core";
-import Form from '@rjsf/material-ui'
+// import Form from '@rjsf/material-ui'
+import { Theme as MaterialUITheme } from './../../forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { UiSchema } from "react-jsonschema-form";
+
+const Form = withTheme(MaterialUITheme)
 
 export const useStyles = makeStyles( (theme: any) => ({
   root: {
@@ -169,11 +172,6 @@ export default function TemplateForm(props: Props): JSX.Element {
 
   const handleChange = (evt: ISubmitEvent<OBComponent>): void => {
     const curr = ref.current as any
-    //todo how to tell if change is from array size changing
-    // console.log('form changed')
-    // console.log(evt)
-    // console.log(`height ${height} vs current height of ${curr.clientHeight}`)
-    // console.log('updating form')
     let newFormData = { ...evt.formData }
     // check if form changed heights
     let newHeight: number = height!==curr.clientHeight? curr.clientHeight : undefined
