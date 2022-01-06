@@ -14,7 +14,6 @@ import { default as mock_instrument_packages } from './instrument_packages.json'
 export const mock_get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
    const mockPromise = new Promise<InstrumentPackage>((resolve) => {
       const ip = mock_instrument_packages[0] as InstrumentPackage
-      // const ip = JSON.parse(mock_instrument_packages[0]) as InstrumentPackage
       resolve(ip)
    })
    return mockPromise

@@ -1,6 +1,42 @@
 import { UiSchema } from "react-jsonschema-form"
 import { JsonSchema } from "../../typings/ob_json_form"
 
+export const metadataSchema: JsonSchema = {
+  title: "Metadata",
+  type: "object",
+  required: ["name", "instrument", "version", "ob_type", "pi_id", "sem_id"],
+  properties: {
+    name: {
+      type: "string",
+      title: "Name"
+    },
+    instrument: {
+      type: "string",
+      title: "Instrument"
+    },
+    version: {
+      type: "string",
+      title: "Version"
+    },
+    pi_id: {
+      type: "string",
+      title: "PI ID"
+    },
+    ob_type: {
+      type: "string",
+      title: "OB Type"
+    },
+    sem_id: {
+      type: "string",
+      title: "Semid"
+    },
+    comment: {
+      type: "string",
+      title: "Comment"
+    },
+  }
+}
+
 export const targetSchema: JsonSchema = {
   title: "Target",
   type: "object",
@@ -95,6 +131,8 @@ export const targetSchema: JsonSchema = {
     }
   }
 }
+
+export const uiMetadataSchema: UiSchema = { }
 
 export const uiTargetSchema: UiSchema = { }
 

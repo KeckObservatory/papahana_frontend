@@ -10,6 +10,8 @@ import { IconButton, Tooltip } from '@mui/material';
 
 interface Props {
 handleDelete: Function
+id: string
+name: string 
 }
 
 export const DeleteComponentButton = (props: Props) => {
@@ -25,12 +27,11 @@ export const DeleteComponentButton = (props: Props) => {
     };
 
     const handleClose = (event: any, confirmDelete: boolean ) => {
-        console.log('confirmDelete')
-        console.log(confirmDelete)
+        console.log('confirmDelete for', props.id, props.name, confirmDelete)
         event.stopPropagation();
         setOpen(false);
         if (confirmDelete) {
-            props.handleDelete()
+            props.handleDelete(props.id)
         }
     };
 

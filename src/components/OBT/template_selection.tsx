@@ -1,11 +1,8 @@
 import React from 'react';
 import { get_instrument_package } from '../../api/utils'
 import { useState, useEffect } from 'react';
-import { Instrument, InstrumentPackage, InstrumentPackageTemplates, ObservationBlock, Template, TemplateEntry } from '../../typings/papahana';
+import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template} from '../../typings/papahana';
 import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material'
-import MenuItem from '@mui/material/MenuItem';
-import ListSubheader from '@mui/material/ListSubheader';
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 
@@ -21,7 +18,7 @@ interface Props {
     addSeq: Function;
 }
 
-const parse_template_arr = (arr: TemplateEntry[]): string[] => {
+const parse_template_arr = (arr: string[]): string[] => {
     return (
         arr.map((tname: any, idx: number) => {
             return tname.name
@@ -39,17 +36,18 @@ const add_targets = (tList: string[], dList: boolean[], obSequences: string[]):v
     })
 }
 
-const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[]] => {
+const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[], string[]] => {
     let tList: string[] = []
     let dList: boolean[] = []
-    Object.entries(instTemplates).forEach(([templateType, templateArr]: any) => {
-        const templateNames = parse_template_arr(templateArr)
-        const disabled = templateNames.map(() => obSequences.includes(templateType))
-        tList = tList.concat(templateNames)
-        dList = dList.concat(disabled)
+    let idList: string[] = []
+    Object.entries(instTemplates).forEach(([templateName, templateID]: any) => {
+        const disabled = obSequences.includes(templateName)
+        tList.push(templateName)
+        dList.push(disabled)
+        idList.push(templateID) 
     })
     add_targets(tList, dList, obSequences)
-    return [tList, dList]
+    return [tList, dList, idList]
 }
 
 export default function TemplateSelection(props: Props) {
@@ -58,25 +56,29 @@ export default function TemplateSelection(props: Props) {
     const [templates, setTemplates] = useState({} as InstrumentPackageTemplates)
     const [templateList, setTemplateList] = useState([] as string[])
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
+    const [templateIdList, setTemplateIdList] = useState([] as string[])
 
     useEffect(() => {
         get_instrument_package(props.instrument)
             .then((ip: InstrumentPackage) => {
-                const [tList, dList] = create_drop_down_list(ip.templates, props.obSequences)
-                setTemplates(ip.templates)
+                const [tList, dList, idList] = create_drop_down_list(ip.template_list, props.obSequences)
+                setTemplates(ip.template_list)
                 setTemplateList(tList)
                 setDisabledArr(dList)
+                setTemplateIdList(idList)
             })
     }, [props.instrument])
 
     useEffect(() => {
-        const [tList, dList] = create_drop_down_list(templates, props.obSequences)
+        const [tList, dList, idList] = create_drop_down_list(templates, props.obSequences)
         setTemplateList(tList)
         setDisabledArr(dList)
+        setTemplateIdList(idList)
     }, [props.obSequences])
 
 
     const handleChange = (templateName: string) => {
+        console.log(templateName, 'templateName')
         get_template(templateName).then((template: Template) => {
             let seq = {
                 'metadata': template.metadata,

@@ -18,6 +18,7 @@ import TemplateSelection from './template_selection'
 import useBoop from './../../hooks/boop'
 import { animated } from 'react-spring'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
+import Button from '@mui/material/Button';
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -145,14 +146,14 @@ export default function OBTView(props: Props) {
   }
 
   const createOB = () => {
-    const newOB = {} as ObservationBlock
+    const newOB = {metadata: {}} as ObservationBlock
     triggerBoop(true)
     setOB(newOB)
-    const query = ``
-    api_call(query, 'papahana_demo', 'post', newOB).then((result: any) => {
-      console.log('put result')
-      console.log(result)
-    })
+    //const query = ``
+    // api_call(query, 'papahana_demo', 'post', newOB).then((result: any) => {
+    //   console.log('put result')
+    //   console.log(result)
+    // })
 
   }
 
@@ -174,6 +175,10 @@ export default function OBTView(props: Props) {
   }
 
   const handleEdit = props.editable ? onEdit : false
+
+  const targetResolverClick = () => {
+    console.log('target resolver clicked')
+  }
 
   return (
     <Grid container spacing={3} className={classes.grid}>
@@ -204,6 +209,11 @@ export default function OBTView(props: Props) {
           <Tooltip title="Add template to Selected OB">
             <div className={classes.templateSelect}>
               <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={obSequences} />
+            </div>
+          </Tooltip>
+          <Tooltip title="Resolve template image">
+            <div>
+              <Button onClick={targetResolverClick} >Target Resolver</Button>
             </div>
           </Tooltip>
           <Tooltip title="Change the color theme of the OB JSON display">

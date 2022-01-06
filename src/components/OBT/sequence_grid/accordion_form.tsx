@@ -67,6 +67,7 @@ export const AccordionForm = (props: AccordianProps) => {
     const defaultExpanded: boolean = true 
     const classes = useStyles()
     const ref = useRef(null)
+    const deletable = props.name !== 'metadata'
 
     return (
         <Accordion sx={{backgroundColor: 'divider'}} ref={ref}
@@ -89,8 +90,11 @@ export const AccordionForm = (props: AccordianProps) => {
                     >
                         <OpenWithIcon />
                     </IconButton>
-                </Tooltip>
-                <DeleteComponentButton handleDelete={props.handleDelete} />
+
+                 </Tooltip>
+                {deletable && 
+                    <DeleteComponentButton handleDelete={props.handleDelete} id={props.id} name={props.name}/>
+                }
                 <Typography variant={"h6"} className={classes.heading}>{props.name.toUpperCase()}</Typography>
             </AccordionSummary>
             <AccordionDetails >

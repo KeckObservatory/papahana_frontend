@@ -10,7 +10,7 @@ import "./styles.css";
 import { mergeClasses } from '@mui/material/styles';
 
 const ROW_HEIGHT = 45;
-const OB_NAMES: OBSeqNames[] = ['acquisition', 'sequences', 'target']
+const OB_NAMES: OBSeqNames[] = ['metadata', 'acquisition', 'sequences', 'target']
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -107,9 +107,8 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     return forms
 }
 
-const handleDelete = () => { }
 
-const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc: any) => {
+const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc: any, handleDelete: Function) => {
     const className = snapshot.isDragging ? {...provided.draggableProps, ...acc.accDrag} : acc.acc
     return (
         <div
@@ -129,7 +128,7 @@ const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc
     )
 }
 
-const create_draggable = (keyValue, index, updateOB, acc) => {
+const create_draggable = (keyValue, index, updateOB, acc, handleDelete) => {
     const [key, component] = keyValue
     const form = createForm(key, component, updateOB)
     return (
@@ -138,7 +137,7 @@ const create_draggable = (keyValue, index, updateOB, acc) => {
             draggableId={key}
             index={index}
         >
-            {(provided, snapshot) => createAccordianDiv(provided, snapshot, key, form, acc)}
+            {(provided, snapshot) => createAccordianDiv(provided, snapshot, key, form, acc, handleDelete)}
         </Draggable>
     )
 }
@@ -201,7 +200,7 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
 
 const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
     let component = ob[seqName as keyof ObservationBlock] as any
-    if (seqName === 'target') {
+    if (seqName === 'target' || seqName === 'metadata' ) {
         component = formData
     }
     else {
@@ -273,6 +272,26 @@ export const OBBeautifulDnD = (props) => {
         }
     }
 
+
+    const handleDelete = (name: string) => { 
+        console.log('deleteing component:', name)
+
+        let newOB = {...props.ob}
+        if (name.includes('science')) {
+            //find id
+            const idx = JSON.parse(name.split('_')[1])
+            //find and delete sequence from array
+            let newSequences = props.ob.sequences
+            newSequences.splice(idx, 1)
+            newOB.sequences = newSequences
+            props.setOB(newOB)
+        }
+        else {
+            delete newOB[name]
+            props.setOB(newOB)
+        }
+    }
+
     const acc = {acc: classes.accordian, accDrag: classes.accordianDragging}
     return (
         <div className={classes.root}>
@@ -287,7 +306,7 @@ export const OBBeautifulDnD = (props) => {
                                     {...provided.droppableProps}
                                 >
                                     {keyValueArr.map((keyValue, index) => (
-                                        create_draggable(keyValue, index, updateOB, acc)
+                                        create_draggable(keyValue, index, updateOB, acc, handleDelete)
                                     ))}
                                     {provided.placeholder}
                                 </div>

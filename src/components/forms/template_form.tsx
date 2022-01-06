@@ -97,7 +97,7 @@ const template_parameter_to_schema_properties = (param: TemplateParameter): OBJs
     property.minimum = param.allowed[0] as any
     property.maximum = param.allowed[1] as any
   }
-  if (param.option === "list") {
+  if (param.option === "set") {
     property.enum = param.allowed
   }
   if (property.type === 'array') {
@@ -139,7 +139,7 @@ export default function TemplateForm(props: Props): JSX.Element {
   let formData: { [key: string]: any } = {}
   const ref = React.useRef(null)
 
-  if (props.id === 'target') {
+  if (props.id === 'target' || props.id === 'metadata') {
     formData = props.obComponent
   }
   else {
@@ -155,6 +155,9 @@ export default function TemplateForm(props: Props): JSX.Element {
 
     if (props.id === 'target') {
       setSchema(schemas.targetSchema as JSONSchema7)
+    }
+    else if (props.id === 'metadata') {
+      setSchema(schemas.metadataSchema as JSONSchema7)
     }
     else {
       const seq = props.obComponent as OBSequence

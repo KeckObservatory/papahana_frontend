@@ -18,7 +18,7 @@ export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
-export type OBComponent = Target | OBSequence 
+export type OBComponent = Target | OBSequence | OBMetadata 
 export type OBSeqNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
 
 export type OBType = 'science' | 'engineering' | 'calibration'
@@ -125,9 +125,9 @@ export interface Metadata {
 	name: string,
 	version: string,
 	ui_name: string,
-	instrument: Instrument,
+	instrument?: Instrument,
     template_type: string,
-	script: string
+	script?: string
 }
 
 export interface SequenceMetadata {
@@ -183,16 +183,42 @@ export interface Magnitude extends Base {
 	mag: number,
 }
 
+export interface IP_METADATA {
+	_id: string,
+	name: string,
+	ui_name: string
+	version: string
+	instrument: string
+	observing_modes: string[]
+}
+
+export interface OPICAL_PARAMETERS {
+	field_of_view: number[],
+	slit_length: 4
+}
+
+export interface GUIDER {
+	name: string,
+	fov: number[],
+	pixel_scale: number,
+	pa_offset: any,
+	read_noise: any,
+	gain: any,
+	zero_points: any,
+	sensitivity: any,
+	filters: any
+}
 
 export type InstrumentPackage = KCWIInstrumentPackage
 
 interface KCWIInstrumentPackage extends Base {
-  instrument: Instrument
-  version: string | number
-  modes: string[]
-  cameras: Cameras[]
-  templates: InstrumentPackageTemplates
-  configuration_parameters: object[]
+	metadata: IP_METADATA
+	optical_parameters: OPICAL_PARAMETERS
+	guider: GUIDER
+	configurable_elements: string[]
+	pointing_origins: string[]
+	common_parameters: string
+	template_list: {[key: string]: string}
 }
 
 export type CameraName = "BLUE" | "RED"
@@ -205,13 +231,9 @@ export interface Cameras extends object {
   detector: string
 }
 
-export interface TemplateEntry {
-	name: string;
-	version: string
-}
 
 export interface InstrumentPackageTemplates {
-  [key: string]: TemplateEntry[] 
+  [key: string]: string 
 }
 
 export type TemplateType = "acq" | "sci" | "config"
