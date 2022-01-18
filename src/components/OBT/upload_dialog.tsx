@@ -1,0 +1,78 @@
+import React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { IconButton, Tooltip } from '@mui/material';
+import UploadIcon from '@mui/icons-material/Upload';
+import { ObservationBlock } from '../../typings/papahana';
+
+interface Props {
+    uploadOBFromJSON: Function
+}
+
+export default function UploadDialog(props: Props) {
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    const fileLoad = (evt: any) => {
+        console.log(evt.target.files[0])
+        const fileReader = new FileReader()
+        fileReader.readAsText(evt.target.files[0], "UTF-8");
+        fileReader.onload = e => {
+            const contents = e.target?.result as string
+            const ob: ObservationBlock = contents? JSON.parse(contents): {}
+            console.log("e.target.result", ob);
+            props.uploadOBFromJSON(ob);
+            setOpen(false)
+        };
+    };
+    return (
+        <div>
+
+            <Tooltip title="Upload OB from .json file">
+                <IconButton  area-label='upload' onClick={handleClickOpen} >
+                    <UploadIcon />
+                </IconButton>
+            </Tooltip>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="alert-dialog-title"
+                aria-describedby="alert-dialog-description"
+            >
+                <DialogTitle id="alert-dialog-title">{"Upload OB from .json file"}</DialogTitle>
+                <DialogContent>
+                    <DialogContentText id="alert-dialog-description">
+                        Select the file to upload
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <input
+                        accept="*.json"
+                        style={{ display: 'none' }}
+                        id="raised-button-file"
+                        type="file"
+                        multiple
+                        onChange={fileLoad}
+                    />
+                    <label htmlFor="raised-button-file">
+                        <Button variant="outlined" component="span" color="primary"
+                        >
+                            Upload File
+                        </Button>
+                    </label>
+                </DialogActions>
+            </Dialog>
+        </div>
+    );
+}

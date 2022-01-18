@@ -1,6 +1,6 @@
 import React, { } from "react"
 import { Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
-import { withTheme, ISubmitEvent } from "@rjsf/core";
+import { withTheme, ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 // import Form from '@rjsf/material-ui'
 import { Theme as MaterialUITheme } from './../../forms'
 import { JSONSchema7 } from 'json-schema'
@@ -36,29 +36,16 @@ interface Props {
 }
 export const log = (type: any) => console.log.bind(console, type);
 
-const getUiSchema = (id: string): UiSchema => {
-  let uiSchema: UiSchema
-  if (id === 'target') {
-    uiSchema = schemas.uiTargetSchema
-  }
-  else if (id === 'acquisition') {
-    uiSchema = schemas.uiAcquisitionSchema
-  }
-  else if (id.includes('science')) {
-    uiSchema = schemas.uiScienceSchema
-  }
-  else {
-    console.log(`component ${id} has undefined schema`)
-    uiSchema = {}
-  }
-  return uiSchema
-}
 
 const to_schema_type = (tpl_param: string): string => {
   let type: string
   switch (tpl_param) {
     case 'float': {
       type = 'number'
+      break;
+    }
+    case 'file': {
+      type = 'string'
       break;
     }
     case 'string': {
@@ -85,7 +72,7 @@ const to_schema_type = (tpl_param: string): string => {
   return type
 }
 
-const template_parameter_to_schema_properties = (param: TemplateParameter): OBJsonSchemaProperties => {
+export const template_parameter_to_schema_properties = (param: TemplateParameter): OBJsonSchemaProperties => {
   let property: Partial<JSProperty> = {}
   property.title = param.ui_name
   property.type = to_schema_type(param.type)
@@ -94,20 +81,21 @@ const template_parameter_to_schema_properties = (param: TemplateParameter): OBJs
   }
   property.readonly = false // todo: need to verify if this will allways be the case
   if (param.option === "range") {
-    property.minimum = param.allowed[0] as any
-    property.maximum = param.allowed[1] as any
+    property.minimum = param.allowed[0] as string | number | undefined
+    property.maximum = param.allowed[1] as string | number | undefined
   }
   if (param.option === "set") {
     property.enum = param.allowed
   }
   if (property.type === 'array') {
-    let schema = {} as any //todo make this a function
+    let schema = {} as JsonSchema //todo make this a function
     schema.title = 'dither item'
     schema.type = 'object'
     schema.properties = {}
     param.allowed.forEach((param: any) => {
       const dkey = Object.keys(param)[0]
       const dvalue = param[dkey]
+      //@ts-ignore
       schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
     })
     schema.required = Object.keys(schema.properties)
@@ -135,12 +123,21 @@ const template_to_schema = (template: Template): JSONSchema7 => {
 export default function TemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const uiSchema = getUiSchema(props.id)
+  const uiSchema = schemas.getUiSchema(props.id)
   let formData: { [key: string]: any } = {}
   const ref = React.useRef(null)
 
-  if (props.id === 'target' || props.id === 'metadata') {
+  if (props.id === 'target' || props.id === 'metadata' || props.id === 'status') {
     formData = props.obComponent
+  }
+  else if (props.id === 'time_constraints') {
+    let timeConstraints = props.obComponent as any
+
+    if( timeConstraints ) {
+      formData['time_constraints'] = timeConstraints[0].map((constraint: any) => {
+          return {start_datetime: constraint[0], end_datetime: constraint[1] }
+      })
+    }
   }
   else {
     const seq = props.obComponent as OBSequence
@@ -153,21 +150,27 @@ export default function TemplateForm(props: Props): JSX.Element {
     const curr = ref.current as any;
     height = curr.clientHeight;
 
-    if (props.id === 'target') {
+    if (props.id === 'target') { // needs to be used in the database
       setSchema(schemas.targetSchema as JSONSchema7)
     }
     else if (props.id === 'metadata') {
       setSchema(schemas.metadataSchema as JSONSchema7)
     }
+    else if (props.id === 'time_constraints') {
+      setSchema(schemas.timeConstraintSchema as JSONSchema7)
+    }
+    else if (props.id === 'status') {
+      setSchema(schemas.statusSchema as JSONSchema7)
+    }
     else {
-      const seq = props.obComponent as OBSequence
-      var md = seq.metadata
+      //@ts-ignore line
+      const md = props.obComponent.metadata 
       if (md) {
         get_template(md.name).then((templates: Template) => {
           const sch = template_to_schema(templates)
           setSchema(sch as JSONSchema7)
         }).catch(err => {
-          console.log(`TemplateForm err: ${err}`)
+          console.error(`TemplateForm err: ${err}`)
         })
       }
     }
@@ -178,16 +181,15 @@ export default function TemplateForm(props: Props): JSX.Element {
     let newFormData = { ...evt.formData }
     // check if form changed heights
     let newHeight: number = height!==curr.clientHeight? curr.clientHeight : undefined
-    props.updateOB(props.id, newFormData, newHeight)
+    props.updateOB(props.id, newFormData)
     height = curr.clientHeight
   }
-
 
   return (
     <div ref={ref} className={classes.root}>
       <Form className={classes.form}
         schema={schema}
-        uiSchema={uiSchema as any}
+        uiSchema={uiSchema as rUiSchema}
         formData={formData}
         onChange={handleChange}
         onError={log("errors")} ><div></div></Form>

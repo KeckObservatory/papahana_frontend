@@ -67,7 +67,7 @@ export const AccordionForm = (props: AccordianProps) => {
     const defaultExpanded: boolean = true 
     const classes = useStyles()
     const ref = useRef(null)
-    const deletable = props.name !== 'metadata'
+    const deletable = !(props.name === 'metadata' || props.name === 'common_parameters')
 
     return (
         <Accordion sx={{backgroundColor: 'divider'}} ref={ref}

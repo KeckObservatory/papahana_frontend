@@ -18,8 +18,25 @@ export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
-export type OBComponent = Target | OBSequence | OBMetadata 
+export type OBComponent = Target | OBSequence | OBMetadata | CommonParameters | TimeConstraints | Status
 export type OBSeqNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
+
+export interface Status {
+	state: string;
+	priority: number;
+	current_seq: number;
+	current_step: number;
+	current_exp: number;
+}
+
+export type TimeConstraints = Array<[string, string]>
+
+export interface CommonParameters {
+	metadata: { [key:string]: any },
+	instrument_parameters: { [key:string]: any },
+	detector_parameters: { [key:string]: any },
+	tcs_parameters: { [key:string]: any }
+}
 
 export type OBType = 'science' | 'engineering' | 'calibration'
 export interface Base {

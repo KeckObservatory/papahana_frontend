@@ -19,7 +19,7 @@ export const DeleteComponentButton = (props: Props) => {
 
     const [open, setOpen] = React.useState(false);
     const title = "Delete Component"
-    const msg = "Are you sure you want to delete this component?" 
+    const msg = "Are you sure you want to delete this component from the Observing Block?" 
 
     const handleClickOpen = (event: any) => {
         event.stopPropagation()

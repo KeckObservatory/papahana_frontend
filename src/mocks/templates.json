@@ -928,5 +928,362 @@
 				"units" : null
 			}
 		}
+	},
+	{
+		"_id" : "61203d3a86574cd1da879135",
+		"metadata" : {
+			"name" : "kcwi_common_parameters",
+			"ui_name" : "KCWI Common parameters",
+			"instrument" : "KCWI",
+			"template_type" : "common_parameters",
+			"version" : "0.1.1"
+		},
+		"instrument_parameters": {
+			"inst_cfg_slicer" : {
+				"ui_name" : "Slicer",
+				"option" : "set",
+				"allowed" : [
+					"slicer1",
+					"slicer2"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg_blockingfilter" : {
+				"ui_name" : "Blocking Filter",
+				"option" : "set",
+				"allowed" : [
+					"filter1",
+					"filter2"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float",
+				"units" : null
+			},
+			"inst_cfg_hatch" : {
+				"ui_name" : "Hatch Position",
+				"option" : "set",
+				"allowed" : [
+					"open",
+					"closed"
+				],
+				"default" : "open",
+				"optionality" : "optional",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg_calib" : {
+				"ui_name" : "Calibration Position",
+				"option" : "set",
+				"allowed" : [
+					"Sky",
+					"Mirror",
+					"Filter"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg_polarimeter" : {
+				"ui_name" : "Polarimeter",
+				"option" : "set",
+				"allowed" : [
+					"Sky",
+					"Polar",
+					"Lens"
+				],
+				"default" : "Lens",
+				"optionality" : "optional",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg_ifu" : {
+				"ui_name" : "IFU",
+				"option" : "set",
+				"allowed" : [
+					"Home",
+					"Large",
+					"Medium",
+					"Small",
+					"FPCam",
+					"Aux"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg1_filter" : {
+				"ui_name" : "Red-Side Filter for camera 1",
+				"option" : "set",
+				"allowed" : [
+					"Home",
+					"Large",
+					"Medium",
+					"Small",
+					"FPCam",
+					"Aux"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg2_filter" : {
+				"ui_name" : "Blue-Side Filter for camera 1",
+				"option" : "set",
+				"allowed" : [
+					"Home",
+					"Large",
+					"Medium",
+					"Small",
+					"FPCam",
+					"Aux"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg1_grating" : {
+				"ui_name" : "Blue-Side Grating Position",
+				"option" : "set",
+				"allowed" : [
+					"None",
+					"BH3",
+					"BL",
+					"BH2",
+					"BM",
+					"GGTrg"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_cfg2_grating" : {
+				"ui_name" : "Red-Side Grating Position",
+				"option" : "set",
+				"allowed" : [
+					"None",
+					"RH3",
+					"RL",
+					"RH2",
+					"BM",
+					"GGTrg"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_ns_mask" : {
+				"ui_name" : "Nod and Shuffle Mask",
+				"option" : "set",
+				"allowed" : [
+					"open",
+					"Dark",
+					"Mask"
+				],
+				"default" : "open",
+				"optionality" : "optional",
+				"type" : "float",
+				"units" : null
+			},
+			"inst_ns_direction" : {
+				"ui_name" : "Nod and Shuffle Direction (1=down, 2=up)",
+				"option" : "set",
+				"allowed" : [
+					1,
+					2
+				],
+				"default" : 1,
+				"optionality" : "optional",
+				"type" : "float",
+				"units" : null
+			},
+			"inst_kmirror_mode" : {
+				"ui_name" : "K-Mirror Mode",
+				"option" : "set",
+				"allowed" : [
+					"Tracking",
+					"Stationary"
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "string",
+				"units" : null
+			},
+			"inst_kmirror_angle" : {
+				"ui_name" : "K-Mirror Angle",
+				"option" : "range",
+				"allowed" : [
+					0,
+					360
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float",
+				"units" : null
+			},
+			"inst_wavelength1_central" : {
+				"ui_name" : "Red-Side Central Wavelength",
+				"option" : "range",
+				"allowed" : [
+					350,
+					1050
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float",
+				"units" : "nm"
+			},
+			"inst_wavelength2_central" : {
+				"ui_name" : "Blue-Side Central Wavelength",
+				"option" : "range",
+				"allowed" : [
+					350,
+					1050
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float",
+				"units" : "nm"
+			},
+			"inst_wavelength1_peak" : {
+				"ui_name" : "Red-Side Peak Wavelength",
+				"option" : "range",
+				"allowed" : [
+					350,
+					1050
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float",
+				"units" : "nm"
+			},
+			"inst_wavelength2_peak" : {
+				"ui_name" : "Blue-Side Peak Wavelength",
+				"option" : "range",
+				"allowed" : [
+					350,
+					1050
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "float",
+				"units" : "nm"
+			}
+		},
+		"detector_parameters": {
+			"det1_mode_binning" : {
+				"ui_name" : "Red-Side Detector Binning",
+				"option" : "set",
+				"allowed" : [
+					"1x1",
+					"2x2"
+				],
+				"default" : "2x2",
+				"optionality" : "optional",
+				"type" : "string",
+				"units" : "pixels"
+			},
+		  "det2_mode_binning" : {
+				"ui_name" : "Blue-Side Detector Binning",
+				"option" : "set",
+				"allowed" : [
+					"1x1",
+					"2x2"
+				],
+				"default" : "2x2",
+				"optionality" : "optional",
+				"type" : "integer",
+				"units" : "pixels"
+			},
+			"det1_mode_amp" : {
+				"ui_name" : "Red-Side Amplifier Mode",
+				"option" : "range",
+				"allowed" : [
+					1,
+					10
+				],
+				"default" : 0,
+				"optionality" : "optional",
+				"type" : "integer",
+				"units" : "0 : quad (ALL), 1 : single C, 2 : single E, 3 : single D, 4 : single F, 5 : single B, 6 : single G, 7 : single A, 8 : single H, 9 : dual (A&B), 10 : dual (C&D)"
+			},
+			"det2_mode_amp" : {
+				"ui_name" : "Blue-Side Amplifier Mode",
+				"option" : "range",
+				"allowed" : [
+					1,
+					10
+				],
+				"default" : 0,
+				"optionality" : "optional",
+				"type" : "integer",
+				"units" : "0 : quad (ALL), 1 : single C, 2 : single E, 3 : single D, 4 : single F, 5 : single B, 6 : single G, 7 : single A, 8 : single H, 9 : dual (A&B), 10 : dual (C&D)"
+				
+			},
+			"det1_mode_read" : {
+				"ui_name" : "Red-Side CCD Read Mode",
+				"option" : "set",
+				"allowed" : [
+					0,
+					1
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer",
+				"units" : "(0=slow, 1=fast)"
+			},
+			"det2_mode_read" : {
+				"ui_name" : "Blue-Side CCD Read Mode",
+				"option" : "set",
+				"allowed" : [
+					0,
+					1
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer",
+				"units" : "(0=slow, 1=fast)"
+			},
+			"det1_mode_gain" : {
+				"ui_name" : "Red-Side CCD Gain Multiplier",
+				"option" : "set",
+				"allowed" : [
+					1,
+					2,
+					5,
+					10
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer",
+				"units" : null
+			},
+			"det2_mode_gain" : {
+				"ui_name" : "Blue-Side CCD Gain Multiplier",
+				"option" : "set",
+				"allowed" : [
+					1,
+					2,
+					5,
+					10
+				],
+				"default" : null,
+				"optionality" : "required",
+				"type" : "integer",
+				"units" : null
+			}
+		},
+		"tcs_parameters": {
+		
+		}
 	}
 ]

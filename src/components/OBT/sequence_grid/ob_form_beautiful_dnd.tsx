@@ -1,5 +1,6 @@
 //@ts-nocheck
 import TemplateForm from '../../forms/template_form';
+import CommonParametersTemplateForm from '../../forms/common_parameters_template_form';
 import { AccordionForm } from './accordion_form';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import React from "react";
@@ -9,8 +10,18 @@ import { makeStyles } from '@mui/styles'
 import "./styles.css";
 import { mergeClasses } from '@mui/material/styles';
 
+const GRID = 4;
 const ROW_HEIGHT = 45;
-const OB_NAMES: OBSeqNames[] = ['metadata', 'acquisition', 'sequences', 'target']
+const OB_NAMES: OBSeqNames[] = [
+    'metadata',
+    'acquisition',
+    'sequences', 
+    'target', 
+    'common_parameters',
+    'time_constraints',
+    'status'
+]
+const METADATALESS = ['target', 'metadata', 'common_parameters', 'status', 'time_constraints']
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -20,23 +31,23 @@ const useStyles = makeStyles((theme: Theme) =>
         },
         droppableDragging: {
             background: theme.palette.divider,
-            padding: grid,
-            minWidth: '350px'
+            padding: GRID,
+            minWidth: '450px'
         },
         droppable: {
             background: theme.palette.sucess,
-            padding: grid,
-            minWidth: '350px'
+            padding: GRID,
+            minWidth: '450px'
         },
         accordian: {
             userSelect: "none",
-            padding: grid * 2,
-            margin: `0 0 ${grid}px 0`,
+            padding: GRID * 2,
+            margin: `0 0 ${GRID}px 0`,
         },
         accordianDragging: {
             userSelect: "none",
-            padding: grid * 2,
-            margin: `0 0 ${grid}px 0`,
+            padding: GRID * 2,
+            margin: `0 0 ${GRID}px 0`,
             background: theme.palette.primary,
         },
         heading: {
@@ -85,7 +96,6 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 
     return result;
 };
-const grid = 8;
 
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
@@ -181,7 +191,14 @@ const chunkify = (a, n, balanced) => {
 }
 
 const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element => {
-    return <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
+    let form
+    if (id === 'common_parameters') {
+        form = <CommonParametersTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
+    }
+    else {
+        form = <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
+    }
+    return form 
 }
 
 const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
@@ -198,9 +215,19 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
     return newOb
 }
 
+const updateOBTimeConstraint = (seqName: string, ob: ObservationBlock, formData: any): ObservationBlock => {
+    let newOb = { ...ob }
+    let time_constraints = []
+    formData['time_constraints'].forEach( timeConstraint => {
+       time_constraints.push( [ timeConstraint.start_datetime, timeConstraint.end_datetime ] )
+    })
+    newOb['time_constraints'] = [ time_constraints ]
+    return newOb
+}
+
 const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
     let component = ob[seqName as keyof ObservationBlock] as any
-    if (seqName === 'target' || seqName === 'metadata' ) {
+    if (METADATALESS.includes(seqName)) {
         component = formData
     }
     else {
@@ -232,13 +259,15 @@ export const OBBeautifulDnD = (props) => {
         setState(obItems)
     }, [props.ob])
 
-    const updateOB = (seqName: OBSeqNames, formData: OBSequence, newHeight?: number) => {
-        // if (newHeight) { handleResize(seqName, newHeight, true) }
+    const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
             //handle sequences
             if (seqName.includes('science')) {
                 newOb = updateOBScience(seqName, newOb, formData)
+            }
+            if (seqName.includes('time_constraints')) {
+                newOb = updateOBTimeConstraint(seqName, newOb, formData)
             }
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)

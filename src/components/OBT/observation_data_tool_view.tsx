@@ -7,11 +7,14 @@ import { Theme } from '@mui/material/styles'
 import PublishIcon from '@mui/icons-material/Publish'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import AddIcon from '@mui/icons-material/Add'
+import SaveIcon from '@mui/icons-material/Save';
+import UploadIcon from '@mui/icons-material/Upload';
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
 import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteDialog from './delete_dialog'
+import UploadDialog from './upload_dialog'
 import ObservationBlockSelecter from '../OBSelect/ob_select'
 import JsonViewTheme from '../json_view_theme'
 import TemplateSelection from './template_selection'
@@ -19,6 +22,7 @@ import useBoop from './../../hooks/boop'
 import { animated } from 'react-spring'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import Button from '@mui/material/Button';
+import { Autosave } from './autosave'
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -49,10 +53,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: theme.spacing(1),
     // height: '500px',
     elevation: 5,
-    minWidth: theme.spacing(140)
+    minWidth: theme.spacing(170)
   },
   dndGrid: {
-    minWidth: theme.spacing(140),
+    minWidth: theme.spacing(170),
     elevation: 5,
   }
 }))
@@ -80,11 +84,12 @@ export default function OBTView(props: Props) {
 
   useEffect(() => {
     handleOBSelect('0000') //remove if not demo
-    
+
   }, [])
 
   useEffect(() => {
     obSequences = Object.keys(ob)
+    //TODO: save ob to database
   }, [ob])
 
   const getOB = (new_ob_id: string): void => {
@@ -99,6 +104,30 @@ export default function OBTView(props: Props) {
     )
   }
 
+  const saveOBasJSON = () => {
+    // Create a blob with the data we want to download as a file
+    const blob = new Blob([JSON.stringify(ob, null, 4)], { type: 'text/plain' })
+    // Create an anchor element and dispatch a click event on it
+    // to trigger a download
+    const a = document.createElement('a')
+    a.download = ob._id + '.json'
+    a.href = window.URL.createObjectURL(blob)
+    const clickEvt = new MouseEvent('click', {
+      view: window,
+      bubbles: true,
+      cancelable: true,
+    })
+    a.dispatchEvent(clickEvt)
+    a.remove()
+  }
+
+  const uploadOBFromJSON = (newOB: ObservationBlock): void => {
+    if (newOB) {
+      setOBID(newOB._id)
+      setOB(newOB)
+    }
+
+  }
 
   const copyOB = (): void => {
     const query = `ob_id=${ob_id}`
@@ -119,6 +148,7 @@ export default function OBTView(props: Props) {
   }
 
   const onEdit = (e: InteractionProps) => {
+    //ob was edited. in react json viewer
     triggerBoop(true)
     setOB(e.updated_src as ObservationBlock);
   }
@@ -146,7 +176,7 @@ export default function OBTView(props: Props) {
   }
 
   const createOB = () => {
-    const newOB = {metadata: {}} as ObservationBlock
+    const newOB = { metadata: {} } as ObservationBlock
     triggerBoop(true)
     setOB(newOB)
     //const query = ``
@@ -161,12 +191,13 @@ export default function OBTView(props: Props) {
     const empty = Object.keys(ob).length > 0
     if (empty) {
       return (
-        <OBBeautifulDnD 
+        <OBBeautifulDnD
           className={classes.dndGrid}
           ob={ob}
-          setOB={(newOb: ObservationBlock) => { 
+          setOB={(newOb: ObservationBlock) => {
             triggerBoop(true)
-            setOB(newOb)}} />
+            setOB(newOb)
+          }} />
       )
     }
     else {
@@ -203,6 +234,12 @@ export default function OBTView(props: Props) {
                 <FileCopyIcon />
               </IconButton>
             </Tooltip>
+            <Tooltip title="Save OB as JSON">
+              <IconButton aria-label='copy' onClick={saveOBasJSON}>
+                <SaveIcon />
+              </IconButton>
+            </Tooltip>
+            <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
             <DeleteDialog deleteOB={deleteOB} />
           </div>
 
@@ -240,6 +277,7 @@ export default function OBTView(props: Props) {
           {renderRGL(ob)}
         </Paper>
       </Grid>
+    <Autosave ob={ob} />
     </Grid>
   )
 }

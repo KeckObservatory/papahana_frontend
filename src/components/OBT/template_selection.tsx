@@ -6,24 +6,10 @@ import { makeStyles } from '@mui/styles'
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 
-const useStyles = makeStyles((theme: any) => ({
-    root: {
-        width: '100%',
-    }
-}))
-
 interface Props {
     instrument: Instrument;
     obSequences: string[];
     addSeq: Function;
-}
-
-const parse_template_arr = (arr: string[]): string[] => {
-    return (
-        arr.map((tname: any, idx: number) => {
-            return tname.name
-        })
-    )
 }
 
 const add_targets = (tList: string[], dList: boolean[], obSequences: string[]):void  => {
@@ -31,59 +17,80 @@ const add_targets = (tList: string[], dList: boolean[], obSequences: string[]):v
     const targetTemplates = ['sidereal_target','non_sidereal_target', 'multi_object_target' ]
     targetTemplates.forEach( (tgtName: string) => {
         tList.push(tgtName)
-        const disabled = obSequences.includes('target')
+        const disabled = check_disabled(tgtName, obSequences)
         dList.push(disabled)
     })
 }
+const add_common_parameters= (tList: string[], dList: boolean[], obSequences: string[]):void  => {
+    const templateName = 'kcwi_common_parameters'
+    tList.push(templateName)
+    const disabled = check_disabled(templateName, obSequences)
+    dList.push(disabled)
+}
 
-const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[], string[]] => {
+const check_disabled = (templateName: string, obSequences: string[]) => {
+    if (templateName.includes('acq') && obSequences.includes('acquisition') ) {
+        return true 
+    }
+    else if (templateName.includes('common_parameters') && obSequences.includes('common_parameters')) {
+        return true
+    }
+    else if (templateName.includes('target') && obSequences.includes('target')) { 
+        return true
+    }
+    else if (obSequences.includes(templateName)) { //acquistion and science 
+        return true
+    }
+    else {
+        return false
+    }
+}
+
+const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[]] => {
     let tList: string[] = []
     let dList: boolean[] = []
-    let idList: string[] = []
     Object.entries(instTemplates).forEach(([templateName, templateID]: any) => {
-        const disabled = obSequences.includes(templateName)
+        const disabled = check_disabled(templateName, obSequences) 
         tList.push(templateName)
         dList.push(disabled)
-        idList.push(templateID) 
     })
     add_targets(tList, dList, obSequences)
-    return [tList, dList, idList]
+    add_common_parameters(tList, dList, obSequences)
+    return [tList, dList]
 }
 
 export default function TemplateSelection(props: Props) {
 
-    const classes = useStyles()
     const [templates, setTemplates] = useState({} as InstrumentPackageTemplates)
     const [templateList, setTemplateList] = useState([] as string[])
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
-    const [templateIdList, setTemplateIdList] = useState([] as string[])
 
     useEffect(() => {
         get_instrument_package(props.instrument)
             .then((ip: InstrumentPackage) => {
-                const [tList, dList, idList] = create_drop_down_list(ip.template_list, props.obSequences)
+                const [tList, dList] = create_drop_down_list(ip.template_list, props.obSequences)
                 setTemplates(ip.template_list)
                 setTemplateList(tList)
                 setDisabledArr(dList)
-                setTemplateIdList(idList)
             })
     }, [props.instrument])
 
     useEffect(() => {
-        const [tList, dList, idList] = create_drop_down_list(templates, props.obSequences)
+        const [tList, dList] = create_drop_down_list(templates, props.obSequences)
         setTemplateList(tList)
         setDisabledArr(dList)
-        setTemplateIdList(idList)
     }, [props.obSequences])
 
 
     const handleChange = (templateName: string) => {
-        console.log(templateName, 'templateName')
         get_template(templateName).then((template: Template) => {
+            console.log('template name created', templateName)
             let seq = {
                 'metadata': template.metadata,
-                'parameters': {},
                 'template_id': ''
+            } as Partial<Template> 
+            if (templateName.includes('acq') || templateName.includes('sci') ) {
+              seq['parameters'] = {}
             }
             props.addSeq(seq)
         })
