@@ -11,6 +11,7 @@ from itertools import product
 import pdb
 from functools import wraps
 import urllib
+import copy
 seed = 1984739
 random.seed(seed)
 
@@ -144,9 +145,13 @@ kcwi_science = ['KCWI_ifu_sci_dither', 'KCWI_ifu_sci_stare']
 filled_sci_templates = [
     {
         "metadata": {
-            "name": "KCWI_ifu_sci_stare", "ui_name": "KCWI stare",
-            "instrument": "KCWI", "type": "science", "version": 0.1,
-            "script": "KCWI_ifu_sci_stare"
+            "name": "KCWI_ifu_sci_stare",
+            "ui_name": "KCWI stare",
+            "instrument": "KCWI",
+            "template_type": "science",
+            "version": 0.1,
+            "script": "KCWI_ifu_sci_stare",
+            "sequence_number": 1
         },
         "parameters": {
             "det1_exp_time": 30,
@@ -162,7 +167,8 @@ filled_sci_templates = [
             "instrument": "KCWI",
             "template_type": "science",
             "version": 0.1,
-            "script": "KCWI_ifu_sci_stare"
+            "script": "KCWI_ifu_sci_stare",
+            "sequence_number": 1
         },
         "parameters": {
             "det1_exptime": 60.0,
@@ -496,16 +502,13 @@ def generate_dither():
     }
     return schema
 
-
 def generate_kcwi_science():
-    import copy
-
     schema = []
     n_templates = random.randint(0, 5)
     for indx in range(0, n_templates):
         tmp_list = copy.deepcopy(filled_sci_templates)
         filled_template = random.choice(tmp_list)
-        filled_template['template_id'] = f'seq{indx}'
+        filled_template['metadata']['sequence_number'] = indx
         schema.append(filled_template)
 
     return schema
@@ -513,7 +516,6 @@ def generate_kcwi_science():
 
 def generate_kcwi_acquisiton(nLen, maxArr):
     acq = random.choice(filled_acq_templates)
-    acq['template_id'] = 'acq0'
     return acq
 
 
@@ -640,9 +642,9 @@ def generate_observation_block(nLen, maxArr, inst='KCWI', _id=None):
                                  generate_nonsidereal_target(),
                                  generate_mos_target()]),
         'acquisition': generate_acquisition(nLen, maxArr, inst),
-        'sequences': generate_science(inst),
+        'observations': generate_science(inst),
         'associations': randArrStr(nLen, maxArr),
-        'common_paremeters': generate_common_parameters(),
+        'common_parameters': generate_common_parameters(),
         'status': randStatus(),
         'time_constraints': [randTimeConstraint()],
     }

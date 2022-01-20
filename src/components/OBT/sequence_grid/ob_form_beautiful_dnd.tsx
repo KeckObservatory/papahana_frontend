@@ -15,7 +15,7 @@ const ROW_HEIGHT = 45;
 const OB_NAMES: OBSeqNames[] = [
     'metadata',
     'acquisition',
-    'sequences', 
+    'observations', 
     'target', 
     'common_parameters',
     'time_constraints',
@@ -100,17 +100,18 @@ const move = (source, destination, droppableSource, droppableDestination) => {
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
     let forms: { [k: string]: any } = {}
-    Object.keys(ob).forEach((cn: string) => {
-        if (OB_NAMES.indexOf(cn as any) > -1) {
-            if (cn === 'sequences') {
-                const seq = ob.sequences as any
+    Object.keys(ob).forEach((componentName: string) => {
+        if (OB_NAMES.indexOf(componentName as any) > -1) {
+            if (componentName === 'observations') {
+                const seq = ob.observations as any
                 for (let idx = 0; idx < seq.length; idx++) {
-                    const sci_name = 'science_' + JSON.stringify(idx) as string
+                    const sn = JSON.stringify(seq[idx].metadata.sequence_number)
+                    const sci_name = 'sequence ' + sn 
                     forms[sci_name] = seq[idx]
                 }
             }
             else {
-                forms[cn] = ob[cn as keyof ObservationBlock]
+                forms[componentName] = ob[componentName as keyof ObservationBlock]
             }
         }
     })
@@ -205,17 +206,17 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
     let newOb = { ...ob }
     //get science idx from name
     const idx = JSON.parse(seqName.substring(seqName.indexOf('_') + 1))
-    let seq = ob.sequences as Science[]
+    let seq = ob.observations as Science[]
     if (seq) {
         Object.entries(formData).forEach(([key, value]) => {
             seq[idx].parameters[key] = value
         })
-        newOb.sequences = seq
+        newOb.observations = seq
     }
     return newOb
 }
 
-const updateOBTimeConstraint = (seqName: string, ob: ObservationBlock, formData: any): ObservationBlock => {
+const updateOBTimeConstraint = (ob: ObservationBlock, formData: any): ObservationBlock => {
     let newOb = { ...ob }
     let time_constraints = []
     formData['time_constraints'].forEach( timeConstraint => {
@@ -232,7 +233,6 @@ const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [k
     }
     else {
         let params: { [key: string]: any } = component.parameters
-        console.log(params)
         Object.entries(formData).forEach(([key, value]) => {
             params[key] = value
         })
@@ -252,22 +252,23 @@ export const OBBeautifulDnD = (props) => {
     const [state, setState] = React.useState(obItems);
 
     React.useEffect(() => {
-        console.log(`ob changed. setting grid items`)
+        //updates view after direct JSON edit 
+        console.log(`JSON edited. resetting grid items`)
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         let obItems = Object.entries(obComponents)
         obItems = chunkify(obItems, nColumns, evenChunks)
-        setState(obItems)
+        setState(() => obItems)
     }, [props.ob])
 
     const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
-            //handle sequences
+            //handle observations
             if (seqName.includes('science')) {
                 newOb = updateOBScience(seqName, newOb, formData)
             }
-            if (seqName.includes('time_constraints')) {
-                newOb = updateOBTimeConstraint(seqName, newOb, formData)
+            else if (seqName.includes('time_constraints')) {
+                newOb = updateOBTimeConstraint(newOb, formData)
             }
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
@@ -296,23 +297,22 @@ export const OBBeautifulDnD = (props) => {
             const newState = [...state];
             newState[sInd] = result[sInd];
             newState[dInd] = result[dInd];
-
             setState(newState.filter(group => group.length));
         }
     }
-
 
     const handleDelete = (name: string) => { 
         console.log('deleteing component:', name)
 
         let newOB = {...props.ob}
-        if (name.includes('science')) {
+        if (name.includes('sequence')) {
             //find id
-            const idx = JSON.parse(name.split('_')[1])
+            const sequence_number = JSON.parse(name.split(' ')[1])
             //find and delete sequence from array
-            let newSequences = props.ob.sequences
+            let newSequences = props.ob.observations
+            const idx = newSequences.findIndex( (s) => s.metadata.sequence_number === sequence_number)
             newSequences.splice(idx, 1)
-            newOB.sequences = newSequences
+            newOB.observations = newSequences
             props.setOB(newOB)
         }
         else {

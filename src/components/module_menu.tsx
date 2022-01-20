@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
-import OBTView from './OBT/observation_data_tool_view';
+import ODTView from './OBT/observation_data_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { SelectionToolView } from './SelectionTool/selection_tool_view';
 
@@ -94,7 +94,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <OBTView observer_id={props.observer_id} theme={props.jsonTheme} />
+                <ODTView observer_id={props.observer_id} theme={props.jsonTheme} />
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <SelectionToolView observer_id={props.observer_id}/>

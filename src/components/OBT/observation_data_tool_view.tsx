@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
-import { Instrument, OBSeqNames, OBSequence, ObservationBlock } from '../../typings/papahana'
+import { Instrument, OBSeqNames, OBSequence, ObservationBlock, ScienceMetadata } from '../../typings/papahana'
 import { IconButton, Paper } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
@@ -71,26 +71,26 @@ export interface Props {
   editable: boolean
 }
 
-export default function OBTView(props: Props) {
+export default function ODTView(props: Props) {
   const instrument: Instrument = 'KCWI'
   const classes = useStyles();
-  const [boopStyle, triggerBoop] = useBoop({})
+  // const [boopStyle, triggerBoop] = useBoop({})
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
-  const [ob, setOB] = useState({} as ObservationBlock)
+  const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}')
+  const [ob, setOB] = useState(initOB as ObservationBlock)
   const [theme, setTheme] =
     useQueryParam('theme', withDefault(StringParam, props.theme as string))
   let obSequences = Object.keys(ob)
 
 
   useEffect(() => {
-    handleOBSelect('0000') //remove if not demo
+    // handleOBSelect('0000') //remove if not demo
 
   }, [])
 
   useEffect(() => {
     obSequences = Object.keys(ob)
-    //TODO: save ob to database
-  }, [ob])
+  }, [ ob ])
 
   const getOB = (new_ob_id: string): void => {
     api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
@@ -149,9 +149,11 @@ export default function OBTView(props: Props) {
 
   const onEdit = (e: InteractionProps) => {
     //ob was edited. in react json viewer
-    triggerBoop(true)
-    setOB(e.updated_src as ObservationBlock);
+    //triggerBoop(true)
+    console.log('editing via json directly.')
+    setOB(() => e.updated_src as ObservationBlock);
   }
+  
 
   const handleOBSelect = (ob_id: string) => {
     console.log(`setting selected ob to ${ob_id}`)
@@ -162,22 +164,31 @@ export default function OBTView(props: Props) {
   const addSeq = (seq: OBSequence) => {
     let newOB = { ...ob } as any
     const tmplType = seq.metadata.template_type
-    if (tmplType.includes('science') && ob.sequences) {
-      newOB.sequences?.push(seq)
+    console.log('templateType adding', tmplType)
+    if (tmplType.includes('sci') && ob.observations) {
+      const metadata = seq.metadata as ScienceMetadata
+      metadata.sequence_number = newOB.observations? newOB.observations.length+1: 1
+      seq.metadata = metadata
+      console.log('adding sequence', seq.metadata.sequence_number)
+      newOB.observations?.push(seq)
     }
-    else if (tmplType.includes('science') && !ob.sequences) {
-      newOB['sequences'] = [seq]
+    else if (tmplType.includes('sci') && !ob.observations) {
+      const metadata = seq.metadata as ScienceMetadata
+      metadata.sequence_number = newOB.observations? newOB.observations.length+1: 1
+      seq.metadata = metadata
+      console.log('adding sequence', seq.metadata.sequence_number)
+      newOB['observations'] = [seq]
     }
     else {
       newOB[tmplType as OBSeqNames] = seq
     }
-    triggerBoop(true)
+    //triggerBoop(true)
     setOB(newOB)
   }
 
   const createOB = () => {
     const newOB = { metadata: {} } as ObservationBlock
-    triggerBoop(true)
+    //triggerBoop(true)
     setOB(newOB)
     //const query = ``
     // api_call(query, 'papahana_demo', 'post', newOB).then((result: any) => {
@@ -187,7 +198,7 @@ export default function OBTView(props: Props) {
 
   }
 
-  const renderRGL = (ob: ObservationBlock) => {
+  const renderRGL = () => {
     const empty = Object.keys(ob).length > 0
     if (empty) {
       return (
@@ -195,7 +206,7 @@ export default function OBTView(props: Props) {
           className={classes.dndGrid}
           ob={ob}
           setOB={(newOb: ObservationBlock) => {
-            triggerBoop(true)
+            //triggerBoop(true)
             setOB(newOb)
           }} />
       )
@@ -219,11 +230,11 @@ export default function OBTView(props: Props) {
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
           <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
-            <Tooltip title="Upload OB to database">
+            {/* <Tooltip title="Upload OB to database">
               <animated.button aria-label='upload' onClick={() => triggerBoop(false)} style={boopStyle}>
                 <PublishIcon />
               </animated.button>
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="Create blank OB">
               <IconButton aria-label='create' onClick={createOB}>
                 <AddIcon />
@@ -274,7 +285,7 @@ export default function OBTView(props: Props) {
       </Grid>
       <Grid item >
         <Paper className={classes.widepaper}>
-          {renderRGL(ob)}
+          {renderRGL()}
         </Paper>
       </Grid>
     <Autosave ob={ob} />
@@ -282,7 +293,7 @@ export default function OBTView(props: Props) {
   )
 }
 
-OBTView.defaultProps = {
+ODTView.defaultProps = {
   theme: 'bespin',
   iconStyle: 'circle',
   collapsed: 1,

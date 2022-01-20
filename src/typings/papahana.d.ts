@@ -19,7 +19,7 @@ export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
 export type OBComponent = Target | OBSequence | OBMetadata | CommonParameters | TimeConstraints | Status
-export type OBSeqNames = 'acquisition' | 'science' | 'signature' | 'target' | 'sequences'
+export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations'
 
 export interface Status {
 	state: string;
@@ -84,7 +84,7 @@ export interface ObservationBlock extends Base {
 	target?: Target;
 	time_constraints: string[] | string[][];
 	comment: string;
-	sequences?: Science[];
+	observations?: Science[];
 	acquisition: Acquisition;
 	associations: string[];
 	status: Status;
@@ -152,6 +152,7 @@ export interface SequenceMetadata {
 }
 
 export interface ScienceMetadata extends SequenceMetadata {
+	sequence_number: number
 }
 
 export interface AcquisitionMetadata extends SequenceMetadata {
@@ -162,14 +163,8 @@ export interface KCWIScience extends Base {
 	parameters: KCWIScienceParameters;
 }
 
-export interface DefaultScience extends Base{
-	instrument: string,
-	exposure_sequences: string[],
-	associations: string[],
-}
-
 export interface Observation extends Base {
-	exposure_sequences: string[],
+	exposure_observations: string[],
 	associations: string[],
 }
 

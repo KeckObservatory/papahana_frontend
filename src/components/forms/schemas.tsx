@@ -13,7 +13,7 @@ export const getUiSchema = (id: string): UiSchema => {
   else if (id === 'metadata') {
     uiSchema = uiMetadataSchema
   }
-  else if (id.includes('science')) {
+  else if (id.includes('sequence')) {
     uiSchema = uiScienceSchema
   }
   else if (id === 'status') {

@@ -36,7 +36,6 @@ interface Props {
 }
 export const log = (type: any) => console.log.bind(console, type);
 
-
 const to_schema_type = (tpl_param: string): string => {
   let type: string
   switch (tpl_param) {
@@ -120,61 +119,80 @@ const template_to_schema = (template: Template): JSONSchema7 => {
   return schema as JSONSchema7
 }
 
-export default function TemplateForm(props: Props): JSX.Element {
-  const classes = useStyles()
-  const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const uiSchema = schemas.getUiSchema(props.id)
+const init_form_data = (obComponent: OBComponent, id: string) => {
+
   let formData: { [key: string]: any } = {}
-  const ref = React.useRef(null)
-
-  if (props.id === 'target' || props.id === 'metadata' || props.id === 'status') {
-    formData = props.obComponent
+  if (id === 'target' || id === 'metadata' || id === 'status') {
+    formData = obComponent
   }
-  else if (props.id === 'time_constraints') {
-    let timeConstraints = props.obComponent as any
+  else if (id === 'time_constraints') {
+    let timeConstraints = obComponent as any
 
-    if( timeConstraints ) {
+    if( timeConstraints[0] ) {
       formData['time_constraints'] = timeConstraints[0].map((constraint: any) => {
           return {start_datetime: constraint[0], end_datetime: constraint[1] }
       })
     }
   }
   else {
-    const seq = props.obComponent as OBSequence
+    const seq = obComponent as OBSequence
     formData = seq.parameters
   }
+  return formData
+}
+
+const get_schema = async (obComponent: OBComponent, id: string): Promise<JSONSchema7>  => {
+    let sch: JSONSchema7 = {}
+    if (id === 'target') { // needs to be used in the database
+      sch = schemas.targetSchema as JSONSchema7
+    }
+    else if (id === 'metadata') {
+      sch = schemas.metadataSchema as JSONSchema7
+    }
+    else if (id === 'time_constraints') {
+      sch = schemas.timeConstraintSchema as JSONSchema7
+    }
+    else if (id === 'status') {
+      sch = schemas.statusSchema as JSONSchema7
+    }
+    else {
+      //@ts-ignore line
+      const md = obComponent.metadata 
+      if (md) {
+        await get_template(md.name).then((templates: Template) => {
+          const sche = template_to_schema(templates)
+          sch = sche as JSONSchema7
+          return sch
+        }).catch(err => {
+          console.error(`TemplateForm err: ${err}`)
+        })
+      }
+    }
+    return sch
+  }
+
+export default function TemplateForm(props: Props): JSX.Element {
+  const classes = useStyles()
+  const [schema, setSchema] = React.useState({} as JSONSchema7)
+  const uiSchema = schemas.getUiSchema(props.id)
+  let initFormData = init_form_data(props.obComponent, props.id) 
+  const ref = React.useRef(null)
+  const [formData, setFormData] = React.useState(initFormData)
 
   let height = 0 //monitor the height of the form
 
   React.useEffect(() => {
     const curr = ref.current as any;
     height = curr.clientHeight;
-
-    if (props.id === 'target') { // needs to be used in the database
-      setSchema(schemas.targetSchema as JSONSchema7)
-    }
-    else if (props.id === 'metadata') {
-      setSchema(schemas.metadataSchema as JSONSchema7)
-    }
-    else if (props.id === 'time_constraints') {
-      setSchema(schemas.timeConstraintSchema as JSONSchema7)
-    }
-    else if (props.id === 'status') {
-      setSchema(schemas.statusSchema as JSONSchema7)
-    }
-    else {
-      //@ts-ignore line
-      const md = props.obComponent.metadata 
-      if (md) {
-        get_template(md.name).then((templates: Template) => {
-          const sch = template_to_schema(templates)
-          setSchema(sch as JSONSchema7)
-        }).catch(err => {
-          console.error(`TemplateForm err: ${err}`)
-        })
-      }
-    }
+    get_schema(props.obComponent, props.id).then( (initSchema: JSONSchema7) => {
+      setSchema(initSchema)
+    })
   }, [])
+
+  React.useEffect(() => {
+    let newFormData = init_form_data(props.obComponent, props.id) 
+    setFormData(() => newFormData)
+  }, [props.obComponent])
 
   const handleChange = (evt: ISubmitEvent<OBComponent>): void => {
     const curr = ref.current as any
@@ -182,6 +200,7 @@ export default function TemplateForm(props: Props): JSX.Element {
     // check if form changed heights
     let newHeight: number = height!==curr.clientHeight? curr.clientHeight : undefined
     props.updateOB(props.id, newFormData)
+    setFormData(() => newFormData)
     height = curr.clientHeight
   }
 
