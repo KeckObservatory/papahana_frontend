@@ -646,7 +646,7 @@ def generate_observation_block(nLen, maxArr, inst='KCWI', _id=None):
         'associations': randArrStr(nLen, maxArr),
         'common_parameters': generate_common_parameters(),
         'status': randStatus(),
-        'time_constraints': [randTimeConstraint()],
+        'time_constraints': randTimeConstraint(),
     }
     if _id:
         schema['_id'] = _id
