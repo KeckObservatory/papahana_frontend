@@ -61,8 +61,8 @@ export interface OBCell {
 	id: string;
 	name: string;
 	type: 'ob' | 'container'
-	ra?: string;
-	dec?: string;
+	ra?: number | string;
+	dec?: number | string;
 	cid?: string
 }
 
@@ -170,8 +170,8 @@ export interface Observation extends Base {
 
 export interface Target {
 	name: string,
-	ra: string,
-	dec: string,
+	target_coord_ra: string,
+	target_coord_dec: string,
 	ra_deg?: number,
 	dec_deg?: number,
 	equinox: number,

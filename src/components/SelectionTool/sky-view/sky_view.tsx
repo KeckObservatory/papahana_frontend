@@ -53,8 +53,8 @@ export default function SkyView(props: Props) {
     })
 
     targets = targets.map((target: Target) => {
-        target.ra_deg = util.ra_dec_to_deg(target.ra, false)
-        target.dec_deg = util.ra_dec_to_deg(target.dec, true)
+        target.ra_deg = util.ra_dec_to_deg(target.target_coord_ra, false)
+        target.dec_deg = util.ra_dec_to_deg(target.target_coord_dec, true)
         return target
     })
 

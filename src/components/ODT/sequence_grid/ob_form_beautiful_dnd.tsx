@@ -1,5 +1,6 @@
 //@ts-nocheck
 import TemplateForm from '../../forms/template_form';
+import TargetTemplateForm from '../../forms/target_template_form';
 import CommonParametersTemplateForm from '../../forms/common_parameters_template_form';
 import { AccordionForm } from './accordion_form';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
@@ -195,6 +196,9 @@ const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element
     let form
     if (id === 'common_parameters') {
         form = <CommonParametersTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
+    }
+    else if (id === 'target') {
+        form = <TargetTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
     }
     else {
         form = <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />

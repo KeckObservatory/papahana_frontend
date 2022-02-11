@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
-import ODTView from './OBT/observation_data_tool_view';
+import ODTView from './ODT/observation_data_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { SelectionToolView } from './SelectionTool/selection_tool_view';
 

@@ -1,8 +1,7 @@
 import React from 'react';
 import { makeStyles } from "@mui/styles"
 import './App.css';
-import ODTView from './OBT/observation_data_tool_view'
-import { createTheme, createStyles, ThemeProvider, Theme } from "@mui/material/styles";
+import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { lightBlue, deepOrange, deepPurple } from '@mui/material/colors';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'

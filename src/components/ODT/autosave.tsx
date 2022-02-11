@@ -14,7 +14,7 @@ export const Autosave = (props: Props) => {
     const saveToLocalStorage = (ob: ObservationBlock) => {
         //ob
         window.localStorage.setItem('OB', JSON.stringify(ob));
-        console.log('save ob to local storage', ob)
+        // console.log('save ob to local storage', ob)
     }
 
     const debouncedSave = useCallback(debounce(async (newOB) => {

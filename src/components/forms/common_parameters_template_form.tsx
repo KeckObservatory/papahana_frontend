@@ -5,7 +5,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 // import Form from '@rjsf/material-ui'
-import { Theme as MaterialUITheme } from '../../forms'
+import { Theme as MaterialUITheme } from '../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { template_parameter_to_schema_properties, log } from "./template_form"

@@ -18,7 +18,7 @@ import UploadDialog from './upload_dialog'
 import ObservationBlockSelecter from '../OBSelect/ob_select'
 import JsonViewTheme from '../json_view_theme'
 import TemplateSelection from './template_selection'
-import useBoop from './../../hooks/boop'
+import useBoop from '../../hooks/boop'
 import { animated } from 'react-spring'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import Button from '@mui/material/Button';
