@@ -58,13 +58,13 @@ export const ra_dec_to_deg = (time: string, dec = false) => {
         }
         deg = sign * parseInt(hours, 10) // dec is already in degrees
             + parseInt(min, 10) / 60
-            + parseInt(sec, 10) / 60
+            + parseInt(sec, 10) / 60**2
         }
 
     else {
         deg = 15 * parseInt(hours, 10) // convert hours to deg
             + 15 * parseInt(min, 10) / 60
-            + 15 * parseInt(sec, 10) / 60
+            + 15 * parseInt(sec, 10) / 60**2
         }
     return deg
 }

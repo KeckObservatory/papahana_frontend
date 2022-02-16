@@ -26,7 +26,8 @@ const CatalogTable = (props: Props) => {
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
         onRowsDelete: () => false,
-        selectableRows: 'single'
+        selectableRows: 'single',
+        rowsSelected: [props.selIdx]
     }
 
     return (
