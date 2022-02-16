@@ -24,11 +24,10 @@ const add_target = (aladin: any, win: any, ra: number, dec: number) => {
 const add_catalog = (aladin: any, win: any, catalogRows: CatalogRow[], setSelIdx: Function) => {
         var cat = win.A.catalog({ name: 'Catalog Stars', sourceSize: 18, shape: 'circle' });
         aladin.addCatalog(cat);
-
         aladin.on('objectClicked', function(object: any) {
             if(object) {
                 console.log('objectClicked', object.data?.id0)
-                setSelIdx(object.data.idx)
+                setSelIdx(object.data?.idx)
             }
         })
 
