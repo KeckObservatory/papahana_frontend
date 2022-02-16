@@ -63,8 +63,8 @@ export const ra_dec_to_deg = (time: string, dec = false) => {
 
     else {
         deg = 15 * parseInt(hours, 10) // convert hours to deg
-            + parseInt(min, 10) / 60
-            + parseInt(sec, 10) / 60
+            + 15 * parseInt(min, 10) / 60
+            + 15 * parseInt(sec, 10) / 60
         }
     return deg
 }

@@ -11,57 +11,6 @@ interface Props {
     setSelObs: Function
 }
 
-const columns = [
-    {
-        name: "id",
-        label: "ID",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
-    {
-        name: "name",
-        label: "Name",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
-    {
-        name: "type",
-        label: "OB Type",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
-    {
-        name: "ra",
-        label: "RA",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
-    {
-        name: "dec",
-        label: "DEC",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
-    {
-        name: "cid",
-        label: "CID",
-        options: {
-            filter: true,
-            sort: true
-        }
-    },
-]
-
 interface CTProps {
     selectedRows: any,
     setSelObs: Function,

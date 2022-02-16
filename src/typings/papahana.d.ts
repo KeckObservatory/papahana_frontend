@@ -1,3 +1,5 @@
+export type CatalogRow = Array< number | string >
+
 export interface Container {
 	_id: string,
 	sem_id: string,

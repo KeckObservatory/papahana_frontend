@@ -7,10 +7,11 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { JSONSchema7 } from 'json-schema'
 import Aladin from './aladin'
 import TemplateForm from '../forms/template_form';
-import { OBComponent, Target } from './../../typings/papahana'
+import { OBComponent, Target } from './../../typings/papahana';
+import CatalogTable from './catalog_table';
+import { mockCatalog } from "./../../mocks/catalog"
 
 interface Props {
   id: string
@@ -21,6 +22,7 @@ interface Props {
 export const TargetResolverDialog = (props: Props) => {
 
   const [open, setOpen] = React.useState(false)
+  const [selIdx, setSelIdx] = React.useState(undefined as number | undefined)
 
   const launch_target_resolver = (evt: any) => {
     console.log('target resolver blastoff!!!')
@@ -37,18 +39,24 @@ export const TargetResolverDialog = (props: Props) => {
           <LaunchIcon />
         </IconButton>
       </Tooltip>
-      <Dialog maxWidth={'lg'} open={open} onClose={close_target_resolver}>
+      <Dialog maxWidth={'xl'} open={open} onClose={close_target_resolver}>
         <DialogTitle>Target Resolver</DialogTitle>
         <DialogContent >
-          <div style={{display: 'flex'}}>
-          <div style={{ width: '250px', margin: '5px', padding: '5px' }}>
-            <TemplateForm id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
+          <div style={{ display: 'flex' }}>
+            <div style={{ width: '250px', margin: '5px', padding: '5px' }}>
+              <TemplateForm id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
+            </div>
+            <Aladin
+              selIdx={selIdx}
+              setSelIdx={setSelIdx}
+              catalogRows={mockCatalog}
+              target={props.obComponent as Target} />
+            <div style={{ width: '500px', margin: '5px', padding: '5px' }}>
+              <CatalogTable rows={mockCatalog} selIdx={selIdx} setSelIdx={setSelIdx} />
+            </div>
           </div>
-          <Aladin target={props.obComponent as Target} />
-          </div>
-          <p>some info here</p>
         </DialogContent>
       </Dialog>
-    </div>
+    </div >
   )
 }
