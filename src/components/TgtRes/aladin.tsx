@@ -68,6 +68,30 @@ export default function Aladin(props: Props) {
         const url = 'https://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?catalog=allwise_p3as_psd&spatial=cone&radius=300&radunits=arcsec&objstr=00h+42m+44.32s+41d+16m+08.5s&size=300&outfmt=3&selcols=ra,dec,w1mpro,w2mpro,w3mpro,w4mpro'
         win.A.catalogFromURL(url)
 
+        // Testing rotation -- hold down ctrl key to rotate
+        const al: any = document.querySelector('#aladin-lite-div');
+        const rect = al.getBoundingClientRect();
+        const centerX: number = rect.x + (rect.right - rect.left) / 2;
+        const centerY: number = rect.y + (rect.bottom - rect.top) / 2;
+        al.addEventListener('mousemove', (e: MouseEvent) => {
+            if (e.ctrlKey && e.buttons !== 1) {
+                document.querySelectorAll('.aladin-imageCanvas,.aladin-catalogCanvas,.aladin-reticleCanvas').forEach( el => {
+                    const currentAngle: number = Math.acos(parseFloat(window.getComputedStyle(el).transform.split('(')[1].split(',')[0])/1.41421356);
+                    const currentDir: number = Math.asin(parseFloat(window.getComputedStyle(el).transform.split('(')[1].split(',')[1])/1.41421356);
+                    const angleStart: number = Math.atan2(e.clientY - centerY, e.clientX - centerX);
+                    const angleEnd: number = Math.atan2(e.clientY + e.movementY - centerY, e.clientX + e.movementX - centerX);
+                    const angle: number = (angleEnd - angleStart + currentAngle * Math.sign(currentDir)) * 180 / Math.PI;
+                    el.setAttribute('style', 'transform: rotate(' + angle + 'deg) scale(1.41421356); cursor: default;');
+
+                });
+            }
+        });
+        // Change FoV text to reflect shown FoV rather than rendered FoV -- note, bug on full zoom out because max zoom ≠ what aladin thinks
+        aladin.callbacksByEventName.zoomChanged = () => {
+            const fov = aladin.getFov()[0] / 1.41421356;
+            document.querySelector('.aladin-fov')!.textContent = 'FoV: ' + (fov).toPrecision(4) + '\u00b0'; // TODO -- update to use arcmin, arcsec, etc...
+        };
+
     }
 
     React.useEffect(() => {
@@ -85,8 +109,20 @@ export default function Aladin(props: Props) {
         script.src = "https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.js"
         script.async = true
         script.onload = scriptloaded
-
         document.body.appendChild(script)
+
+        // Custom CSS, TODO -- ask Tyler what the project standard is
+        const extraStyle = document.createElement('style');
+        extraStyle.innerText =  '#aladin-lite-div {' +
+                                '   overflow: hidden;' +
+                                '}' +
+                                '.aladin-imageCanvas,' +
+                                '.aladin-catalogCanvas,' +
+                                '.aladin-reticleCanvas {' +
+                                '   transform: rotate(0deg) scale(1.41421356);' +
+                                '}';
+        document.head.appendChild(extraStyle);
+
     }, [props.target.target_coord_ra, props.target.target_coord_dec])
 
 
