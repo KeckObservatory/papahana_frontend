@@ -4,7 +4,23 @@ import { CatalogRow } from "../../typings/papahana"
 interface Props {
     rows: CatalogRow[],
     selIdx: number | undefined
+    setFiltCatalog: Function
     setSelIdx: Function
+}
+
+
+interface CTProps {
+}
+
+const CustomToolbarSelect = (props: CTProps) => {
+    return (
+        <div className={"custom-toolbar-select"}>
+        </div>
+    );
+}
+
+const handleSelect = (rowsSelected: CatalogRow[]) => {
+    console.log('rows selected', rowsSelected)
 }
 
 const CatalogTable = (props: Props) => {
@@ -27,7 +43,11 @@ const CatalogTable = (props: Props) => {
         filterType: 'dropdown',
         onRowsDelete: () => false,
         selectableRows: 'single',
-        rowsSelected: [props.selIdx]
+        rowsSelected: [props.selIdx],
+        customToolbarSelect: () => (
+            <CustomToolbarSelect />
+        ),
+        onRowSelectionChange: handleSelect
     }
 
     return (

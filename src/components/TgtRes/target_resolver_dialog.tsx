@@ -23,6 +23,8 @@ export const TargetResolverDialog = (props: Props) => {
 
   const [open, setOpen] = React.useState(false)
   const [selIdx, setSelIdx] = React.useState(undefined as number | undefined)
+  const [catalog, setCatalog] = React.useState(mockCatalog)
+  const [filtCatalog, setFiltCatalog] = React.useState(mockCatalog)
 
   const launch_target_resolver = (evt: any) => {
     console.log('target resolver blastoff!!!')
@@ -49,10 +51,14 @@ export const TargetResolverDialog = (props: Props) => {
             <Aladin
               selIdx={selIdx}
               setSelIdx={setSelIdx}
-              catalogRows={mockCatalog}
+              catalogRows={catalog}
               target={props.obComponent as Target} />
             <div style={{ width: '500px', margin: '5px', padding: '5px' }}>
-              <CatalogTable rows={mockCatalog} selIdx={selIdx} setSelIdx={setSelIdx} />
+              <CatalogTable 
+                rows={filtCatalog}
+                setFiltCatalog={setFiltCatalog}
+                selIdx={selIdx}
+                setSelIdx={setSelIdx} />
             </div>
           </div>
         </DialogContent>

@@ -42,6 +42,7 @@ const AvailableOBTable = (props: Props) => {
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
         onRowsDelete: () => false,
+        selectableRowsHeader: false,
         customToolbarSelect: selectedRows => (
             <CustomToolbarSelect
                 selectedRows={selectedRows}
