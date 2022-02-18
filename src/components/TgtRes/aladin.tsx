@@ -14,12 +14,27 @@ const format_target_coords = (ra: string, dec: string) => {
     return coords
 }
 
+const style_popup = () => {
+    const pt: any = document.querySelector('.aladin-popupTitle')
+    pt.setAttribute('style', 'color: black')
+}
+
 const add_target = (aladin: any, win: any, ra: number, dec: number) => {
     var cat = win.A.catalog({ name: 'Target', sourceSize: 18 });
     aladin.addCatalog(cat);
     const options = { popupTitle: 'Target', popupDesc: '' }
     cat.addSources([win.A.marker(ra, dec, options)]);
     style_popup()
+}
+
+const add_selected_catalog = (aladin: any, win: any, catalogRow: CatalogRow) => {
+    var cat = win.A.catalog({ name: 'Selected Catalog Star', sourceSize: 18, shape: 'circle' });
+    aladin.addCatalog(cat);
+    const ra = catalogRow[5]
+    const dec = catalogRow[6]
+    const id0 = catalogRow[3]
+    const options = { }
+    cat.addSources(win.A.source(ra, dec, options));
 }
 
 const add_catalog = (aladin: any, win: any, catalogRows: CatalogRow[], setSelIdx: Function) => {
@@ -31,7 +46,6 @@ const add_catalog = (aladin: any, win: any, catalogRows: CatalogRow[], setSelIdx
             setSelIdx(object.data?.idx)
         }
     })
-
 
     aladin.on('objectHovered', function (object: any) {
         if (object) console.log('objectHovored', object.data?.id0)
@@ -50,10 +64,6 @@ const add_catalog = (aladin: any, win: any, catalogRows: CatalogRow[], setSelIdx
     }
 }
 
-const style_popup = () => {
-    const pt: any = document.querySelector('.aladin-popupTitle')
-    pt.setAttribute('style', 'color: black')
-}
 
 const rotate_view = (aladin: any) => {
     // Testing rotation -- hold down ctrl key to rotate
@@ -83,7 +93,6 @@ const rotate_view = (aladin: any) => {
 
 export default function Aladin(props: Props) {
 
-
     const scriptloaded = () => {
         const win: any = window
         let ra: string = props.target.target_coord_ra;
@@ -98,12 +107,14 @@ export default function Aladin(props: Props) {
 
         add_target(aladin, win, raDeg, decDeg)
         add_catalog(aladin, win, props.catalogRows, props.setSelIdx)
+        if (props.selIdx) {
+            console.log('selected idx:', props.selIdx)
+            const selRow = props.catalogRows[props.selIdx]
+            add_selected_catalog(aladin, win, selRow)
+        }
         rotate_view(aladin)
         const url = 'https://irsa.ipac.caltech.edu/cgi-bin/Gator/nph-query?catalog=allwise_p3as_psd&spatial=cone&radius=300&radunits=arcsec&objstr=00h+42m+44.32s+41d+16m+08.5s&size=300&outfmt=3&selcols=ra,dec,w1mpro,w2mpro,w3mpro,w4mpro'
         win.A.catalogFromURL(url)
-
-
-
     }
 
     React.useEffect(() => {
@@ -135,7 +146,7 @@ export default function Aladin(props: Props) {
             '}';
         document.head.appendChild(extraStyle);
 
-    }, [props.target.target_coord_ra, props.target.target_coord_dec])
+    }, [props.target.target_coord_ra, props.target.target_coord_dec, props.selIdx])
 
 
     return (
