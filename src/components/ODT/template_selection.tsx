@@ -12,20 +12,20 @@ interface Props {
     addSeq: Function;
 }
 
-const add_targets = (tList: string[], dList: boolean[], obSequences: string[]):void  => {
+const add_targets = (templateList: string[], disList: boolean[], obSequences: string[]):void  => {
     //todo: get list of targets from api
     const targetTemplates = ['sidereal_target','non_sidereal_target', 'multi_object_target' ]
     targetTemplates.forEach( (tgtName: string) => {
-        tList.push(tgtName)
+        templateList.push(tgtName)
         const disabled = check_disabled(tgtName, obSequences)
-        dList.push(disabled)
+        disList.push(disabled)
     })
 }
-const add_common_parameters= (tList: string[], dList: boolean[], obSequences: string[]):void  => {
+const add_common_parameters= (templateList: string[], disList: boolean[], obSequences: string[]):void  => {
     const templateName = 'kcwi_common_parameters'
-    tList.push(templateName)
+    templateList.push(templateName)
     const disabled = check_disabled(templateName, obSequences)
-    dList.push(disabled)
+    disList.push(disabled)
 }
 
 const check_disabled = (templateName: string, obSequences: string[]) => {
@@ -47,16 +47,16 @@ const check_disabled = (templateName: string, obSequences: string[]) => {
 }
 
 const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[]] => {
-    let tList: string[] = []
-    let dList: boolean[] = []
+    let templateList: string[] = []
+    let disList: boolean[] = []
     Object.entries(instTemplates).forEach(([templateName, templateID]: any) => {
         const disabled = check_disabled(templateName, obSequences) 
-        tList.push(templateName)
-        dList.push(disabled)
+        templateList.push(templateName)
+        disList.push(disabled)
     })
-    add_targets(tList, dList, obSequences)
-    add_common_parameters(tList, dList, obSequences)
-    return [tList, dList]
+    add_targets(templateList, disList, obSequences)
+    add_common_parameters(templateList, disList, obSequences)
+    return [templateList, disList]
 }
 
 export default function TemplateSelection(props: Props) {
@@ -68,17 +68,17 @@ export default function TemplateSelection(props: Props) {
     useEffect(() => {
         get_instrument_package(props.instrument)
             .then((ip: InstrumentPackage) => {
-                const [tList, dList] = create_drop_down_list(ip.template_list, props.obSequences)
+                const [templateList, disList] = create_drop_down_list(ip.template_list, props.obSequences)
                 setTemplates(ip.template_list)
-                setTemplateList(tList)
-                setDisabledArr(dList)
+                setTemplateList(templateList)
+                setDisabledArr(disList)
             })
     }, [props.instrument])
 
     useEffect(() => {
-        const [tList, dList] = create_drop_down_list(templates, props.obSequences)
-        setTemplateList(tList)
-        setDisabledArr(dList)
+        const [templateList, disList] = create_drop_down_list(templates, props.obSequences)
+        setTemplateList(templateList)
+        setDisabledArr(disList)
     }, [props.obSequences])
 
 
@@ -87,7 +87,6 @@ export default function TemplateSelection(props: Props) {
             console.log('template name created', templateName)
             let seq = {
                 'metadata': template.metadata,
-                'template_id': ''
             } as Partial<Template> 
             if (templateName.includes('acq') || templateName.includes('sci') ) {
               seq['parameters'] = {}

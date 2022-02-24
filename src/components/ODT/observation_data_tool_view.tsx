@@ -23,6 +23,7 @@ import { animated } from 'react-spring'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import Button from '@mui/material/Button';
 import { Autosave } from './autosave'
+import cloneDeep from 'lodash/cloneDeep';
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -80,17 +81,9 @@ export default function ODTView(props: Props) {
   const [ob, setOB] = useState(initOB as ObservationBlock)
   const [theme, setTheme] =
     useQueryParam('theme', withDefault(StringParam, props.theme as string))
-  let obSequences = Object.keys(ob)
-
 
   useEffect(() => {
-    // handleOBSelect('0000') //remove if not demo
-
   }, [])
-
-  useEffect(() => {
-    obSequences = Object.keys(ob)
-  }, [ ob ])
 
   const getOB = (new_ob_id: string): void => {
     api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
@@ -162,22 +155,17 @@ export default function ODTView(props: Props) {
   }
 
   const addSeq = (seq: OBSequence) => {
-    let newOB = { ...ob } as any
+    console.log('ob before add Seq', ob)
     const tmplType = seq.metadata.template_type
     console.log('templateType adding', tmplType)
-    if (tmplType.includes('sci') && ob.observations) {
+    const newOB: any = cloneDeep(ob) // need to deep clone a nested object
+    if (tmplType.includes('sci')) {
+      let obs = [...(newOB.observations ?? [])] //need to make a deep copy of observations
       const metadata = seq.metadata as ScienceMetadata
-      metadata.sequence_number = newOB.observations? newOB.observations.length+1: 1
+      metadata['sequence_number'] = obs.length + 1
       seq.metadata = metadata
-      console.log('adding sequence', seq.metadata.sequence_number)
-      newOB.observations?.push(seq)
-    }
-    else if (tmplType.includes('sci') && !ob.observations) {
-      const metadata = seq.metadata as ScienceMetadata
-      metadata.sequence_number = newOB.observations? newOB.observations.length+1: 1
-      seq.metadata = metadata
-      console.log('adding sequence', seq.metadata.sequence_number)
-      newOB['observations'] = [seq]
+      obs.push(seq as any)
+      newOB.observations = [...obs]
     }
     else {
       newOB[tmplType as OBSeqNames] = seq
@@ -256,7 +244,7 @@ export default function ODTView(props: Props) {
 
           <Tooltip title="Add template to Selected OB">
             <div className={classes.templateSelect}>
-              <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={obSequences} />
+              <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={Object.keys(ob)} />
             </div>
           </Tooltip>
           <Tooltip title="Resolve template image">
