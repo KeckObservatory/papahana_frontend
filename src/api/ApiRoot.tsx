@@ -10,9 +10,9 @@ import { mock_get_instrument_package, mock_get_template, mock_get_containers, mo
 // Define your api url from any source.
 // Pulling from your .env file when on the server or from localhost when locally
 
-const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT==='production'? true : false
+const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT==='production'
 console.log(`is PRODUCTION? set to ${IS_PRODUCTION}`) 
-var PRODUCTION_URL = 'https://vm-appserver.keck.hawaii.edu/api/ddoi/v0/' //use on server (npm build)
+var PRODUCTION_URL = 'http://www3build.keck.hawaii.edu/api/ddoi/'
 var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
 var BASE_URL = IS_PRODUCTION ? PRODUCTION_URL : DEV_URL // sets for production vs dev
 var OB_URL = BASE_URL + 'obsBlocks?' 
