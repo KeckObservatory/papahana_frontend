@@ -33,7 +33,7 @@ const get_semesters = (observer_id: string): Promise<Semester[]> => {
         .catch(handleError);
 }
 
-const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
+const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage[]> => {
     // 'http://vm-webtools.keck.hawaii.edu:50000/v0/instrumentPackages/KCWI'
     const url = `${INSTRUMENT_URL}/${instrument}`
     return axios

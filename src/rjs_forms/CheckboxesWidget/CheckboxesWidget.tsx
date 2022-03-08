@@ -64,7 +64,7 @@ const CheckboxesWidget = ({
         {(enumOptions as any).map((option: any, index: number) => {
           const checked = value.indexOf(option.value) !== -1
           const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1
+            enumDisabled && (enumDisabled as any).indexOf(option.value) !== -1
           const checkbox = (
             <Checkbox
               id={`${id}_${index}`}

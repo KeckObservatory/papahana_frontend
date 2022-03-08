@@ -4,7 +4,6 @@ import { OBCell } from "../../typings/papahana"
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton';
 import FilterIcon from '@mui/icons-material/Filter';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 interface Props {
     rows: OBCell[],

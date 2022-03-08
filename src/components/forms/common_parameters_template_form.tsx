@@ -1,18 +1,15 @@
 import React, { } from "react"
-import { Template, OBComponent, TemplateParameter, CommonParameters } from "../../typings/papahana"
+import { Template, CommonParameters } from "../../typings/papahana"
 import { withTheme, ISubmitEvent } from "@rjsf/core";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { IconButton, Tooltip } from '@mui/material';
 import Typography from '@mui/material/Typography';
 // import Form from '@rjsf/material-ui'
 import { Theme as MaterialUITheme } from '../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
-import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
+import { JsonSchema, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { template_parameter_to_schema_properties, log } from "./template_form"
 import { makeStyles } from "@mui/styles";
-import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
-import { UiSchema } from "react-jsonschema-form";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -62,15 +59,10 @@ const template_to_schema = (template: Template, formName: string): JSONSchema7 =
 export default function CommonParametersTemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
   const sub_forms = ['instrument_parameters', 'detector_parameters', 'tcs_parameters']
-  const initSchema = {}
   const [schemas, setSchemas] = React.useState({} as any)
-  let formData: { [key: string]: any } = {}
   const ref = React.useRef(null)
-  let height = 0 //monitor the height of the form
 
   React.useEffect(() => {
-    const curr = ref.current as any;
-    height = curr.clientHeight;
     const md = props.obComponent.metadata
 
     let newSchemas = {...schemas}
@@ -89,12 +81,10 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
 
 
   const handleChange = (evt: ISubmitEvent<any>, formName: keyof CommonParameters): void => {
-    const curr = ref.current as any
     let newFormData = { ...props.obComponent }
     newFormData[formName] = evt.formData
     // console.log('new subform data', evt.formData)
     props.updateOB(props.id, newFormData)
-    height = curr.clientHeight
   }
 
   return (

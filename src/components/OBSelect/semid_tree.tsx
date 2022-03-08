@@ -3,7 +3,6 @@ import { Container } from '../../typings/papahana';
 import Tree, { Node, NodeId, Leaf } from '@naisutech/react-tree';
 import { get_containers } from '../../api/utils'
 import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
 import { Button } from '@mui/material';
 
 const useStyles = makeStyles((theme: any) => ({
@@ -50,30 +49,6 @@ const containers_to_nodes = (containers: Container[]): Node[] => {
         nodes.push(node)
     })
     return nodes
-}
-
-const add_container = () => {
-
-}
-
-const add_ob_to_contianer = () => {
-
-}
-
-const remove_ob_from_conteiner = () => {
-
-}
-
-const update_container_db = () => {
-
-}
-
-const move_container = () => {
-
-}
-
-const move_ob = () => {
-
 }
 
 const find_item_by_id = (containers: Container[], id: string): string | undefined => {

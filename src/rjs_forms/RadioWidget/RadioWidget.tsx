@@ -22,8 +22,8 @@ const RadioWidget = ({
 }: WidgetProps) => {
   const { enumOptions, enumDisabled } = options
 
-  const _onChange = ({}, value: any) =>
-    onChange(schema.type == 'boolean' ? value !== 'false' : value)
+  const _onChange = (_: any, value: any) =>
+    onChange(schema.type === 'boolean' ? value !== 'false' : value)
   const _onBlur = ({ target: { value } }: React.FocusEvent<HTMLInputElement>) =>
     onBlur(id, value)
   const _onFocus = ({
@@ -45,7 +45,7 @@ const RadioWidget = ({
         onFocus={_onFocus}>
         {(enumOptions as any).map((option: any, i: number) => {
           const itemDisabled =
-            enumDisabled && (enumDisabled as any).indexOf(option.value) != -1
+            enumDisabled && (enumDisabled as any).indexOf(option.value) !== -1
 
           const radio = (
             <FormControlLabel

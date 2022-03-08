@@ -27,7 +27,7 @@ const CheckboxWidget = (props: WidgetProps) => {
   // "const" or "enum" keywords
   const required = schemaRequiresTrueValue(schema)
 
-  const _onChange = ({}, checked: boolean) => onChange(checked)
+  const _onChange = (_: any, checked: boolean) => onChange(checked)
   const _onBlur = ({
     target: { value },
   }: React.FocusEvent<HTMLButtonElement>) => onBlur(id, value)

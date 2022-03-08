@@ -14,11 +14,8 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   let initFormData = init_form_data(props.obComponent, props.id)
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
-  let height = 0 //monitor the height of the form
 
   React.useEffect(() => {
-    const curr = ref.current as any;
-    height = curr.clientHeight;
     get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
       setSchema(initSchema)
     })
@@ -30,13 +27,10 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   }, [props.obComponent])
 
   const handleChange = (evt: ISubmitEvent<OBComponent>): void => {
-    const curr = ref.current as any
     let newFormData = { ...evt.formData }
     // check if form changed heights
-    let newHeight: number = height !== curr.clientHeight ? curr.clientHeight : undefined
     props.updateOB(props.id, newFormData)
     setFormData(() => newFormData)
-    height = curr.clientHeight
   }
 
 

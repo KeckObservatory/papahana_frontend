@@ -1,8 +1,6 @@
-import * as dayjs from 'dayjs'
 import * as SunCalc from 'suncalc'
 import { LngLatEl } from './sky_view'
 
-const HT_OFFSET = 600 // hawaii time offset from ut time [minutes]
 export const KECK_LONG = 360 - 155.4747 // Keck Observatory longitude west of Greenwich [deg]
 const KECK_LAT = 19.8260 //[deg]
 const KECK_ELEVATION = 4.1449752 // km

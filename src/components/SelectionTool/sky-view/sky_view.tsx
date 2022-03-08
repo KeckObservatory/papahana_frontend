@@ -1,12 +1,10 @@
-
 import React from 'react';
 import { useD3 } from '../../../hooks/useD3'
 import * as d3 from 'd3'
 import { OBCell, Target } from '../../../typings/papahana'
-import * as dayjs from 'dayjs'
 import * as util from './sky_view_util'
 import {skyview} from './sky_view_d3'
-import { useQueryParam, NumericObjectParam, NumberParam, StringParam, withDefault, DateParam } from 'use-query-params'
+import { useQueryParam, NumericObjectParam, withDefault, DateParam } from 'use-query-params'
 
 interface Props {
     outerHeight: number
@@ -27,7 +25,6 @@ export interface LngLatEl {
 
 export default function SkyView(props: Props) {
 
-    const HT_OFFSET = 600 // hawaii time offset from ut time [minutes]
     const KECK_LONG = 360 - 155.4747 // Keck Observatory longitude west of Greenwich [deg]
     const KECK_LAT = 19.8260 //[deg]
     const KECK_ELEVATION = 4144.9752 // m
@@ -35,7 +32,6 @@ export default function SkyView(props: Props) {
     const keckLngLat: LngLatEl = {lng: KECK_LONG, lat: KECK_LAT, ele: KECK_ELEVATION}
 
     const [date, setDate] = useQueryParam('date', withDefault(DateParam, today))
-    const [offset, setOffset] = useQueryParam('offset', withDefault(NumberParam, HT_OFFSET))
     const [lngLatEl, setLngLatEl] = useQueryParam('lngLatEl', withDefault(NumericObjectParam, keckLngLat as any))
 
     React.useEffect(() => {

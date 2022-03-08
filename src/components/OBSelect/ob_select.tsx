@@ -24,7 +24,7 @@ const defaultState: State = {
   obList: [],
   semIdList: [],
   containerIdList: [],
-  sem_id: '2017A_U033',
+  sem_id: '',
   container_id: 'all',
 }
 

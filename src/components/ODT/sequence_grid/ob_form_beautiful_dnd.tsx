@@ -9,7 +9,6 @@ import { Theme, createStyles } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
 
 import "./styles.css";
-import { mergeClasses } from '@mui/material/styles';
 
 const GRID = 4;
 const ROW_HEIGHT = 45;

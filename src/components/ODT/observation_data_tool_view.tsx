@@ -4,11 +4,9 @@ import { Instrument, OBSeqNames, OBSequence, ObservationBlock, ScienceMetadata }
 import { IconButton, Paper } from '@mui/material'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
-import PublishIcon from '@mui/icons-material/Publish'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import AddIcon from '@mui/icons-material/Add'
 import SaveIcon from '@mui/icons-material/Save';
-import UploadIcon from '@mui/icons-material/Upload';
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { api_call } from '../../api/utils'
 import Grid from '@mui/material/Grid'
@@ -18,12 +16,11 @@ import UploadDialog from './upload_dialog'
 import ObservationBlockSelecter from '../OBSelect/ob_select'
 import JsonViewTheme from '../json_view_theme'
 import TemplateSelection from './template_selection'
-import useBoop from '../../hooks/boop'
-import { animated } from 'react-spring'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import Button from '@mui/material/Button';
 import { Autosave } from './autosave'
 import cloneDeep from 'lodash/cloneDeep';
+import ContainerEditor from './container_editor';
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -216,6 +213,7 @@ export default function ODTView(props: Props) {
         <Paper className={classes.paper} elevation={3}>
           <h3>Observation Block Selection</h3>
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
+          <ContainerEditor />
           <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
             {/* <Tooltip title="Upload OB to database">

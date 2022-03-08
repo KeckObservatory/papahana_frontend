@@ -32,7 +32,7 @@ const add_selected_catalog = (aladin: any, win: any, catalogRow: CatalogRow) => 
     aladin.addCatalog(cat);
     const ra = catalogRow[5]
     const dec = catalogRow[6]
-    const id0 = catalogRow[3]
+    // const id0 = catalogRow[3]
     const options = { }
     cat.addSources(win.A.source(ra, dec, options));
 }

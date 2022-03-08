@@ -1,9 +1,5 @@
-
-import React from 'react';
-import { useD3 } from '../../../hooks/useD3'
 import * as d3 from 'd3'
-import { OBCell, Target } from '../../../typings/papahana'
-import dayjs from 'dayjs'
+import { Target } from '../../../typings/papahana'
 import * as util from './sky_view_util'
 import { LngLatEl } from './sky_view'
 import * as SunCalc from 'suncalc'
@@ -54,7 +50,7 @@ const make_data = (targets: Target[], chartType: string, date: Date, lngLatEl: L
     let mergedData: Data[] = []
 
     targets.forEach((target: Target) => {
-        const azAlt = util.ra_dec_to_az_alt(target.ra_deg as number, target.dec_deg as number, nadir, lngLatEl)
+        // const azAlt = util.ra_dec_to_az_alt(target.ra_deg as number, target.dec_deg as number, nadir, lngLatEl)
         const values = get_chart_data(target, times, chartType, date, lngLatEl)
         const data = format_values(values, times, target, 'degrees')
         mergedData = [...mergedData, ...data]
@@ -174,7 +170,6 @@ const formatDate = (date: Date) => {
         day = date.getDate(),
         hour = date.getHours(),
         minute = date.getMinutes(),
-        second = date.getSeconds(),
         hourFormatted = hour % 12 || 12, // hour returned in 24 hour format
         minuteFormatted = minute < 10 ? "0" + minute : minute,
         morning = hour < 12 ? "am" : "pm";
@@ -265,9 +260,6 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
     if (myData.length <= 0) return
     const startDate = myData[0][0].time
     const endDate = myData[0][myData[0].length - 1].time
-    const values = myData.flat().map(d => d.value)
-    const yMin: number = d3.min(values) as number
-    const yMax: number = d3.max(values) as number
 
     const height = outerHeight - marginTop - marginBottom
     const width = outerWidth - marginRight - marginLeft
@@ -312,7 +304,7 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
     const [tooltip, ruler] = init_hovors(svg, tgtNames, width)
 
     const moveRuler = (event: any) => {
-        const [xp, yp] = d3.pointer(event, svg.node())
+        const [xp, _] = d3.pointer(event, svg.node())
         const xpoint = xScale.invert(xp)
         var d: any
         var keyData: any[] = []
@@ -377,15 +369,6 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
     svg
         .on("mousemove", moveRuler)
         .on("mouseleave", hideRuler)
-
-    const lineClass = svg.selectAll('path')
-        .data(myData)
-        .join('path')
-        .attr('class', 'chart-lines')
-        .attr('d', line.curve(d3.curveBasis))
-        .style('stroke', (d: any | Data[]) => colors(d[0].tgt))
-        .style('stroke-width', 2)
-        .style('fill', 'transparent')
 
     // add the axes
     // axes go on last

@@ -1,12 +1,9 @@
 
 import Paper from '@mui/material/Paper'
-import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
-import React, { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
-import { ObservationBlock, OBCell } from "../../typings/papahana"
-import { Theme } from '@mui/material/styles'
-import Button from '@mui/material/Button';
+import { OBCell } from "../../typings/papahana"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import OBSubmit from './ob_submit'
 

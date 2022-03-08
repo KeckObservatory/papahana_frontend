@@ -3,9 +3,7 @@ import LaunchIcon from '@mui/icons-material/Launch';
 import Tooltip from '@mui/material/Tooltip'
 import { IconButton } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Aladin from './aladin'
 import TemplateForm from '../forms/template_form';
