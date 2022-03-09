@@ -24,7 +24,7 @@ console.log('backend url set to')
 console.log(BASE_URL)
 
 
-const get_semesters = (observer_id: string): Promise<Semester[]> => {
+const get_semesters = (observer_id: string): Promise<string[]> => {
     // 'http://vm-webtools.keck.hawaii.edu:50000/v0/semesterIds/?obs_id=2003'
     const url = `${SEMESTERS_URL}/?obs_id=${observer_id}`
     return axios

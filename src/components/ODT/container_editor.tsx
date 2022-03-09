@@ -4,9 +4,10 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import ContainerTable from './container_table'
 
 interface Props {
-
+ observer_id: string;
 }
 
 const stl = {
@@ -25,6 +26,7 @@ const ContainerEditor = (props: Props) => {
         setOpen(false);
     };
 
+
     return (
         <div>
             <Button sx={stl} onClick={handleClickOpen}>Container Editor</Button>
@@ -39,6 +41,7 @@ const ContainerEditor = (props: Props) => {
                     {"Create, Edit, and Delete Containers"}
                 </DialogTitle>
                 <DialogContent>
+                    <ContainerTable observer_id={props.observer_id}/>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>

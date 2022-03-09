@@ -1,7 +1,9 @@
 import DescriptionField from '../DescriptionField/DescriptionField';
 import TitleField from '../TitleField/TitleField';
 
-export default {
+const exportedObject = {
   DescriptionField,
   TitleField,
 };
+
+export default exportedObject

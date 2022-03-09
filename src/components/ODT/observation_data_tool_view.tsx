@@ -213,7 +213,7 @@ export default function ODTView(props: Props) {
         <Paper className={classes.paper} elevation={3}>
           <h3>Observation Block Selection</h3>
           <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
-          <ContainerEditor />
+          <ContainerEditor observer_id={props.observer_id} />
           <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
             {/* <Tooltip title="Upload OB to database">

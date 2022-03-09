@@ -53,7 +53,7 @@ export interface Status extends Base {
 export interface Scoby {
 	row_id?: string
 	sem_id?: string
-	container_id?: string
+	container_id: string
 	ob_id?: string
     name?: string
 }

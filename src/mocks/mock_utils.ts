@@ -4,7 +4,7 @@ import { Instrument, ObservationBlock, Template } from './../typings/papahana.d'
 // import { mock_observation_blocks } from './mock_obs'
 // import { mock_ob } from './mock_ob'
 import { mock_semesters } from './mock_semesters'
-import { Semester, Container, InstrumentPackage } from "../typings/papahana";
+import { Container, InstrumentPackage } from "../typings/papahana";
 import { default as mock_obs } from './ob.json'
 import { default as mock_templates } from './templates.json'
 import { default as mock_containers } from './containers-demo.json'
@@ -35,9 +35,11 @@ export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {
    return mockPromise
 }
 
-export const mock_get_semesters = (observer_id: string): Promise<Semester[]> => {
-   const mockPromise = new Promise<Semester[]>((resolve) => {
-      resolve(mock_semesters)
+export const mock_get_semesters = (observer_id: string): Promise<string[]> => {
+   const mockPromise = new Promise<string[]>((resolve) => {
+      const semids = mock_semesters.map(sem => sem.sem_id)
+      // resolve(mock_semesters)
+      resolve(semids)
    })
    return mockPromise
 }

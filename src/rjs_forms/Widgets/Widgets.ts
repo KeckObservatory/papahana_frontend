@@ -13,7 +13,7 @@ import TextWidget from '../TextWidget/TextWidget'
 import UpDownWidget from '../UpDownWidget/UpDownWidget'
 import URLWidget from '../URLWidget/URLWidget'
 
-export default {
+const exportedObject = {
   CheckboxWidget,
   CheckboxesWidget,
   ColorWidget,
@@ -29,3 +29,5 @@ export default {
   UpDownWidget,
   URLWidget,
 }
+
+export default exportedObject;

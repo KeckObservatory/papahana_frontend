@@ -2,7 +2,6 @@ import React from 'react';
 import { get_instrument_package } from '../../api/utils'
 import { useState, useEffect } from 'react';
 import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template} from '../../typings/papahana';
-import { makeStyles } from '@mui/styles'
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 
