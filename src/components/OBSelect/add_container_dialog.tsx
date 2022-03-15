@@ -30,6 +30,8 @@ export default function AddContainterDialog() {
       const container = { name: name, sem_id: '', observation_blocks: [] }
       container_api_funcs.post(container).then((response: string) => {
         console.log(`container ${response} created`)
+      }).catch((error: any) => {
+        console.log('handleCreate Error:', error)
       })
     }
   };
