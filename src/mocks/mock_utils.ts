@@ -19,10 +19,10 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
    return mockPromise
 }
 
-export const mock_get_template = (name: string): Promise<Template[]> => {
-   const mockPromise = new Promise<Template[]>((resolve) => {
+export const mock_get_template = (name: string): Promise<Template> => {
+   const mockPromise = new Promise<Template>((resolve) => {
       const template = mock_templates.find(t => t.metadata.name === name) as any
-      resolve([template])
+      resolve(template)
    })
    return mockPromise
 }

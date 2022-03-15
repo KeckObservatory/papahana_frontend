@@ -24,9 +24,12 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
 
 export const get_template = (name: string): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
-      get_select_funcs.get_template(name).then((templates: Template[]) => {
-         if (templates.length === 1) {
-            resolve(templates[0])
+      get_select_funcs.get_template(name).then((template: Template) => {
+      const keys = Object.keys(template) 
+         if (keys.length === 1) {
+            const tmp = Object.values(template)[0]
+            console.log('get_template', tmp)
+            resolve(tmp)
          }
       }).catch(err => {
          console.log(`get_template err: ${err}`)
@@ -200,7 +203,7 @@ export function api_call(resource: string, api: SourceAPI, method: Method, body 
          return api_funcs.remove(resource, api);
       }
       case 'put': {
-         return api_funcs.put(resource, api, body);
+         return api_funcs.put(resource, body);
       }
    }
 }

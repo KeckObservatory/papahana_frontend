@@ -43,9 +43,11 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
 }
 
 
-const get_template = (name: string): Promise<Template[]> => {
+const get_template = (name: string, ip_version: string='0.1.0', inst: string='KCWI'): Promise<Template> => {
     // 'http://vm-webtools.keck.hawaii.edu:50000/v0/templates?name=KCWI_ifu_acq_offsetStar
-    const url = `${TEMPLATE_URL}?name=${name}`
+    // const url = `${TEMPLATE_URL}?name=${name}`
+    const url = `${BASE_URL}instrumentPackages/${inst}/templates?ip_version=${ip_version}&template_name=${name}`
+    console.log('get_template url:', url)
     return axios
         .get(url)
         .then(handleResponse)
@@ -71,7 +73,7 @@ const get_observation_blocks_from_container = (container_id: string): Promise<Ob
 };
 
 const get = (resource: string, api_type: string): Promise<ObservationBlock> => {
-    const url = `${OB_URL}ob_id=${resource}`
+    const url = `${OB_URL}&ob_id=${resource}`
     return axios
         .get(url)
         .then(handleResponse)
@@ -85,10 +87,10 @@ const post = (resource: string, api_type: string, model: object): Promise<any> =
         .catch(handleError);
 };
 
-const put = (resource: string, api_type: string, model: object): Promise<any> => {
-    const url = `${OB_URL}${resource}`
+const put = (ob_id: string, ob: ObservationBlock): Promise<any> => {
+    const url = `${OB_URL}&ob_id=${ob_id}`
     return axios
-        .put(url, model)
+        .put(url, ob)
         .then(handleResponse)
         .catch(handleError);
 };

@@ -158,8 +158,8 @@ export const get_schema = async (obComponent: OBComponent, id: string): Promise<
     //@ts-ignore line
     const md = obComponent.metadata
     if (md) {
-      await get_template(md.name).then((templates: Template) => {
-        const sche = template_to_schema(templates)
+      await get_template(md.name).then((template: Template) => {
+        const sche = template_to_schema(template)
         sch = sche as JSONSchema7
         return sch
       }).catch(err => {

@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "./",
   "dependencies": {
+    "@minoru/react-dnd-treeview": "^2.0.0-alpha.2",
     "@mui/icons-material": "^5.0.1",
     "@mui/lab": "^5.0.0-alpha.72",
     "@mui/types": "^7.0.0",

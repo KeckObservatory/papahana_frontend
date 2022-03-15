@@ -1,10 +1,12 @@
-import { useState } from 'react'
+import { useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import ContainerTable from './container_table'
+import ContainerTable from './container_table';
+import ContainerTree from './container_tree';
+import ContainerDnDTree from './container_dnd_tree';
 
 interface Props {
  observer_id: string;
@@ -41,7 +43,9 @@ const ContainerEditor = (props: Props) => {
                     {"Create, Edit, and Delete Containers"}
                 </DialogTitle>
                 <DialogContent>
-                    <ContainerTable observer_id={props.observer_id}/>
+                    {/* <ContainerTree /> */}
+                    <ContainerDnDTree />
+                    {/* <ContainerTable observer_id={props.observer_id}/> */}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Close</Button>
