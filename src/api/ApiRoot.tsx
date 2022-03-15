@@ -10,10 +10,10 @@ console.log(`is PRODUCTION? set to ${IS_PRODUCTION}`)
 var PRODUCTION_URL = 'https://www3build.keck.hawaii.edu/api/ddoi/'
 var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
 var BASE_URL = IS_PRODUCTION ? PRODUCTION_URL : DEV_URL // sets for production vs dev
-var OB_URL = BASE_URL + 'obsBlocks?' 
-var CONTAINER_URL = BASE_URL + 'containers/'
-var SEMESTERS_URL = BASE_URL + 'semesterIds/'
-var INSTRUMENT_URL = BASE_URL + 'instrumentPackages/'
+var OB_URL = BASE_URL + 'obsBlocks' 
+var CONTAINER_URL = BASE_URL + 'containers'
+var SEMESTERS_URL = BASE_URL + 'semesterIds'
+var INSTRUMENT_URL = BASE_URL + 'instrumentPackages'
 var TEMPLATE_URL = BASE_URL + '/templates'
 console.log('backend url set to')
 console.log(BASE_URL)
@@ -28,7 +28,7 @@ const get_semesters = (observer_id: string): Promise<string[]> => {
 }
 
 const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage[]> => {
-    const url = `${INSTRUMENT_URL}${instrument}`
+    const url = `${INSTRUMENT_URL}/${instrument}`
     return axios
         .get(url)
         .then(handleResponse)
@@ -37,7 +37,7 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
 
 
 const get_template = (name: string, ip_version: string='0.1.0', inst: string='KCWI'): Promise<Template> => {
-    const url = `${INSTRUMENT_URL}${inst}/templates?ip_version=${ip_version}&template_name=${name}`
+    const url = `${INSTRUMENT_URL}/${inst}/templates?ip_version=${ip_version}&template_name=${name}`
     console.log('get_template url:', url)
     return axios
         .get(url)
@@ -54,7 +54,7 @@ const get_containers = (sem_id: string, observer_id: string): Promise<Container[
 }
 
 const get_observation_blocks_from_container = (container_id: string): Promise<ObservationBlock[]> => {
-    const url = `${CONTAINER_URL}items/?container_id=${container_id}`
+    const url = `${CONTAINER_URL}/items/?container_id=${container_id}`
     return axios
         .get(url)
         .then(handleResponse)
