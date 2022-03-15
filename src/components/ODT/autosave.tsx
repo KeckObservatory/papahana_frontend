@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react";
 import debounce from "lodash.debounce";
 import { ObservationBlock } from "../../typings/papahana";
-import { api_funcs } from './../../api/ApiRoot';
+import { ob_api_funcs } from './../../api/ApiRoot';
 
 const DEBOUNCE_SAVE_DELAY = 1000;
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
@@ -17,7 +17,7 @@ export const Autosave = (props: Props) => {
     }
 
     const updateDatabaseOB = (ob: ObservationBlock) => {
-        api_funcs.put(ob._id, ob)
+        ob_api_funcs.put(ob._id, ob)
     }
 
     const debouncedSave = useCallback(

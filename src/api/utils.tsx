@@ -1,5 +1,5 @@
 import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template } from "../typings/papahana";
-import { api_funcs, get_select_funcs } from './ApiRoot';
+import { ob_api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 import { resolve } from "path";
 
@@ -189,21 +189,4 @@ export const make_ob_list = (containers: Container[], container_id: string): str
       }
    }
    return ob_list
-}
-
-export function api_call(resource: string, api: SourceAPI, method: Method, body = {} as Document): Promise<Document | any> {
-   switch (method) {
-      case 'get': {
-         return api_funcs.get(resource, api);
-      }
-      case 'post': {
-         return api_funcs.post(resource, api, body);
-      }
-      case 'remove': {
-         return api_funcs.remove(resource, api);
-      }
-      case 'put': {
-         return api_funcs.put(resource, body);
-      }
-   }
 }

@@ -40,27 +40,6 @@ export default function ObservationBlockSelecter(props: Props) {
   const [sem_id, setSemId] =
     useQueryParam('sem_id', withDefault(StringParam, defaultState.sem_id))
 
-  const handle_sem_id_submit = (sid: string) => {
-    setSemId(sid)
-    reset_container_and_ob_select()
-  }
-
-  // get ob blocks from selected container id
-  const handle_container_id_submit = (cid: string) => {
-    setContainerId(cid)
-    get_ob_list(sem_id, cid, observer_id).then((lst: string[]) => {
-      setOBList(lst)
-    })
-  }
-
-  useEffect(() => { //run when props.observer_id changes
-    get_sem_id_list(observer_id)
-      .then((lst: string[]) => {
-        setSemIdList(lst)
-      })
-      .then(() => { reset_container_and_ob_select() })
-  }, [observer_id])
-
   const reset_container_and_ob_select = () => {
     get_container_list(sem_id, observer_id).then((lst: string[]) => {
       setContainerIdList(lst)
@@ -80,6 +59,20 @@ export default function ObservationBlockSelecter(props: Props) {
           })
       })
   }
+
+  const handle_sem_id_submit = (sid: string) => {
+    setSemId(sid)
+    reset_container_and_ob_select()
+  }
+
+  useEffect(() => { //run when props.observer_id changes
+    get_sem_id_list(observer_id)
+      .then((lst: string[]) => {
+        setSemIdList(lst)
+      })
+      .then(() => { reset_container_and_ob_select() })
+  }, [observer_id])
+
 
   return (
     <div>

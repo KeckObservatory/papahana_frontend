@@ -6,17 +6,18 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import { container_api_funcs } from './../../api/ApiRoot'
 
 export default function AddContainterDialog() {
   const [open, setOpen] = React.useState(false);
-  const [newName, setNewName] = React.useState('');
+  const [name, setName] = React.useState('');
 
   const handleClickOpen = () => {
     setOpen(true);
   };
 
   const nameChange = (evt: any) => {
-    setNewName(evt.target.value)
+    setName(evt.target.value)
   }
 
   const handleClose = () => {
@@ -24,8 +25,12 @@ export default function AddContainterDialog() {
   };
 
   const handleCreate = () => {
-    if (newName.length > 0) {
+    if (name.length > 0) {
       setOpen(false);
+      const container = { name: name, sem_id: '', observation_blocks: [] }
+      container_api_funcs.post(container).then((response: string) => {
+        console.log(`container ${response} created`)
+      })
     }
   };
 
@@ -45,7 +50,7 @@ export default function AddContainterDialog() {
             margin="dense"
             id="name"
             label="container name"
-            value={newName}
+            value={name}
             type="name"
             onChange={nameChange}
             fullWidth

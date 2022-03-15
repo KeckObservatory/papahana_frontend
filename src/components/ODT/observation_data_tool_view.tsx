@@ -8,7 +8,7 @@ import FileCopyIcon from '@mui/icons-material/FileCopy'
 import AddIcon from '@mui/icons-material/Add'
 import SaveIcon from '@mui/icons-material/Save';
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
-import { api_call } from '../../api/utils'
+import { ob_api_funcs } from '../../api/ApiRoot';
 import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteDialog from './delete_dialog'
@@ -81,7 +81,7 @@ export default function ODTView(props: Props) {
   }, [])
 
   const getOB = (new_ob_id: string): void => {
-    api_call(new_ob_id as string, 'papahana_demo', 'get').then((newOb: ObservationBlock) => {
+    ob_api_funcs.get(new_ob_id).then((newOb: ObservationBlock) => {
       if (newOb._id) {
         setOB(newOb)
       }
@@ -118,18 +118,16 @@ export default function ODTView(props: Props) {
   }
 
   const copyOB = (): void => {
-    const query = `ob_id=${ob_id}`
     console.log(`creating new ob from ob ${ob_id}`)
-    api_call(query, 'papahana_demo', 'post', ob).then((result: any) => {
+    ob_api_funcs.post(ob).then((result: any) => {
       console.log('put result')
       console.log(result)
     })
   }
 
   const deleteOB = (): void => {
-    const query = `ob_id=${ob_id}`
     console.log(`deleting ob ${ob_id}`)
-    api_call(query, 'papahana_demo', 'remove', ob).then((result: any) => {
+    ob_api_funcs.remove(ob_id as string).then((result: any) => {
       console.log('delete result')
       console.log(result)
     })
@@ -172,12 +170,6 @@ export default function ODTView(props: Props) {
     const newOB = { metadata: {} } as ObservationBlock
     //triggerBoop(true)
     setOB(newOB)
-    //const query = ``
-    // api_call(query, 'papahana_demo', 'post', newOB).then((result: any) => {
-    //   console.log('put result')
-    //   console.log(result)
-    // })
-
   }
 
   const renderRGL = () => {
