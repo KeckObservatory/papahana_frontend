@@ -1,8 +1,3 @@
-
-// interface response {
-//     results?:
-// }
-
 export function handleResponse(response: any) {
     if (response.results) {
         return response.results;
@@ -17,6 +12,7 @@ export function handleResponse(response: any) {
 
 export function handleError(error: any) {
     if (error.data) {
+        console.error('handleError: ', error)
         return error.data;
     }
     return error;

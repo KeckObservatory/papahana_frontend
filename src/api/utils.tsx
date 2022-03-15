@@ -28,7 +28,6 @@ export const get_template = (name: string): Promise<Template> => {
       const keys = Object.keys(template) 
          if (keys.length === 1) {
             const tmp = Object.values(template)[0]
-            console.log('get_template', tmp)
             resolve(tmp)
          }
       }).catch(err => {
