@@ -46,7 +46,7 @@ const get_template = (name: string, ip_version: string='0.1.0', inst: string='KC
 }
 
 const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
-    const url = `${SEMESTERS_URL}${sem_id}/containers?obs_id=${observer_id}`
+    const url = `${SEMESTERS_URL}/${sem_id}/containers?obs_id=${observer_id}`
     return axios
         .get(url)
         .then(handleResponse)
