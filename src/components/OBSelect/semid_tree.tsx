@@ -4,6 +4,7 @@ import Tree, { Node, NodeId, Leaf } from '@naisutech/react-tree';
 import { get_containers } from '../../api/utils'
 import { makeStyles } from '@mui/styles'
 import { Button } from '@mui/material';
+import { useObserverContext } from './../App'
 
 const useStyles = makeStyles((theme: any) => ({
     root: {
@@ -29,7 +30,6 @@ const useStyles = makeStyles((theme: any) => ({
     },
 }))
 interface Props {
-    observer_id: string;
     sem_id: string;
     handleOBSelect: Function;
 }
@@ -74,9 +74,10 @@ export default function SemidTree(props: Props) {
 
     const [containers, setContainers] = React.useState([] as Container[])
     const [nodes, setNodes] = React.useState([] as Node[])
+    const observer_id = useObserverContext()
 
     useEffect(() => { //run when props.observer_id changes
-        get_containers(props.sem_id, props.observer_id).then((conts: Container[]) => {
+        get_containers(props.sem_id, observer_id).then((conts: Container[]) => {
             setContainers(conts)
             setNodes(containers_to_nodes(containers))
         })

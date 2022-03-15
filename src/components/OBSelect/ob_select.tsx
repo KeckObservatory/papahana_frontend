@@ -4,9 +4,10 @@ import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
 import { Paper } from '@mui/material'
 import SemidTree from './semid_tree'
+import { useObserverContext } from './../App'
+import ContainerTree from './container_tree'
 
 export interface Props {
-  observer_id: string
   handleOBSelect: Function
   ob_id: string | undefined | null
 }
@@ -32,6 +33,7 @@ export default function ObservationBlockSelecter(props: Props) {
   const [obList, setOBList] = useState(defaultState.obList)
   const [semIdList, setSemIdList] = useState(defaultState.semIdList)
   const [containerIdList, setContainerIdList] = useState(defaultState.containerIdList)
+  const observer_id = useObserverContext()
 
   const [container_id, setContainerId] =
     useQueryParam('container_id', withDefault(StringParam, defaultState.container_id))
@@ -46,28 +48,28 @@ export default function ObservationBlockSelecter(props: Props) {
   // get ob blocks from selected container id
   const handle_container_id_submit = (cid: string) => {
     setContainerId(cid)
-    get_ob_list(sem_id, cid, props.observer_id).then((lst: string[]) => {
+    get_ob_list(sem_id, cid, observer_id).then((lst: string[]) => {
       setOBList(lst)
     })
   }
 
   useEffect(() => { //run when props.observer_id changes
-    get_sem_id_list(props.observer_id)
+    get_sem_id_list(observer_id)
       .then((lst: string[]) => {
         setSemIdList(lst)
       })
       .then(() => { reset_container_and_ob_select() })
-  }, [props.observer_id])
+  }, [observer_id])
 
   const reset_container_and_ob_select = () => {
-    get_container_list(sem_id, props.observer_id).then((lst: string[]) => {
+    get_container_list(sem_id, observer_id).then((lst: string[]) => {
       setContainerIdList(lst)
       if (lst.length >= 1) {
         setContainerId(lst[0])
       }
     })
       .then(() => {
-        get_ob_list(sem_id, container_id, props.observer_id).then((lst: string[]) => {
+        get_ob_list(sem_id, container_id, observer_id).then((lst: string[]) => {
           setOBList(lst)
           return lst
         })
@@ -89,7 +91,8 @@ export default function ObservationBlockSelecter(props: Props) {
         label={'Semester ID'}
       />
       <Paper>
-        <SemidTree observer_id={props.observer_id} sem_id={sem_id} handleOBSelect={props.handleOBSelect} />
+        {/* <SemidTree sem_id={sem_id} handleOBSelect={props.handleOBSelect} /> */}
+        <ContainerTree sem_id={sem_id} handleOBSelect={props.handleOBSelect}/>
       </Paper>
     </div>
   )

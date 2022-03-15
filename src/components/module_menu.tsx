@@ -66,7 +66,6 @@ const a11yProps = (index: number) => {
 }
 
 interface ModuleMenuProps {
-    observer_id: string;
     jsonTheme: ThemeKeys | undefined;
 }
 
@@ -94,10 +93,10 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                 </Tabs>
             </AppBar>
             <TabPanel value={value} index={0}>
-                <ODTView observer_id={props.observer_id} theme={props.jsonTheme} />
+                <ODTView theme={props.jsonTheme} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <SelectionToolView observer_id={props.observer_id}/>
+                <SelectionToolView />
             </TabPanel>
         </ div >
     )

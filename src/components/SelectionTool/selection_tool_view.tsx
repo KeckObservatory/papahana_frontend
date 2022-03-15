@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
+import { useObserverContext } from './../App'
 import { get_obs_from_semester, get_sem_id_list } from '../../api/utils'
 import { OBCell, ObservationBlock } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
@@ -38,7 +39,6 @@ const useStyles = makeStyles((theme: any) => ({
 }))
 
 interface Props {
-    observer_id: string
 }
 
 interface State {
@@ -97,8 +97,10 @@ export const SelectionToolView = (props: Props) => {
     const [sem_id, setSemId] =
         useQueryParam('sem_id', withDefault(StringParam, defaultState.sem_id))
 
+    const observer_id = useObserverContext() 
+
     useEffect(() => {
-        get_obs_from_semester(props.observer_id, sem_id).then((container_obs: ObservationBlock[]) => {
+        get_obs_from_semester(observer_id, sem_id).then((container_obs: ObservationBlock[]) => {
             const cells = container_obs_to_cells(container_obs)
             setAvlObs(cells)
         })
@@ -106,7 +108,7 @@ export const SelectionToolView = (props: Props) => {
 
     useEffect(() => {
         console.log('sem_id changed')
-        get_obs_from_semester(props.observer_id, sem_id).then((container_obs: ObservationBlock[]) => {
+        get_obs_from_semester(observer_id, sem_id).then((container_obs: ObservationBlock[]) => {
             const cells = container_obs_to_cells(container_obs)
             // console.log('got cells to add')
             // console.log(cells)
@@ -116,11 +118,11 @@ export const SelectionToolView = (props: Props) => {
     }, [sem_id])
 
     useEffect(() => { //run when props.observer_id changes
-        get_sem_id_list(props.observer_id)
+        get_sem_id_list(observer_id)
             .then((lst: string[]) => {
                 setSemIdList(() => [...lst])
             })
-    }, [props.observer_id])
+    }, [observer_id])
 
     const handleSemIdSubmit = (new_sem_id: string) => {
         // console.log('submit button pressed')

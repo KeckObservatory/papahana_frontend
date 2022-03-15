@@ -20,7 +20,6 @@ import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import Button from '@mui/material/Button';
 import { Autosave } from './autosave'
 import cloneDeep from 'lodash/cloneDeep';
-import ContainerEditor from './container_editor';
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -60,7 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 }))
 
 export interface Props {
-  observer_id: string
   theme: any | null | undefined
   iconStyle: 'circle' | 'triangle' | 'square'
   collapsed: number | boolean,
@@ -143,7 +141,6 @@ export default function ODTView(props: Props) {
     console.log('editing via json directly.')
     setOB(() => e.updated_src as ObservationBlock);
   }
-  
 
   const handleOBSelect = (ob_id: string) => {
     console.log(`setting selected ob to ${ob_id}`)
@@ -212,8 +209,7 @@ export default function ODTView(props: Props) {
       <Grid item xs={3}>
         <Paper className={classes.paper} elevation={3}>
           <h3>Observation Block Selection</h3>
-          <ObservationBlockSelecter observer_id={props.observer_id} handleOBSelect={handleOBSelect} ob_id={ob_id} />
-          <ContainerEditor observer_id={props.observer_id} />
+          <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id} />
           <h3>Observation Block Edit/Display</h3>
           <div className={classes.buttonBlock}>
             {/* <Tooltip title="Upload OB to database">
@@ -274,7 +270,7 @@ export default function ODTView(props: Props) {
           {renderRGL()}
         </Paper>
       </Grid>
-    <Autosave ob={ob} />
+      <Autosave ob={ob} />
     </Grid>
   )
 }

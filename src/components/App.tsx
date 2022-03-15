@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { makeStyles } from "@mui/styles"
 import './App.css';
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
@@ -59,11 +59,17 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
   return [theme, jsonTheme]
 }
 
+const ObserverContext = createContext<string>('2003')
+export const useObserverContext = () => useContext(ObserverContext)
+
+
 export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [observer_id] =
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
+
+  
   const [theme, jsonTheme] = handleTheme(darkState)
 
   const handleThemeChange = (): void => {
@@ -73,10 +79,12 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
+      <ObserverContext.Provider value={observer_id}>
       <div className={classes.root}>
         <TopBar darkTheme={theme} observer_id={observer_id} handleThemeChange={handleThemeChange} />
-        <ModuleMenu observer_id={observer_id} jsonTheme={jsonTheme} />
+        <ModuleMenu jsonTheme={jsonTheme} />
       </div>
+      </ObserverContext.Provider>
     </ThemeProvider>
   );
 }
