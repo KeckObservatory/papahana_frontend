@@ -4,6 +4,7 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AddContainerDialog from './add_container_dialog'
 
 interface PButtonProps extends Props {
 
@@ -19,6 +20,7 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const addContainer = () => {
         console.log('creating new container')
+
 
     }
 
@@ -48,7 +50,8 @@ const PopoverButtons = (props: PButtonProps) => {
         <div style={{ display: 'grid' }}>
             {props.type === 'semid' &&
                 <div style={{ display: 'grid' }}>
-                    <Button onClick={addContainer} >add container</Button>
+                    {/* <Button onClick={addContainer} >add container</Button> */}
+                    <AddContainerDialog />
                     {/* <Button onClick={addOB} >add new OB</Button> */}
                 </div>
             }
