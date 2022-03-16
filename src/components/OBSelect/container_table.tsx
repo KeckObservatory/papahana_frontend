@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import { make_scoby_table } from '../../api/utils';
 import DropDown from '../drop_down'
 import { useObserverContext } from '../App'
+import { useSemIDContext } from './ob_select'
 
 interface Props {
 }
@@ -48,10 +49,12 @@ const ContainerTable = (props: Props) => {
     const [ containers, setContainers ] = useState([] as string[])
 
     const observer_id = useObserverContext()
+    const [sem_id, _] = useSemIDContext()
 
     useEffect(() => {
         make_scoby_table(observer_id).then( (scoby: Scoby[]) => {
-            setRows(scoby)
+            const filtScoby = scoby.filter( (x: Scoby) => x.sem_id === sem_id)
+            setRows(filtScoby)
             const contSet = new Set()
             scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
             setContainers(Array.from(contSet) as string[])
@@ -63,10 +66,9 @@ const ContainerTable = (props: Props) => {
     }
 
     const columns = [
-        "sem_id",
-        "container_id",
+        "name",
         "ob_id",
-        "name"
+        "container_id",
     ]
 
     const options: MUIDataTableOptions = {

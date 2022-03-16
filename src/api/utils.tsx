@@ -25,7 +25,7 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
 export const get_template = (name: string): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
       get_select_funcs.get_template(name).then((template: Template) => {
-      const keys = Object.keys(template) 
+         const keys = Object.keys(template)
          if (keys.length === 1) {
             const tmp = Object.values(template)[0]
             resolve(tmp)
@@ -50,7 +50,7 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
          })
       })
    })
-   return sem_cons 
+   return sem_cons
 }
 
 const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]> => {
@@ -73,7 +73,9 @@ const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]
 
 export const make_scoby_table = (observer_id: string): Promise<Scoby[]> => {
    return get_select_funcs.get_semesters(observer_id)
-      .then((semesters: string[]) => create_sc_table(semesters, observer_id))
+      .then((semesters: string[]) => {
+         return create_sc_table(semesters, observer_id)
+      })
       .then((sem_cons: [string, string][]) => create_scoby_table(sem_cons))
 }
 
