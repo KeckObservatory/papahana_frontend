@@ -14,6 +14,7 @@ interface PButtonProps extends Props {
 interface Props {
     id: string,
     type: string
+    name?: string
     handleOBSelect: Function
 }
 
@@ -49,9 +50,9 @@ const PopoverButtons = (props: PButtonProps) => {
                 </div>
             }
             {props.type === 'container' &&
-                <div style={{ display: 'grid' }}>
+                <div style={{ display: 'flex' }}>
                     <Button onClick={addOB}>add new OB</Button>
-                    <RemoveContainerDialog container_id={props.id}/>
+                    <RemoveContainerDialog name={props.name as string} container_id={props.id}/>
                     <Button onClick={editContainerName} >edit container name</Button>
                 </div>
             }

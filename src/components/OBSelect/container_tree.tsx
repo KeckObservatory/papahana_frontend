@@ -60,7 +60,10 @@ export default function ContainerTree(props: Props) {
                     ? nodes.children.map((node) => renderTree(node))
                     : null}
             </TreeItem>
-            <NodePopover handleOBSelect={props.handleOBSelect} id={nodes.id} type={nodes.type} />
+            <NodePopover handleOBSelect={props.handleOBSelect}
+                id={nodes.id}
+                type={nodes.type}
+                name={nodes.name} />
         </div >
     );
 
