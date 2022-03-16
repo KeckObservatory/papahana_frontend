@@ -67,7 +67,7 @@ export const make_semid_scoby_table = async (sem_id: string, observer_id: string
                   sem_id: sem_id,
                   container_id: cid,
                   ob_id: ob_id,
-                  name: 'tbd'
+                  name: container.name
                }
                scoby.push(s)
             })
