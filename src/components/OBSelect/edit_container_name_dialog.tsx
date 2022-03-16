@@ -41,7 +41,6 @@ export default function EditContainerNameDialog(props: Props) {
         container.name = name
         return container_api_funcs.put(container._id, container)
       }).then((response: string) => {
-        console.log(`container put response`, response)
         reset_container_and_ob_select()
       })
     }

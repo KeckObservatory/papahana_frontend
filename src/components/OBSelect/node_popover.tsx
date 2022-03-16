@@ -25,14 +25,6 @@ const PopoverButtons = (props: PButtonProps) => {
         console.log(`creating new ob in ${props.type} id ${props.id}.`)
     }
 
-    const removeContainer = () => {
-        console.log(`removing ${props.type} id ${props.id}.`)
-    }
-
-    const editContainerName = () => {
-        console.log(`editing ${props.type} id ${props.id}.`)
-    }
-
     const removeOB = () => {
         console.log(`removing ${props.type} id ${props.id}.`)
     }
@@ -55,7 +47,6 @@ const PopoverButtons = (props: PButtonProps) => {
                     <Button onClick={addOB}>add new OB</Button>
                     <RemoveContainerDialog name={props.name as string} container_id={props.id} />
                     <EditContainerNameDialog name={props.name as string} container_id={props.id}/>
-                        <Button onClick={editContainerName} >edit container name</Button>
                 </div>
             }
             {props.type === 'ob' &&
