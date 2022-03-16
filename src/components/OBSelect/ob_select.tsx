@@ -57,11 +57,11 @@ export default function ObservationBlockSelecter(props: Props) {
           setOBList(lst)
           return lst
         })
-          .then((lst: string[]) => {
-            if (lst.length >= 1) {
-              props.handleOBSelect(lst[0])
-            }
-          })
+          // .then((lst: string[]) => {
+          //   if (lst.length >= 1) {
+          //     props.handleOBSelect(lst[0])
+          //   }
+          // })
       })
   }
 
