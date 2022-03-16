@@ -39,7 +39,7 @@ const containers_to_nodes = (containers: Container[]): RenderTree[] => {
 export default function ContainerTree(props: Props) {
 
     const observer_id = useObserverContext()
-    const sem_id = useSemIDContext()
+    const [sem_id, _] = useSemIDContext()
     const rootTree: RenderTree = { 'id': 'root', 'name': sem_id, type: 'semid', children: undefined }
     const [containers, setContainers] = React.useState([] as Container[])
     const [tree, setTree] = React.useState(rootTree as RenderTree)

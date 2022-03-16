@@ -31,7 +31,7 @@ const defaultState: State = {
 }
 
 
-const SemIDContext = createContext<string>('')
+const SemIDContext = createContext<[string, Function]>( ['', ()=>{}] )
 export const useSemIDContext = () => useContext(SemIDContext)
 
 export default function ObservationBlockSelecter(props: Props) {
@@ -80,7 +80,7 @@ export default function ObservationBlockSelecter(props: Props) {
 
 
   return (
-    <SemIDContext.Provider value={sem_id}>
+    <SemIDContext.Provider value={[sem_id, reset_container_and_ob_select]}>
     <div>
       <DropDown
         placeholder={'semester id'}
