@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
 import { Container, Scoby } from "../../typings/papahana";
 import Button from '@mui/material/Button';
-import { make_scoby_table } from '../../api/utils';
+import { make_semid_scoby_table } from '../../api/utils';
 import DropDown from '../drop_down'
 import { useObserverContext } from '../App'
 import { useSemIDContext } from './ob_select'
@@ -104,12 +104,10 @@ const ContainerTable = (props: Props) => {
     const [sem_id, _] = useSemIDContext()
 
     useEffect(() => {
-        make_scoby_table(observer_id).then((scoby: Scoby[]) => {
+        make_semid_scoby_table(sem_id, observer_id).then((scoby: Scoby[]) => {
             //todo: replace this with something more efficient
-            const filtScoby = scoby.filter((x: Scoby) => x.sem_id === sem_id)
-            console.log('sem_id', sem_id, ' has table of ', filtScoby.length, ' rows')
-            console.log('out of ', scoby.length,' rows')
-            setRows(filtScoby)
+            console.log('sem_id', sem_id, ' has table of ', scoby.length, ' rows')
+            setRows(scoby)
             const contSet = new Set()
             scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
             setContainers(Array.from(contSet) as string[])

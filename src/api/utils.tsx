@@ -56,6 +56,26 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
    return sem_cons
 }
 
+export const make_semid_scoby_table = async (sem_id: string, observer_id: string): Promise<Scoby[]> => {
+      let scoby: Scoby[] = []
+      return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
+         console.log('containers', containers);
+         containers.forEach((container: Container) => {
+            const cid = container._id
+            container.observation_blocks.forEach( (ob_id: string) => {
+               const s = {
+                  sem_id: sem_id,
+                  container_id: cid,
+                  ob_id: ob_id,
+                  name: 'tbd'
+               }
+               scoby.push(s)
+            })
+         })
+      return scoby 
+      })
+}
+
 const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]> => {
    let rows: Scoby[] = []
    sem_cons.forEach(async (sem_con: [string, string]) => {
