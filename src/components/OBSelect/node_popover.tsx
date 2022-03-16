@@ -4,8 +4,9 @@ import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AddContainerDialog from './add_container_dialog'
-import RemoveContainerDialog from './remove_container_dialog'
+import AddContainerDialog from './add_container_dialog';
+import RemoveContainerDialog from './remove_container_dialog';
+import EditContainerNameDialog from './edit_container_name_dialog';
 
 interface PButtonProps extends Props {
 
@@ -39,7 +40,7 @@ const PopoverButtons = (props: PButtonProps) => {
     const selectOB = () => {
         console.log(`selecting ${props.type} id ${props.id}.`)
         props.handleOBSelect(props.id)
-        
+
     }
 
     return (
@@ -52,8 +53,9 @@ const PopoverButtons = (props: PButtonProps) => {
             {props.type === 'container' &&
                 <div style={{ display: 'flex' }}>
                     <Button onClick={addOB}>add new OB</Button>
-                    <RemoveContainerDialog name={props.name as string} container_id={props.id}/>
-                    <Button onClick={editContainerName} >edit container name</Button>
+                    <RemoveContainerDialog name={props.name as string} container_id={props.id} />
+                    <EditContainerNameDialog name={props.name as string} container_id={props.id}/>
+                        <Button onClick={editContainerName} >edit container name</Button>
                 </div>
             }
             {props.type === 'ob' &&
