@@ -107,6 +107,8 @@ const ContainerTable = (props: Props) => {
         make_scoby_table(observer_id).then((scoby: Scoby[]) => {
             //todo: replace this with something more efficient
             const filtScoby = scoby.filter((x: Scoby) => x.sem_id === sem_id)
+            console.log('sem_id', sem_id, ' has table of ', filtScoby.length, ' rows')
+            console.log('out of ', scoby.length,' rows')
             setRows(filtScoby)
             const contSet = new Set()
             scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
