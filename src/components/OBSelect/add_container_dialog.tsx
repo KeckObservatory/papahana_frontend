@@ -7,10 +7,12 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { container_api_funcs } from './../../api/ApiRoot'
+import { useSemIDContext } from './ob_select'
 
 export default function AddContainterDialog() {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
+  const sem_id = useSemIDContext()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -27,11 +29,9 @@ export default function AddContainterDialog() {
   const handleCreate = () => {
     if (name.length > 0) {
       setOpen(false);
-      const container = { name: name, sem_id: '', observation_blocks: [] }
+      const container = { name: name, sem_id: sem_id, observation_blocks: [] }
       container_api_funcs.post(container).then((response: string) => {
         console.log(`container ${response} created`)
-      }).catch((error: any) => {
-        console.log('handleCreate Error:', error)
       })
     }
   };

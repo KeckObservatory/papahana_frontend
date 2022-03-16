@@ -1,3 +1,4 @@
+import React, { createContext, useContext } from 'react';
 import { get_ob_list, get_container_list, get_sem_id_list } from '../../api/utils'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
@@ -28,6 +29,10 @@ const defaultState: State = {
   sem_id: '',
   container_id: 'all',
 }
+
+
+const SemIDContext = createContext<string>('')
+export const useSemIDContext = () => useContext(SemIDContext)
 
 export default function ObservationBlockSelecter(props: Props) {
   const [obList, setOBList] = useState(defaultState.obList)
@@ -75,6 +80,7 @@ export default function ObservationBlockSelecter(props: Props) {
 
 
   return (
+    <SemIDContext.Provider value={sem_id}>
     <div>
       <DropDown
         placeholder={'semester id'}
@@ -85,8 +91,9 @@ export default function ObservationBlockSelecter(props: Props) {
       />
       <Paper>
         {/* <SemidTree sem_id={sem_id} handleOBSelect={props.handleOBSelect} /> */}
-        <ContainerTree sem_id={sem_id} handleOBSelect={props.handleOBSelect}/>
+        <ContainerTree handleOBSelect={props.handleOBSelect}/>
       </Paper>
     </div>
+    </ SemIDContext.Provider>
   )
 }
