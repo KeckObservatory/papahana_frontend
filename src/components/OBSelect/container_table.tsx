@@ -81,6 +81,7 @@ const CustomToolbarSelect = (props: CTProps) => {
             return container_api_funcs.put(cid, cont)
         }).finally( () => {
             console.log('resetting table')
+            ob_select_object.reset_container_and_ob_select()
             ob_select_object.setTrigger(ob_select_object.trigger+1)
         })
 
