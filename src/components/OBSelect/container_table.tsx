@@ -57,11 +57,14 @@ const CustomToolbarSelect = (props: CTProps) => {
             await container_api_funcs.get(cont).then((container: Container) => {
                 //make new container that is missing ob
                 const oldLength = container.observation_blocks.length
+                console.log('oldLength:', oldLength)
                 container.observation_blocks =
                     container.observation_blocks.filter((ob_id: string) => {
                         return ob_id !== _id
                     })
+                console.log('new length', container.observation_blocks.length)
                 if (container.observation_blocks.length !== oldLength) {
+                    console.log('sending put statement', container)
                     return container_api_funcs.put(cont, container)
                 }
             })
