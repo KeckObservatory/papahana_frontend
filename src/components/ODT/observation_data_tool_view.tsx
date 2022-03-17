@@ -198,7 +198,7 @@ export default function ODTView(props: Props) {
 
   return (
     <Grid container spacing={3} className={classes.grid}>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <Paper className={classes.paper} elevation={3}>
           <h3>Observation Block Selection</h3>
           <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id} />
