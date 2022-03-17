@@ -102,6 +102,11 @@ export default function ObservationBlockSelecter(props: Props) {
   }, [observer_id])
 
 
+  useEffect(() => { //run when props.observer_id changes
+    console.log('trigger changed!')
+  }, [trigger])
+
+
   const ob_select_object = {
     sem_id: sem_id,
     reset_container_and_ob_select: reset_container_and_ob_select,
