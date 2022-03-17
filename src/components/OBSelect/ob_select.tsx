@@ -129,7 +129,7 @@ export default function ObservationBlockSelecter(props: Props) {
       />
       <Paper>
         {/* <SemidTree sem_id={sem_id} handleOBSelect={props.handleOBSelect} /> */}
-        <Tabs value={tabNumber} onChange={handleTabChange}>
+        {/* <Tabs value={tabNumber} onChange={handleTabChange}>
           <Tab label="Containers" />
           <Tab label="OBs" />
         </Tabs>
@@ -138,7 +138,9 @@ export default function ObservationBlockSelecter(props: Props) {
         </TabPanel>
         <TabPanel value={tabNumber} index={1}>
         <ContainerTable/>
-        </TabPanel>
+        </TabPanel> */}
+        <ContainerTree handleOBSelect={props.handleOBSelect}/>
+        <ContainerTable/>
       </Paper>
     </div>
     </ SemIDContext.Provider>
