@@ -36,6 +36,8 @@ const CustomToolbarSelect = (props: CTProps) => {
         setContainer(selectedContainer)
     }
 
+    const [_, reset_container_and_ob_select] = useSemIDContext()
+
     const setSelectedToContainer = () => {
         if (cid.length === 0) {
             console.log('container id not specified.')
@@ -77,6 +79,9 @@ const CustomToolbarSelect = (props: CTProps) => {
                 cont.observation_blocks.push(ob_id)
             })
             return container_api_funcs.put(cid, cont)
+        }).finally( () => {
+            console.log('resetting table')
+            reset_container_and_ob_select()
         })
 
     }
@@ -101,12 +106,10 @@ const ContainerTable = (props: Props) => {
     const [containers, setContainers] = useState([] as string[])
 
     const observer_id = useObserverContext()
-    const [sem_id, _] = useSemIDContext()
+    const [sem_id, reset_container_and_ob_select] = useSemIDContext()
 
     useEffect(() => {
         make_semid_scoby_table(sem_id, observer_id).then((scoby: Scoby[]) => {
-            //todo: replace this with something more efficient
-            console.log('sem_id', sem_id, ' has table of ', scoby.length, ' rows')
             setRows(scoby)
             const contSet = new Set()
             scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
