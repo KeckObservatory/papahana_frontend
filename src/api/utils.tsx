@@ -42,7 +42,6 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
    let sem_cons: [string, string][] = []
    await semesters.forEach(async (sem_id: string) => {
       await get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
-         console.log('containers', containers);
          containers.forEach((container: Container) => {
             const cid = container._id
             const sem_con = [sem_id, cid] as [string, string]
@@ -52,14 +51,12 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
       })
    })
 
-   console.log('sem_cons', sem_cons);
    return sem_cons
 }
 
 export const make_semid_scoby_table = async (sem_id: string, observer_id: string): Promise<Scoby[]> => {
       let scoby: Scoby[] = []
       return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
-         console.log('containers', containers);
          containers.forEach((container: Container) => {
             const cid = container._id
             container.observation_blocks.forEach( (ob_id: string) => {
