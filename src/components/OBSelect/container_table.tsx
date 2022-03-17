@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import { make_semid_scoby_table } from '../../api/utils';
 import DropDown from '../drop_down'
 import { useObserverContext } from '../App'
-import { useSemIDContext } from './ob_select'
+import { useOBSelectContext } from './ob_select'
 import { container_api_funcs } from '../../api/ApiRoot'
 
 interface Props {
@@ -16,8 +16,6 @@ interface CTProps {
     containers: string[],
     selectedRows: any
     displayData: any
-    trigger: number
-    setTrigger: Function 
 }
 
 interface SRD {
@@ -33,12 +31,12 @@ interface DA {
 const CustomToolbarSelect = (props: CTProps) => {
     const [cid, setContainer] = useState('')
 
+    const ob_select_object = useOBSelectContext()
+
     const handleChange = (selectedContainer: string) => {
         console.log('changed', selectedContainer)
         setContainer(selectedContainer)
     }
-
-    const [_, reset_container_and_ob_select] = useSemIDContext()
 
     const setSelectedToContainer = () => {
         if (cid.length === 0) {
@@ -83,20 +81,14 @@ const CustomToolbarSelect = (props: CTProps) => {
             return container_api_funcs.put(cid, cont)
         }).finally( () => {
             console.log('resetting table')
-            props.setTrigger(props.trigger+1)
+            ob_select_object.setTrigger(ob_select_object.trigger+1)
         })
 
     }
 
-    // const removeSelectedFromContainers = () => {
-    //     console.log('removing selected from all containers')
-    //     console.log(props.selectedRows.data)
-    // }
-
     return (
         <div className={"custom-toolbar-select"}>
             <Button onClick={setSelectedToContainer}>Add selected to Container</Button>
-            {/* <Button onClick={removeSelectedFromContainers}>remove selected from containers</Button> */}
             <DropDown arr={props.containers} handleChange={handleChange} value={cid} placeholder={'container'} label={'available containers'} />
         </div>
     );
@@ -106,13 +98,13 @@ const ContainerTable = (props: Props) => {
 
     const [rows, setRows] = useState([] as Scoby[])
     const [containers, setContainers] = useState([] as string[])
-    const [trigger, setTrigger] = useState(0)
 
     const observer_id = useObserverContext()
-    const [sem_id, _] = useSemIDContext()
+    const ob_select_object = useOBSelectContext()
+
 
     useEffect(() => {
-        make_semid_scoby_table(sem_id, observer_id).then((scoby: Scoby[]) => {
+        make_semid_scoby_table(ob_select_object.sem_id, observer_id).then((scoby: Scoby[]) => {
             setRows(scoby)
             const contSet = new Set()
             scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
@@ -121,13 +113,13 @@ const ContainerTable = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        make_semid_scoby_table(sem_id, observer_id).then((scoby: Scoby[]) => {
+        make_semid_scoby_table(ob_select_object.sem_id, observer_id).then((scoby: Scoby[]) => {
             setRows(scoby)
             const contSet = new Set()
             scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
             setContainers(Array.from(contSet) as string[])
         })
-    }, [trigger])
+    }, [ob_select_object.trigger])
 
     const handleSelect = (indexes: any) => {
     }
@@ -144,8 +136,6 @@ const ContainerTable = (props: Props) => {
         selectableRows: 'multiple',
         customToolbarSelect: (selectedRows, displayData) => (
             <CustomToolbarSelect 
-            trigger={trigger}
-            setTrigger={setTrigger}
             selectedRows={selectedRows}
             displayData={displayData}
             containers={containers} />

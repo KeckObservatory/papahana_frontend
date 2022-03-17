@@ -7,7 +7,7 @@ import { Container } from '../../typings/papahana';
 import { useObserverContext } from '../App'
 import { get_containers } from '../../api/utils'
 import NodePopover from './node_popover'
-import { useSemIDContext } from './ob_select'
+import { useOBSelectContext } from './ob_select'
 
 interface Props {
     handleOBSelect: Function
@@ -39,14 +39,20 @@ const containers_to_nodes = (containers: Container[]): RenderTree[] => {
 export default function ContainerTree(props: Props) {
 
     const observer_id = useObserverContext()
-    const [sem_id, _] = useSemIDContext()
-    const rootTree: RenderTree = { 'id': 'root', 'name': sem_id, type: 'semid', children: undefined }
+
+    const ob_select_object = useOBSelectContext()
+    const rootTree: RenderTree = {
+        'id': 'root',
+        'name': ob_select_object.sem_id,
+        type: 'semid',
+        children: undefined
+    }
     const [containers, setContainers] = React.useState([] as Container[])
     const [tree, setTree] = React.useState(rootTree as RenderTree)
 
     useEffect(() => { //run when props.observer_id changes
         let newTree = { ...rootTree }
-        get_containers(sem_id, observer_id).then((conts: Container[]) => {
+        get_containers(ob_select_object.sem_id, observer_id).then((conts: Container[]) => {
             setContainers(conts)
             newTree['children'] = containers_to_nodes(containers)
             setTree(newTree)

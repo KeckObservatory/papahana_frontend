@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { container_api_funcs } from './../../api/ApiRoot'
-import { useSemIDContext } from './ob_select'
+import { useOBSelectContext } from './ob_select'
 import { Container } from '../../typings/papahana';
 
 
@@ -19,7 +19,7 @@ interface Props {
 export default function EditContainerNameDialog(props: Props) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
-  const [sem_id, reset_container_and_ob_select] = useSemIDContext()
+  const ob_select_object = useOBSelectContext()
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -40,8 +40,9 @@ export default function EditContainerNameDialog(props: Props) {
         console.log(`container ${container._id} retrieved, editing name`)
         container.name = name
         return container_api_funcs.put(container._id, container)
-      }).then((response: string) => {
-        reset_container_and_ob_select()
+      }).finally(() => {
+        ob_select_object.reset_container_and_ob_select()
+        ob_select_object.setTrigger(ob_select_object.trigger)
       })
     }
   };

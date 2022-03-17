@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { container_api_funcs } from './../../api/ApiRoot'
-import { useSemIDContext } from './ob_select'
+import { useOBSelectContext } from './ob_select'
 
 interface Props {
     container_id: string
@@ -17,8 +17,7 @@ interface Props {
 
 export default function RemoveContainerDialog(props: Props) {
     const [open, setOpen] = React.useState(false);
-    const [sem_id, reset_container_and_ob_select] = useSemIDContext()
-
+    const ob_select_object = useOBSelectContext()
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -31,7 +30,8 @@ export default function RemoveContainerDialog(props: Props) {
         setOpen(false);
         container_api_funcs.remove(props.container_id).then((response: string) => {
             console.log(`container ${response} removed`)
-            reset_container_and_ob_select()
+            ob_select_object.reset_container_and_ob_select()
+            ob_select_object.setTrigger(ob_select_object.trigger)
         })
     };
 
