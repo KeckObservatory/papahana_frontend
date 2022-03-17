@@ -8,6 +8,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography'
+import { useDrawerOpenContext } from './App';
 
 const useStyles = makeStyles((theme: any) => ({
   root: { 
@@ -33,6 +34,12 @@ const useStyles = makeStyles((theme: any) => ({
 
 export function TopBar(props: any) {
   const classes = useStyles();
+  const drawer = useDrawerOpenContext()
+
+  const handleMenuClick = () => {
+    drawer.setDrawerOpen(!drawer.drawerOpen)
+  }
+
   return( 
     <AppBar 
       position="absolute"
@@ -45,6 +52,7 @@ export function TopBar(props: any) {
           edge="start"
           color="inherit"
           aria-label="open drawer"
+          onClick={handleMenuClick}
         >
           <MenuIcon />
         </IconButton>

@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { makeStyles } from "@mui/styles"
 import './App.css';
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
@@ -8,10 +8,10 @@ import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query
 import { ThemeKeys } from 'react-json-view'
 import { TopBar } from './top_bar' 
 import { ModuleMenu } from './module_menu'
+import { styled, useTheme } from '@mui/material/styles';
 
 
-
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex"
   },
@@ -62,10 +62,41 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
 const ObserverContext = createContext<string>('2003')
 export const useObserverContext = () => useContext(ObserverContext)
 
+export interface Drawer {
+  drawerOpen: boolean
+  setDrawerOpen: Function
+  drawerWidth: number
+}
+
+const DrawerOpenContext = createContext<Drawer>({drawerOpen:true, setDrawerOpen: ()=>{}, drawerWidth: 500})
+export const useDrawerOpenContext = () => useContext(DrawerOpenContext)
+
+
+const drawerWidth = 500;
+
+const Main = styled('main', { shouldForwardProp: (prop: string) => prop !== 'open' })<{
+  open?: string;
+}>(({ theme, open }) => ({
+  flexGrow: 1,
+  padding: theme.spacing(1),
+  transition: theme.transitions.create('margin', {
+    easing: theme.transitions.easing.sharp,
+    duration: theme.transitions.duration.leavingScreen,
+  }),
+  marginLeft: 0,
+  ...(open === 'open' && {
+    transition: theme.transitions.create('margin', {
+      easing: theme.transitions.easing.easeOut,
+      duration: theme.transitions.duration.enteringScreen,
+    }),
+    marginLeft: `${drawerWidth}px`,
+  }),
+}));
 
 export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
+  const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
   const [observer_id] =
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
@@ -79,12 +110,16 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
+      <DrawerOpenContext.Provider value={{drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth}}>
       <ObserverContext.Provider value={observer_id}>
       <div className={classes.root}>
+        <Main open={drawerOpen? 'open': 'closed'} >
         <TopBar darkTheme={theme} observer_id={observer_id} handleThemeChange={handleThemeChange} />
         <ModuleMenu jsonTheme={jsonTheme} />
+        </Main>
       </div>
       </ObserverContext.Provider>
+      </DrawerOpenContext.Provider>
     </ThemeProvider>
   );
 }

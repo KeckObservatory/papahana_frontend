@@ -20,6 +20,9 @@ import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import Button from '@mui/material/Button';
 import { Autosave } from './autosave'
 import cloneDeep from 'lodash/cloneDeep';
+import Drawer from '@mui/material/Drawer';
+import { styled, useTheme } from '@mui/material/styles';
+import { useDrawerOpenContext } from './../App'
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -53,10 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     minWidth: theme.spacing(170)
   },
   dndGrid: {
-    minWidth: theme.spacing(170),
+    minWidth: theme.spacing(150),
     elevation: 5,
   }
 }))
+
 
 export interface Props {
   theme: any | null | undefined
@@ -70,12 +74,13 @@ export interface Props {
 export default function ODTView(props: Props) {
   const instrument: Instrument = 'KCWI'
   const classes = useStyles();
-  // const [boopStyle, triggerBoop] = useBoop({})
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}')
   const [ob, setOB] = useState(initOB as ObservationBlock)
   const [theme, setTheme] =
     useQueryParam('theme', withDefault(StringParam, props.theme as string))
+
+  const drawer = useDrawerOpenContext()
 
   useEffect(() => {
   }, [])
@@ -114,7 +119,6 @@ export default function ODTView(props: Props) {
       setOBID(newOB._id)
       setOB(newOB)
     }
-
   }
 
   const copyOB = (): void => {
@@ -135,7 +139,6 @@ export default function ODTView(props: Props) {
 
   const onEdit = (e: InteractionProps) => {
     //ob was edited. in react json viewer
-    //triggerBoop(true)
     console.log('editing via json directly.')
     setOB(() => e.updated_src as ObservationBlock);
   }
@@ -162,13 +165,11 @@ export default function ODTView(props: Props) {
     else {
       newOB[tmplType as OBSeqNames] = seq
     }
-    //triggerBoop(true)
     setOB(newOB)
   }
 
   const createOB = () => {
     const newOB = { metadata: {} } as ObservationBlock
-    //triggerBoop(true)
     setOB(newOB)
   }
 
@@ -180,7 +181,6 @@ export default function ODTView(props: Props) {
           className={classes.dndGrid}
           ob={ob}
           setOB={(newOb: ObservationBlock) => {
-            //triggerBoop(true)
             setOB(newOb)
           }} />
       )
@@ -196,74 +196,82 @@ export default function ODTView(props: Props) {
     console.log('target resolver clicked')
   }
 
-  return (
-    <Grid container spacing={3} className={classes.grid}>
-      <Grid item xs={4}>
-        <Paper className={classes.paper} elevation={3}>
-          <h3>Observation Block Selection</h3>
-          <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id} />
-          <h3>Observation Block Edit/Display</h3>
-          <div className={classes.buttonBlock}>
-            {/* <Tooltip title="Upload OB to database">
-              <animated.button aria-label='upload' onClick={() => triggerBoop(false)} style={boopStyle}>
-                <PublishIcon />
-              </animated.button>
-            </Tooltip> */}
-            <Tooltip title="Create blank OB">
-              <IconButton aria-label='create' onClick={createOB}>
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Copy OB to new OB">
-              <IconButton aria-label='copy' onClick={copyOB}>
-                <FileCopyIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip title="Save OB as JSON">
-              <IconButton aria-label='copy' onClick={saveOBasJSON}>
-                <SaveIcon />
-              </IconButton>
-            </Tooltip>
-            <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
-            <DeleteDialog deleteOB={deleteOB} />
-          </div>
+  const sideMenu = (
+    <Paper className={classes.paper} elevation={3}>
+      <h3>Observation Block Selection</h3>
+      <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id} />
+      <h3>Observation Block Edit/Display</h3>
+      <div className={classes.buttonBlock}>
+        <Tooltip title="Create blank OB">
+          <IconButton aria-label='create' onClick={createOB}>
+            <AddIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Copy OB to new OB">
+          <IconButton aria-label='copy' onClick={copyOB}>
+            <FileCopyIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip title="Save OB as JSON">
+          <IconButton aria-label='copy' onClick={saveOBasJSON}>
+            <SaveIcon />
+          </IconButton>
+        </Tooltip>
+        <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
+        <DeleteDialog deleteOB={deleteOB} />
+      </div>
 
-          <Tooltip title="Add template to Selected OB">
-            <div className={classes.templateSelect}>
-              <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={Object.keys(ob)} />
-            </div>
-          </Tooltip>
-          <Tooltip title="Resolve template image">
-            <div>
-              <Button onClick={targetResolverClick} >Target Resolver</Button>
-            </div>
-          </Tooltip>
-          <Tooltip title="Change the color theme of the OB JSON display">
-            <div>
-              <JsonViewTheme
-                theme={theme as ThemeKeys | null | undefined}
-                setTheme={setTheme}
-              />
-            </div>
-          </Tooltip>
-          <ReactJson
-            src={ob as object}
-            theme={theme as ThemeKeys | undefined}
-            iconStyle={props.iconStyle}
-            collapsed={props.collapsed}
-            collapseStringsAfterLength={props.collapseStringsAfter}
-            enableClipboard={props.enableClipboard}
-            onEdit={handleEdit}
+      <Tooltip title="Add template to Selected OB">
+        <div className={classes.templateSelect}>
+          <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={Object.keys(ob)} />
+        </div>
+      </Tooltip>
+      <Tooltip title="Resolve template image">
+        <div>
+          <Button onClick={targetResolverClick} >Target Resolver</Button>
+        </div>
+      </Tooltip>
+      <Tooltip title="Change the color theme of the OB JSON display">
+        <div>
+          <JsonViewTheme
+            theme={theme as ThemeKeys | null | undefined}
+            setTheme={setTheme}
           />
-        </Paper >
-      </Grid>
-      <Grid item >
-        <Paper className={classes.widepaper}>
-          {renderRGL()}
-        </Paper>
-      </Grid>
+        </div>
+      </Tooltip>
+      <ReactJson
+        src={ob as object}
+        theme={theme as ThemeKeys | undefined}
+        iconStyle={props.iconStyle}
+        collapsed={props.collapsed}
+        collapseStringsAfterLength={props.collapseStringsAfter}
+        enableClipboard={props.enableClipboard}
+        onEdit={handleEdit}
+      />
+    </Paper >
+  )
+
+  return (
+    <div>
+      <Drawer
+        anchor={'left'}
+        open={drawer.drawerOpen}
+        variant="persistent"
+        sx={{
+          width: drawer.drawerWidth,
+          flexShrink: 0,
+          '& .MuiDrawer-paper': {
+            width: drawer.drawerWidth,
+            marginTop: '68px',
+            boxSizing: 'border-box',
+          },
+        }}
+      >
+        {sideMenu}
+      </Drawer>
+      {renderRGL()}
       <Autosave ob={ob} />
-    </Grid>
+    </div>
   )
 }
 
