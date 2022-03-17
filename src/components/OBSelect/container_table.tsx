@@ -16,6 +16,8 @@ interface CTProps {
     containers: string[],
     selectedRows: any
     displayData: any
+    trigger: number
+    setTrigger: Function 
 }
 
 interface SRD {
@@ -81,7 +83,7 @@ const CustomToolbarSelect = (props: CTProps) => {
             return container_api_funcs.put(cid, cont)
         }).finally( () => {
             console.log('resetting table')
-            reset_container_and_ob_select()
+            props.setTrigger(props.trigger+1)
         })
 
     }
@@ -104,9 +106,10 @@ const ContainerTable = (props: Props) => {
 
     const [rows, setRows] = useState([] as Scoby[])
     const [containers, setContainers] = useState([] as string[])
+    const [trigger, setTrigger] = useState(0)
 
     const observer_id = useObserverContext()
-    const [sem_id, reset_container_and_ob_select] = useSemIDContext()
+    const [sem_id, _] = useSemIDContext()
 
     useEffect(() => {
         make_semid_scoby_table(sem_id, observer_id).then((scoby: Scoby[]) => {
@@ -116,6 +119,15 @@ const ContainerTable = (props: Props) => {
             setContainers(Array.from(contSet) as string[])
         })
     }, [])
+
+    useEffect(() => {
+        make_semid_scoby_table(sem_id, observer_id).then((scoby: Scoby[]) => {
+            setRows(scoby)
+            const contSet = new Set()
+            scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
+            setContainers(Array.from(contSet) as string[])
+        })
+    }, [trigger])
 
     const handleSelect = (indexes: any) => {
     }
@@ -131,7 +143,13 @@ const ContainerTable = (props: Props) => {
         onRowsDelete: () => false,
         selectableRows: 'multiple',
         customToolbarSelect: (selectedRows, displayData) => (
-            <CustomToolbarSelect selectedRows={selectedRows} displayData={displayData} containers={containers} />
+            <CustomToolbarSelect 
+            trigger={trigger}
+            setTrigger={setTrigger}
+            selectedRows={selectedRows}
+            displayData={displayData}
+            containers={containers} />
+
         ),
         onRowSelectionChange: handleSelect
     }
