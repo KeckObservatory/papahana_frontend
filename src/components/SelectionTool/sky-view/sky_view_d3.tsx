@@ -238,7 +238,7 @@ const init_hovors = (svg: any, tgts: string[], height: number) => {
     const ruler = svg.append('rect')
         .attr('x', 0)
         .attr('y', 0)
-        .attr('height', height)
+        .attr('height', height - 315)
         .attr('width', 2)
         .attr('class', 'ruler')
         .style('stroke', 'lightgray')
