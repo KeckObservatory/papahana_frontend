@@ -366,6 +366,15 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
             .style("opacity", 0)
     }
 
+    const lineClass = svg.selectAll('path')
+        .data(myData)
+        .join('path')
+        .attr('class', 'chart-lines')
+        .attr('d', line.curve(d3.curveBasis))
+        .style('stroke', (d: any | Data[]) => colors(d[0].tgt))
+        .style('stroke-width', 2)
+        .style('fill', 'transparent')
+
     svg
         .on("mousemove", moveRuler)
         .on("mouseleave", hideRuler)
