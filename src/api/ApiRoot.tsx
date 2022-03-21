@@ -37,7 +37,7 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
 
 
 const get_template = (name: string, ip_version: string='0.1.0', inst: string='KCWI'): Promise<Template> => {
-    const url = `${INSTRUMENT_URL}/${inst}/templates?ip_version=${ip_version}&template_name=${name}`
+    const url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}&ip_version=${ip_version}`
     return axios
         .get(url)
         .then(handleResponse)
