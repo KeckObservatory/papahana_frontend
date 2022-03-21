@@ -26,6 +26,7 @@ export const get_template = (name: string): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
       get_select_funcs.get_template(name).then((template: Template) => {
          const keys = Object.keys(template)
+         console.log('got template', template)
          if (keys.length === 1) {
             const tmp = Object.values(template)[0]
             resolve(tmp)
