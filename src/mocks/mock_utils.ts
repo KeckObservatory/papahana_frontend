@@ -19,10 +19,12 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
    return mockPromise
 }
 
-export const mock_get_template = (name: string): Promise<Template> => {
+export const mock_get_template = (name: string): Promise<any> => {
    const mockPromise = new Promise<Template>((resolve) => {
-      const template = mock_templates.find(t => t.metadata.name === name) as any
-      resolve(template)
+      const template = mock_templates.find(t => t.metadata.name === name) as unknown | Template 
+      let template_obj = {} as any
+      template_obj[name] = template
+      resolve(template_obj)
    })
    return mockPromise
 }
@@ -38,7 +40,6 @@ export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {
 export const mock_get_semesters = (observer_id: string): Promise<string[]> => {
    const mockPromise = new Promise<string[]>((resolve) => {
       const semids = mock_semesters.map(sem => sem.sem_id)
-      // resolve(mock_semesters)
       resolve(semids)
    })
    return mockPromise

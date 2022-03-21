@@ -46,7 +46,6 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
             const cid = container._id
             const sem_con = [sem_id, cid] as [string, string]
             sem_cons.push(sem_con)
-            // console.log('sem_cons', sem_cons)
          })
       })
    })

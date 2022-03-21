@@ -64,13 +64,10 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
 
   React.useEffect(() => {
     const md = props.obComponent.metadata
-
     let newSchemas = {...schemas}
     get_template(md.name).then((template: {[key: string]: any}) => {
         sub_forms.forEach( (formName: string) => {
-        // console.log('sub template', formName, template[formName])
         const subSchema = template_to_schema(template[formName] as Template, formName)
-        // console.log('sub schema', subSchema)
         newSchemas[formName] = subSchema
       })
       setSchemas(newSchemas)
@@ -105,13 +102,12 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
               <Typography variant={"h6"} >{formName}</Typography>
             </AccordionSummary>
             <AccordionDetails >
-              <p>form goes here</p>
               {schemas[formName] && 
               <Form className={classes.form}
                 schema={schemas[formName]}
                 formData={formData}
                 onChange={handleSubChange}
-                onError={log("errors")} />
+                onError={log("errors")}><div></div></Form>
               }
             </AccordionDetails>
           </Accordion>

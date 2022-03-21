@@ -194,6 +194,7 @@ const chunkify = (a, n, balanced) => {
 const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element => {
     let form
     if (id === 'common_parameters') {
+        console.log('common parameters', obComponent)
         form = <CommonParametersTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
     }
     else if (id === 'target') {
