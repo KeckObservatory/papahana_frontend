@@ -932,7 +932,7 @@
 	{
 		"_id" : "61203d3a86574cd1da879135",
 		"metadata" : {
-			"name" : "kcwi_common_parameters",
+			"name" : "KCWI_common_parameters",
 			"ui_name" : "KCWI Common parameters",
 			"instrument" : "KCWI",
 			"template_type" : "common_parameters",

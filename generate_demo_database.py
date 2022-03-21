@@ -558,7 +558,7 @@ def generate_random_executions():
 def generate_common_parameters():
     schema = {
         "metadata": {
-            "name": "kcwi_common_parameters",
+            "name": "KCWI_common_parameters",
             "ui_name": "KCWI Common parameters",
             "instrument": "KCWI",
             "template_type": "common_parameters",
