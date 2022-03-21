@@ -21,7 +21,7 @@ const add_targets = (templateList: string[], disList: boolean[], obSequences: st
     })
 }
 const add_common_parameters= (templateList: string[], disList: boolean[], obSequences: string[]):void  => {
-    const templateName = 'kcwi_common_parameters'
+    const templateName = 'KCWI_common_parameters'
     templateList.push(templateName)
     const disabled = check_disabled(templateName, obSequences)
     disList.push(disabled)
