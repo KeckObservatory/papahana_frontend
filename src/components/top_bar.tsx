@@ -49,8 +49,8 @@ export function TopBar(props: any) {
         className={classes.toolbar}
       >
         <IconButton
-          edge="start"
-          color="inherit"
+          // edge="start"
+          // color="inherit"
           aria-label="open drawer"
           onClick={handleMenuClick}
         >

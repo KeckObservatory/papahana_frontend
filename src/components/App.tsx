@@ -72,7 +72,7 @@ const DrawerOpenContext = createContext<Drawer>({drawerOpen:true, setDrawerOpen:
 export const useDrawerOpenContext = () => useContext(DrawerOpenContext)
 
 
-const drawerWidth = 500;
+const drawerWidth = 700;
 
 const Main = styled('main', { shouldForwardProp: (prop: string) => prop !== 'open' })<{
   open?: string;
