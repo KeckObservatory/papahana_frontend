@@ -128,7 +128,7 @@ const ContainerTable = (props: Props) => {
     const columns = [
         "name",
         "ob_id",
-        "container_id",
+        "container_name",
     ]
 
     const options: MUIDataTableOptions = {
