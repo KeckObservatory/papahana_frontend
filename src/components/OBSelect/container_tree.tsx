@@ -72,16 +72,17 @@ export default function ContainerTree(props: Props) {
 
     useEffect(() => { //run when props.observer_id changes
         let newTree = { ...rootTree }
+        console.log('container tree triggered')
         get_containers(ob_select_object.sem_id, observer_id).then((conts: Container[]) => {
             setContainers(conts)
             newTree['children'] = containers_to_nodes(containers)
             setTree(newTree)
         })
-    }, [props, ob_select_object.trigger])
+    }, [ob_select_object.trigger])
 
     const renderTree = (nodes: RenderTree) => (
         <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>
-            <TreeItem key={nodes.id} nodeId={nodes.id} label={nodes.name}>
+            <TreeItem  nodeId={nodes.id} label={nodes.name}>
                 {Array.isArray(nodes.children)
                     ? nodes.children.map((node) => renderTree(node))
                     : null}

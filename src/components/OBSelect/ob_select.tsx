@@ -103,6 +103,7 @@ export default function ObservationBlockSelecter(props: Props) {
 
   useEffect(() => {
     console.log('trigger changed!')
+    console.log(reset_container_and_ob_select())
   }, [trigger])
 
 

@@ -81,7 +81,7 @@ const CustomToolbarSelect = (props: CTProps) => {
             return container_api_funcs.put(cid, cont)
         }).finally( () => {
             console.log('resetting table')
-            ob_select_object.reset_container_and_ob_select()
+            // ob_select_object.reset_container_and_ob_select()
             ob_select_object.setTrigger(ob_select_object.trigger+1)
         })
 
@@ -105,6 +105,7 @@ const ContainerTable = (props: Props) => {
 
 
     useEffect(() => {
+        console.log('init container table')
         make_semid_scoby_table(ob_select_object.sem_id, observer_id).then((scoby: Scoby[]) => {
             setRows(scoby)
             const contSet = new Set()
@@ -114,6 +115,7 @@ const ContainerTable = (props: Props) => {
     }, [])
 
     useEffect(() => {
+        console.log('container table triggered')
         make_semid_scoby_table(ob_select_object.sem_id, observer_id).then((scoby: Scoby[]) => {
             setRows(scoby)
             const contSet = new Set()
