@@ -3,11 +3,12 @@ import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-import { Container } from '../../typings/papahana';
+import { Container, ObservationBlock } from '../../typings/papahana';
 import { useObserverContext } from '../App'
 import { get_containers } from '../../api/utils'
 import NodePopover from './node_popover'
 import { useOBSelectContext } from './ob_select'
+import { get_select_funcs } from '../../api/ApiRoot';
 
 interface Props {
     handleOBSelect: Function
@@ -20,15 +21,17 @@ interface RenderTree {
     type: string;
 }
 
-const containers_to_nodes = (containers: Container[]): RenderTree[] => {
+const containers_to_nodes = async (containers: Container[]): Promise<RenderTree[]> => {
     let nodes: any = []
-    containers.forEach((container: Container) => {
+    containers.forEach(async (container: Container) => {
+
+        const obs = await get_select_funcs.get_observation_blocks_from_container(container._id)
         let node: any = {};
         node['name'] = container.name;
         node['id'] = container._id;
         node['type'] = 'container'
-        node['children'] = container.observation_blocks.map((obStr: string) => {
-            let leaf: RenderTree = { name: obStr, id: obStr, type: 'ob' }
+        node['children'] = obs.map((ob: ObservationBlock) => {
+            let leaf: RenderTree = { name: ob.metadata.name, id: ob._id, type: 'ob' }
             return leaf
         })
         nodes.push(node)
@@ -52,9 +55,9 @@ export default function ContainerTree(props: Props) {
 
     useEffect(() => { //run when props.observer_id changes
         let newTree = { ...rootTree }
-        get_containers(ob_select_object.sem_id, observer_id).then((conts: Container[]) => {
+        get_containers(ob_select_object.sem_id, observer_id).then(async (conts: Container[]) => {
             setContainers(conts)
-            newTree['children'] = containers_to_nodes(containers)
+            newTree['children'] = await containers_to_nodes(containers)
             setTree(newTree)
         })
     }, [props, ob_select_object.trigger])
