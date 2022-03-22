@@ -59,17 +59,27 @@ export const make_semid_scoby_table = async (sem_id: string, observer_id: string
    return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
       containers.forEach(async (container: Container) => {
          const cid = container._id
-         const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
+         // const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
 
-         obs.forEach((ob: ObservationBlock) => {
-            const row = {
+         // Use this when the database containers refer to existing OBs
+         // obs.forEach((ob: ObservationBlock) => {
+         //    const row = {
+         //       sem_id: sem_id,
+         //       container_id: cid,
+         //       container_name: container.name,
+         //       ob_id: ob._id,
+         //       name: ob.metadata.name
+         //    } as Scoby
+         //    scoby.push(row)
+         // })
+         container.observation_blocks.forEach((ob_id: string) => {
+            const s = {
                sem_id: sem_id,
                container_id: cid,
-               container_name: container.name,
-               ob_id: ob._id,
-               name: ob.metadata.name
-            } as Scoby
-            scoby.push(row)
+               ob_id: ob_id,
+               container_name: container.name
+            }
+            scoby.push(s)
          })
       })
       return scoby

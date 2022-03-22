@@ -23,7 +23,7 @@ export const Autosave = (props: Props) => {
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
         if (IS_PRODUCTION) {
-            // updateDatabaseOB(newOB)
+            // updateDatabaseOB(newOB) //todo: decide to keep this
             await saveToLocalStorage(newOB)
         }
         else {

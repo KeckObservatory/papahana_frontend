@@ -7,7 +7,6 @@ import { Paper } from '@mui/material'
 import { useObserverContext } from './../App'
 import ContainerTree from './container_tree'
 import ContainerTable from './container_table'
-import Box from '@mui/material/Box';
 
 export interface Props {
   handleOBSelect: Function
@@ -102,7 +101,7 @@ export default function ObservationBlockSelecter(props: Props) {
   }, [observer_id])
 
 
-  useEffect(() => { //run when props.observer_id changes
+  useEffect(() => {
     console.log('trigger changed!')
   }, [trigger])
 

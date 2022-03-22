@@ -126,7 +126,7 @@ const ContainerTable = (props: Props) => {
     }
 
     const columns = [
-        "name",
+        // "name",
         "ob_id",
         "container_name",
     ]
