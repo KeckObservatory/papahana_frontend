@@ -7,9 +7,9 @@ import { Theme } from '@mui/material/styles'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
 import AddIcon from '@mui/icons-material/Add'
 import SaveIcon from '@mui/icons-material/Save';
+import PublishIcon from '@mui/icons-material/Publish';
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { ob_api_funcs } from '../../api/ApiRoot';
-import Grid from '@mui/material/Grid'
 import Tooltip from '@mui/material/Tooltip'
 import DeleteDialog from './delete_dialog'
 import UploadDialog from './upload_dialog'
@@ -21,8 +21,9 @@ import Button from '@mui/material/Button';
 import { Autosave } from './autosave'
 import cloneDeep from 'lodash/cloneDeep';
 import Drawer from '@mui/material/Drawer';
-import { styled, useTheme } from '@mui/material/styles';
 import { useDrawerOpenContext } from './../App'
+import { animated } from 'react-spring'
+import useBoop from './../../hooks/boop'
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -74,6 +75,7 @@ export interface Props {
 export default function ODTView(props: Props) {
   const instrument: Instrument = 'KCWI'
   const classes = useStyles();
+  const [boopStyle, triggerBoop] = useBoop({})
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}')
   const [ob, setOB] = useState(initOB as ObservationBlock)
@@ -139,6 +141,7 @@ export default function ODTView(props: Props) {
 
   const onEdit = (e: InteractionProps) => {
     //ob was edited. in react json viewer
+    // triggerBoop(true)
     console.log('editing via json directly.')
     setOB(() => e.updated_src as ObservationBlock);
   }
@@ -165,11 +168,13 @@ export default function ODTView(props: Props) {
     else {
       newOB[tmplType as OBSeqNames] = seq
     }
+    // triggerBoop(true)
     setOB(newOB)
   }
 
   const createOB = () => {
     const newOB = { metadata: {} } as ObservationBlock
+    // triggerBoop(true)
     setOB(newOB)
   }
 
@@ -181,6 +186,7 @@ export default function ODTView(props: Props) {
           className={classes.dndGrid}
           ob={ob}
           setOB={(newOb: ObservationBlock) => {
+            // triggerBoop(true)
             setOB(newOb)
           }} />
       )
@@ -196,12 +202,22 @@ export default function ODTView(props: Props) {
     console.log('target resolver clicked')
   }
 
+  const handleSubmit = () => {
+    triggerBoop(false)
+    ob_api_funcs.put(ob._id, ob)
+  }
+
   const sideMenu = (
     <Paper className={classes.paper} elevation={3}>
       <h3>Observation Block Selection</h3>
       <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id} />
       <h3>Observation Block Edit/Display</h3>
       <div className={classes.buttonBlock}>
+        <Tooltip title="Upload OB to database">
+          <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
+            <PublishIcon />
+          </animated.button>
+        </Tooltip>
         <Tooltip title="Create blank OB">
           <IconButton aria-label='create' onClick={createOB}>
             <AddIcon />
