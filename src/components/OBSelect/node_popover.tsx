@@ -27,9 +27,18 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const addOB = () => {
         console.log(`creating new ob in ${props.type} id ${props.id}.`)
-        const meta ={name: "new ob", version: "0.1.0", instrument: "", pi_id: "", semid: "", comment: ""}
+        const meta = {
+            name: "",
+            priority: 0,
+            version: "0.1.0",
+            ob_type: "",
+            instrument: "",
+            pi_id: 0,
+            semid: "",
+            comment: ""
+        }
         //@ts-ignore
-        const newOB = {metadata: meta} as ObservationBlock
+        const newOB = { metadata: meta } as ObservationBlock
         // triggerBoop(true)
         props.setOB(newOB)
         props.handleClose()
@@ -52,23 +61,23 @@ const PopoverButtons = (props: PButtonProps) => {
                     <AddContainerDialog
                         container_names={props.container_names}
                         handleClose={props.handleClose}
-                         />
+                    />
                 </div>
             }
             {props.type === 'container' &&
                 <div style={{ display: 'flex' }}>
                     <Button onClick={addOB}>add new OB</Button>
-                    <RemoveContainerDialog 
+                    <RemoveContainerDialog
                         name={props.name as string}
-                        container_id={props.id} 
+                        container_id={props.id}
                         handleClose={props.handleClose}
-                        />
+                    />
                     <EditContainerNameDialog
                         container_names={props.container_names}
                         name={props.name as string}
-                        container_id={props.id} 
+                        container_id={props.id}
                         handleClose={props.handleClose}
-                        />
+                    />
                 </div>
             }
             {props.type === 'ob' &&
