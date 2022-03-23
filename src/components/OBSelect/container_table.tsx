@@ -10,6 +10,7 @@ import { container_api_funcs } from '../../api/ApiRoot'
 interface Props {
     rows: Scoby[]
     containerIdNames: object[]
+    containerNames: string[]
 }
 
 
@@ -17,6 +18,7 @@ interface CTProps {
     containerIdNames: object[],
     selectedRows: any
     displayData: any
+    containerNames: string[]
 }
 
 interface SRD {
@@ -97,15 +99,12 @@ const CustomToolbarSelect = (props: CTProps) => {
 
     }
 
-    //@ts-ignore
-    let names = props.containerIdNames.map( cidn => { return cidn.name}) 
-    names = Array.from(new Set(names))
 
 
     return (
         <div className={"custom-toolbar-select"}>
             <Button onClick={setSelectedToContainer}>Add selected to Container</Button>
-            <DropDown arr={names} handleChange={handleChange} value={cidname.name} placeholder={'container'} label={'available containers'} />
+            <DropDown arr={props.containerNames} handleChange={handleChange} value={cidname.name} placeholder={'container'} label={'available containers'} />
         </div>
     );
 }
@@ -129,6 +128,7 @@ const ContainerTable = (props: Props) => {
             selectedRows={selectedRows}
             displayData={displayData}
             containerIdNames={props.containerIdNames}
+            containerNames={props.containerNames}
             />
             
 

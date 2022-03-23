@@ -136,6 +136,9 @@ export default function ObservationBlockSelecter(props: Props) {
     setTrigger: setTrigger 
   }
 
+  const containerNames = containers.map((x: Container) => { return x.name })
+
+
   return (
     <OBSelectContext.Provider value={ob_select_object}>
       <div>
@@ -148,7 +151,7 @@ export default function ObservationBlockSelecter(props: Props) {
         />
         <Paper>
           <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
-          <ContainerTable rows={rows} containerIdNames={containerIdNames}/>
+          <ContainerTable rows={rows} containerNames={containerNames} containerIdNames={containerIdNames}/>
         </Paper>
       </div>
     </ OBSelectContext.Provider>
