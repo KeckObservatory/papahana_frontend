@@ -126,7 +126,7 @@ const ContainerTable = (props: Props) => {
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
         onRowsDelete: () => false,
-        selectableRows: 'multiple',
+        selectableRows: 'single', //bug multiple will not removed all selected obs from container
         customToolbarSelect: (selectedRows, displayData) => (
             <CustomToolbarSelect 
             selectedRows={selectedRows}
