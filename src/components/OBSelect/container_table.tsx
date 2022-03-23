@@ -10,7 +10,6 @@ import { container_api_funcs } from '../../api/ApiRoot'
 interface Props {
     rows: Scoby[]
     containerIdNames: object[]
-    containerNames: string[]
 }
 
 
@@ -18,7 +17,6 @@ interface CTProps {
     containerIdNames: object[],
     selectedRows: any
     displayData: any
-    containerNames: string[]
 }
 
 interface SRD {
@@ -36,7 +34,7 @@ const CustomToolbarSelect = (props: CTProps) => {
 
     const ob_select_object = useOBSelectContext()
 
-    const handleChange = (selName: string) => {
+    const handleDropdownChange = (selName: string) => {
         console.log('changed', selName)
         //@ts-ignore
         const newcidname = props.containerIdNames.find( (x) => {return x.name === selName})
@@ -96,15 +94,15 @@ const CustomToolbarSelect = (props: CTProps) => {
             // ob_select_object.reset_container_and_ob_select()
             ob_select_object.setTrigger(ob_select_object.trigger+1)
         })
-
     }
 
-
+    //@ts-ignore
+    const names = props.containerIdNames.map( x => x.name)
 
     return (
         <div className={"custom-toolbar-select"}>
             <Button onClick={setSelectedToContainer}>Add selected to Container</Button>
-            <DropDown arr={props.containerNames} handleChange={handleChange} value={cidname.name} placeholder={'container'} label={'available containers'} />
+            <DropDown arr={names} handleChange={handleDropdownChange} value={cidname.name} placeholder={'container'} label={'available containers'} />
         </div>
     );
 }
@@ -128,7 +126,6 @@ const ContainerTable = (props: Props) => {
             selectedRows={selectedRows}
             displayData={displayData}
             containerIdNames={props.containerIdNames}
-            containerNames={props.containerNames}
             />
             
 

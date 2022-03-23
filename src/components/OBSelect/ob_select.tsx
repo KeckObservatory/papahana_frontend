@@ -116,11 +116,15 @@ export default function ObservationBlockSelecter(props: Props) {
     .then((scoby_containers: [Scoby[], Container[]]) => {
         const [scoby, cntners] = scoby_containers
         const contset: object[] = [] 
-        scoby.forEach((sc: Scoby) => contset.push({
-          _id: sc.container_id,
-          name: sc.container_name
-          
+        containers.forEach((c: Container) => contset.push({
+          _id: c._id,
+          name: c.name
         }))
+        // scoby.forEach((sc: Scoby) => contset.push({
+        //   _id: sc.container_id,
+        //   name: sc.container_name
+          
+        // }))
         setContainers(cntners)
         setRows(scoby)
         setContainerIdNames(contset)
@@ -136,9 +140,6 @@ export default function ObservationBlockSelecter(props: Props) {
     setTrigger: setTrigger 
   }
 
-  const containerNames = containers.map((x: Container) => { return x.name })
-
-
   return (
     <OBSelectContext.Provider value={ob_select_object}>
       <div>
@@ -151,7 +152,7 @@ export default function ObservationBlockSelecter(props: Props) {
         />
         <Paper>
           <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
-          <ContainerTable rows={rows} containerNames={containerNames} containerIdNames={containerIdNames}/>
+          <ContainerTable rows={rows} containerIdNames={containerIdNames}/>
         </Paper>
       </div>
     </ OBSelectContext.Provider>
