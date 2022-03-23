@@ -2,18 +2,19 @@ import { useState, useEffect } from 'react';
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
 import { Container, Scoby } from "../../typings/papahana";
 import Button from '@mui/material/Button';
-import { make_semid_scoby_table } from '../../api/utils';
 import DropDown from '../drop_down'
 import { useObserverContext } from '../App'
 import { useOBSelectContext } from './ob_select'
 import { container_api_funcs } from '../../api/ApiRoot'
 
 interface Props {
+    rows: Scoby[]
+    containerNames: string[]
 }
 
 
 interface CTProps {
-    containers: string[],
+    containerNames: string[],
     selectedRows: any
     displayData: any
 }
@@ -90,15 +91,13 @@ const CustomToolbarSelect = (props: CTProps) => {
     return (
         <div className={"custom-toolbar-select"}>
             <Button onClick={setSelectedToContainer}>Add selected to Container</Button>
-            <DropDown arr={props.containers} handleChange={handleChange} value={cid} placeholder={'container'} label={'available containers'} />
+            <DropDown arr={props.containerNames} handleChange={handleChange} value={cid} placeholder={'container'} label={'available containers'} />
         </div>
     );
 }
 
 const ContainerTable = (props: Props) => {
 
-    const [rows, setRows] = useState([] as Scoby[])
-    const [containers, setContainers] = useState([] as string[])
 
     const observer_id = useObserverContext()
     const ob_select_object = useOBSelectContext()
@@ -106,22 +105,10 @@ const ContainerTable = (props: Props) => {
 
     useEffect(() => {
         console.log('init container table')
-        make_semid_scoby_table(ob_select_object.sem_id, observer_id).then((scoby: Scoby[]) => {
-            setRows(scoby)
-            const contSet = new Set()
-            scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
-            setContainers(Array.from(contSet) as string[])
-        })
     }, [])
 
     useEffect(() => {
         console.log('container table triggered')
-        make_semid_scoby_table(ob_select_object.sem_id, observer_id).then((scoby: Scoby[]) => {
-            setRows(scoby)
-            const contSet = new Set()
-            scoby.forEach((sc: Scoby) => contSet.add(sc.container_id))
-            setContainers(Array.from(contSet) as string[])
-        })
     }, [ob_select_object.trigger])
 
     const handleSelect = (indexes: any) => {
@@ -141,7 +128,7 @@ const ContainerTable = (props: Props) => {
             <CustomToolbarSelect 
             selectedRows={selectedRows}
             displayData={displayData}
-            containers={containers} />
+            containerNames={props.containerNames} />
 
         ),
         onRowSelectionChange: handleSelect
@@ -149,7 +136,7 @@ const ContainerTable = (props: Props) => {
 
     return (
         <MUIDataTable
-            data={rows}
+            data={props.rows}
             columns={columns}
             options={options}
             title={'Observation Block Table'} />

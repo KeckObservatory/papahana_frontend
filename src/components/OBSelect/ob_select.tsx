@@ -1,5 +1,5 @@
 import React, { createContext, useContext } from 'react';
-import { get_ob_list, get_container_list, get_sem_id_list } from '../../api/utils'
+import { get_ob_list, get_container_list, get_sem_id_list, make_semid_scoby_table_and_containers } from '../../api/utils'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
@@ -7,6 +7,7 @@ import { Paper } from '@mui/material'
 import { useObserverContext } from './../App'
 import ContainerTree from './container_tree'
 import ContainerTable from './container_table'
+import { Container, Scoby } from '../../typings/papahana';
 
 export interface Props {
   handleOBSelect: Function
@@ -19,6 +20,9 @@ interface State {
   containerIdList: string[]
   container_id: string
   sem_id: string
+  rows: Scoby[]
+  containers: Container[]
+  containerNames: string[]
 }
 
 
@@ -28,6 +32,9 @@ const defaultState: State = {
   containerIdList: [],
   sem_id: '',
   container_id: 'all',
+  rows: [],
+  containers: [],
+  containerNames: []
 }
 
 export interface OBSelectContextObject {
@@ -59,6 +66,9 @@ export default function ObservationBlockSelecter(props: Props) {
   const [semIdList, setSemIdList] = useState(defaultState.semIdList)
   const [containerIdList, setContainerIdList] = useState(defaultState.containerIdList)
   const [trigger, setTrigger] = useState(0)
+  const [rows, setRows] = useState(defaultState.rows)
+  const [containerNames, setContainerNames] = useState(defaultState.containerNames)
+  const [containers, setContainers] = useState(defaultState.containers)
 
   const observer_id = useObserverContext()
 
@@ -103,6 +113,15 @@ export default function ObservationBlockSelecter(props: Props) {
 
   useEffect(() => {
     console.log('trigger changed!')
+    make_semid_scoby_table_and_containers(ob_select_object.sem_id, observer_id)
+    .then((scoby_containers: [Scoby[], Container[]]) => {
+        const [scoby, cntners] = scoby_containers
+        setContainers(cntners)
+        setRows(scoby)
+        const contset = new Set()
+        scoby.forEach((sc: Scoby) => contset.add(sc.container_id))
+        setContainerNames(Array.from(contset) as string[])
+    })
     console.log(reset_container_and_ob_select())
   }, [trigger])
 
@@ -125,8 +144,8 @@ export default function ObservationBlockSelecter(props: Props) {
           label={'Semester ID'}
         />
         <Paper>
-          <ContainerTree handleOBSelect={props.handleOBSelect} />
-          <ContainerTable />
+          <ContainerTree containers={containers} handleOBSelect={props.handleOBSelect} />
+          <ContainerTable rows={rows} containerNames={containerNames}/>
         </Paper>
       </div>
     </ OBSelectContext.Provider>

@@ -11,6 +11,7 @@ import { useOBSelectContext } from './ob_select'
 
 interface Props {
     handleOBSelect: Function
+    containers: Container[]
 }
 
 interface RenderTree {
@@ -67,17 +68,13 @@ export default function ContainerTree(props: Props) {
         type: 'semid',
         children: undefined
     }
-    const [containers, setContainers] = React.useState([] as Container[])
     const [tree, setTree] = React.useState(rootTree as RenderTree)
 
     useEffect(() => { //run when props.observer_id changes
-        let newTree = { ...rootTree }
         console.log('container tree triggered')
-        get_containers(ob_select_object.sem_id, observer_id).then((conts: Container[]) => {
-            setContainers(conts)
-            newTree['children'] = containers_to_nodes(containers)
-            setTree(newTree)
-        })
+        let newTree = { ...rootTree }
+        newTree['children'] = containers_to_nodes(props.containers)
+        setTree(newTree)
     }, [ob_select_object.trigger])
 
     const renderTree = (nodes: RenderTree) => (

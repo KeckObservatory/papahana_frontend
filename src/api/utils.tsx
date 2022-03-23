@@ -54,7 +54,7 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
    return sem_cons
 }
 
-export const make_semid_scoby_table = async (sem_id: string, observer_id: string): Promise<Scoby[]> => {
+export const make_semid_scoby_table_and_containers = async (sem_id: string, observer_id: string): Promise<[Scoby[], Container[]]> => {
    let scoby: Scoby[] = []
    return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
       containers.forEach(async (container: Container) => {
@@ -82,7 +82,7 @@ export const make_semid_scoby_table = async (sem_id: string, observer_id: string
             scoby.push(s)
          })
       })
-      return scoby
+      return [scoby, containers]
    })
 }
 
