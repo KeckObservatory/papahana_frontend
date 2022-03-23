@@ -9,12 +9,12 @@ import { container_api_funcs } from '../../api/ApiRoot'
 
 interface Props {
     rows: Scoby[]
-    containerNames: string[]
+    containerIdNames: object[]
 }
 
 
 interface CTProps {
-    containerNames: string[],
+    containerIdNames: object[],
     selectedRows: any
     displayData: any
 }
@@ -30,56 +30,65 @@ interface DA {
 }
 
 const CustomToolbarSelect = (props: CTProps) => {
-    const [cid, setContainer] = useState('')
+    const [cidname, setContainerName] = useState({_id: '', name: ''})
 
     const ob_select_object = useOBSelectContext()
 
-    const handleChange = (selectedContainer: string) => {
-        console.log('changed', selectedContainer)
-        setContainer(selectedContainer)
+    const handleChange = (selName: string) => {
+        console.log('changed', selName)
+        //@ts-ignore
+        const newcidname = props.containerIdNames.find( (x) => {return x.name === selName})
+
+        //@ts-ignore
+        setContainerName(newcidname)
     }
 
     const setSelectedToContainer = () => {
-        if (cid.length === 0) {
-            console.log('container id not specified.')
+        if (cidname.name.length === 0) {
+            console.log('container name not specified.')
             return
         }
         const rows = props.selectedRows.data.map((x: SRD) => {
             return props.displayData[x.index]
         })
 
-        console.log('setting selected to container', cid)
+        console.log('setting selected to container ', cidname.name)
         console.log('rows', rows)
         //remove ob reference from each container
         //TODO: get all containers, filter the ones that need to update,
         // create new containers, and then
         // PUT 
         rows.forEach(async (r: DA) => {
-            const [name, _id, cont] = r.data
+            const [ob_id, container_name] = r.data
             //get container
-            await container_api_funcs.get(cont).then((container: Container) => {
+            //@ts-ignore
+            const cidname = props.containerIdNames.find( x => {return x.name === container_name})
+
+            //@ts-ignore
+            await container_api_funcs.get(cidname._id).then((container: Container) => {
                 //make new container that is missing ob
                 const oldLength = container.observation_blocks.length
                 container.observation_blocks =
-                    container.observation_blocks.filter((ob_id: string) => {
-                        return ob_id !== _id
+                    container.observation_blocks.filter((_id: string) => {
+                        return _id !== ob_id
                     })
                 if (container.observation_blocks.length !== oldLength) {
-                    return container_api_funcs.put(cont, container)
+                    //@ts-ignore
+                    return container_api_funcs.put(cidname._id, container)
                 }
             })
         })
 
         //add to container, the selected obs
         let obs = rows.map((r: DA) => {
-            const [name, _id, cont] = r.data
+            const [_id, cont_name] = r.data
             return _id
         })
-        container_api_funcs.get(cid).then((cont: Container) => {
+        container_api_funcs.get(cidname._id).then((cont: Container) => {
             obs.forEach((ob_id: string) => {
                 cont.observation_blocks.push(ob_id)
             })
-            return container_api_funcs.put(cid, cont)
+            return container_api_funcs.put(cidname._id, cont)
         }).finally( () => {
             console.log('resetting table')
             // ob_select_object.reset_container_and_ob_select()
@@ -88,34 +97,25 @@ const CustomToolbarSelect = (props: CTProps) => {
 
     }
 
+    //@ts-ignore
+    let names = props.containerIdNames.map( cidn => { return cidn.name}) 
+    names = Array.from(new Set(names))
+
+
     return (
         <div className={"custom-toolbar-select"}>
             <Button onClick={setSelectedToContainer}>Add selected to Container</Button>
-            <DropDown arr={props.containerNames} handleChange={handleChange} value={cid} placeholder={'container'} label={'available containers'} />
+            <DropDown arr={names} handleChange={handleChange} value={cidname.name} placeholder={'container'} label={'available containers'} />
         </div>
     );
 }
 
 const ContainerTable = (props: Props) => {
 
-
-    const observer_id = useObserverContext()
-    const ob_select_object = useOBSelectContext()
-
-
-    useEffect(() => {
-        console.log('init container table')
-    }, [])
-
-    useEffect(() => {
-        console.log('container table triggered')
-    }, [ob_select_object.trigger])
-
     const handleSelect = (indexes: any) => {
     }
 
     const columns = [
-        // "name",
         "ob_id",
         "container_name",
     ]
@@ -128,7 +128,9 @@ const ContainerTable = (props: Props) => {
             <CustomToolbarSelect 
             selectedRows={selectedRows}
             displayData={displayData}
-            containerNames={props.containerNames} />
+            containerIdNames={props.containerIdNames}
+            />
+            
 
         ),
         onRowSelectionChange: handleSelect

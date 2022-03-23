@@ -14,11 +14,13 @@ import { Container } from '../../typings/papahana';
 interface Props {
     container_id: string
     name: string
+    container_names: Set<string>
 }
 
 export default function EditContainerNameDialog(props: Props) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
+  const [nameTaken, setNameTaken] = React.useState(false);
   const ob_select_object = useOBSelectContext()
 
   const handleClickOpen = () => {
@@ -26,7 +28,7 @@ export default function EditContainerNameDialog(props: Props) {
   };
 
   const nameChange = (evt: any) => {
-    setName(evt.target.value)
+      setName(evt.target.value)
   }
 
   const handleClose = () => {
@@ -34,8 +36,16 @@ export default function EditContainerNameDialog(props: Props) {
   };
 
   const handleCreate = () => {
+
+    if (props.container_names.has(name)) {
+      setNameTaken(true)
+      return
+    }
+    else {
+      setNameTaken(false)
+    }
+
     if (name.length > 0) {
-      setOpen(false);
       container_api_funcs.get(props.container_id).then((container: Container) => {
         console.log(`container ${container._id} retrieved, editing name`)
         container.name = name
@@ -43,6 +53,7 @@ export default function EditContainerNameDialog(props: Props) {
       }).finally(() => {
         // ob_select_object.reset_container_and_ob_select()
         ob_select_object.setTrigger(ob_select_object.trigger + 1)
+        setOpen(false);
       })
     }
   };
@@ -57,6 +68,9 @@ export default function EditContainerNameDialog(props: Props) {
         <DialogContent>
           <DialogContentText>
             Please enter a new container name
+          </DialogContentText>
+          <DialogContentText>
+            {nameTaken && "Please enter a unique container name"} 
           </DialogContentText>
           <TextField
             autoFocus

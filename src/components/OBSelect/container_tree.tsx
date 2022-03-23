@@ -69,9 +69,16 @@ export default function ContainerTree(props: Props) {
         children: undefined
     }
     const [tree, setTree] = React.useState(rootTree as RenderTree)
+    let names = new Set(props.containers.map( (c: Container) => {
+        return c.name
+    }))
 
     useEffect(() => { //run when props.observer_id changes
         console.log('container tree triggered')
+
+        names = new Set(props.containers.map( (c: Container) => {
+            return c.name
+        }))
         let newTree = { ...rootTree }
         newTree['children'] = containers_to_nodes(props.containers)
         setTree(newTree)
@@ -87,6 +94,7 @@ export default function ContainerTree(props: Props) {
             <NodePopover handleOBSelect={props.handleOBSelect}
                 id={nodes.id}
                 type={nodes.type}
+                container_names={names}
                 name={nodes.name} />
         </div >
     );

@@ -9,7 +9,7 @@ import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
 
 interface PButtonProps extends Props {
-
+    container_names: Set<string>
 }
 
 interface Props {
@@ -17,6 +17,7 @@ interface Props {
     type: string
     name?: string
     handleOBSelect: Function
+    container_names: Set<string>
 }
 
 const PopoverButtons = (props: PButtonProps) => {
@@ -32,21 +33,24 @@ const PopoverButtons = (props: PButtonProps) => {
     const selectOB = () => {
         console.log(`selecting ${props.type} id ${props.id}.`)
         props.handleOBSelect(props.id)
-
     }
 
     return (
         <div style={{ display: 'grid' }}>
             {props.type === 'semid' &&
                 <div style={{ display: 'grid' }}>
-                    <AddContainerDialog />
+                    <AddContainerDialog
+                        container_names={props.container_names} />
                 </div>
             }
             {props.type === 'container' &&
                 <div style={{ display: 'flex' }}>
                     <Button onClick={addOB}>add new OB</Button>
                     <RemoveContainerDialog name={props.name as string} container_id={props.id} />
-                    <EditContainerNameDialog name={props.name as string} container_id={props.id}/>
+                    <EditContainerNameDialog
+                        container_names={props.container_names}
+                        name={props.name as string}
+                        container_id={props.id} />
                 </div>
             }
             {props.type === 'ob' &&
@@ -89,7 +93,11 @@ const NodePopover = (props: Props) => {
                 }}
             >
                 <Typography sx={{ p: 2 }}>The content of the {props.type} id {props.id}.</Typography>
-                <PopoverButtons handleOBSelect={props.handleOBSelect} type={props.type} id={props.id} />
+                <PopoverButtons
+                    container_names={props.container_names}
+                    handleOBSelect={props.handleOBSelect}
+                    type={props.type}
+                    id={props.id} />
             </Popover>
         </div>
     );

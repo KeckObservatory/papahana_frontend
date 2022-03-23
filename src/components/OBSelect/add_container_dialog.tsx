@@ -9,9 +9,14 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { container_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './ob_select'
 
-export default function AddContainterDialog() {
+interface Props {
+  container_names: Set<string>
+}
+
+export default function AddContainterDialog(props: Props) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
+  const [nameTaken, setNameTaken] = React.useState(false)
   const ob_select_object = useOBSelectContext()
 
   const handleClickOpen = () => {
@@ -27,6 +32,16 @@ export default function AddContainterDialog() {
   };
 
   const handleCreate = () => {
+    console.log('contaier_names', props.container_names)
+    console.log(props.container_names.has(name))
+    if (props.container_names.has(name)) {
+      setNameTaken(true)
+      return
+    }
+    else { 
+      setNameTaken(false)
+    }
+
     if (name.length > 0) {
       setOpen(false);
       const container = { name: name, sem_id: ob_select_object.sem_id, observation_blocks: [] }
@@ -48,6 +63,9 @@ export default function AddContainterDialog() {
         <DialogContent>
           <DialogContentText>
             Please enter a new container name
+          </DialogContentText>
+          <DialogContentText>
+            {nameTaken && "Enter a unique name"}
           </DialogContentText>
           <TextField
             autoFocus
