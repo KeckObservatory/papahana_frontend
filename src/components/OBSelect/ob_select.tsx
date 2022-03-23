@@ -116,7 +116,7 @@ export default function ObservationBlockSelecter(props: Props) {
     .then((scoby_containers: [Scoby[], Container[]]) => {
         const [scoby, cntners] = scoby_containers
         const contset: object[] = [] 
-        containers.forEach((c: Container) => contset.push({
+        cntners.forEach((c: Container) => contset.push({
           _id: c._id,
           name: c.name
         }))
