@@ -34,7 +34,7 @@ const PopoverButtons = (props: PButtonProps) => {
             ob_type: "",
             instrument: "",
             pi_id: 0,
-            semid: "",
+            sem_id: "",
             comment: ""
         }
         //@ts-ignore
