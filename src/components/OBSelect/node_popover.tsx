@@ -28,17 +28,17 @@ const PopoverButtons = (props: PButtonProps) => {
     const addOB = () => {
         console.log(`creating new ob in ${props.type} id ${props.id}.`)
         const meta = {
-            name: "",
+            name: "Made by ODT",
             priority: 0,
             version: "0.1.0",
-            ob_type: "",
-            instrument: "",
-            pi_id: 0,
-            sem_id: "",
+            ob_type: "Engineering",
+            instrument: "KCWI",
+            pi_id: 2003,
+            sem_id: "2017A_U050",
             comment: ""
         }
         //@ts-ignore
-        const newOB = { metadata: meta } as ObservationBlock
+        const newOB = { _id: Date.now(), metadata: meta } as ObservationBlock
         // triggerBoop(true)
         props.setOB(newOB)
         props.handleClose()
