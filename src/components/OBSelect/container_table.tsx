@@ -68,10 +68,12 @@ const CustomToolbarSelect = (props: CTProps) => {
             await container_api_funcs.get(cidname._id).then((container: Container) => {
                 //make new container that is missing ob
                 const oldLength = container.observation_blocks.length
-                container.observation_blocks =
-                    container.observation_blocks.filter((_id: string) => {
+                const new_observation_blocks = 
+                container.observation_blocks.filter((_id: string) => {
                         return _id !== ob_id
                     })
+                console.log('old container obs', container.observation_blocks, 'new container obs', new_observation_blocks)
+                container.observation_blocks = new_observation_blocks
                 if (container.observation_blocks.length !== oldLength) {
                     //@ts-ignore
                     return container_api_funcs.put(cidname._id, container)
