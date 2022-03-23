@@ -75,7 +75,7 @@ export default function ContainerTree(props: Props) {
         let newTree = { ...rootTree }
         newTree['children'] = containers_to_nodes(props.containers)
         setTree(newTree)
-    }, [ob_select_object.trigger])
+    }, [props.containers])
 
     const renderTree = (nodes: RenderTree) => (
         <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>

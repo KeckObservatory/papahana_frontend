@@ -99,6 +99,7 @@ export default function ObservationBlockSelecter(props: Props) {
 
   const handle_sem_id_submit = (sid: string) => {
     setSemId(sid)
+    setTrigger(trigger+1)
     reset_container_and_ob_select()
   }
 
