@@ -12,6 +12,7 @@ import { useOBSelectContext } from './ob_select'
 interface Props {
     handleOBSelect: Function
     containers: Container[]
+    setOB: Function
 }
 
 interface RenderTree {
@@ -95,6 +96,7 @@ export default function ContainerTree(props: Props) {
                 id={nodes.id}
                 type={nodes.type}
                 container_names={names}
+                setOB={props.setOB}
                 name={nodes.name} />
         </div >
     );

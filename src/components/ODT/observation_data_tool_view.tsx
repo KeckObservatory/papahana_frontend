@@ -210,7 +210,7 @@ export default function ODTView(props: Props) {
   const sideMenu = (
     <Paper className={classes.paper} elevation={3}>
       <h3>Observation Block Selection</h3>
-      <ObservationBlockSelecter handleOBSelect={handleOBSelect} ob_id={ob_id} />
+      <ObservationBlockSelecter setOB={setOB} handleOBSelect={handleOBSelect} ob_id={ob_id} />
       <h3>Observation Block Edit/Display</h3>
       <div className={classes.buttonBlock}>
         <Tooltip title="Upload OB to database">
@@ -218,11 +218,11 @@ export default function ODTView(props: Props) {
             <PublishIcon />
           </animated.button>
         </Tooltip>
-        <Tooltip title="Create blank OB">
+        {/* <Tooltip title="Create blank OB">
           <IconButton aria-label='create' onClick={createOB}>
             <AddIcon />
           </IconButton>
-        </Tooltip>
+        </Tooltip> */}
         <Tooltip title="Copy OB to new OB">
           <IconButton aria-label='copy' onClick={copyOB}>
             <FileCopyIcon />

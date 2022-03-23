@@ -12,6 +12,7 @@ import { Container, Scoby } from '../../typings/papahana';
 export interface Props {
   handleOBSelect: Function
   ob_id: string | undefined | null
+  setOB: Function
 }
 
 interface State {
@@ -146,7 +147,7 @@ export default function ObservationBlockSelecter(props: Props) {
           label={'Semester ID'}
         />
         <Paper>
-          <ContainerTree containers={containers} handleOBSelect={props.handleOBSelect} />
+          <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
           <ContainerTable rows={rows} containerIdNames={containerIdNames}/>
         </Paper>
       </div>

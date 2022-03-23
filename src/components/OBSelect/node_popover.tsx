@@ -7,6 +7,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddContainerDialog from './add_container_dialog';
 import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
+import { ObservationBlock } from '../../typings/papahana';
 
 interface PButtonProps extends Props {
     container_names: Set<string>
@@ -19,12 +20,17 @@ interface Props {
     name?: string
     handleOBSelect: Function
     container_names: Set<string>
+    setOB: Function
 }
 
 const PopoverButtons = (props: PButtonProps) => {
 
     const addOB = () => {
         console.log(`creating new ob in ${props.type} id ${props.id}.`)
+        const newOB = { metadata: {} } as ObservationBlock
+        // triggerBoop(true)
+        props.setOB(newOB)
+        props.handleClose()
     }
 
     const removeOB = () => {
@@ -108,6 +114,7 @@ const NodePopover = (props: Props) => {
                     handleOBSelect={props.handleOBSelect}
                     handleClose={handleClose}
                     type={props.type}
+                    setOB={props.setOB}
                     id={props.id} />
             </Popover>
         </div>
