@@ -13,6 +13,7 @@ import { useOBSelectContext } from './ob_select'
 interface Props {
     container_id: string
     name: string
+    handleClose: Function
 }
 
 export default function RemoveContainerDialog(props: Props) {
@@ -33,6 +34,7 @@ export default function RemoveContainerDialog(props: Props) {
             // ob_select_object.reset_container_and_ob_select()
             ob_select_object.setTrigger(ob_select_object.trigger + 1)
         })
+        props.handleClose()
     };
 
     return (

@@ -15,6 +15,7 @@ interface Props {
     container_id: string
     name: string
     container_names: Set<string>
+    handleClose: Function
 }
 
 export default function EditContainerNameDialog(props: Props) {
@@ -54,6 +55,7 @@ export default function EditContainerNameDialog(props: Props) {
         // ob_select_object.reset_container_and_ob_select()
         ob_select_object.setTrigger(ob_select_object.trigger + 1)
         setOpen(false);
+        props.handleClose()
       })
     }
   };
