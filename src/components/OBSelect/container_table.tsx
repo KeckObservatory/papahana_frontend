@@ -72,9 +72,13 @@ const CustomToolbarSelect = (props: CTProps) => {
                 container.observation_blocks.filter((_id: string) => {
                         return _id !== ob_id
                     })
+                console.log()
                 console.log('old container obs', container.observation_blocks, 'new container obs', new_observation_blocks)
                 container.observation_blocks = new_observation_blocks
                 if (container.observation_blocks.length !== oldLength) {
+
+                    //@ts-ignore
+                    console.log('container', cidname.name, cidname._id, 'changing to', container)
                     //@ts-ignore
                     return container_api_funcs.put(cidname._id, container)
                 }
