@@ -38,7 +38,7 @@ const PopoverButtons = (props: PButtonProps) => {
             comment: ""
         }
         //@ts-ignore
-        const newOB = { _id: Date.now(), metadata: meta } as ObservationBlock
+        const newOB = { _id: JSON.stringify(Date.now()), metadata: meta } as ObservationBlock
         // triggerBoop(true)
         props.setOB(newOB)
         props.handleClose()
