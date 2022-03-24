@@ -105,7 +105,7 @@ const container_post = (container: object): Promise<string> => {
         .catch(handleError);
 };
 
-const container_put = (container_id: string, container: Container): Promise<any> => {
+const container_put = (container_id: string, container: Container): Promise<number> => {
     const url = `${CONTAINER_URL}?container_id=${container_id}`
     return axios
         .put(url, container)

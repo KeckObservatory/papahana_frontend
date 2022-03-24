@@ -7,7 +7,9 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddContainerDialog from './add_container_dialog';
 import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
-import { ObservationBlock } from '../../typings/papahana';
+import { Container, ObservationBlock } from '../../typings/papahana';
+import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
+import { useOBSelectContext } from './ob_select' 
 
 interface PButtonProps extends Props {
     container_names: Set<string>
@@ -25,22 +27,37 @@ interface Props {
 
 const PopoverButtons = (props: PButtonProps) => {
 
+    const ob_select_context = useOBSelectContext() 
+
     const addOB = () => {
         console.log(`creating new ob in ${props.type} id ${props.id}.`)
         const meta = {
             name: "Made by ODT",
             priority: 0,
             version: "0.1.0",
-            ob_type: "Engineering",
+            ob_type: "engineering",
             instrument: "KCWI",
             pi_id: 2003,
             sem_id: "2017A_U050",
             comment: ""
         }
         //@ts-ignore
-        const newOB = { _id: JSON.stringify(Date.now()), metadata: meta } as ObservationBlock
-        // triggerBoop(true)
-        props.setOB(newOB)
+        const _id = JSON.stringify(Date.now()) + 'XXXXXXXXXXX' // _id is not used. this is to get past validation.
+        const newOB = { _id: _id, metadata: meta } as ObservationBlock
+        // props.setOB(newOB)
+        let ob_id: string;
+        ob_api_funcs.post(newOB)
+        .then((obid: string) => {
+            ob_id = obid 
+            return container_api_funcs.get(props.id)
+        })
+        .then((container: Container) => {
+            container.observation_blocks.push(ob_id)
+            //update container and update 
+            ob_select_context.setTrigger(ob_select_context.trigger)
+            return container_api_funcs.put(container._id, container)
+        })
+        
         props.handleClose()
     }
 
