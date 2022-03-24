@@ -49,9 +49,9 @@ export interface OBSelectContextObject {
 
 const init_object = {
   sem_id: '',
-  reset_container_and_ob_select: ()=>{},
+  reset_container_and_ob_select: () => { },
   trigger: 0,
-  setTrigger: ()=>{}
+  setTrigger: () => { }
 }
 
 
@@ -97,25 +97,29 @@ export default function ObservationBlockSelecter(props: Props) {
 
   const handle_sem_id_submit = (sid: string) => {
     setSemId(sid)
-    setTrigger(trigger+1)
+    setTrigger(trigger + 1)
     reset_container_and_ob_select()
   }
 
   useEffect(() => { //run when props.observer_id changes
+    console.log('observer_id changed', observer_id)
     get_sem_id_list(observer_id)
       .then((lst: string[]) => {
         setSemIdList(lst)
       })
-      .then(() => { reset_container_and_ob_select() })
+      .then(() => {
+        setTrigger(trigger + 1)
+        reset_container_and_ob_select()
+      })
   }, [observer_id])
 
 
   useEffect(() => {
     console.log('trigger changed!')
     make_semid_scoby_table_and_containers(ob_select_object.sem_id, observer_id)
-    .then((scoby_containers: [Scoby[], Container[]]) => {
+      .then((scoby_containers: [Scoby[], Container[]]) => {
         const [scoby, cntners] = scoby_containers
-        const contset: object[] = [] 
+        const contset: object[] = []
         cntners.forEach((c: Container) => contset.push({
           _id: c._id,
           name: c.name
@@ -123,12 +127,12 @@ export default function ObservationBlockSelecter(props: Props) {
         // scoby.forEach((sc: Scoby) => contset.push({
         //   _id: sc.container_id,
         //   name: sc.container_name
-          
+
         // }))
         setContainers(cntners)
         setRows(scoby)
         setContainerIdNames(contset)
-    })
+      })
   }, [trigger])
 
 
@@ -136,7 +140,7 @@ export default function ObservationBlockSelecter(props: Props) {
     sem_id: sem_id,
     reset_container_and_ob_select: reset_container_and_ob_select,
     trigger: trigger,
-    setTrigger: setTrigger 
+    setTrigger: setTrigger
   }
 
   return (
@@ -151,7 +155,7 @@ export default function ObservationBlockSelecter(props: Props) {
         />
         <Paper>
           <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
-          <ContainerTable rows={rows} containerIdNames={containerIdNames}/>
+          <ContainerTable rows={rows} containerIdNames={containerIdNames} />
         </Paper>
       </div>
     </ OBSelectContext.Provider>
