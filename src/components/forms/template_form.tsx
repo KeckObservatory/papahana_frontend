@@ -5,13 +5,13 @@ import { withTheme, ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { Theme as MaterialUITheme } from './../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
-import { makeStyles } from "@mui/styles";
+import { DefaultTheme, makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 
 export const Form = withTheme(MaterialUITheme)
 
-export const useStyles = makeStyles((theme: any) => ({
+export const useStyles = makeStyles((theme: DefaultTheme) => ({
   root: {
     textAlign: 'left',
     margin: theme.spacing(0),
@@ -34,7 +34,7 @@ export interface Props {
   id: string
 }
 
-export const log = (type: any) => console.log.bind(console, type);
+export const log = (type: unknown) => console.log.bind(console, type);
 
 export const to_schema_type = (tpl_param: string): string => {
   let type: string
@@ -93,7 +93,7 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
     schema.properties = {}
     param.allowed.forEach((param: any) => {
       const dkey = Object.keys(param)[0]
-      const dvalue = param[dkey]
+      const dvalue = param[dkey as string]
       //@ts-ignore
       schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
     })

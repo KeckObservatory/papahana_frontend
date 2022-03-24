@@ -1,6 +1,5 @@
 import React  from 'react';
 import { makeStyles } from "@mui/styles"
-
 import AppBar from '@mui/material/AppBar';
 import Switch from "@mui/material/Switch"
 import IconButton from '@mui/material/IconButton';
@@ -9,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography'
 import { useDrawerOpenContext } from './App';
+// import { DefaultTheme } from '@mui/private-theming'
 
 const useStyles = makeStyles((theme: any) => ({
   root: { 
@@ -31,8 +31,13 @@ const useStyles = makeStyles((theme: any) => ({
   },
 }))
 
+interface Props {
+  observer_id: string
+  darkState: boolean
+  handleThemeChange: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
+}
 
-export function TopBar(props: any) {
+export function TopBar(props: Props) {
   const classes = useStyles();
   const drawer = useDrawerOpenContext()
 

@@ -8,7 +8,7 @@ import { Theme as MaterialUITheme } from '../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { template_parameter_to_schema_properties, log } from "./template_form"
-import { makeStyles } from "@mui/styles";
+import { DefaultTheme, makeStyles } from "@mui/styles";
 import { get_template } from "../../api/utils";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -16,7 +16,7 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 
 const Form = withTheme(MaterialUITheme)
 
-export const useStyles = makeStyles((theme: any) => ({
+export const useStyles = makeStyles((theme: DefaultTheme) => ({
   root: {
     textAlign: 'left',
     margin: theme.spacing(0),
@@ -59,7 +59,7 @@ const template_to_schema = (template: Template, formName: string): JSONSchema7 =
 export default function CommonParametersTemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
   const sub_forms = ['instrument_parameters', 'detector_parameters', 'tcs_parameters']
-  const [schemas, setSchemas] = React.useState({} as any)
+  const [schemas, setSchemas] = React.useState({} as {[key: string]: any})
   const ref = React.useRef(null)
 
   React.useEffect(() => {
@@ -78,7 +78,7 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
   }, [])
 
 
-  const handleChange = (evt: ISubmitEvent<any>, formName: keyof CommonParameters): void => {
+  const handleChange = (evt: ISubmitEvent<CommonParameters>, formName: keyof CommonParameters): void => {
     let newFormData = { ...props.obComponent }
     newFormData[formName] = evt.formData
     // console.log('new subform data', evt.formData)
@@ -90,7 +90,7 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
       {sub_forms.map((formName: string) => {
         //@ts-ignore
         const formData = props.obComponent[formName]
-        const handleSubChange = (evt: ISubmitEvent<any>) => handleChange(evt, formName as keyof CommonParameters)
+        const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName as keyof CommonParameters)
         // { console.log('making form', formName, 'schema', schemas[formName] ) }
         return (
           <Accordion key={formName}>

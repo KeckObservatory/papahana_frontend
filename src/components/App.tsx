@@ -114,7 +114,7 @@ export default function App() {
       <ObserverContext.Provider value={observer_id}>
       <div className={classes.root}>
         <Main open={drawerOpen? 'open': 'closed'} >
-        <TopBar darkTheme={theme} observer_id={observer_id} handleThemeChange={handleThemeChange} />
+        <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />
         <ModuleMenu jsonTheme={jsonTheme} />
         </Main>
       </div>

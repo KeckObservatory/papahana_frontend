@@ -29,7 +29,7 @@ export default function RemoveContainerDialog(props: Props) {
 
     const handleRemove = () => {
         setOpen(false);
-        container_api_funcs.remove(props.container_id).then((response: string) => {
+        container_api_funcs.remove(props.container_id).then((response: unknown) => {
             console.log(`container ${response} removed`)
             // ob_select_object.reset_container_and_ob_select()
             ob_select_object.setTrigger(ob_select_object.trigger + 1)

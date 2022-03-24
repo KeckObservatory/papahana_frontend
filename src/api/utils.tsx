@@ -1,4 +1,4 @@
-import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template } from "../typings/papahana";
+import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs } from "../typings/papahana";
 import { ob_api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 import { resolve } from "path";
@@ -112,7 +112,9 @@ export const make_scoby_table = (observer_id: string): Promise<Scoby[]> => {
       .then((sem_cons: [string, string][]) => create_scoby_table(sem_cons))
 }
 
-export const get_obs_from_semester = async (observer_id: string, sem_id: string): Promise<any> => {
+
+
+export const get_obs_from_semester = async (observer_id: string, sem_id: string): Promise<ContainerObs> => {
    const container_obs = await get_select_funcs.get_semesters(observer_id)
       .then((semesters: string[]) => {
          const semester = semesters.find((elem: string) => elem === sem_id)
@@ -123,7 +125,7 @@ export const get_obs_from_semester = async (observer_id: string, sem_id: string)
          return create_sc_table([semester], observer_id)
       })
       .then((sem_cons: [string, string][]) => {
-         const container_obs: any = {}
+         const container_obs: ContainerObs = {}
          sem_cons.forEach(async (sem_cid: [string, string]) => {
             const cid = sem_cid[1]
             const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
@@ -132,7 +134,7 @@ export const get_obs_from_semester = async (observer_id: string, sem_id: string)
          return container_obs
       })
 
-   const promise = new Promise<string[]>((resolve) => {
+   const promise = new Promise<ContainerObs>((resolve) => {
       resolve(container_obs)
    })
    return promise

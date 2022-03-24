@@ -1,4 +1,8 @@
-export type CatalogRow = Array< number | string >
+export interface ContainerObs {
+	[key: string]: ObservationBlock[]
+}
+
+export type CatalogRow = Array<number | string>
 
 export interface Container {
 	_id: string,
@@ -9,11 +13,11 @@ export interface Container {
 }
 
 export interface Semester {
-    _id: string
-    comment?: string
-    container_list: string[]
-    name: string
-    sem_id: string
+	_id: string
+	comment?: string
+	container_list: string[]
+	name: string
+	sem_id: string
 }
 export type Method = 'get' | 'put' | 'post' | 'remove'
 export type Document = ObservationBlock | Group | object
@@ -34,10 +38,10 @@ export interface Status {
 export type TimeConstraints = Array<[string, string]>
 
 export interface CommonParameters {
-	metadata: { [key:string]: any },
-	instrument_parameters: { [key:string]: any },
-	detector_parameters: { [key:string]: any },
-	tcs_parameters: { [key:string]: any }
+	metadata: { [key: string]: any },
+	instrument_parameters: { [key: string]: any },
+	detector_parameters: { [key: string]: any },
+	tcs_parameters: { [key: string]: any }
 }
 
 export type OBType = 'science' | 'engineering' | 'calibration'
@@ -56,7 +60,7 @@ export interface Scoby {
 	container_id: string
 	container_name?: string
 	ob_id?: string
-    name?: string
+	name?: string
 }
 
 export interface OBCell {
@@ -73,7 +77,7 @@ export interface OBMetadata {
 	name: string;
 	version: string | number;
 	priority: number;
-	ob_type: OBType; 
+	ob_type: OBType;
 	pi_id: number;
 	sem_id: string;
 	instrument: Instrument;
@@ -101,11 +105,11 @@ export interface AcquisitionMetadata extends Metadata {
 
 export interface BaseSequence extends Base {
 	metadata: Metadata;
-	parameters: { [key:string]: any }
+	parameters: { [key: string]: any }
 }
 
-export interface DefaultAcquisition extends BaseSequence{
-    metadata: AcquisitionMetadata;
+export interface DefaultAcquisition extends BaseSequence {
+	metadata: AcquisitionMetadata;
 	template_id: string;
 }
 
@@ -138,7 +142,7 @@ export interface Dither extends Base {
 export type Science = KCWIScience
 
 export interface KCWIScienceParameters {
-    [key: string]: number | string | Slicer | Grating | any
+	[key: string]: number | string | Slicer | Grating | any
 }
 
 export interface Metadata {
@@ -146,7 +150,7 @@ export interface Metadata {
 	version: string,
 	ui_name: string,
 	instrument?: Instrument,
-    template_type: string,
+	template_type: string,
 	script?: string
 }
 
@@ -233,22 +237,22 @@ interface KCWIInstrumentPackage extends Base {
 	configurable_elements: string[]
 	pointing_origins: string[]
 	common_parameters: string
-	template_list: {[key: string]: string}
+	template_list: { [key: string]: string }
 }
 
 export type CameraName = "BLUE" | "RED"
 export type CameraItentifier = "CAM1" | "CAM2"
 
 export interface Cameras extends object {
-  name: CameraName 
-  type: string
-  identifier: CameraIdentifier
-  detector: string
+	name: CameraName
+	type: string
+	identifier: CameraIdentifier
+	detector: string
 }
 
 
 export interface InstrumentPackageTemplates {
-  [key: string]: string 
+	[key: string]: string
 }
 
 export type TemplateType = "acq" | "sci" | "config"
@@ -258,17 +262,17 @@ export interface TemplateMetadata extends Metadata {
 }
 
 export interface TemplateParameter {
-  ui_name: string;
-  option: string;
-  allowed: string[] | number[] | object[];
-  default: string | number | null;
-  type: string;
-  optionality: string;
+	ui_name: string;
+	option: string;
+	allowed: string[] | number[] | object[];
+	default: string | number | null;
+	type: string;
+	optionality: string;
 }
 
 export interface Template {
 	template_id: string;
 	metadata: TemplateMetadata;
-	parameters: {[key: string]: TemplateParameter};
-    name: string,
+	parameters: { [key: string]: TemplateParameter };
+	name: string,
 }

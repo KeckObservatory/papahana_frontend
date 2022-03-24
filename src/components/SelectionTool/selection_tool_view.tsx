@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useObserverContext } from './../App'
 import { get_obs_from_semester, get_sem_id_list } from '../../api/utils'
-import { OBCell, ObservationBlock } from '../../typings/papahana'
+import { ContainerObs, OBCell, ObservationBlock } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import Paper from '@mui/material/Paper'
@@ -100,7 +100,7 @@ export const SelectionToolView = (props: Props) => {
     const observer_id = useObserverContext() 
 
     useEffect(() => {
-        get_obs_from_semester(observer_id, sem_id).then((container_obs: ObservationBlock[]) => {
+        get_obs_from_semester(observer_id, sem_id).then((container_obs: ContainerObs) => {
             const cells = container_obs_to_cells(container_obs)
             setAvlObs(cells)
         })
@@ -108,7 +108,7 @@ export const SelectionToolView = (props: Props) => {
 
     useEffect(() => {
         console.log('sem_id changed')
-        get_obs_from_semester(observer_id, sem_id).then((container_obs: ObservationBlock[]) => {
+        get_obs_from_semester(observer_id, sem_id).then((container_obs: ContainerObs) => {
             const cells = container_obs_to_cells(container_obs)
             // console.log('got cells to add')
             // console.log(cells)

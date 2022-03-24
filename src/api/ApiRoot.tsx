@@ -75,7 +75,7 @@ const ob_post = (ob: object): Promise<string> => {
         .catch(handleError);
 };
 
-const ob_put = (ob_id: string, ob: ObservationBlock): Promise<any> => {
+const ob_put = (ob_id: string, ob: ObservationBlock): Promise<unknown> => {
     const url = `${OB_URL}?ob_id=${ob_id}`
     return axios
         .put(url, ob)
@@ -83,7 +83,7 @@ const ob_put = (ob_id: string, ob: ObservationBlock): Promise<any> => {
         .catch(handleError);
 };
 
-const ob_remove = (ob_id: string): Promise<any> => {
+const ob_remove = (ob_id: string): Promise<unknown> => {
     return axios
         .delete(`${OB_URL}?ob_id=${ob_id}`)
         .then(handleResponse)
@@ -113,7 +113,7 @@ const container_put = (container_id: string, container: Container): Promise<numb
         .catch(handleError);
 };
 
-const container_remove = (container_id: string): Promise<any> => {
+const container_remove = (container_id: string): Promise<unknown> => {
     return axios
         .delete(`${CONTAINER_URL}?container_id=${container_id}`)
         .then(handleResponse)

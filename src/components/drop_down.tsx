@@ -2,9 +2,9 @@ import { FormControl } from '@mui/material'
 import Select from '@mui/material/Select'
 import MenuItem from '@mui/material/MenuItem'
 import InputLabel from '@mui/material/InputLabel'
-import { makeStyles } from '@mui/styles';
+import { DefaultTheme, makeStyles } from '@mui/styles';
 
-const useStyles = makeStyles( (theme: any) => ({
+const useStyles = makeStyles( (theme: DefaultTheme)  => ({
     formControl: {
         minWidth: 120,
         width: '100%',

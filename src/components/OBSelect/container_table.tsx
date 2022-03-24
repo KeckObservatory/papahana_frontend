@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
+import MUIDataTable, { DisplayData, MUIDataTableOptions } from "mui-datatables"
 import { Container, Scoby } from "../../typings/papahana";
 import Button from '@mui/material/Button';
 import DropDown from '../drop_down'
@@ -12,11 +12,16 @@ interface Props {
     containerIdNames: object[]
 }
 
+interface SelectedRowData { index: number; dataIndex: number }
+
+interface SelectedRows {
+    data: Array<SelectedRowData>; lookup?: { [key: number]: boolean }
+}
 
 interface CTProps {
     containerIdNames: object[],
-    selectedRows: any
-    displayData: any
+    selectedRows: SelectedRows,
+    displayData: DisplayData 
 }
 
 interface SRD {
@@ -25,7 +30,7 @@ interface SRD {
 }
 
 interface DA {
-    data: [string, string, string]
+    data: [string, string]
     dataIndex: number
 }
 
@@ -48,7 +53,7 @@ const CustomToolbarSelect = (props: CTProps) => {
             console.log('container name not specified.')
             return
         }
-        const rows = props.selectedRows.data.map((x: SRD) => {
+        const rows = props.selectedRows.data.map((x: any) => {
             return props.displayData[x.index]
         })
 
@@ -58,7 +63,7 @@ const CustomToolbarSelect = (props: CTProps) => {
         //TODO: get all containers, filter the ones that need to update,
         // create new containers, and then
         // PUT 
-        rows.forEach(async (r: DA) => {
+        rows.forEach(async (r: any) => {
             const [ob_id, container_name] = r.data
             //get container
             //@ts-ignore
@@ -86,7 +91,7 @@ const CustomToolbarSelect = (props: CTProps) => {
         })
 
         //add to container, the selected obs
-        let obs = rows.map((r: DA) => {
+        let obs = rows.map((r: any) => {
             const [_id, cont_name] = r.data
             return _id
         })
@@ -126,8 +131,8 @@ const ContainerTable = (props: Props) => {
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
         onRowsDelete: () => false,
-        selectableRows: 'single', //bug multiple will not removed all selected obs from container
-        customToolbarSelect: (selectedRows, displayData) => (
+        selectableRows: 'multiple', //bug multiple will not removed all selected obs from container
+        customToolbarSelect: (selectedRows: SelectedRows, displayData: DisplayData) => (
             <CustomToolbarSelect 
             selectedRows={selectedRows}
             displayData={displayData}

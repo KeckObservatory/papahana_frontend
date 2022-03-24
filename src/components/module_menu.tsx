@@ -1,5 +1,5 @@
 import React from 'react';
-import { makeStyles } from "@mui/styles"
+import { DefaultTheme, makeStyles } from "@mui/styles"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -8,7 +8,7 @@ import ODTView from './ODT/observation_data_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { SelectionToolView } from './SelectionTool/selection_tool_view';
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: DefaultTheme) => ({
     moduleMain: {
         width: '100%'
     },
@@ -82,7 +82,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
             <AppBar position="static" className={classes.tabs}>
                 <Tabs
                     value={value}
-                    onChange={handleChange as any}
+                    onChange={handleChange}
                     indicatorColor="secondary"
                     textColor="inherit"
                     variant="fullWidth"
