@@ -118,6 +118,7 @@ export const SelectionToolView = (props: Props) => {
     }, [sem_id])
 
     useEffect(() => { //run when props.observer_id changes
+        console.log('planning tool: observer_id changed')
         get_sem_id_list(observer_id)
             .then((lst: string[]) => {
                 setSemIdList(() => [...lst])
