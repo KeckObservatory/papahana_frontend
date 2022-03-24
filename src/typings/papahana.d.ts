@@ -50,8 +50,14 @@ export interface Base {
 }
 
 export interface Status extends Base {
-	executions: string[]
-	state: string
+	executions?: string[]
+	deleted: boolean
+	state?: number
+	priority?: number
+	current_seq?: number
+	current_exp_det1?: number
+	current_exp_det2?: number
+	current_step?: number 
 }
 
 export interface Scoby {

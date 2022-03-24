@@ -41,9 +41,10 @@ const PopoverButtons = (props: PButtonProps) => {
             sem_id: "2017A_U050",
             comment: ""
         }
+        const status = { deleted: false}
         //@ts-ignore
         const _id = JSON.stringify(Date.now()) + 'XXXXXXXXXXX' // _id is not used. this is to get past validation.
-        const newOB = { _id: _id, metadata: meta } as ObservationBlock
+        const newOB = { _id: _id, metadata: meta, status: status } as ObservationBlock
         // props.setOB(newOB)
         let ob_id: string;
         ob_api_funcs.post(newOB)
