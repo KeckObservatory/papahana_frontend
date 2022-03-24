@@ -70,7 +70,7 @@ const ob_get = (ob_id: string ): Promise<ObservationBlock> => {
 
 const ob_post = (ob: object): Promise<string> => {
     return axios
-        .post(`${OB_URL}`, ob)
+        .post(`${OB_URL}`, JSON.stringify(ob))
         .then(handleResponse)
         .catch(handleError);
 };
