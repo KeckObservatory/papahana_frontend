@@ -129,7 +129,6 @@ export default function ObservationBlockSelecter(props: Props) {
         setRows(scoby)
         setContainerIdNames(contset)
     })
-    console.log(reset_container_and_ob_select())
   }, [trigger])
 
 
