@@ -23,42 +23,42 @@ interface RenderTree {
     type: string;
 }
 
-const containers_to_nodes = async (containers: Container[]): Promise<RenderTree[]> => {
-    //use the obs themselves to create the nodes
-    let nodes: any = []
-    containers.forEach(async (container: Container) => {
-
-        const obs = await get_select_funcs.get_observation_blocks_from_container(container._id)
-        console.log('obs', obs)
-        let node: any = {};
-        node['name'] = container.name;
-        node['id'] = container._id;
-        node['type'] = 'container'
-        node['children'] = obs.map((ob: ObservationBlock) => {
-            let leaf: RenderTree = { name: ob.metadata.name, id: ob._id, type: 'ob' }
-            return leaf
-        })
-        nodes.push(node)
-    })
-    return nodes
-}
-
-// const containers_to_nodes = (containers: Container[]): RenderTree[] => {
+// const containers_to_nodes = async (containers: Container[]): Promise<RenderTree[]> => {
+//     //use the obs themselves to create the nodes
 //     let nodes: any = []
-//     containers.forEach((container: Container) => {
+//     containers.forEach(async (container: Container) => {
 
+//         const obs = await get_select_funcs.get_observation_blocks_from_container(container._id)
+//         console.log('obs', obs)
 //         let node: any = {};
 //         node['name'] = container.name;
 //         node['id'] = container._id;
 //         node['type'] = 'container'
-//         node['children'] = container.observation_blocks.map((obStr: string) => {
-//             let leaf: RenderTree = { name: obStr, id: obStr, type: 'ob' }
+//         node['children'] = obs.map((ob: ObservationBlock) => {
+//             let leaf: RenderTree = { name: ob.metadata.name, id: ob._id, type: 'ob' }
 //             return leaf
 //         })
 //         nodes.push(node)
 //     })
 //     return nodes
 // }
+
+const containers_to_nodes = (containers: Container[]): RenderTree[] => {
+    let nodes: any = []
+    containers.forEach((container: Container) => {
+
+        let node: any = {};
+        node['name'] = container.name;
+        node['id'] = container._id;
+        node['type'] = 'container'
+        node['children'] = container.observation_blocks.map((obStr: string) => {
+            let leaf: RenderTree = { name: obStr, id: obStr, type: 'ob' }
+            return leaf
+        })
+        nodes.push(node)
+    })
+    return nodes
+}
 
 export default function ContainerTree(props: Props) {
 
@@ -83,12 +83,12 @@ export default function ContainerTree(props: Props) {
             return c.name
         }))
         let newTree = { ...rootTree }
-        // newTree['children'] = await containers_to_nodes(props.containers)
-        // setTree(newTree)
-        containers_to_nodes(props.containers).then( (nodes: RenderTree[]) => {
-            newTree['children'] = nodes
-            setTree(newTree)
-        })
+        newTree['children'] = containers_to_nodes(props.containers)
+        setTree(newTree)
+        // containers_to_nodes(props.containers).then( (nodes: RenderTree[]) => {
+        //     newTree['children'] = nodes
+        //     setTree(newTree)
+        // })
     }, [props.containers])
 
     const renderTree = (nodes: RenderTree) => (
