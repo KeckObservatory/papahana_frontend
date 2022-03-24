@@ -7,7 +7,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddContainerDialog from './add_container_dialog';
 import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
-import { Container, ObservationBlock } from '../../typings/papahana';
+import { Container, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './ob_select' 
 
@@ -41,7 +41,16 @@ const PopoverButtons = (props: PButtonProps) => {
             sem_id: "2017A_U050",
             comment: ""
         }
-        const status = { deleted: false}
+        const status: Status = {
+            current_exp_det1: 0,
+            current_exp_det2: 0,
+            current_seq: 0,
+            current_step: 0,
+            deleted: false,
+            executions: [],
+            priority: 0,
+            state: 4
+        }
         //@ts-ignore
         const _id = JSON.stringify(Date.now()) + 'XXXXXXXXXXX' // _id is not used. this is to get past validation.
         const newOB = { _id: _id, metadata: meta, status: status } as ObservationBlock

@@ -27,13 +27,6 @@ export type OBSequence = Acquisition | Science
 export type OBComponent = Target | OBSequence | OBMetadata | CommonParameters | TimeConstraints | Status
 export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations'
 
-export interface Status {
-	state: string;
-	priority: number;
-	current_seq: number;
-	current_step: number;
-	current_exp: number;
-}
 
 export type TimeConstraints = Array<[string, string]>
 
@@ -52,7 +45,7 @@ export interface Base {
 export interface Status extends Base {
 	executions?: string[]
 	deleted: boolean
-	state?: number
+	state?: number 
 	priority?: number
 	current_seq?: number
 	current_exp_det1?: number
