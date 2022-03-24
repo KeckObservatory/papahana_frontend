@@ -29,6 +29,7 @@ const containers_to_nodes = async (containers: Container[]): Promise<RenderTree[
     containers.forEach(async (container: Container) => {
 
         const obs = await get_select_funcs.get_observation_blocks_from_container(container._id)
+        console.log('obs', obs)
         let node: any = {};
         node['name'] = container.name;
         node['id'] = container._id;
