@@ -41,14 +41,14 @@ const defaultState: State = {
 }
 
 export interface OBSelectContextObject {
-  sem_id: string | undefined,
+  sem_id: string,
   reset_container_and_ob_select: Function,
   trigger: number,
   setTrigger: Function
 }
 
 const init_object = {
-  sem_id: undefined,
+  sem_id: '',
   reset_container_and_ob_select: () => { },
   trigger: 0,
   setTrigger: () => { }
