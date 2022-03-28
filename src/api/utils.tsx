@@ -195,8 +195,7 @@ export const make_container_list = async (semesters: string[], sem_id: string, o
 export const get_ob_list = (sem_id: string, container_id: string, observer_id: string): Promise<string[]> => {
    //make container list from containers and sem_id
    const promise = new Promise<string[]>((resolve) => {
-      get_select_funcs.get_containers(sem_id, observer_id).then((containers: Container[]) => {
-         console.log('containers', containers)
+      get_containers(sem_id, observer_id).then((containers: Container[]) => {
          resolve(make_ob_list(containers, container_id))
       })
    })
