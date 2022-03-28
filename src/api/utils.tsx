@@ -24,7 +24,8 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
 
 export const get_template = (name: string): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
-      get_select_funcs.get_template(name).then((template: Template) => {
+      get_select_funcs.get_template(name).then((templateObject: { [key: string]: Template}) => {
+         const template = templateObject[name]
          const keys = Object.keys(template)
          console.log('got template', name, template)
          if (keys.length === 1) {
