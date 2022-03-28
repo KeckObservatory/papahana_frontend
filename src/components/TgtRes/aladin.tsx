@@ -95,8 +95,8 @@ export default function Aladin(props: Props) {
 
     const scriptloaded = () => {
         const win: any = window
-        let ra: string = props.target.target_coord_ra;
-        let dec: string = props.target.target_coord_dec;
+        let ra: string = props.target.parameters.target_coord_ra;
+        let dec: string = props.target.parameters.target_coord_dec;
         const raDeg = ra_dec_to_deg(ra)
         const decDeg = ra_dec_to_deg(dec, true)
         console.log('in degrees', raDeg, decDeg)
@@ -146,7 +146,7 @@ export default function Aladin(props: Props) {
             '}';
         document.head.appendChild(extraStyle);
 
-    }, [props.target.target_coord_ra, props.target.target_coord_dec, props.selIdx])
+    }, [props.target.parameters.target_coord_ra, props.target.parameters.target_coord_dec, props.selIdx])
 
 
     return (

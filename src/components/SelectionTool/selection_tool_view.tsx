@@ -72,8 +72,8 @@ const container_obs_to_cells = (container_obs: any) => {
                 name: ob.metadata.name,
                 type: 'ob',
                 id: JSON.stringify(uid),
-                ra: ob.target?.target_coord_ra,
-                dec: ob.target?.target_coord_dec
+                ra: ob.target?.parameters.target_coord_ra,
+                dec: ob.target?.parameters.target_coord_dec
             }
             const tgt = ob.target
             if (tgt) obCell['target'] = tgt

@@ -1,5 +1,5 @@
 import React, { } from "react"
-import { Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
+import { Target, Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
 import { withTheme, ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 // import Form from '@rjsf/material-ui'
 import { Theme as MaterialUITheme } from './../../rjs_forms'
@@ -121,8 +121,13 @@ export const template_to_schema = (template: Template): JSONSchema7 => {
 
 export const init_form_data = (obComponent: OBComponent, id: string) => {
   let formData: { [key: string]: any } = {}
-  if (id === 'target' || id === 'metadata' || id === 'status') {
+  if (id === 'metadata' || id === 'status') {
     formData = obComponent
+  }
+  else if( id==='target') {
+    const tgt = obComponent as Target 
+    formData = tgt.parameters
+
   }
   else if (id === 'time_constraints') {
     let timeConstraints = obComponent as any

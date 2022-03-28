@@ -19,9 +19,9 @@ const format_values = (values: number[], times: Date[], target: Target, units?: 
     for (let idx = 0; idx < times.length; idx++) {
         const d: Data = {
             time: times[idx], value: values[idx], units: units,
-            type: 'trajectory', tgt: target.name,
-            ra: target.ra_deg,
-            dec: target.dec_deg
+            type: 'trajectory', tgt: target.parameters.target_info_name,
+            ra: target.parameters.ra_deg,
+            dec: target.parameters.dec_deg
 
         }
         data.push(d)
@@ -180,26 +180,28 @@ const formatDate = (date: Date) => {
 
 const get_chart_data = (target: Target, times: Date[], chartType: string, date: Date, lngLatEl: LngLatEl, offset: number = 600): number[] => {
     let val;
+    const ra = target.parameters.ra_deg as number
+    const dec = target.parameters.dec_deg as number
     switch (chartType) {
         case 'altitude': {
-            val = util.get_target_traj(target.ra_deg as number, target.dec_deg as number, times, date, lngLatEl, offset)
+            val = util.get_target_traj(ra, dec, times, date, lngLatEl, offset)
             val = val.map((azAlt: any) => azAlt[1]) as number[]
             break;
         }
         case 'air mass': {
-            val = util.get_air_mass(target.ra_deg as number, target.dec_deg as number, times, date, lngLatEl, offset)
+            val = util.get_air_mass(ra, dec, times, date, lngLatEl, offset)
             break;
         }
         case 'parallactic angle': {
-            val = util.get_parallactic_angle(target.ra_deg as number, target.dec_deg as number, times, lngLatEl, offset)
+            val = util.get_parallactic_angle(ra, dec, times, lngLatEl, offset)
             break;
         }
         case 'lunar angle': {
-            val = util.get_lunar_angle(target.ra_deg as number, target.dec_deg as number, times, lngLatEl)
+            val = util.get_lunar_angle(ra, dec, times, lngLatEl)
             break;
         }
         default: {
-            val = util.get_target_traj(target.ra_deg as number, target.dec_deg as number, times, date, lngLatEl, offset)
+            val = util.get_target_traj(ra, dec, times, date, lngLatEl, offset)
             val = val.map((azAlt: any) => azAlt[1]) as number[]
         }
     }
