@@ -21,7 +21,7 @@ const OB_NAMES: OBSeqNames[] = [
     'time_constraints',
     'status'
 ]
-const METADATALESS = ['target', 'metadata', 'common_parameters', 'status', 'time_constraints']
+const METADATALESS = ['metadata', 'common_parameters', 'status', 'time_constraints']
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
