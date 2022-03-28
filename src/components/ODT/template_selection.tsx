@@ -11,22 +11,6 @@ interface Props {
     addSeq: Function;
 }
 
-// const add_targets = (templateList: string[], disList: boolean[], obSequences: string[]):void  => {
-//     //todo: get list of targets from api
-//     const targetTemplates = ['sidereal_target','non_sidereal_target', 'multi_object_target' ]
-//     targetTemplates.forEach( (tgtName: string) => {
-//         templateList.push(tgtName)
-//         const disabled = check_disabled(tgtName, obSequences)
-//         disList.push(disabled)
-//     })
-// }
-// const add_common_parameters= (templateList: string[], disList: boolean[], obSequences: string[]):void  => {
-//     const templateName = 'KCWI_common_parameters'
-//     templateList.push(templateName)
-//     const disabled = check_disabled(templateName, obSequences)
-//     disList.push(disabled)
-// }
-
 const check_disabled = (templateName: string, obSequences: string[]) => {
     if (templateName.includes('acq') && obSequences.includes('acquisition') ) {
         return true 
@@ -53,8 +37,6 @@ const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequ
         templateList.push(templateName)
         disList.push(disabled)
     })
-    // add_targets(templateList, disList, obSequences)
-    // add_common_parameters(templateList, disList, obSequences)
     return [templateList, disList]
 }
 
@@ -87,7 +69,12 @@ export default function TemplateSelection(props: Props) {
             let seq = {
                 'metadata': template.metadata,
             } as Partial<Template> 
-            if (templateName.includes('acq') || templateName.includes('sci') ) {
+            if (templateName.includes('common') ) {
+              seq['detector_parameters'] = {}
+              seq['instrument_parameters'] = {}
+              seq['tcs_parameters'] = {}
+            }
+            else { 
               seq['parameters'] = {}
             }
             props.addSeq(seq)

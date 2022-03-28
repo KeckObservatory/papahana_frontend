@@ -282,5 +282,17 @@ export interface Template {
 	template_id: string;
 	metadata: TemplateMetadata;
 	parameters: { [key: string]: TemplateParameter };
+    detector_parameters?: { [key: string]: TemplateParameter }
+    tcs_parameters?: { [key: string]: TemplateParameter }
+    instrument_parameters?: { [key: string]: TemplateParameter }
 	name: string,
+}
+
+export interface CommonTemplate {
+	name: string,
+	template_id: string;
+	metadata: TemplateMetadata;
+    detector_parameters: { [key: string]: TemplateParameter }
+    tcs_parameters: { [key: string]: TemplateParameter }
+    instrument_parameters: { [key: string]: TemplateParameter }
 }
