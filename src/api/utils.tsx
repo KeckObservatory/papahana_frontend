@@ -42,9 +42,6 @@ export const get_template = (name: string): Promise<Template> => {
 const create_sc_table = async (semesters: string[], observer_id: string) => {
    let sem_cons: [string, string][] = []
    await semesters.forEach(async (sem_id: string) => {
-      if (!sem_id) {
-         return sem_cons 
-      }
       await get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
          containers.forEach((container: Container) => {
             const cid = container._id
@@ -59,10 +56,6 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
 
 export const make_semid_scoby_table_and_containers = async (sem_id: string, observer_id: string): Promise<[Scoby[], Container[]]> => {
    let scoby: Scoby[] = []
-   if (!sem_id) {
-      console.log('no semid selected. returning empty list')
-      return [scoby, []]
-   }
    return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
       containers.forEach(async (container: Container) => {
          const cid = container._id
@@ -170,6 +163,9 @@ export const get_container_list = (sem_id: string, observer_id: string): Promise
 export const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
    //make container given sem_id and observer_id 
    const promise = new Promise<Container[]>((resolve) => {
+      if (!sem_id) {
+         resolve([])
+      }
       resolve(get_select_funcs.get_containers(sem_id, observer_id))
    })
    return promise
