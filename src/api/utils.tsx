@@ -42,6 +42,9 @@ export const get_template = (name: string): Promise<Template> => {
 const create_sc_table = async (semesters: string[], observer_id: string) => {
    let sem_cons: [string, string][] = []
    await semesters.forEach(async (sem_id: string) => {
+      if (!sem_id) {
+         return sem_cons 
+      }
       await get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
          containers.forEach((container: Container) => {
             const cid = container._id
