@@ -154,7 +154,7 @@ export const get_container_list = (sem_id: string, observer_id: string): Promise
 export const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
    //make container given sem_id and observer_id 
    const promise = new Promise<Container[]>((resolve) => {
-      if (sem_id.length <= 0) {
+      if (!sem_id) {
          resolve([])
       }
       else{ 
