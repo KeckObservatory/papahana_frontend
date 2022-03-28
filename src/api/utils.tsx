@@ -196,6 +196,7 @@ export const get_ob_list = (sem_id: string, container_id: string, observer_id: s
    //make container list from containers and sem_id
    const promise = new Promise<string[]>((resolve) => {
       get_select_funcs.get_containers(sem_id, observer_id).then((containers: Container[]) => {
+         console.log('containers', containers)
          resolve(make_ob_list(containers, container_id))
       })
    })
