@@ -56,12 +56,11 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
 
 export const make_semid_scoby_table_and_containers = async (sem_id: string, observer_id: string): Promise<[Scoby[], Container[]]> => {
    let scoby: Scoby[] = []
+   if (!sem_id) {
+      console.log('no semid selected. returning empty list')
+      return [scoby, []]
+   }
    return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
-      console.log('containers', containers)
-      if (!containers) {
-          return [scoby, []]
-      } 
-
       containers.forEach(async (container: Container) => {
          const cid = container._id
          // const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
