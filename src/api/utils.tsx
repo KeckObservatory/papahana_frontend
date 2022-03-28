@@ -29,8 +29,7 @@ export const get_template = (name: string): Promise<Template> => {
          const keys = Object.keys(template)
          console.log('got template', name, template)
          if (keys.length === 1) {
-            const tmp = Object.values(template)[0]
-            resolve(tmp)
+            resolve(template)
          }
       }).catch(err => {
          console.log(`get_template err: ${err}`)
