@@ -141,15 +141,6 @@ export const get_obs_from_semester = async (observer_id: string, sem_id: string)
 
 }
 
-export const make_sem_id_list = (semesters: Semester[]): string[] => {
-   //let sem_ids: string[] = ['all'] // not possible to have both 'all' sem_id and 'all' containers`
-   let sem_ids: string[] = []
-   semesters.forEach((sem: Semester) => {
-      sem_ids.push(sem.sem_id)
-   })
-   return sem_ids
-}
-
 export const get_container_list = (sem_id: string, observer_id: string): Promise<string[]> => {
    //make container list from containers and sem_id
    const promise = new Promise<string[]>((resolve) => {
@@ -166,7 +157,9 @@ export const get_containers = (sem_id: string, observer_id: string): Promise<Con
       if (sem_id.length <= 0) {
          resolve([])
       }
-      resolve(get_select_funcs.get_containers(sem_id, observer_id))
+      else{ 
+         resolve(get_select_funcs.get_containers(sem_id, observer_id))
+      }
    })
    return promise
 }
