@@ -147,10 +147,10 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
 
 export const get_schema = async (obComponent: OBComponent, id: string): Promise<JSONSchema7> => {
   let sch: JSONSchema7 = {}
-  if (id === 'target') { // needs to be used in the database
-    sch = schemas.targetSchema as JSONSchema7
-  }
-  else if (id === 'metadata') {
+  // if (id === 'target') { // needs to be used in the database
+  //   sch = schemas.targetSchema as JSONSchema7
+  // }
+  if (id === 'metadata') {
     sch = schemas.metadataSchema as JSONSchema7
   }
   else if (id === 'time_constraints') {
