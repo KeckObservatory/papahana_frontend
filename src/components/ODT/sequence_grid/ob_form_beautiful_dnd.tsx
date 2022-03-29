@@ -209,9 +209,11 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
     let newOb = { ...ob }
     //get science idx from name
     console.log('updating component', seqName, formData)
-    const idx = JSON.parse(seqName.substring(seqName.indexOf(' ') + 1)) - 1
-    console.log('seq idx:', idx)
+    const sequence_number = JSON.parse(seqName.substring(seqName.indexOf(' ') + 1))
     let seq = ob.observations as Science[]
+    idx = seq.findIndex(x => { return x.metadata.sequence_number===sequence_number })
+
+    console.log('seq_number', sequence_number, 'seq idx:', idx)
     if (seq) {
         Object.entries(formData).forEach(([key, value]) => {
             seq[idx].parameters[key] = value
