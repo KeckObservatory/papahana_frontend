@@ -211,7 +211,7 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
     console.log('updating component', seqName, formData)
     const sequence_number = JSON.parse(seqName.substring(seqName.indexOf(' ') + 1))
     let seq = ob.observations as Science[]
-    idx = seq.findIndex(x => { return x.metadata.sequence_number===sequence_number })
+    const idx = seq.findIndex(x => { return x.metadata.sequence_number===sequence_number })
 
     console.log('seq_number', sequence_number, 'seq idx:', idx)
     if (seq) {
