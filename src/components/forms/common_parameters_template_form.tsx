@@ -68,9 +68,7 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
   React.useEffect(() => {
     const md = props.obComponent.metadata
     let newSchemas = {...schemas}
-    let name=md.name
-
-    get_template(name).then((template: Template) => {
+    get_template(md.name).then((template: Template) => {
         sub_forms.forEach( (formName: keyof Template) => {
         const subSchema = template_to_schema(template[formName] as unknown as Template, formName)
 
