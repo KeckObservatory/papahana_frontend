@@ -152,6 +152,7 @@ export default function ODTView(props: Props) {
     console.log(`setting selected ob to ${ob_id}`)
     setOBID(ob_id)
     getOB(ob_id)
+    setTriggerRender(triggerRender + 1) //re render DnD items 
   }
 
   const addSeq = (seq: OBSequence) => {
