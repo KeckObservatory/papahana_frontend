@@ -251,7 +251,13 @@ const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [k
     return ob as ObservationBlock
 }
 
-export const OBBeautifulDnD = (props) => {
+interface Props {
+    triggerRender: number 
+    ob: ObservationBlock
+    setOB: Function
+}
+
+export const OBBeautifulDnD = (props: Props) => {
     const classes = useStyles()
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
     let obItems = Object.entries(obComponents)
@@ -265,12 +271,15 @@ export const OBBeautifulDnD = (props) => {
         // enabling this makes affects the placement of
         // sequences. moving a sequence and editing it after will 
         // move it back to its original position erroniously.
-        // console.log(`JSON edited. resetting grid items`)
-        // const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
-        // let obItems = Object.entries(obComponents)
-        // obItems = chunkify(obItems, nColumns, evenChunks)
-        // setState(() => obItems)
-    }, [props.ob])
+        // It also takes a lot of resources to rerender the
+        // entire dnd component.
+
+        console.log(`JSON edited. resetting grid items`)
+        const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
+        let obItems = Object.entries(obComponents)
+        obItems = chunkify(obItems, nColumns, evenChunks)
+        setState(() => obItems)
+    }, [props.triggerRender])
 
     const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
         if (Object.keys(formData).length > 0) {

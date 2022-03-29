@@ -81,6 +81,7 @@ export default function ODTView(props: Props) {
   const [ob, setOB] = useState(initOB as ObservationBlock)
   const [theme, setTheme] =
     useQueryParam('theme', withDefault(StringParam, props.theme as string))
+  const [ triggerRender, setTriggerRender ] = useState(0)
 
   const drawer = useDrawerOpenContext()
 
@@ -120,6 +121,7 @@ export default function ODTView(props: Props) {
     if (newOB) {
       setOBID(newOB._id)
       setOB(newOB)
+      setTriggerRender(triggerRender + 1) //re render DnD items 
     }
   }
 
@@ -183,8 +185,8 @@ export default function ODTView(props: Props) {
     if (empty) {
       return (
         <OBBeautifulDnD
-          className={classes.dndGrid}
           ob={ob}
+          triggerRender={triggerRender}
           setOB={(newOb: ObservationBlock) => {
             // triggerBoop(true)
             setOB(newOb)
