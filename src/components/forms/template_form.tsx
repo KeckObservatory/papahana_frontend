@@ -124,8 +124,8 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
   if (id === 'metadata' || id === 'status') {
     formData = obComponent
   }
-  else if( id==='target') {
-    const tgt = obComponent as Target 
+  else if (id === 'target') {
+    const tgt = obComponent as Target
     formData = tgt.parameters
 
   }
@@ -180,12 +180,12 @@ export default function TemplateForm(props: Props): JSX.Element {
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
 
+  console.log('rendering form: ', props.id)
+  get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
+    setSchema(initSchema)
+  })
 
   React.useEffect(() => {
-    console.log('rendering form: ', props.id)
-    get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
-    setSchema(initSchema)
-    })
   }, [])
 
   React.useEffect(() => {
