@@ -26,7 +26,6 @@ export const get_template = (name: string): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
       get_select_funcs.get_template(name).then((templateObject: { [key: string]: Template}) => {
          const template = templateObject[name]
-         console.log('got template', name, template)
          resolve(template)
       }).catch(err => {
          console.log(`get_template err: ${err}`)
