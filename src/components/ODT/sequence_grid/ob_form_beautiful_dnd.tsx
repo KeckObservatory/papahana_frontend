@@ -208,6 +208,9 @@ const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element
 const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
     let newOb = { ...ob }
     //get science idx from name
+
+    console.log('updating component', seqName, formData, component)
+    console.log('seqName', seqName, 'formData', formData, 'component', component)
     const idx = JSON.parse(seqName.substring(seqName.indexOf('_') + 1))
     let seq = ob.observations as Science[]
     if (seq) {
@@ -230,20 +233,20 @@ const updateOBTimeConstraint = (ob: ObservationBlock, formData: any): Observatio
 }
 
 const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
-    let component = ob[seqName as keyof ObservationBlock] as any
+    let component = ob[seqName as keyof ObservationBlock] as OBComponent 
+
     if (METADATALESS.includes(seqName)) {
         component = formData
     }
     else {
-        console.log('updating component', seqName, formData, component)
         let params: { [key: string]: any } = component.parameters
-        console.log('seqName', seqName, 'formData', formData, 'component', component)
+
         Object.entries(formData).forEach(([key, value]) => {
             params[key] = value
         })
         component.parameters = params
     }
-    ob[seqName as keyof ObservationBlock] = component as any
+    ob[seqName as keyof ObservationBlock] = component as OBComponent 
     return ob as ObservationBlock
 }
 
@@ -269,7 +272,7 @@ export const OBBeautifulDnD = (props) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
             //handle observations
-            if (seqName.includes('science')) {
+            if (seqName.includes('sequence')) {
                 newOb = updateOBScience(seqName, newOb, formData)
             }
             else if (seqName.includes('time_constraints')) {
