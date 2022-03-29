@@ -230,11 +230,6 @@ export default function ODTView(props: Props) {
             <PublishIcon />
           </animated.button>
         </Tooltip>
-        {/* <Tooltip title="Create blank OB">
-          <IconButton aria-label='create' onClick={createOB}>
-            <AddIcon />
-          </IconButton>
-        </Tooltip> */}
         <Tooltip title="Copy OB to new OB">
           <IconButton aria-label='copy' onClick={copyOB}>
             <FileCopyIcon />

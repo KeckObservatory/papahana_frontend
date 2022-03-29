@@ -1,4 +1,7 @@
+import { toast } from 'react-toastify'
+import axios, {AxiosError} from 'axios';
 export function handleResponse(response: any) {
+    toast("a response is here")
     if (response.results) {
         return response.results;
     }
@@ -10,10 +13,11 @@ export function handleResponse(response: any) {
     return response;
 }
 
-export function handleError(error: any) {
-    if (error.data) {
-        console.error('handleError: ', error)
-        return error.data;
+export function handleError(error: Error | AxiosError) {
+    toast.error(error.message)
+    if (axios.isAxiosError(error)) {
+        console.error('handleError: ', error.message)
+        return error.toJSON();
     }
     return error;
 }

@@ -6,10 +6,11 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { lightBlue, deepOrange, deepPurple } from '@mui/material/colors';
 import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
 import { ThemeKeys } from 'react-json-view'
-import { TopBar } from './top_bar' 
+import { TopBar } from './top_bar'
 import { ModuleMenu } from './module_menu'
 import { styled, useTheme } from '@mui/material/styles';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -17,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   toolbar: {
     paddingRight: '8px',
-    paddingLeft: '40px' 
+    paddingLeft: '40px'
   },
   toolbarIcon: {
     display: "flex",
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     // ...theme.mixins.toolbar
   },
   menuButton: {
-    marginRight: '16px' 
+    marginRight: '16px'
   },
   // appBarSpacer: theme.mixins.toolbar,
   content: {
@@ -37,7 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   container: {
     paddingTop: '27px',
-    paddingBottom: '16px' 
+    paddingBottom: '16px'
   },
   fixedHeight: { height: 240 }
 }));
@@ -68,9 +69,8 @@ export interface Drawer {
   drawerWidth: number
 }
 
-const DrawerOpenContext = createContext<Drawer>({drawerOpen:true, setDrawerOpen: ()=>{}, drawerWidth: 500})
+const DrawerOpenContext = createContext<Drawer>({ drawerOpen: true, setDrawerOpen: () => { }, drawerWidth: 500 })
 export const useDrawerOpenContext = () => useContext(DrawerOpenContext)
-
 
 const drawerWidth = 700;
 
@@ -100,25 +100,61 @@ export default function App() {
   const [observer_id] =
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
-  
+
   const [theme, jsonTheme] = handleTheme(darkState)
 
   const handleThemeChange = (): void => {
     setDarkState(!darkState);
   }
+  
+  const notify = () => {
+    toast("Default Notification !");
 
+    toast.success("Success Notification !", {
+      position: toast.POSITION.TOP_CENTER
+    });
+
+    toast.error("Error Notification !", {
+      position: toast.POSITION.TOP_LEFT
+    });
+
+    toast.warn("Warning Notification !", {
+      position: toast.POSITION.BOTTOM_LEFT
+    });
+
+    toast.info("Info Notification !", {
+      position: toast.POSITION.BOTTOM_CENTER
+    });
+
+    toast("Custom Style Notification with css class!", {
+      position: toast.POSITION.BOTTOM_RIGHT,
+      className: 'foo-bar'
+    });
+  };
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
-      <DrawerOpenContext.Provider value={{drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth}}>
-      <ObserverContext.Provider value={observer_id}>
-      <div className={classes.root}>
-        <Main open={drawerOpen? 'open': 'closed'} >
-        <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />
-        <ModuleMenu jsonTheme={jsonTheme} />
-        </Main>
-      </div>
-      </ObserverContext.Provider>
+      <DrawerOpenContext.Provider value={{ drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth }}>
+        <ObserverContext.Provider value={observer_id}>
+          <div className={classes.root}>
+            <Main open={drawerOpen ? 'open' : 'closed'} >
+              <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />
+              <ModuleMenu jsonTheme={jsonTheme} />
+              <ToastContainer
+                position="top-right"
+                autoClose={5000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+              />
+              <button onClick={notify}>Notify</button>
+            </Main>
+          </div>
+        </ObserverContext.Provider>
       </DrawerOpenContext.Provider>
     </ThemeProvider>
   );
