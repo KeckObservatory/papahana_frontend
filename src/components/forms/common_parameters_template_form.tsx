@@ -1,5 +1,5 @@
 import React, { } from "react"
-import { Template, CommonParameters } from "../../typings/papahana"
+import { Template, CommonParameters, CommonTemplate } from "../../typings/papahana"
 import { withTheme, ISubmitEvent } from "@rjsf/core";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
@@ -58,17 +58,27 @@ const template_to_schema = (template: Template, formName: string): JSONSchema7 =
 
 export default function CommonParametersTemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
-  const sub_forms = ['instrument_parameters', 'detector_parameters', 'tcs_parameters']
-  const [schemas, setSchemas] = React.useState({} as {[key: string]: any})
+  const sub_forms = [
+   'instrument_parameters',
+   'detector_parameters',
+   'tcs_parameters'] as unknown as (keyof Template)[]
+  const [schemas, setSchemas] = React.useState({} as { [id: string]: JSONSchema7})
   const ref = React.useRef(null)
 
   React.useEffect(() => {
     const md = props.obComponent.metadata
     let newSchemas = {...schemas}
-    get_template(md.name).then((template: {[key: string]: any}) => {
+    let name=md.name
+    //TODO: fix the OB so that they all use uppercase
+    //this is a hacky fix that shoudn't belong in production.
+    const inst = name.split('_')[0]
+    name = name.replace(inst, inst.toUpperCase())
+
+    get_template(name).then((template: Template) => {
       console.log('cp template', template)
-        sub_forms.forEach( (formName: string) => {
-        const subSchema = template_to_schema(template[formName] as Template, formName)
+        sub_forms.forEach( (formName: keyof Template) => {
+        const subSchema = template_to_schema(template[formName] as unknown as Template, formName)
+
         newSchemas[formName] = subSchema
       })
       setSchemas(newSchemas)
