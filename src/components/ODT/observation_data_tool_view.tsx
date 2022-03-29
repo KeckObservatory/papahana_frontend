@@ -98,6 +98,9 @@ export default function ODTView(props: Props) {
         console.error(error)
       }
     )
+    .finally( () => {
+      setTriggerRender( triggerRender + 1 ) //force dnd component to rerender
+    })
   }
 
   const saveOBasJSON = () => {
@@ -152,7 +155,6 @@ export default function ODTView(props: Props) {
     console.log(`setting selected ob to ${ob_id}`)
     setOBID(ob_id)
     getOB(ob_id)
-    setTriggerRender(triggerRender + 1) //re render DnD items 
   }
 
   const addSeq = (seq: OBSequence) => {
@@ -213,7 +215,10 @@ export default function ODTView(props: Props) {
   const sideMenu = (
     <Paper className={classes.paper} elevation={3}>
       <h3>Observation Block Selection</h3>
-      <ObservationBlockSelecter setOB={setOB} handleOBSelect={handleOBSelect} ob_id={ob_id} />
+      <ObservationBlockSelecter 
+      setOB={setOB}
+      handleOBSelect={handleOBSelect} 
+      ob_id={ob_id} />
       <h3>Observation Block Edit/Display</h3>
       <div className={classes.buttonBlock}>
         <Tooltip title="Upload OB to database">
