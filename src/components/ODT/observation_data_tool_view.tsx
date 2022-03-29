@@ -121,7 +121,6 @@ export default function ODTView(props: Props) {
     if (newOB) {
       setOBID(newOB._id)
       setOB(newOB)
-      setTriggerRender(triggerRender + 1) //re render DnD items 
     }
   }
 
@@ -146,6 +145,7 @@ export default function ODTView(props: Props) {
     // triggerBoop(true)
     console.log('editing via json directly.')
     setOB(() => e.updated_src as ObservationBlock);
+    setTriggerRender(triggerRender + 1) //re render DnD items 
   }
 
   const handleOBSelect = (ob_id: string) => {
