@@ -267,13 +267,6 @@ export const OBBeautifulDnD = (props: Props) => {
     const [state, setState] = React.useState(obItems);
 
     React.useEffect(() => {
-        // updates view after direct JSON edit 
-        // enabling this makes affects the placement of
-        // sequences. moving a sequence and editing it after will 
-        // move it back to its original position erroniously.
-        // It also takes a lot of resources to rerender the
-        // entire dnd component.
-
         console.log(`JSON edited. resetting grid items`)
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         let obItems = Object.entries(obComponents)

@@ -69,10 +69,6 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
     const md = props.obComponent.metadata
     let newSchemas = {...schemas}
     let name=md.name
-    //TODO: fix the OB so that they all use uppercase
-    //this is a hacky fix to our test dataset that shoudn't belong in production.
-    const inst = name.split('_')[0]
-    name = name.replace(inst, inst.toUpperCase())
 
     get_template(name).then((template: Template) => {
         sub_forms.forEach( (formName: keyof Template) => {
