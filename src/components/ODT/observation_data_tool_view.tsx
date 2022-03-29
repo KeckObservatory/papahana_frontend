@@ -124,6 +124,7 @@ export default function ODTView(props: Props) {
     if (newOB) {
       setOBID(newOB._id)
       setOB(newOB)
+      setTriggerRender( triggerRender + 1 ) //force dnd component to rerender
     }
   }
 
@@ -175,6 +176,9 @@ export default function ODTView(props: Props) {
     }
     // triggerBoop(true)
     setOB(newOB)
+    setTriggerRender( triggerRender + 1 )
+
+
   }
 
   const createOB = () => {
