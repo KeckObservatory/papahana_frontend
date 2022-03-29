@@ -12,7 +12,6 @@ import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './ob_select' 
 
 interface PButtonProps extends Props {
-    container_names: Set<string>
     handleClose: Function
 }
 
@@ -21,7 +20,7 @@ interface Props {
     type: string
     name?: string
     handleOBSelect: Function
-    container_names: Set<string>
+    container_names?: Set<string>
     setOB: Function
 }
 
@@ -89,7 +88,7 @@ const PopoverButtons = (props: PButtonProps) => {
             {props.type === 'semid' &&
                 <div style={{ display: 'grid' }}>
                     <AddContainerDialog
-                        container_names={props.container_names}
+                        container_names={props.container_names as Set<string>}
                         handleClose={props.handleClose}
                     />
                 </div>
@@ -103,7 +102,7 @@ const PopoverButtons = (props: PButtonProps) => {
                         handleClose={props.handleClose}
                     />
                     <EditContainerNameDialog
-                        container_names={props.container_names}
+                        container_names={props.container_names as Set<string>}
                         name={props.name as string}
                         container_id={props.id}
                         handleClose={props.handleClose}
@@ -156,6 +155,7 @@ const NodePopover = (props: Props) => {
                     handleClose={handleClose}
                     type={props.type}
                     setOB={props.setOB}
+                    name={props.name}
                     id={props.id} />
             </Popover>
         </div>

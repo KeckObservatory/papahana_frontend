@@ -128,6 +128,11 @@ const ContainerTable = (props: Props) => {
         "container_name",
     ]
 
+
+    const onRowClick = (rowData: string[], rowMeta: {dataIndex: number, rowIndex: number}) => {
+        console.log('rowData', rowData, 'rowMeta', rowMeta)
+    }
+
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
         onRowsDelete: () => false,
@@ -138,11 +143,11 @@ const ContainerTable = (props: Props) => {
             displayData={displayData}
             containerIdNames={props.containerIdNames}
             />
-            
-
         ),
-        onRowSelectionChange: handleSelect
+        onRowSelectionChange: handleSelect,
+        onRowClick: onRowClick
     }
+
 
     return (
         <MUIDataTable
