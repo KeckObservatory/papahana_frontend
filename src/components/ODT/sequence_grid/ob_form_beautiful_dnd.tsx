@@ -272,6 +272,7 @@ export const OBBeautifulDnD = (props) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
             //handle observations
+            console.log('seqName', seqName)
             if (seqName.includes('sequence')) {
                 newOb = updateOBScience(seqName, newOb, formData)
             }
