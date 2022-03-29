@@ -266,7 +266,7 @@ export const OBBeautifulDnD = (props) => {
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         let obItems = Object.entries(obComponents)
         obItems = chunkify(obItems, nColumns, evenChunks)
-        setState(() => obItems)
+        // setState(() => obItems)
     }, [props.ob])
 
     const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
@@ -300,13 +300,13 @@ export const OBBeautifulDnD = (props) => {
             const items = reorder(state[sInd], source.index, destination.index);
             const newState = [...state];
             newState[sInd] = items;
-            setState(newState);
+            setState(() => newState);
         } else {
             const result = move(state[sInd], state[dInd], source, destination);
             const newState = [...state];
             newState[sInd] = result[sInd];
             newState[dInd] = result[dInd];
-            setState(newState.filter(group => group.length));
+            setState(() => newState.filter(group => group.length));
         }
     }
 
