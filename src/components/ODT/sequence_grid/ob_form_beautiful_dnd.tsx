@@ -266,7 +266,7 @@ export const OBBeautifulDnD = (props) => {
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         let obItems = Object.entries(obComponents)
         obItems = chunkify(obItems, nColumns, evenChunks)
-        // setState(() => obItems)
+        setState(() => obItems)
     }, [props.ob])
 
     const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
