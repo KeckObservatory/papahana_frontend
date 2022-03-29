@@ -1,9 +1,8 @@
 import { toast } from 'react-toastify'
-import axios, {AxiosError} from 'axios';
-export function handleResponse(response: any) {
-    toast("a response is here")
-    if (response.results) {
-        return response.results;
+import axios, {AxiosError, AxiosResponse } from 'axios';
+export function handleResponse(response: AxiosResponse) {
+    if (response.status < 200) {
+        toast.error(response.statusText)
     }
 
     if (response.data) {
