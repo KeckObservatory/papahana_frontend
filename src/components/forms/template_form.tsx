@@ -147,9 +147,6 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
 
 export const get_schema = async (obComponent: OBComponent, id: string): Promise<JSONSchema7> => {
   let sch: JSONSchema7 = {}
-  // if (id === 'target') { // needs to be used in the database
-  //   sch = schemas.targetSchema as JSONSchema7
-  // }
   if (id === 'metadata') {
     sch = schemas.metadataSchema as JSONSchema7
   }
@@ -185,8 +182,9 @@ export default function TemplateForm(props: Props): JSX.Element {
 
 
   React.useEffect(() => {
+    console.log('rendering form: ', props.id)
     get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
-      setSchema(initSchema)
+    setSchema(initSchema)
     })
   }, [])
 
