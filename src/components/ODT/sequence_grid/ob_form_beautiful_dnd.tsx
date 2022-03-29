@@ -261,12 +261,15 @@ export const OBBeautifulDnD = (props) => {
     const [state, setState] = React.useState(obItems);
 
     React.useEffect(() => {
-        //updates view after direct JSON edit 
-        console.log(`JSON edited. resetting grid items`)
-        const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
-        let obItems = Object.entries(obComponents)
-        obItems = chunkify(obItems, nColumns, evenChunks)
-        setState(() => obItems)
+        // updates view after direct JSON edit 
+        // enabling this makes affects the placement of
+        // sequences. moving a sequence and editing it after will 
+        // move it back to its original position erroniously.
+        // console.log(`JSON edited. resetting grid items`)
+        // const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
+        // let obItems = Object.entries(obComponents)
+        // obItems = chunkify(obItems, nColumns, evenChunks)
+        // setState(() => obItems)
     }, [props.ob])
 
     const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
