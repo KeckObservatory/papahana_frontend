@@ -235,6 +235,7 @@ const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [k
         component = formData
     }
     else {
+        console.log('updating component', seqName, formData, component)
         let params: { [key: string]: any } = component.parameters
         console.log('seqName', seqName, 'formData', formData, 'component', component)
         Object.entries(formData).forEach(([key, value]) => {
