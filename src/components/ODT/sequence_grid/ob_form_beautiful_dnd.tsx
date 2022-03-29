@@ -208,7 +208,7 @@ const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element
 const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
     let newOb = { ...ob }
     //get science idx from name
-    console.log('updating component', seqName, formData, component)
+    console.log('updating component', seqName, formData)
     const idx = JSON.parse(seqName.substring(seqName.indexOf('_') + 1))
     let seq = ob.observations as Science[]
     if (seq) {
