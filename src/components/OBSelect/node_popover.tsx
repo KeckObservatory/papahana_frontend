@@ -73,7 +73,7 @@ const PopoverButtons = (props: PButtonProps) => {
         })
     }
 
-    const removeOB = () => {
+    const removeOBFromContainer = () => {
         console.log(`removing ${props.type} id ${props.id}.`)
     }
 
@@ -112,7 +112,7 @@ const PopoverButtons = (props: PButtonProps) => {
             {props.type === 'ob' &&
                 <div style={{ display: 'grid' }}>
                     <Button onClick={selectOB}>edit ob</Button>
-                    {/* <Button onClick={removeOB}>delete ob</Button> */}
+                    <Button onClick={removeOBFromContainer}>remove ob from container</Button>
                 </div>
             }
         </div>

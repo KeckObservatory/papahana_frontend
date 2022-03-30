@@ -19,12 +19,20 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
    return mockPromise
 }
 
-export const mock_get_template = (name: string): Promise<any> => {
-   const mockPromise = new Promise<Template>((resolve) => {
+export const mock_get_template = (name: string): Promise<{ [key: string]: Template }> => {
+   const mockPromise = new Promise<{ [key: string]: Template }>((resolve) => {
       const template = mock_templates.find(t => t.metadata.name === name) as unknown | Template 
-      let template_obj = {} as any
+      let template_obj = {} 
+      //@ts-ignore
       template_obj[name] = template
       resolve(template_obj)
+   })
+   return mockPromise
+}
+
+export const mock_get_semester_obs = (sem_id: string) => {
+   const mockPromise = new Promise<ObservationBlock[]>((resolve) => {
+      resolve(mock_obs as unknown as ObservationBlock[])
    })
    return mockPromise
 }
@@ -32,7 +40,7 @@ export const mock_get_template = (name: string): Promise<any> => {
 export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {
    const mockPromise = new Promise<ObservationBlock>((resolve) => {
       const idx = Math.floor(Math.random() * mock_obs.length)
-      resolve(mock_obs[idx] as ObservationBlock | any)
+      resolve(mock_obs[idx] as unknown as ObservationBlock)
    })
    return mockPromise
 }
@@ -55,7 +63,7 @@ export const mock_get_containers = (sem_id: string, observer_id: string): Promis
    return mockPromise
 }
 
-const sliceIntoChunks = (arr: Array<any>, chunkSize: number) => {
+const sliceIntoChunks = (arr: Array<unknown>, chunkSize: number) => {
    const res = [];
    for (let i = 0; i < arr.length; i += chunkSize) {
       const chunk = arr.slice(i, i + chunkSize);

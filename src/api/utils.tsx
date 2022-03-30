@@ -1,5 +1,5 @@
 import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs } from "../typings/papahana";
-import { ob_api_funcs, get_select_funcs } from './ApiRoot';
+import { ob_api_funcs, semid_api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 import { resolve } from "path";
 
@@ -24,7 +24,7 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
 
 export const get_template = (name: string): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
-      get_select_funcs.get_template(name).then((templateObject: { [key: string]: Template}) => {
+      get_select_funcs.get_template(name).then((templateObject: { [key: string]: Template }) => {
          const template = templateObject[name]
          resolve(template)
       }).catch(err => {
@@ -52,34 +52,50 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
 
 export const make_semid_scoby_table_and_containers = async (sem_id: string, observer_id: string): Promise<[Scoby[], Container[]]> => {
    let scoby: Scoby[] = []
-   return get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
-      containers.forEach(async (container: Container) => {
-         const cid = container._id
-         // const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
-
-         // Use this when the database containers refer to existing OBs
-         // obs.forEach((ob: ObservationBlock) => {
-         //    const row = {
-         //       sem_id: sem_id,
-         //       container_id: cid,
-         //       container_name: container.name,
-         //       ob_id: ob._id,
-         //       name: ob.metadata.name
-         //    } as Scoby
-         //    scoby.push(row)
-         // })
-         container.observation_blocks.forEach((ob_id: string) => {
-            const s = {
-               sem_id: sem_id,
-               container_id: cid,
-               ob_id: ob_id,
-               container_name: container.name
-            }
-            scoby.push(s)
+   return get_containers(sem_id, observer_id)
+      .then(async (containers: Container[]) => { // adds all obs in a special container
+         const obs = await semid_api_funcs.get_semester_obs(sem_id)
+         let allContainer: Container = {
+            name: 'all obs',
+            observation_blocks: [],
+            _id: 'all obs',
+            sem_id: sem_id
+         }
+         obs.forEach( (ob: ObservationBlock) => {
+            allContainer.observation_blocks.push(ob._id)
          })
+         containers.push(allContainer)
+
+         return containers
       })
-      return [scoby, containers]
-   })
+      .then(async (containers: Container[]) => {
+         containers.forEach(async (container: Container) => {
+            const cid = container._id
+            // const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
+
+            // Use this when the database containers refer to existing OBs
+            // obs.forEach((ob: ObservationBlock) => {
+            //    const row = {
+            //       sem_id: sem_id,
+            //       container_id: cid,
+            //       container_name: container.name,
+            //       ob_id: ob._id,
+            //       name: ob.metadata.name
+            //    } as Scoby
+            //    scoby.push(row)
+            // })
+            container.observation_blocks.forEach((ob_id: string) => {
+               const s = {
+                  sem_id: sem_id,
+                  container_id: cid,
+                  ob_id: ob_id,
+                  container_name: container.name
+               }
+               scoby.push(s)
+            })
+         })
+         return [scoby, containers]
+      })
 }
 
 const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]> => {
@@ -153,7 +169,7 @@ export const get_containers = (sem_id: string, observer_id: string): Promise<Con
       if (!sem_id) {
          resolve([])
       }
-      else{ 
+      else {
          resolve(get_select_funcs.get_containers(sem_id, observer_id))
       }
    })
