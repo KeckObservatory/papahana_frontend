@@ -30,6 +30,7 @@ console.log(BASE_URL)
 
 const axiosInstance = axios.create({
     withCredentials: true,
+    headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
  })
 
 const get_semesters = (observer_id: string): Promise<string[]> => {
