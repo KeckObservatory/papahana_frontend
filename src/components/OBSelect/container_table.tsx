@@ -53,6 +53,9 @@ const CustomToolbarSelect = (props: CTProps) => {
             console.log('container name not specified.')
             return
         }
+        if (cidname.name === 'all obs') {
+            console.log('can not add to all obs synthetic container')
+        }
         const rows = props.selectedRows.data.map((x: any) => {
             return props.displayData[x.index]
         })
