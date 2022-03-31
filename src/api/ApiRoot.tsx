@@ -30,13 +30,16 @@ console.log(BASE_URL)
 
 const axiosInstance = axios.create({
     withCredentials: true,
-    headers: {'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
- })
+    headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+})
 
 const get_semesters = (observer_id: string): Promise<string[]> => {
     const url = `${SEMESTERS_URL}?obs_id=${observer_id}`
     return axiosInstance
-        .get(url)
+        .get(url, {
+            withCredentials: true,
+            headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+        })
         .then(handleResponse)
         .catch(handleError);
 }
