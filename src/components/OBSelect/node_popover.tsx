@@ -75,6 +75,18 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const removeOBFromContainer = () => {
         console.log(`removing ${props.type} id ${props.id}.`)
+        container_api_funcs.get(props.id)
+        .then((container: Container) => {
+            container.observation_blocks.push(props.id)
+            return container_api_funcs.put(container._id, container)
+        })
+        .finally(()=>{
+            setTimeout(() => {
+                console.log("removed ob from container. triggering new view")
+                ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                props.handleClose()
+            }, 1000);
+        })
     }
 
     const selectOB = () => {
