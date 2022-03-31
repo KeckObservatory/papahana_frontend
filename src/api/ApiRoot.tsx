@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 import { handleResponse, handleError } from './response';
 import { Container, ObservationBlock, Semester, Instrument, InstrumentPackage, Template } from './../typings/papahana'
 import {
@@ -27,10 +28,13 @@ var TEMPLATE_URL = BASE_URL + '/templates'
 console.log('backend url set to')
 console.log(BASE_URL)
 
+const axiosInstance = axios.create({
+    withCredentials: true,
+ })
 
 const get_semesters = (observer_id: string): Promise<string[]> => {
     const url = `${SEMESTERS_URL}?obs_id=${observer_id}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
@@ -38,7 +42,7 @@ const get_semesters = (observer_id: string): Promise<string[]> => {
 
 const get_semester_obs = (sem_id: string): Promise<ObservationBlock[]> => {
     const url = `${SEMESTERS_URL}/${sem_id}/ob`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
@@ -46,7 +50,7 @@ const get_semester_obs = (sem_id: string): Promise<ObservationBlock[]> => {
 
 const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage[]> => {
     const url = `${INSTRUMENT_URL}/${instrument}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
@@ -55,7 +59,7 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
 
 const get_template = (name: string, ip_version: string = '0.1.0', inst: string = 'KCWI'): Promise<{ [key: string]: Template }> => {
     const url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}&ip_version=${ip_version}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
@@ -63,7 +67,7 @@ const get_template = (name: string, ip_version: string = '0.1.0', inst: string =
 
 const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
     const url = `${SEMESTERS_URL}/${sem_id}/containers?obs_id=${observer_id}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
@@ -71,7 +75,7 @@ const get_containers = (sem_id: string, observer_id: string): Promise<Container[
 
 const get_observation_blocks_from_container = (container_id: string): Promise<ObservationBlock[]> => {
     const url = `${CONTAINER_URL}/items/?container_id=${container_id}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
@@ -79,14 +83,14 @@ const get_observation_blocks_from_container = (container_id: string): Promise<Ob
 
 const ob_get = (ob_id: string): Promise<ObservationBlock> => {
     const url = `${OB_URL}?ob_id=${ob_id}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
 }
 
 const ob_post = (ob: object): Promise<string> => {
-    return axios
+    return axiosInstance
         .post(`${OB_URL}`, ob)
         .then(handleResponse)
         .catch(handleError);
@@ -94,14 +98,14 @@ const ob_post = (ob: object): Promise<string> => {
 
 const ob_put = (ob_id: string, ob: ObservationBlock): Promise<unknown> => {
     const url = `${OB_URL}?ob_id=${ob_id}`
-    return axios
+    return axiosInstance
         .put(url, ob)
         .then(handleResponse)
         .catch(handleError);
 };
 
 const ob_remove = (ob_id: string): Promise<unknown> => {
-    return axios
+    return axiosInstance
         .delete(`${OB_URL}?ob_id=${ob_id}`)
         .then(handleResponse)
         .catch(handleError);
@@ -109,14 +113,14 @@ const ob_remove = (ob_id: string): Promise<unknown> => {
 
 const container_get = (container_id: string): Promise<Container> => {
     const url = `${CONTAINER_URL}?container_id=${container_id}`
-    return axios
+    return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
 }
 
 const container_post = (container: object): Promise<string> => {
-    return axios
+    return axiosInstance
         .post(`${CONTAINER_URL}`, container)
         .then(handleResponse)
         .catch(handleError);
@@ -124,14 +128,14 @@ const container_post = (container: object): Promise<string> => {
 
 const container_put = (container_id: string, container: Container): Promise<number> => {
     const url = `${CONTAINER_URL}?container_id=${container_id}`
-    return axios
+    return axiosInstance
         .put(url, container)
         .then(handleResponse)
         .catch(handleError);
 };
 
 const container_remove = (container_id: string): Promise<unknown> => {
-    return axios
+    return axiosInstance
         .delete(`${CONTAINER_URL}?container_id=${container_id}`)
         .then(handleResponse)
         .catch(handleError);
