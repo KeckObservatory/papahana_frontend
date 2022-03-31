@@ -73,22 +73,20 @@ export default function ObservationBlockSelecter(props: Props) {
   const [containerIdNames, setContainerIdNames] = useState(defaultState.containerIdNames)
   const [containers, setContainers] = useState(defaultState.containers)
 
-  const observer_id = useObserverContext()
-
   const [container_id, setContainerId] =
     useQueryParam('container_id', withDefault(StringParam, defaultState.container_id))
   const [sem_id, setSemId] =
     useQueryParam('sem_id', withDefault(StringParam, defaultState.sem_id))
 
   const reset_container_and_ob_select = () => {
-    get_container_list(sem_id, observer_id).then((lst: string[]) => {
+    get_container_list(sem_id).then((lst: string[]) => {
       setContainerIdList(lst)
       if (lst.length >= 1) {
         setContainerId(lst[0])
       }
     })
       .then(() => {
-        get_ob_list(sem_id, container_id, observer_id).then((lst: string[]) => {
+        get_ob_list(sem_id, container_id).then((lst: string[]) => {
           setOBList(lst)
           return lst
         })
@@ -101,9 +99,8 @@ export default function ObservationBlockSelecter(props: Props) {
     reset_container_and_ob_select()
   }
 
-  useEffect(() => { //run when props.observer_id changes
-    console.log('observer_id changed', observer_id)
-    get_sem_id_list(observer_id)
+  useEffect(() => { 
+    get_sem_id_list()
       .then((lst: string[]) => {
         setSemIdList(lst)
       })
@@ -111,12 +108,12 @@ export default function ObservationBlockSelecter(props: Props) {
         setTrigger(trigger + 1)
         reset_container_and_ob_select()
       })
-  }, [observer_id])
+  }, [])
 
 
   useEffect(() => {
     console.log('trigger changed!')
-    make_semid_scoby_table_and_containers(ob_select_object.sem_id, observer_id)
+    make_semid_scoby_table_and_containers(ob_select_object.sem_id)
       .then((scoby_containers: [Scoby[], Container[]]) => {
         const [scoby, cntners] = scoby_containers
         const contset: object[] = []

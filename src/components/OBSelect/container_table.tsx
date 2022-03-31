@@ -21,7 +21,7 @@ interface SelectedRows {
 interface CTProps {
     containerIdNames: object[],
     selectedRows: SelectedRows,
-    displayData: DisplayData 
+    displayData: DisplayData
 }
 
 interface SRD {
@@ -35,17 +35,63 @@ interface DA {
 }
 
 const CustomToolbarSelect = (props: CTProps) => {
-    const [cidname, setContainerName] = useState({_id: '', name: ''})
+    const [cidname, setContainerName] = useState({ _id: '', name: '' })
 
     const ob_select_object = useOBSelectContext()
 
     const handleDropdownChange = (selName: string) => {
         console.log('changed', selName)
         //@ts-ignore
-        const newcidname = props.containerIdNames.find( (x) => {return x.name === selName})
+        const newcidname = props.containerIdNames.find((x) => { return x.name === selName })
 
         //@ts-ignore
         setContainerName(newcidname)
+    }
+
+    const remove_row_references = async (r: any) => {
+        //TODO: get all containers, filter the ones that need to update,
+        // create new containers, and then
+        const [ob_id, container_name] = r.data
+        //get container
+        //@ts-ignore
+        const cidname = props.containerIdNames.find(x => { return x.name === container_name })
+
+        //@ts-ignore
+        await container_api_funcs.get(cidname._id).then((container: Container) => {
+            //make new container that is missing ob
+            const oldLength = container.observation_blocks.length
+            const new_observation_blocks =
+                container.observation_blocks.filter((_id: string) => {
+                    return _id !== ob_id
+                })
+            console.log()
+            console.log('old container obs', container.observation_blocks, 'new container obs', new_observation_blocks)
+            container.observation_blocks = new_observation_blocks
+            if (container.observation_blocks.length !== oldLength) {
+
+                //@ts-ignore
+                console.log('container', cidname.name, cidname._id, 'changing to', container)
+                //@ts-ignore
+                return container_api_funcs.put(cidname._id, container)
+            }
+        })
+    }
+
+    const add_obs_to_container = (rows: DA[]) => {
+        let obs = rows.map((r: DA) => {
+            const [_id, cont_name] = r.data
+            return _id
+        })
+        container_api_funcs.get(cidname._id).then((cont: Container) => {
+            obs.forEach((ob_id: string) => {
+                cont.observation_blocks.push(ob_id)
+            })
+            return container_api_funcs.put(cidname._id, cont)
+        }).finally(() => {
+            console.log('resetting table')
+            // ob_select_object.reset_container_and_ob_select()
+            ob_select_object.setTrigger(ob_select_object.trigger + 1)
+        })
     }
 
     const setSelectedToContainer = () => {
@@ -57,62 +103,20 @@ const CustomToolbarSelect = (props: CTProps) => {
             console.log('can not add to all obs synthetic container')
             return
         }
+
         const rows = props.selectedRows.data.map((x: any) => {
             return props.displayData[x.index]
         })
 
-        console.log('setting selected to container ', cidname.name)
-        console.log('rows', rows)
+        console.log('setting selected rows to container ', cidname.name)
         //remove ob reference from each container
-        //TODO: get all containers, filter the ones that need to update,
-        // create new containers, and then
-        // PUT 
-        rows.forEach(async (r: any) => {
-            const [ob_id, container_name] = r.data
-            //get container
-            //@ts-ignore
-            const cidname = props.containerIdNames.find( x => {return x.name === container_name})
-
-            //@ts-ignore
-            await container_api_funcs.get(cidname._id).then((container: Container) => {
-                //make new container that is missing ob
-                const oldLength = container.observation_blocks.length
-                const new_observation_blocks = 
-                container.observation_blocks.filter((_id: string) => {
-                        return _id !== ob_id
-                    })
-                console.log()
-                console.log('old container obs', container.observation_blocks, 'new container obs', new_observation_blocks)
-                container.observation_blocks = new_observation_blocks
-                if (container.observation_blocks.length !== oldLength) {
-
-                    //@ts-ignore
-                    console.log('container', cidname.name, cidname._id, 'changing to', container)
-                    //@ts-ignore
-                    return container_api_funcs.put(cidname._id, container)
-                }
-            })
-        })
-
+        rows.forEach( remove_row_references )
         //add to container, the selected obs
-        let obs = rows.map((r: any) => {
-            const [_id, cont_name] = r.data
-            return _id
-        })
-        container_api_funcs.get(cidname._id).then((cont: Container) => {
-            obs.forEach((ob_id: string) => {
-                cont.observation_blocks.push(ob_id)
-            })
-            return container_api_funcs.put(cidname._id, cont)
-        }).finally( () => {
-            console.log('resetting table')
-            // ob_select_object.reset_container_and_ob_select()
-            ob_select_object.setTrigger(ob_select_object.trigger+1)
-        })
+        add_obs_to_container(rows as DA[])
     }
 
     //@ts-ignore
-    const names = props.containerIdNames.map( x => x.name)
+    const names = props.containerIdNames.map(x => x.name)
 
     return (
         <div className={"custom-toolbar-select"}>
@@ -133,7 +137,7 @@ const ContainerTable = (props: Props) => {
     ]
 
 
-    const onRowClick = (rowData: string[], rowMeta: {dataIndex: number, rowIndex: number}) => {
+    const onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
         console.log('rowData', rowData, 'rowMeta', rowMeta)
     }
 
@@ -142,10 +146,10 @@ const ContainerTable = (props: Props) => {
         onRowsDelete: () => false,
         selectableRows: 'multiple', //bug multiple will not removed all selected obs from container
         customToolbarSelect: (selectedRows: SelectedRows, displayData: DisplayData) => (
-            <CustomToolbarSelect 
-            selectedRows={selectedRows}
-            displayData={displayData}
-            containerIdNames={props.containerIdNames}
+            <CustomToolbarSelect
+                selectedRows={selectedRows}
+                displayData={displayData}
+                containerIdNames={props.containerIdNames}
             />
         ),
         onRowSelectionChange: handleSelect,

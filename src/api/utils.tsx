@@ -3,10 +3,10 @@ import { ob_api_funcs, semid_api_funcs, get_select_funcs } from './ApiRoot';
 import { ObservationBlock } from '../typings/papahana'
 import { resolve } from "path";
 
-export const get_sem_id_list = (observer_id: string): Promise<string[]> => {
+export const get_sem_id_list = (): Promise<string[]> => {
    //make sem_id list from semesters
    const promise = new Promise<string[]>((resolve) => {
-      get_select_funcs.get_semesters(observer_id).then((semesters: string[]) => {
+      get_select_funcs.get_semesters().then((semesters: string[]) => {
          resolve(semesters as string[])
       })
    })
@@ -35,10 +35,10 @@ export const get_template = (name: string): Promise<Template> => {
 }
 
 
-const create_sc_table = async (semesters: string[], observer_id: string) => {
+const create_sc_table = async (semesters: string[]) => {
    let sem_cons: [string, string][] = []
    await semesters.forEach(async (sem_id: string) => {
-      await get_containers(sem_id, observer_id).then(async (containers: Container[]) => {
+      await get_containers(sem_id).then(async (containers: Container[]) => {
          containers.forEach((container: Container) => {
             const cid = container._id
             const sem_con = [sem_id, cid] as [string, string]
@@ -50,9 +50,9 @@ const create_sc_table = async (semesters: string[], observer_id: string) => {
    return sem_cons
 }
 
-export const make_semid_scoby_table_and_containers = async (sem_id: string, observer_id: string): Promise<[Scoby[], Container[]]> => {
+export const make_semid_scoby_table_and_containers = async (sem_id: string ): Promise<[Scoby[], Container[]]> => {
    let scoby: Scoby[] = []
-   return get_containers(sem_id, observer_id)
+   return get_containers(sem_id)
       .then(async (containers: Container[]) => { // adds all obs in a special container
          const obs = await semid_api_funcs.get_semester_obs(sem_id)
          let allContainer: Container = {
@@ -116,25 +116,25 @@ const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]
    return rows
 }
 
-export const make_scoby_table = (observer_id: string): Promise<Scoby[]> => {
-   return get_select_funcs.get_semesters(observer_id)
+export const make_scoby_table = (): Promise<Scoby[]> => {
+   return get_select_funcs.get_semesters()
       .then((semesters: string[]) => {
-         return create_sc_table(semesters, observer_id)
+         return create_sc_table(semesters)
       })
       .then((sem_cons: [string, string][]) => create_scoby_table(sem_cons))
 }
 
 
 
-export const get_obs_from_semester = async (observer_id: string, sem_id: string): Promise<ContainerObs> => {
-   const container_obs = await get_select_funcs.get_semesters(observer_id)
+export const get_obs_from_semester = async (sem_id: string): Promise<ContainerObs> => {
+   const container_obs = await get_select_funcs.get_semesters()
       .then((semesters: string[]) => {
          const semester = semesters.find((elem: string) => elem === sem_id)
          if (!semester) {
-            console.log(`semid ${sem_id} not found for observer_id`);
+            console.log(`semid ${sem_id} not found`);
             return []
          }
-         return create_sc_table([semester], observer_id)
+         return create_sc_table([semester])
       })
       .then((sem_cons: [string, string][]) => {
          const container_obs: ContainerObs = {}
@@ -153,24 +153,24 @@ export const get_obs_from_semester = async (observer_id: string, sem_id: string)
 
 }
 
-export const get_container_list = (sem_id: string, observer_id: string): Promise<string[]> => {
+export const get_container_list = (sem_id: string): Promise<string[]> => {
    //make container list from containers and sem_id
    const promise = new Promise<string[]>((resolve) => {
-      get_select_funcs.get_semesters(observer_id).then((semesters: string[]) => {
-         resolve(make_container_list(semesters, sem_id, observer_id))
+      get_select_funcs.get_semesters().then((semesters: string[]) => {
+         resolve(make_container_list(semesters, sem_id))
       })
    })
    return promise
 }
 
-export const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
-   //make container given sem_id and observer_id 
+export const get_containers = (sem_id: string): Promise<Container[]> => {
+   //make container given sem_id
    const promise = new Promise<Container[]>((resolve) => {
       if (!sem_id) {
          resolve([])
       }
       else {
-         resolve(get_select_funcs.get_containers(sem_id, observer_id))
+         resolve(get_select_funcs.get_containers(sem_id))
       }
    })
    return promise
@@ -178,7 +178,7 @@ export const get_containers = (sem_id: string, observer_id: string): Promise<Con
 
 
 
-export const make_container_list = async (semesters: string[], sem_id: string, observer_id: string) => {
+export const make_container_list = async (semesters: string[], sem_id: string) => {
    //populates container_list for sem_id
 
    const find_sem_id = (semester: string): boolean => {
@@ -189,11 +189,11 @@ export const make_container_list = async (semesters: string[], sem_id: string, o
    let cl: string[] = []
    var sc;
    if (sem_id === 'all') {
-      sc = await create_sc_table(semesters, observer_id);
+      sc = await create_sc_table(semesters);
    }
    else { //todo: replace with appropriate api call for semester
       const semester = semesters.find(find_sem_id)
-      sc = await create_sc_table([semester as string], observer_id);
+      sc = await create_sc_table([semester as string]);
    }
 
    sc.forEach((semid_cid: [string, string]) => {
@@ -204,10 +204,10 @@ export const make_container_list = async (semesters: string[], sem_id: string, o
    return container_list
 }
 
-export const get_ob_list = (sem_id: string, container_id: string, observer_id: string): Promise<string[]> => {
+export const get_ob_list = (sem_id: string, container_id: string): Promise<string[]> => {
    //make container list from containers and sem_id
    const promise = new Promise<string[]>((resolve) => {
-      get_containers(sem_id, observer_id).then((containers: Container[]) => {
+      get_containers(sem_id).then((containers: Container[]) => {
          resolve(make_ob_list(containers, container_id))
       })
    })

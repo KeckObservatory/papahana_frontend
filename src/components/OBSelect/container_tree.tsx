@@ -62,8 +62,6 @@ const containers_to_nodes = (containers: Container[]): RenderTree[] => {
 
 export default function ContainerTree(props: Props) {
 
-    const observer_id = useObserverContext()
-
     const ob_select_object = useOBSelectContext()
     const rootTree: RenderTree = {
         'id': 'root',
@@ -76,7 +74,7 @@ export default function ContainerTree(props: Props) {
         return c.name
     }))
 
-    useEffect(() => { //run when props.observer_id changes
+    useEffect(() => { 
         console.log('container tree triggered')
 
         names = new Set(props.containers.map( (c: Container) => {

@@ -97,10 +97,9 @@ export const SelectionToolView = (props: Props) => {
     const [sem_id, setSemId] =
         useQueryParam('sem_id', withDefault(StringParam, defaultState.sem_id))
 
-    const observer_id = useObserverContext() 
 
     useEffect(() => {
-        get_obs_from_semester(observer_id, sem_id).then((container_obs: ContainerObs) => {
+        get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
             const cells = container_obs_to_cells(container_obs)
             setAvlObs(cells)
         })
@@ -108,7 +107,7 @@ export const SelectionToolView = (props: Props) => {
 
     useEffect(() => {
         console.log('sem_id changed')
-        get_obs_from_semester(observer_id, sem_id).then((container_obs: ContainerObs) => {
+        get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
             const cells = container_obs_to_cells(container_obs)
             // console.log('got cells to add')
             // console.log(cells)
@@ -117,13 +116,13 @@ export const SelectionToolView = (props: Props) => {
         })
     }, [sem_id])
 
-    useEffect(() => { //run when props.observer_id changes
-        console.log('planning tool: observer_id changed')
-        get_sem_id_list(observer_id)
+    useEffect(() => { 
+        console.log('planning tool: changed')
+        get_sem_id_list()
             .then((lst: string[]) => {
                 setSemIdList(() => [...lst])
             })
-    }, [observer_id])
+    }, [])
 
     const handleSemIdSubmit = (new_sem_id: string) => {
         // console.log('submit button pressed')

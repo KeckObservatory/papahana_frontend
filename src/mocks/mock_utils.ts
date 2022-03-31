@@ -45,7 +45,7 @@ export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {
    return mockPromise
 }
 
-export const mock_get_semesters = (observer_id: string): Promise<string[]> => {
+export const mock_get_semesters = (): Promise<string[]> => {
    const mockPromise = new Promise<string[]>((resolve) => {
       const semids = mock_semesters.map(sem => sem.sem_id)
       resolve(semids)
@@ -53,7 +53,7 @@ export const mock_get_semesters = (observer_id: string): Promise<string[]> => {
    return mockPromise
 }
 
-export const mock_get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
+export const mock_get_containers = (sem_id: string): Promise<Container[]> => {
    const mockPromise = new Promise<Container[]>((resolve) => {
       const sem_id_containers = mock_containers.filter((container: Container) => {
          return container.sem_id === sem_id

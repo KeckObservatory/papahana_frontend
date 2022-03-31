@@ -74,10 +74,9 @@ export default function SemidTree(props: Props) {
 
     const [containers, setContainers] = React.useState([] as Container[])
     const [nodes, setNodes] = React.useState([] as Node[])
-    const observer_id = useObserverContext()
 
-    useEffect(() => { //run when props.observer_id changes
-        get_containers(props.sem_id, observer_id).then((conts: Container[]) => {
+    useEffect(() => { //run when props change
+        get_containers(props.sem_id).then((conts: Container[]) => {
             setContainers(conts)
             setNodes(containers_to_nodes(containers))
         })

@@ -30,11 +30,14 @@ console.log(BASE_URL)
 
 const axiosInstance = axios.create({
     withCredentials: true,
-    headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' }
+    headers: { 
+        'Access-Control-Allow-Origin': '*', 
+        'Content-Type': 'application/json' 
+    }
 })
 
-const get_semesters = (observer_id: string): Promise<string[]> => {
-    const url = `${SEMESTERS_URL}?obs_id=${observer_id}`
+const get_semesters = (): Promise<string[]> => {
+    const url = `${SEMESTERS_URL}`
     return axiosInstance
         .get(url)
         .then(handleResponse)
@@ -66,8 +69,8 @@ const get_template = (name: string, ip_version: string = '0.1.0', inst: string =
         .catch(handleError);
 }
 
-const get_containers = (sem_id: string, observer_id: string): Promise<Container[]> => {
-    const url = `${SEMESTERS_URL}/${sem_id}/containers?obs_id=${observer_id}`
+const get_containers = (sem_id: string): Promise<Container[]> => {
+    const url = `${SEMESTERS_URL}/${sem_id}/containers?`
     return axiosInstance
         .get(url)
         .then(handleResponse)
