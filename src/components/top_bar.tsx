@@ -8,6 +8,7 @@ import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography'
 import { useDrawerOpenContext } from './App';
+import LoginDialog from './login_dialog';
 // import { DefaultTheme } from '@mui/private-theming'
 
 const useStyles = makeStyles((theme: any) => ({
@@ -79,6 +80,7 @@ export function TopBar(props: Props) {
         >
           Welcome, Observer {props.observer_id}!
         </Typography>
+        <LoginDialog />
         <Tooltip title="Toggle on for dark mode">
           <Switch 
             color="secondary"
