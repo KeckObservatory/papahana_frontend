@@ -19,7 +19,7 @@ const useStyles = makeStyles( (theme: DefaultTheme)  => ({
 ))
 
 interface MenuProps {
-    arr: string[]
+    arr: string[] | undefined
     disabledArr?: boolean[]
     handleChange: Function 
     value?: string | null | undefined
@@ -41,7 +41,7 @@ const DropDown = (props: MenuProps): JSX.Element => {
         <MenuItem disabled value="">
             <em>{props.placeholder}</em>
         </MenuItem>
-        {props.arr.map((x,idx) =>  { 
+        {props.arr?.map((x,idx) =>  { 
             const disabled = props.disabledArr? props.disabledArr[idx] : false 
             return MakeMenuItem(x, idx, disabled) 
         })}
