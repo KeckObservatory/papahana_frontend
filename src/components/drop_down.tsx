@@ -34,6 +34,12 @@ const MakeMenuItem = (value: string, key: number, disabled=false) => {
 const DropDown = (props: MenuProps): JSX.Element => { 
     const classes = useStyles()
     const value = props.value ? props.value : "" // MenuItem Value cannot be undefined or null
+
+    console.log('arr', props.arr)
+    const menuItems = props.arr && props.arr.map((x,idx) =>  {
+        const disabled = props.disabledArr? props.disabledArr[idx] : false 
+        return MakeMenuItem(x, idx, disabled) 
+    })
     return(
     <FormControl className={classes.formControl}>
     <InputLabel id="demo-simple-select-label">{props.label}</InputLabel>
@@ -41,10 +47,7 @@ const DropDown = (props: MenuProps): JSX.Element => {
         <MenuItem disabled value="">
             <em>{props.placeholder}</em>
         </MenuItem>
-        {props.arr?.map((x,idx) =>  { 
-            const disabled = props.disabledArr? props.disabledArr[idx] : false 
-            return MakeMenuItem(x, idx, disabled) 
-        })}
+        {menuItems}
     </Select>
     </FormControl>
     )}
