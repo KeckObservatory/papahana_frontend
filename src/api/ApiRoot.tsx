@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { handleResponse, handleError } from './response';
-import { Container, ObservationBlock, Semester, Instrument, InstrumentPackage, Template } from './../typings/papahana'
+import { Container, ObservationBlock, Semester, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
 import {
     mock_get_instrument_package,
     mock_get_template,
@@ -36,7 +36,7 @@ const axiosInstance = axios.create({
     }
 })
 
-const get_semesters = (): Promise<string[]> => {
+const get_semesters = (): Promise<SemesterIds> => {
     const url = `${SEMESTERS_URL}`
     return axiosInstance
         .get(url)

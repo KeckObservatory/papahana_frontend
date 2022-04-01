@@ -60,7 +60,14 @@ const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys |
   return [theme, jsonTheme]
 }
 
-const ObserverContext = createContext<string>('2003')
+export interface ObsContext {
+  observer_id: string,
+  setObserverId: Function
+}
+
+const init_obs_context: ObsContext = {observer_id: '2003', setObserverId: () => {}}
+
+const ObserverContext = createContext<ObsContext>(init_obs_context)
 export const useObserverContext = () => useContext(ObserverContext)
 
 export interface Drawer {
@@ -97,7 +104,7 @@ export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
-  const [observer_id] =
+  const [observer_id, setObserverId] =
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
 
@@ -111,7 +118,7 @@ export default function App() {
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <DrawerOpenContext.Provider value={{ drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth }}>
-        <ObserverContext.Provider value={observer_id}>
+        <ObserverContext.Provider value={{observer_id: observer_id, setObserverId: setObserverId}}>
           <div className={classes.root}>
             <Main open={drawerOpen ? 'open' : 'closed'} >
               <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />

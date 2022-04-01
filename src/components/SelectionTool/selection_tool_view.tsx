@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useObserverContext } from './../App'
 import { get_obs_from_semester, get_sem_id_list } from '../../api/utils'
-import { ContainerObs, OBCell, ObservationBlock } from '../../typings/papahana'
+import { ContainerObs, OBCell, ObservationBlock, SemesterIds } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import Paper from '@mui/material/Paper'
@@ -119,8 +119,8 @@ export const SelectionToolView = (props: Props) => {
     useEffect(() => { 
         console.log('planning tool: changed')
         get_sem_id_list()
-            .then((lst: string[]) => {
-                setSemIdList(() => [...lst])
+            .then((semesters: SemesterIds) => {
+                setSemIdList(() => [...semesters.associations])
             })
     }, [])
 

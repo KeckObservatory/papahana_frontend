@@ -7,7 +7,7 @@ import { Paper } from '@mui/material'
 import { useObserverContext } from './../App'
 import ContainerTree from './container_tree'
 import ContainerTable from './container_table'
-import { Container, Scoby } from '../../typings/papahana';
+import { Container, Scoby, SemesterIds } from '../../typings/papahana';
 
 export interface Props {
   handleOBSelect: Function
@@ -78,6 +78,8 @@ export default function ObservationBlockSelecter(props: Props) {
   const [sem_id, setSemId] =
     useQueryParam('sem_id', withDefault(StringParam, defaultState.sem_id))
 
+  const observerContext = useObserverContext()
+
   const reset_container_and_ob_select = () => {
     get_container_list(sem_id).then((lst: string[]) => {
       setContainerIdList(lst)
@@ -101,8 +103,9 @@ export default function ObservationBlockSelecter(props: Props) {
 
   useEffect(() => { 
     get_sem_id_list()
-      .then((lst: string[]) => {
-        Array.isArray(lst)? setSemIdList(lst) : setSemIdList([])
+      .then((semesters: SemesterIds) => {
+        observerContext.setObserverId(semesters.keck_id)
+        Array.isArray(semesters.associations)? setSemIdList(semesters.associations) : setSemIdList([])
       })
       .then(() => {
         setTrigger(trigger + 1)

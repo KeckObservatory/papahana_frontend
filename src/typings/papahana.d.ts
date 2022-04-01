@@ -2,6 +2,11 @@ export interface ContainerObs {
 	[key: string]: ObservationBlock[]
 }
 
+export interface SemesterIds { 
+	associations: string[]
+	keck_id: number
+}
+
 export type CatalogRow = Array<number | string>
 
 export interface Container {

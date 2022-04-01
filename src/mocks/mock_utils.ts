@@ -1,4 +1,4 @@
-import { Instrument, ObservationBlock, Template } from './../typings/papahana.d';
+import { Instrument, ObservationBlock, SemesterIds, Template } from './../typings/papahana.d';
 // import { mock_kcwi_instrument_package } from './mock_template';
 
 // import { mock_observation_blocks } from './mock_obs'
@@ -45,9 +45,12 @@ export const mock_ob_get = (ob_id: string): Promise<ObservationBlock> => {
    return mockPromise
 }
 
-export const mock_get_semesters = (): Promise<string[]> => {
-   const mockPromise = new Promise<string[]>((resolve) => {
-      const semids = mock_semesters.map(sem => sem.sem_id)
+export const mock_get_semesters = (): Promise<SemesterIds> => {
+   const mockPromise = new Promise<SemesterIds>((resolve) => {
+      const semids = {
+         associations: mock_semesters.map(sem => sem.sem_id),
+         keck_id: 2003
+      }
       resolve(semids)
    })
    return mockPromise

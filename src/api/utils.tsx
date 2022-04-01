@@ -1,13 +1,13 @@
 import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs } from "../typings/papahana";
 import { ob_api_funcs, semid_api_funcs, get_select_funcs } from './ApiRoot';
-import { ObservationBlock } from '../typings/papahana'
+import { ObservationBlock, SemesterIds } from '../typings/papahana'
 import { resolve } from "path";
 
-export const get_sem_id_list = (): Promise<string[]> => {
+export const get_sem_id_list = (): Promise<SemesterIds> => {
    //make sem_id list from semesters
-   const promise = new Promise<string[]>((resolve) => {
-      get_select_funcs.get_semesters().then((semesters: string[]) => {
-         resolve(semesters as string[])
+   const promise = new Promise<SemesterIds>((resolve) => {
+      get_select_funcs.get_semesters().then((semesterIds: SemesterIds) => {
+         resolve(semesterIds)
       })
    })
    return promise
@@ -118,8 +118,8 @@ const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]
 
 export const make_scoby_table = (): Promise<Scoby[]> => {
    return get_select_funcs.get_semesters()
-      .then((semesters: string[]) => {
-         return create_sc_table(semesters)
+      .then((semesters: SemesterIds) => {
+         return create_sc_table(semesters.associations)
       })
       .then((sem_cons: [string, string][]) => create_scoby_table(sem_cons))
 }
@@ -128,8 +128,8 @@ export const make_scoby_table = (): Promise<Scoby[]> => {
 
 export const get_obs_from_semester = async (sem_id: string): Promise<ContainerObs> => {
    const container_obs = await get_select_funcs.get_semesters()
-      .then((semesters: string[]) => {
-         const semester = semesters.find((elem: string) => elem === sem_id)
+      .then((semesters: SemesterIds) => {
+         const semester = semesters.associations.find((elem: string) => elem === sem_id)
          if (!semester) {
             console.log(`semid ${sem_id} not found`);
             return []
@@ -156,8 +156,8 @@ export const get_obs_from_semester = async (sem_id: string): Promise<ContainerOb
 export const get_container_list = (sem_id: string): Promise<string[]> => {
    //make container list from containers and sem_id
    const promise = new Promise<string[]>((resolve) => {
-      get_select_funcs.get_semesters().then((semesters: string[]) => {
-         resolve(make_container_list(semesters, sem_id))
+      get_select_funcs.get_semesters().then((semesters: SemesterIds) => {
+         resolve(make_container_list(semesters.associations, sem_id))
       })
    })
    return promise
