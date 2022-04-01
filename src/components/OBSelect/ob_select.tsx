@@ -102,7 +102,7 @@ export default function ObservationBlockSelecter(props: Props) {
   useEffect(() => { 
     get_sem_id_list()
       .then((lst: string[]) => {
-        setSemIdList(lst)
+        Array.isArray(lst)? setSemIdList(lst) : setSemIdList([])
       })
       .then(() => {
         setTrigger(trigger + 1)

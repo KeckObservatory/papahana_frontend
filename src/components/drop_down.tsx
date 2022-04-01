@@ -35,7 +35,7 @@ const DropDown = (props: MenuProps): JSX.Element => {
     const classes = useStyles()
     const value = props.value ? props.value : "" // MenuItem Value cannot be undefined or null
 
-    const menuItems = Array.isArray(props.arr) && props.arr.map((x,idx) =>  {
+    const menuItems = props.arr?.map((x,idx) =>  {
         const disabled = props.disabledArr? props.disabledArr[idx] : false 
         return MakeMenuItem(x, idx, disabled) 
     })
