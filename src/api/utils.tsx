@@ -50,7 +50,7 @@ const create_sc_table = async (semesters: string[]) => {
    return sem_cons
 }
 
-export const make_semid_scoby_table_and_containers = async (sem_id: string ): Promise<[Scoby[], Container[]]> => {
+export const make_semid_scoby_table_and_containers = async (sem_id: string): Promise<[Scoby[], Container[]]> => {
    let scoby: Scoby[] = []
    return get_containers(sem_id)
       .then(async (containers: Container[]) => { // adds all obs in a special container
@@ -61,7 +61,7 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string ): Pr
             _id: 'all obs',
             sem_id: sem_id
          }
-         obs.forEach( (ob: ObservationBlock) => {
+         obs.forEach((ob: ObservationBlock) => {
             allContainer.observation_blocks.push(ob._id)
          })
          containers.push(allContainer)
@@ -187,13 +187,18 @@ export const make_container_list = async (semesters: string[], sem_id: string) =
 
    let container_list: string[] = ['all']
    let cl: string[] = []
-   var sc;
+   var sc: [string, string][];
    if (sem_id === 'all') {
       sc = await create_sc_table(semesters);
    }
    else { //todo: replace with appropriate api call for semester
       const semester = semesters.find(find_sem_id)
-      sc = await create_sc_table([semester as string]);
+      if (semester) {
+         sc = await create_sc_table([semester as string]);
+      }
+      else {
+         sc = []
+      }
    }
 
    sc.forEach((semid_cid: [string, string]) => {
