@@ -1,7 +1,7 @@
 [{
 	"metadata": {
 		 "_id" : "61203d272a0a5829277a7f2b",
-		 "name": "kcwi_instrument_package",
+		 "name": "KCWI_instrument_package",
 		 "ui_name": "KCWI Instrument Package",
 		 "version" : "0.1.0",
 		 "instrument" : "KCWI",

@@ -65,7 +65,7 @@ export interface ObsContext {
   setObserverId: Function
 }
 
-const init_obs_context: ObsContext = {observer_id: '2003', setObserverId: () => {}}
+const init_obs_context: ObsContext = { observer_id: '2003', setObserverId: () => { } }
 
 const ObserverContext = createContext<ObsContext>(init_obs_context)
 export const useObserverContext = () => useContext(ObserverContext)
@@ -84,6 +84,7 @@ const drawerWidth = 700;
 const Main = styled('main', { shouldForwardProp: (prop: string) => prop !== 'open' })<{
   open?: string;
 }>(({ theme, open }) => ({
+
   flexGrow: 1,
   padding: theme.spacing(1),
   transition: theme.transitions.create('margin', {
@@ -113,12 +114,12 @@ export default function App() {
   const handleThemeChange = (): void => {
     setDarkState(!darkState);
   }
-  
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <DrawerOpenContext.Provider value={{ drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth }}>
-        <ObserverContext.Provider value={{observer_id: observer_id, setObserverId: setObserverId}}>
+        <ObserverContext.Provider value={{ observer_id: observer_id, setObserverId: setObserverId }}>
           <div className={classes.root}>
             <Main open={drawerOpen ? 'open' : 'closed'} >
               <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />

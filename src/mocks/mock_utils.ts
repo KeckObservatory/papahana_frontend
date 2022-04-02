@@ -21,7 +21,8 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
 
 export const mock_get_template = (name: string): Promise<{ [key: string]: Template }> => {
    const mockPromise = new Promise<{ [key: string]: Template }>((resolve) => {
-      const template = mock_templates.find(t => t.metadata.name === name) as unknown | Template 
+      const altName= name.replace('kcwi', 'KCWI')
+      const template = mock_templates.find(t => t.metadata.name === altName) as unknown | Template 
       let template_obj = {} 
       //@ts-ignore
       template_obj[name] = template
