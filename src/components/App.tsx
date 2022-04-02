@@ -74,16 +74,22 @@ export interface Drawer {
   drawerOpen: boolean
   setDrawerOpen: Function
   drawerWidth: number
+  setDrawerWidth: Function
 }
 
-const DrawerOpenContext = createContext<Drawer>({ drawerOpen: true, setDrawerOpen: () => { }, drawerWidth: 500 })
+const initDrawer = { drawerOpen: true, setDrawerOpen: () => { }, drawerWidth: 700, setDrawerWidth: () => { }}
+
+const DrawerOpenContext = createContext<Drawer>(initDrawer)
 export const useDrawerOpenContext = () => useContext(DrawerOpenContext)
 
-const drawerWidth = 700;
 
-const Main = styled('main', { shouldForwardProp: (prop: string) => prop !== 'open' })<{
-  open?: string;
-}>(({ theme, open }) => ({
+interface MainProp {
+  open?: string,
+  drawerWidth: number
+}
+
+const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' && prop !== 'drawerWidth' })<MainProp>
+(({ theme, open, drawerWidth }) => ({
 
   flexGrow: 1,
   padding: theme.spacing(1),
@@ -105,6 +111,7 @@ export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
+  const [drawerWidth, setDrawerWidth] = React.useState(700)
   const [observer_id, setObserverId] =
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
@@ -118,10 +125,10 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
-      <DrawerOpenContext.Provider value={{ drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth }}>
+      <DrawerOpenContext.Provider value={{ drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth, setDrawerWidth }}>
         <ObserverContext.Provider value={{ observer_id: observer_id, setObserverId: setObserverId }}>
           <div className={classes.root}>
-            <Main open={drawerOpen ? 'open' : 'closed'} >
+            <Main open={drawerOpen ? 'open' : 'closed'} drawerWidth={drawerWidth} >
               <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />
               <ModuleMenu jsonTheme={jsonTheme} />
               <ToastContainer
