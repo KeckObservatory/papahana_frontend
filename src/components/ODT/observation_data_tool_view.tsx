@@ -205,6 +205,7 @@ export default function ODTView(props: Props) {
         <OBBeautifulDnD
           ob={ob}
           triggerRender={triggerRender}
+          setTriggerRender={setTriggerRender}
           setOB={(newOb: ObservationBlock) => {
             // triggerBoop(true)
             setOB(newOb)

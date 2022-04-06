@@ -253,6 +253,7 @@ const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [k
 
 interface Props {
     triggerRender: number 
+    setTriggerRender: Function
     ob: ObservationBlock
     setOB: Function
 }
@@ -327,12 +328,12 @@ export const OBBeautifulDnD = (props: Props) => {
             const idx = newSequences.findIndex( (s) => s.metadata.sequence_number === sequence_number)
             newSequences.splice(idx, 1)
             newOB.observations = newSequences
-            props.setOB(newOB)
         }
         else {
             delete newOB[name]
-            props.setOB(newOB)
         }
+        props.setOB(newOB)
+        props.setTriggerRender(triggerRender + 1)
     }
 
     const acc = {acc: classes.accordian, accDrag: classes.accordianDragging}
