@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import { Instrument, OBSeqNames, OBSequence, ObservationBlock, ScienceMetadata } from '../../typings/papahana'
 import { IconButton, Paper } from '@mui/material'
@@ -59,17 +59,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   dndGrid: {
     minWidth: theme.spacing(150),
     elevation: 5,
-  },
-  dragger: {
-    width: "5px",
-    cursor: "ew-resize",
-    padding: "4px 0 0",
-    borderTop: "1px solid #ddd",
-    position: "absolute",
-    top: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 100,
   }
 }))
 
@@ -254,6 +243,7 @@ export default function ODTView(props: Props) {
         <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
         <DeleteDialog deleteOB={deleteOB} />
       </div>
+
       <Tooltip title="Add template to Selected OB">
         <div className={classes.templateSelect}>
           <TemplateSelection addSeq={addSeq} instrument={instrument} obSequences={Object.keys(ob)} />
@@ -284,23 +274,6 @@ export default function ODTView(props: Props) {
     </Paper >
   )
 
-  const handleMouseDown = (e: any) => {
-    document.addEventListener("mouseup", handleMouseUp, true);
-    document.addEventListener("mousemove", handleMouseMove, true);
-  };
-
-  const handleMouseUp = () => {
-    document.removeEventListener("mouseup", handleMouseUp, true);
-    document.removeEventListener("mousemove", handleMouseMove, true);
-  };
-
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const newWidth = e.clientX - document.body.offsetLeft;
-    if (newWidth > 50 && newWidth < 1500) {
-      drawer.setDrawerWidth(newWidth);
-    }
-  }, []);
-
   return (
     <div>
       <Drawer
@@ -317,7 +290,6 @@ export default function ODTView(props: Props) {
           },
         }}
       >
-        <div onMouseDown={ e => handleMouseDown(e)} className={classes.dragger} />
         {sideMenu}
       </Drawer>
       {renderRGL()}
