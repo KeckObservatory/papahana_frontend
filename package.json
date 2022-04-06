@@ -55,6 +55,26 @@
     "eject": "react-scripts eject",
     "preinstall": "npx npm-force-resolutions"
   },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/jest-setup.ts"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less)$": "jest-css-modules"
+    },
+    "transform": {
+      "\\.(ts|tsx)$": "ts-jest"
+    },
+    "testRegex": ".test.(ts|tsx?)$",
+    "moduleFileExensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
