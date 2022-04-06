@@ -333,7 +333,7 @@ export const OBBeautifulDnD = (props: Props) => {
             delete newOB[name]
         }
         props.setOB(newOB)
-        props.setTriggerRender(triggerRender + 1)
+        props.setTriggerRender(props.triggerRender + 1)
     }
 
     const acc = {acc: classes.accordian, accDrag: classes.accordianDragging}
