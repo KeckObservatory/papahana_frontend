@@ -16,7 +16,8 @@ export function handleResponse(response: AxiosResponse) {
 export function handleError(error: Error | AxiosError) {
     toast.error(error.message)
     if (axios.isAxiosError(error)) {
-        console.error('handleError: ', error.message)
+        console.error('handleError: ', error)
+        console.error(error.toJSON())
         return error.toJSON();
     }
     return error;
