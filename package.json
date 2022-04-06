@@ -10,12 +10,16 @@
     "@mui/types": "^7.0.0",
     "@naisutech/react-tree": "^2.0.11",
     "@rjsf/core": "^3.1.0",
+    "@rjsf/material-ui": "^3.1.0",
+    "@testing-library/jest-dom": "^5.11.10",
+    "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "@types/d3-force": "^2.1.1",
+    "@types/jest": "^26.0.22",
     "@types/node": "^12.20.10",
-    "@types/react": "^17.0.43",
+    "@types/react": "^17.0.3",
     "@types/react-beautiful-dnd": "^13.1.2",
-    "@types/react-dom": "^17.0.14",
+    "@types/react-dom": "^17.0.3",
     "@types/react-grid-layout": "^1.1.1",
     "axios": "^0.21.1",
     "d3": "^6.7.0",
@@ -24,14 +28,13 @@
     "dayjs": "^1.10.7",
     "lodash": "^4.17.21",
     "mui-datatables": "^4.0.0",
-    "next": "^12.1.4",
     "npm-force-resolutions": "^0.0.10",
     "query-string": "^7.0.0",
-    "react": "^18.0.0",
+    "react": "^17.0.2",
     "react-beautiful-dnd": "^13.0.0",
     "react-dnd": "^14.0.3",
     "react-dnd-html5-backend": "^14.0.1",
-    "react-dom": "^18.0.0",
+    "react-dom": "^17.0.2",
     "react-force-graph": "^1.41.5",
     "react-json-view": "^1.21.3",
     "react-jsonschema-form": "^1.6.1",
@@ -51,29 +54,9 @@
     "start": "REACT_APP_ENVIRONMENT=demobuild PORT=50001 react-scripts start",
     "build": "REACT_APP_ENVIRONMENT=production react-scripts build",
     "demobuild": "REACT_APP_ENVIRONMENT=demobuild react-scripts build",
-    "test": "jest",
+    "test": "react-scripts test",
     "eject": "react-scripts eject",
     "preinstall": "npx npm-force-resolutions"
-  },
-  "jest": {
-    "setupFilesAfterEnv": [
-      "<rootDir>/jest-setup.ts"
-    ],
-    "moduleNameMapper": {
-      "\\.(css|less)$": "jest-css-modules"
-    },
-    "transform": {
-      "\\.(ts|tsx)$": "ts-jest"
-    },
-    "testRegex": ".test.(ts|tsx?)$",
-    "moduleFileExensions": [
-      "ts",
-      "tsx",
-      "js",
-      "jsx",
-      "json",
-      "node"
-    ]
   },
   "eslintConfig": {
     "extends": [
@@ -101,21 +84,13 @@
     "@emotion/styled": "^11.3.0",
     "@mui/material": "^5.0.1",
     "@mui/styles": "^5.0.1",
-    "@testing-library/jest-dom": "^5.16.3",
-    "@testing-library/react": "^13.0.0",
     "@types/d3": "^6.7.0",
-    "@types/jest": "^27.4.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/mui-datatables": "^3.7.7",
     "@types/react-jsonschema-form": "^1.7.4",
     "@types/react-router-dom": "^5.1.7",
     "@types/suncalc": "^1.8.1",
-    "ajv": "^8.11.0",
     "cross-env": "^7.0.3",
-    "dotenv": "^8.2.0",
-    "identity-obj-proxy": "^3.0.0",
-    "jest": "^27.5.1",
-    "jest-css-modules": "^2.1.0",
-    "ts-jest": "^27.1.4"
+    "dotenv": "^8.2.0"
   }
 }

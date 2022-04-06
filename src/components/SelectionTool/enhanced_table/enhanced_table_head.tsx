@@ -3,7 +3,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Checkbox from '@mui/material/Checkbox';
 import TableSortLabel from '@mui/material/TableSortLabel';
-// import { visuallyHidden } from '@mui/utils';
+import { visuallyHidden } from '@mui/utils';
 import { SortDirection } from '@mui/material/TableCell';
 import Box from '@mui/material/Box';
 
@@ -55,7 +55,7 @@ const EnhancedTableHead = (props: Props) => {
                         >
                             {headCell.label}
                             {orderBy === headCell.id ? (
-                                <Box component="span">
+                                <Box component="span" sx={visuallyHidden}>
                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
                                 </Box>
                             ) : null}
