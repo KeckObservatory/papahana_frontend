@@ -54,7 +54,10 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string): Pro
    let scoby: Scoby[] = []
    return get_containers(sem_id)
       .then(async (containers: Container[]) => { // adds all obs in a special container
-         const obs = await semid_api_funcs.get_semester_obs(sem_id)
+         let obs: ObservationBlock[] = []
+         if (sem_id) {
+             obs = await semid_api_funcs.get_semester_obs(sem_id)
+         }
          let allContainer: Container = {
             name: 'all obs',
             observation_blocks: [],
