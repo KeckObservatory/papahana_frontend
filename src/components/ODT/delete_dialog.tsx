@@ -28,7 +28,6 @@ export default function DeleteDialog(props: Props) {
 
   return (
     <div>
-
       <Tooltip title="Delete OB by ID">
         <IconButton color='primary' area-label='remove' onClick={handleClickOpen} >
           <DeleteIcon />

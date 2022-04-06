@@ -3,7 +3,6 @@ import { Template, CommonParameters, CommonTemplate } from "../../typings/papaha
 import { withTheme, ISubmitEvent } from "@rjsf/core";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
-// import Form from '@rjsf/material-ui'
 import { Theme as MaterialUITheme } from '../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, OBJsonSchemaProperties } from "../../typings/ob_json_form";
