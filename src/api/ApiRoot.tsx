@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(function ( response ) {
 }, function (error) {
     //do somthing with error data
     console.log('interceptor error', error.response)
-    return Promise.reject(error)
+    return Promise.reject(error.response) // send axios error
 });
 
 const get_semesters = (): Promise<SemesterIds> => {
