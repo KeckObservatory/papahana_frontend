@@ -97,7 +97,6 @@ const ob_post = (ob: object): Promise<string> => {
     return axiosInstance
         .post(`${OB_URL}`, ob)
         .then(handleResponse)
-        .catch(handleError);
 };
 
 const ob_put = (ob_id: string, ob: ObservationBlock): Promise<unknown> => {
