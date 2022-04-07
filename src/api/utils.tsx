@@ -15,8 +15,8 @@ export const get_sem_id_list = (): Promise<SemesterIds> => {
 
 export const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
    const promise = new Promise<InstrumentPackage>((resolve) => {
-      get_select_funcs.get_instrument_package(instrument).then((instrumentPackage: InstrumentPackage[]) => {
-         resolve(instrumentPackage[0])
+      get_select_funcs.get_instrument_package(instrument).then((instrumentPackage: InstrumentPackage) => {
+         resolve(instrumentPackage)
       })
    })
    return promise

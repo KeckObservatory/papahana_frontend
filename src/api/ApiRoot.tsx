@@ -53,7 +53,7 @@ const get_semester_obs = (sem_id: string): Promise<ObservationBlock[]> => {
         .catch(handleError);
 }
 
-const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage[]> => {
+const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
     const url = `${INSTRUMENT_URL}/${instrument}`
     return axiosInstance
         .get(url)

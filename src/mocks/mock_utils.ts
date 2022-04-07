@@ -11,10 +11,10 @@ import { default as mock_containers } from './containers-demo.json'
 import { default as mock_instrument_packages } from './instrument_packages.json'
 
 
-export const mock_get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage[]> => {
-   const mockPromise = new Promise<InstrumentPackage[]>((resolve) => {
+export const mock_get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
+   const mockPromise = new Promise<InstrumentPackage>((resolve) => {
       const ip = mock_instrument_packages
-      resolve(ip as InstrumentPackage[])
+      resolve(ip as any as InstrumentPackage)
    })
    return mockPromise
 }

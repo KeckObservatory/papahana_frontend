@@ -1,4 +1,4 @@
-[{
+{
 	"metadata": {
 		 "_id" : "61203d272a0a5829277a7f2b",
 		 "name": "KCWI_instrument_package",
@@ -68,4 +68,4 @@
 	 "event_table" : null,
 	 "comment" : "A KCWI Instrument Package"
  }
-]
+
