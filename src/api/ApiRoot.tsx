@@ -35,6 +35,11 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json' 
     }
 })
+axiosInstance.interceptors.response.use(function ( response ) {
+    
+}, function (error) {
+    console.log('interceptor error', error)
+});
 
 const get_semesters = (): Promise<SemesterIds> => {
     const url = `${SEMESTERS_URL}`
