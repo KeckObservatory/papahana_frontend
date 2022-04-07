@@ -5,10 +5,6 @@ export function handleResponse(response: AxiosResponse) {
         console.log('response status >200', response)
         toast.error(response.statusText)
     }
-    else { 
-        console.log('errored response', response)
-        toast.error(response.status)
-    }
 
     if (response.data) {
         return response.data;
@@ -17,8 +13,8 @@ export function handleResponse(response: AxiosResponse) {
     return response;
 }
 
-export function handleError(error: Error | AxiosError) {
-    toast.error(error.message)
+export function handleError(error: AxiosError) {
+    toast.error(error.response?.data)
     if (axios.isAxiosError(error)) {
         console.error('handleError: ', error)
         console.error(error.toJSON())
