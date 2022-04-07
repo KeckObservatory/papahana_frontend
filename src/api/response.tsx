@@ -31,7 +31,7 @@ export function intError(error: AxiosError) {
     //do somthing with error data
     const msg = error.response?.data.detail
     console.log('interceptor error detail', msg)
-    toast.error(error.message)
+    toast.error(msg)
 
     return Promise.reject(error) // send axios error
 }
