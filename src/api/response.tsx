@@ -13,8 +13,8 @@ export function handleResponse(response: AxiosResponse) {
     return response;
 }
 
-export function handleError(error: Error | AxiosError) {
-    toast.error(error.message)
+export function handleError(error: AxiosError) {
+    toast.error(error.response)
     if (axios.isAxiosError(error)) {
         console.error('handleError: ', error)
         console.error(error.toJSON())
