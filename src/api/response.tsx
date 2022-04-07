@@ -13,11 +13,11 @@ export function handleResponse(response: AxiosResponse) {
     return response;
 }
 
-export function handleError(error: AxiosError) {
-    toast.error(error.response)
+export function handleError(error: Error | AxiosError) {
+    toast.error(error.message)
     if (axios.isAxiosError(error)) {
         console.error('handleError: ', error)
-        console.error(error.toJSON())
+        // console.error(error.toJSON())
         return error.toJSON();
     }
     return error;
