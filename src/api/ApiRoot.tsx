@@ -40,7 +40,7 @@ axiosInstance.interceptors.response.use(function ( response ) {
    return response 
 }, function (error) {
     //do somthing with error data
-    console.log('interceptor error', error)
+    console.log('interceptor error', error.toJSON())
     return Promise.reject(error)
 });
 
