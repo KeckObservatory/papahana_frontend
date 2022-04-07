@@ -14,11 +14,24 @@ export function handleResponse(response: AxiosResponse) {
 }
 
 export function handleError(error: Error | AxiosError) {
-    toast.error(error.message)
     if (axios.isAxiosError(error)) {
         console.error('handleError: ', error)
         // console.error(error.toJSON())
         return error.toJSON();
     }
     return error;
+}
+
+export function intResponse( response: AxiosResponse ) {
+    //do somthing with response data
+   return response 
+}
+
+export function intError(error: AxiosError) {
+    //do somthing with error data
+    const msg = error.response?.data.detail
+    console.log('interceptor error detail', msg)
+    toast.error(error.message)
+
+    return Promise.reject(error) // send axios error
 }

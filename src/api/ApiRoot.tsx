@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-import { handleResponse, handleError } from './response';
+import { handleResponse, handleError, intResponse, intError } from './response';
 import { Container, ObservationBlock, Semester, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
 import {
     mock_get_instrument_package,
@@ -35,14 +35,7 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json' 
     }
 })
-axiosInstance.interceptors.response.use(function ( response ) {
-    //do somthing with response data
-   return response 
-}, function (error) {
-    //do somthing with error data
-    console.log('interceptor error', error.response)
-    return Promise.reject(error.response) // send axios error
-});
+axiosInstance.interceptors.response.use(intResponse, intError);
 
 const get_semesters = (): Promise<SemesterIds> => {
     const url = `${SEMESTERS_URL}`
