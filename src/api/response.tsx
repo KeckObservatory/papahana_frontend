@@ -29,9 +29,20 @@ export function intResponse( response: AxiosResponse ) {
 
 export function intError(error: AxiosError) {
     //do somthing with error data
-    const msg = error.response?.data.detail
-    console.log('interceptor error detail', msg)
-    toast.error(msg)
+    if (error.code === '400') {
+        const msg = error.response?.data.detail
+        console.log('interceptor error detail', error)
+        toast.error(msg)
+    }
+    if (error.code==='401') {
+        toast.error('Authentication error')
+    }
+    if (error.code == '404') {
+        toast.error('404 error. API not found')
+    }
+    else { 
+        toast.error(error.message)
+    }
 
     return Promise.reject(error) // send axios error
 }
