@@ -43,11 +43,18 @@ interface RenderTree {
 //     return nodes
 // }
 
+export interface TreeNode {
+    name: string
+    id: string;
+    type: string;
+    children: RenderTree[];
+}
+
 const containers_to_nodes = (containers: Container[]): RenderTree[] => {
-    let nodes: any = []
+    let nodes: TreeNode[] = []
     containers.forEach((container: Container) => {
 
-        let node: any = {};
+        let node: Partial<TreeNode> = {};
         node['name'] = container.name;
         node['id'] = container._id;
         node['type'] = 'container'
@@ -55,7 +62,7 @@ const containers_to_nodes = (containers: Container[]): RenderTree[] => {
             let leaf: RenderTree = { name: obStr, id: obStr, type: 'ob' }
             return leaf
         })
-        nodes.push(node)
+        nodes.push(node as TreeNode)
     })
     return nodes
 }

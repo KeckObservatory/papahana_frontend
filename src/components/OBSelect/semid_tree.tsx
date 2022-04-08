@@ -4,9 +4,10 @@ import Tree, { Node, NodeId, Leaf } from '@naisutech/react-tree';
 import { get_containers } from '../../api/utils'
 import { makeStyles } from '@mui/styles'
 import { Button } from '@mui/material';
+import { Theme } from '@mui/material/styles'
 import { useObserverContext } from './../App'
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: Theme) => ({
     root: {
         margin: theme.spacing(1),
         display: 'flex',
@@ -36,7 +37,7 @@ interface Props {
 
 
 const containers_to_nodes = (containers: Container[]): Node[] => {
-    let nodes: any = []
+    let nodes: Node[] = []
     containers.forEach((container: Container) => {
         let node: any = {};
         node['label'] = container.name;
