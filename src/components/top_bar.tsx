@@ -10,8 +10,10 @@ import Typography from '@mui/material/Typography'
 import { useDrawerOpenContext } from './App';
 import LoginDialog from './login_dialog';
 // import { DefaultTheme } from '@mui/private-theming'
+import { Theme } from "@mui/material/styles";
 
-const useStyles = makeStyles((theme: any) => ({
+
+const useStyles = makeStyles((theme: Theme) => ({
   root: { 
     position: "absolute",
     display: "flex"
@@ -27,8 +29,6 @@ const useStyles = makeStyles((theme: any) => ({
     paddingLeft: theme.spacing(5) 
   },
   switch: {
-    color: theme.palette.primary,
-    backgroundColor: theme.palette.secondary
   },
 }))
 

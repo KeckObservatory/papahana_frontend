@@ -1,5 +1,5 @@
 import React, { } from "react"
-import { Target, Template, OBComponent, TemplateParameter, OBSequence } from "../../typings/papahana"
+import { Target, Template, OBComponent, TemplateParameter, OBSequence, TimeConstraint } from "../../typings/papahana"
 import { withTheme, ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 // import Form from '@rjsf/material-ui'
 import { Theme as MaterialUITheme } from './../../rjs_forms'
@@ -71,6 +71,21 @@ export const to_schema_type = (tpl_param: string): string => {
   return type
 }
 
+const make_dither_schema = (param: TemplateParameter) => {
+    let schema = {} as JsonSchema
+    schema.title = 'dither item'
+    schema.type = 'object'
+    schema.properties = {}
+    param.allowed.forEach( (param: any) => {
+      const dkey = Object.keys(param)[0]
+      const dvalue = param[dkey as string]
+      //@ts-ignore
+      schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
+    })
+    schema.required = Object.keys(schema.properties)
+    return schema 
+}
+
 export const template_parameter_to_schema_properties = (param: TemplateParameter): OBJsonSchemaProperties => {
   let property: Partial<JSProperty> = {}
   property.title = param.ui_name
@@ -78,7 +93,7 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
   if (param.default) {
     property.default = param.default
   }
-  property.readonly = false // todo: need to verify if this will allways be the case
+  property.readonly = false 
   if (param.option === "range") {
     property.minimum = param.allowed[0] as string | number | undefined
     property.maximum = param.allowed[1] as string | number | undefined
@@ -87,18 +102,7 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
     property.enum = param.allowed
   }
   if (property.type === 'array') {
-    let schema = {} as JsonSchema //todo make this a function
-    schema.title = 'dither item'
-    schema.type = 'object'
-    schema.properties = {}
-    param.allowed.forEach((param: any) => {
-      const dkey = Object.keys(param)[0]
-      const dvalue = param[dkey as string]
-      //@ts-ignore
-      schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
-    })
-    schema.required = Object.keys(schema.properties)
-    property.items = schema
+    property.items = make_dither_schema(param) 
   }
   return property
 }
@@ -131,12 +135,15 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
 
   }
   else if (id === 'time_constraints') {
-    let timeConstraints = obComponent as any
+    let timeConstraints = obComponent as TimeConstraint[]
 
     if (timeConstraints[0]) {
-      formData['time_constraints'] = timeConstraints[0].map((constraint: any) => {
+      const tc = timeConstraints
+      formData['time_constraints'] = tc.map((constraint: TimeConstraint) => {
         return { start_datetime: constraint[0], end_datetime: constraint[1] }
       })
+      console.log('time constraint', tc, formData)
+      
     }
   }
   else {

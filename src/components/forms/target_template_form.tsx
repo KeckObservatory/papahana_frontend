@@ -34,7 +34,6 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
     setFormData(() => newFormData)
   }
 
-
   return (
     <div ref={ref} className={classes.root}>
       <TargetResolverDialog id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
