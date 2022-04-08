@@ -9,9 +9,6 @@ export function handleResponse(response: AxiosResponse) {
 
 export function handleError(error: Error | AxiosError) {
     if (axios.isAxiosError(error)) {
-        console.error('handleError: ', error)
-        console.error('error reponse: ', error.response)
-        // console.error(error.toJSON())
         return error.toJSON();
     }
     return error;
@@ -31,10 +28,10 @@ export function intError(error: AxiosError) {
         console.log('interceptor error detail', error)
         toast.error(msg)
     }
-    if (status === 401) {
+    else if (status === 401) {
         toast.error('Authentication error')
     }
-    if (status === 404) {
+    else if (status === 404) {
         toast.error('404 error. API not found')
     }
     else { 
