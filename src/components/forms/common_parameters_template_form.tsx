@@ -36,7 +36,7 @@ export const useStyles = makeStyles((theme: DefaultTheme) => ({
 interface Props {
   obComponent: CommonParameters
   updateOB: Function
-  schema: JSONSchema7
+  schema?: JSONSchema7
   id: string
 }
 
@@ -95,7 +95,6 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
         //@ts-ignore
         const formData = props.obComponent[formName]
         const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName as keyof CommonParameters)
-        // { console.log('making form', formName, 'schema', schemas[formName] ) }
         return (
           <Accordion key={formName}>
             <AccordionSummary

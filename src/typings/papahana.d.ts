@@ -29,11 +29,17 @@ export type Document = ObservationBlock | Group | object
 export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
-export type OBComponent = Target | OBSequence | OBMetadata | CommonParameters | TimeConstraints | Status
-export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations'
+export type OBComponent = MetadataLessOBComponent | OBStandardComponent | string | string[]
+export type MetadataLessOBComponent = OBMetadata | TimeConstraint[] | Status | CommonParameters
+export type OBStandardComponent = Target | OBSequence 
+export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations' | 'metadata' | 'common_parameters' | 'time_constraints' | 'status'
 
 
-export type TimeConstraints = Array<[string, string]>
+export type TimeConstraint = [string, string]
+// export interface TimeConstraint {
+// 	start_datetime: string,
+// 	end_datetime: string
+// }
 
 export interface CommonParameters {
 	metadata: { [key: string]: any },
@@ -93,7 +99,7 @@ export interface ObservationBlock extends Base {
 	_id: string,
 	metadata: OBMetadata;
 	target?: Target;
-	time_constraints: string[] | string[][];
+	time_constraints: TimeConstraint[][] 
 	comment: string;
 	observations?: Science[];
 	acquisition: Acquisition;

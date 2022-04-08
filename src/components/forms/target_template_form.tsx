@@ -27,6 +27,7 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   }, [props.obComponent])
 
   const handleChange = (evt: ISubmitEvent<OBComponent>): void => {
+    //@ts-ignore
     let newFormData = { ...evt.formData }
     // check if form changed heights
     props.updateOB(props.id, newFormData)

@@ -122,6 +122,7 @@ export const template_to_schema = (template: Template): JSONSchema7 => {
 export const init_form_data = (obComponent: OBComponent, id: string) => {
   let formData: { [key: string]: any } = {}
   if (id === 'metadata' || id === 'status') {
+    //@ts-ignore
     formData = obComponent
   }
   else if( id==='target') {
@@ -194,6 +195,7 @@ export default function TemplateForm(props: Props): JSX.Element {
   }, [props.obComponent])
 
   const handleChange = (evt: ISubmitEvent<OBComponent>): void => {
+    //@ts-ignore
     let newFormData = { ...evt.formData }
     props.updateOB(props.id, newFormData)
     setFormData(() => newFormData)

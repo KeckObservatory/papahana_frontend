@@ -1,27 +1,39 @@
 //@ts-nocheck
-import TemplateForm from '../../forms/template_form';
-import TargetTemplateForm from '../../forms/target_template_form';
-import CommonParametersTemplateForm from '../../forms/common_parameters_template_form';
-import { AccordionForm } from './accordion_form';
-import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import React from "react";
 import { Theme, createStyles } from '@mui/material/styles'
 import { makeStyles } from '@mui/styles'
-
+import {
+    MetadataLessOBComponent,
+    OBComponent,
+    OBSeqNames,
+    OBSequence,
+    ObservationBlock,
+    OBStandardComponent,
+    Science,
+    TimeConstraint,
+} from './../../../typings/papahana'
 import "./styles.css";
+import { chunkify, reorder, move, create_draggable } from './dnd_helpers'
 
 const GRID = 4;
 const ROW_HEIGHT = 45;
 const OB_NAMES: OBSeqNames[] = [
     'metadata',
     'acquisition',
-    'observations', 
-    'target', 
+    'observations',
+    'target',
     'common_parameters',
     'time_constraints',
     'status'
 ]
 const METADATALESS = ['metadata', 'common_parameters', 'status', 'time_constraints']
+
+
+interface AccordionClasses {
+    acc: any,
+    accDrag: any
+}
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -35,16 +47,16 @@ const useStyles = makeStyles((theme: Theme) =>
             minWidth: '450px'
         },
         droppable: {
-            background: theme.palette.sucess,
+            background: theme.palette.success,
             padding: GRID,
             minWidth: '450px'
         },
-        accordian: {
+        accordion: {
             userSelect: "none",
             padding: GRID * 2,
             margin: `0 0 ${GRID}px 0`,
         },
-        accordianDragging: {
+        accordionDragging: {
             userSelect: "none",
             padding: GRID * 2,
             margin: `0 0 ${GRID}px 0`,
@@ -73,40 +85,16 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-const reorder = (list, startIndex, endIndex) => {
-    const result = Array.from(list);
-    const [removed] = result.splice(startIndex, 1);
-    result.splice(endIndex, 0, removed);
-    return result;
-};
-
-/**
- * Moves an item from one list to another list.
- */
-const move = (source, destination, droppableSource, droppableDestination) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-    destClone.splice(droppableDestination.index, 0, removed);
-
-    const result = {};
-    result[droppableSource.droppableId] = sourceClone;
-    result[droppableDestination.droppableId] = destClone;
-
-    return result;
-};
-
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
-    let forms: { [k: string]: any } = {}
+    let forms: { [k: string]: unknown } = {}
     Object.keys(ob).forEach((componentName: string) => {
-        if (OB_NAMES.indexOf(componentName as any) > -1) {
+        if (OB_NAMES.indexOf(componentName as OBSeqNames) > -1) {
             if (componentName === 'observations') {
-                const seq = ob.observations as any
+                const seq = ob.observations as Science[]
                 for (let idx = 0; idx < seq.length; idx++) {
                     const sn = JSON.stringify(seq[idx].metadata.sequence_number)
-                    const sci_name = 'sequence ' + sn 
+                    const sci_name = 'sequence ' + sn
                     forms[sci_name] = seq[idx]
                 }
             }
@@ -118,100 +106,13 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     return forms
 }
 
-
-const createAccordianDiv = (provided, snapshot, key, formChild: JSX.Element, acc: any, handleDelete: Function) => {
-    const className = snapshot.isDragging ? {...provided.draggableProps, ...acc.accDrag} : acc.acc
-    return (
-        <div
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-            {...provided.dragHandleProps}
-            className={className}
-        >
-            <AccordionForm
-                name={key}
-                id={key}
-                handleDelete={handleDelete}
-            >
-                {formChild}
-            </AccordionForm>
-        </div>
-    )
-}
-
-const create_draggable = (keyValue, index, updateOB, acc, handleDelete) => {
-    const [key, component] = keyValue
-    const form = createForm(key, component, updateOB)
-    return (
-        <Draggable
-            key={key}
-            draggableId={key}
-            index={index}
-        >
-            {(provided, snapshot) => createAccordianDiv(provided, snapshot, key, form, acc, handleDelete)}
-        </Draggable>
-    )
-}
-
-const chunkify = (a, n, balanced) => {
-    if (n < 2)
-        return [a];
-    var len = a.length,
-        out = [],
-        i = 0,
-        size;
-
-    if (len % n === 0) {
-        size = Math.floor(len / n);
-        while (i < len) {
-            out.push(a.slice(i, i += size));
-        }
-    }
-
-    else if (balanced) {
-        while (i < len) {
-            size = Math.ceil((len - i) / n--);
-            out.push(a.slice(i, i += size));
-        }
-    }
-
-    else {
-
-        n--;
-        size = Math.floor(len / n);
-        if (len % size === 0)
-            size--;
-        while (i < size * n) {
-            out.push(a.slice(i, i += size));
-        }
-        out.push(a.slice(size * n));
-
-    }
-
-    return out;
-}
-
-const createForm = (id: string, obComponent: OBComponent, updateOB): JSX.Element => {
-    let form
-    if (id === 'common_parameters') {
-        form = <CommonParametersTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
-    }
-    else if (id === 'target') {
-        form = <TargetTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
-    }
-    else {
-        form = <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
-    }
-    return form 
-}
-
 const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
     let newOb = { ...ob }
     //get science idx from name
     console.log('updating component', seqName, formData)
     const sequence_number = JSON.parse(seqName.substring(seqName.indexOf(' ') + 1))
     let seq = ob.observations as Science[]
-    const idx = seq.findIndex(x => { return x.metadata.sequence_number===sequence_number })
+    const idx = seq.findIndex(x => { return x.metadata.sequence_number === sequence_number })
 
     console.log('seq_number', sequence_number, 'seq idx:', idx)
     if (seq) {
@@ -225,21 +126,23 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
 
 const updateOBTimeConstraint = (ob: ObservationBlock, formData: any): ObservationBlock => {
     let newOb = { ...ob }
-    let time_constraints = []
-    formData['time_constraints'].forEach( timeConstraint => {
-       time_constraints.push( [ timeConstraint.start_datetime, timeConstraint.end_datetime ] )
+    let time_constraints: TimeConstraint[] = []
+    formData['time_constraints'].forEach((timeConstraint: any) => {
+        const ts = [timeConstraint.start_datetime as string, timeConstraint.end_datetime as string]
+        time_constraints.push(ts as [string, string])
     })
-    newOb['time_constraints'] = [ time_constraints ]
+    newOb['time_constraints'] = [time_constraints]
     return newOb
 }
 
-const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
-    let component = ob[seqName as keyof ObservationBlock] as OBComponent 
+const updateOBComponent = (seqName: keyof ObservationBlock, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
 
+    let component: OBComponent
     if (METADATALESS.includes(seqName)) {
-        component = formData
+        component = formData as MetadataLessOBComponent
     }
     else {
+        component = ob[seqName] as OBStandardComponent 
         let params: { [key: string]: any } = component.parameters
 
         Object.entries(formData).forEach(([key, value]) => {
@@ -247,12 +150,12 @@ const updateOBComponent = (seqName: string, ob: ObservationBlock, formData: { [k
         })
         component.parameters = params
     }
-    ob[seqName as keyof ObservationBlock] = component as OBComponent 
+    ob[seqName] = component as any 
     return ob as ObservationBlock
 }
 
 interface Props {
-    triggerRender: number 
+    triggerRender: number
     setTriggerRender: Function
     ob: ObservationBlock
     setOB: Function
@@ -264,18 +167,18 @@ export const OBBeautifulDnD = (props: Props) => {
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
-    obItems = chunkify(obItems, nColumns, evenChunks)
+    obItems = chunkify(obItems, nColumns, evenChunks) as any 
     const [state, setState] = React.useState(obItems);
 
     React.useEffect(() => {
         console.log(`JSON edited. resetting grid items`)
         const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
         let obItems = Object.entries(obComponents)
-        obItems = chunkify(obItems, nColumns, evenChunks)
+        obItems = chunkify(obItems, nColumns, evenChunks) as any
         setState(() => obItems)
     }, [props.triggerRender])
 
-    const updateOB = (seqName: OBSeqNames, formData: OBSequence) => {
+    const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
             //handle observations
@@ -292,7 +195,7 @@ export const OBBeautifulDnD = (props: Props) => {
         }
     }
 
-    const onDragEnd = (result) => {
+    const onDragEnd = (result: any) => {
         const { source, destination } = result;
 
         // dropped outside the list
@@ -303,12 +206,12 @@ export const OBBeautifulDnD = (props: Props) => {
         const dInd = +destination.droppableId;
 
         if (sInd === dInd) {
-            const items = reorder(state[sInd], source.index, destination.index);
+            const items = reorder(state[sInd], source.index, destination.index) as any;
             const newState = [...state];
             newState[sInd] = items;
             setState(() => newState);
         } else {
-            const result = move(state[sInd], state[dInd], source, destination);
+            const result = move(state[sInd], state[dInd], source, destination) as any;
             const newState = [...state];
             newState[sInd] = result[sInd];
             newState[dInd] = result[dInd];
@@ -316,32 +219,32 @@ export const OBBeautifulDnD = (props: Props) => {
         }
     }
 
-    const handleDelete = (name: string) => { 
+    const handleDelete = (name: string) => {
         console.log('deleteing component:', name)
 
-        let newOB = {...props.ob}
+        let newOB = { ...props.ob }
         if (name.includes('sequence')) {
             //find id
             const sequence_number = JSON.parse(name.split(' ')[1])
             //find and delete sequence from array
             let newSequences = props.ob.observations
-            const idx = newSequences.findIndex( (s) => s.metadata.sequence_number === sequence_number)
-            newSequences.splice(idx, 1)
+            const idx = newSequences?.findIndex((s) => s.metadata.sequence_number === sequence_number)
+            newSequences?.splice(idx as number, 1)
             newOB.observations = newSequences
         }
         else {
-            delete newOB[name]
+            delete newOB[name as keyof ObservationBlock]
         }
         props.setOB(newOB)
         props.setTriggerRender(props.triggerRender + 1)
     }
 
-    const acc = {acc: classes.accordian, accDrag: classes.accordianDragging}
+    const acc: AccordionClasses = { acc: classes.accordion, accDrag: classes.accordionDragging }
     return (
         <div className={classes.root}>
             <div style={{ display: "flex" }}>
                 <DragDropContext onDragEnd={onDragEnd}>
-                    {state.map((keyValueArr, ind) => (
+                    {state.map((keyValueArr: any[], ind: number) => (
                         <Droppable key={ind} droppableId={`${ind}`}>
                             {(provided, snapshot) => (
                                 <div
@@ -349,7 +252,7 @@ export const OBBeautifulDnD = (props: Props) => {
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >
-                                    {keyValueArr.map((keyValue, index) => (
+                                    {keyValueArr.map((keyValue: [string, unknown], index: number) => (
                                         create_draggable(keyValue, index, updateOB, acc, handleDelete)
                                     ))}
                                     {provided.placeholder}
