@@ -132,7 +132,6 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
   else if( id==='target') {
     const tgt = obComponent as Target 
     formData = tgt.parameters
-
   }
   else if (id === 'time_constraints') {
     let timeConstraints = obComponent as TimeConstraint[]
@@ -142,8 +141,6 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
       formData['time_constraints'] = tc.map((constraint: TimeConstraint) => {
         return { start_datetime: constraint[0], end_datetime: constraint[1] }
       })
-      console.log('time constraint', tc, formData)
-      
     }
   }
   else {
