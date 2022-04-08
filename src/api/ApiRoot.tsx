@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import { handleResponse, handleError, intResponse, intError } from './response';
-import { Container, ObservationBlock, Semester, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
+import { Container, ObservationBlock, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
 import {
     mock_get_instrument_package,
     mock_get_template,
