@@ -29,6 +29,7 @@ export function intResponse( response: AxiosResponse ) {
 
 export function intError(error: AxiosError) {
     //do somthing with error data
+    console.error('intError', error)
     if (error.code === '400') {
         const msg = error.response?.data.detail
         console.log('interceptor error detail', error)
