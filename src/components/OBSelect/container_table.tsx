@@ -48,7 +48,7 @@ const CustomToolbarSelect = (props: CTProps) => {
         setContainerName(newcidname)
     }
 
-    const remove_row_references = async (r: any) => {
+    const remove_row_references = async (r: { data: any[]; dataIndex: number }) => {
         //TODO: get all containers, filter the ones that need to update,
         // create new containers, and then
         const [ob_id, container_name] = r.data
@@ -104,7 +104,7 @@ const CustomToolbarSelect = (props: CTProps) => {
             return
         }
 
-        const rows = props.selectedRows.data.map((x: any) => {
+        const rows = props.selectedRows.data.map((x: SelectedRowData) => {
             return props.displayData[x.index]
         })
 

@@ -28,7 +28,7 @@ export default function EditContainerNameDialog(props: Props) {
     setOpen(true);
   };
 
-  const nameChange = (evt: any) => {
+  const nameChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
       setName(evt.target.value)
   }
 
