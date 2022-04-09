@@ -51,7 +51,7 @@ export const DeleteComponentButton = (props: Props) => {
             </Tooltip>
             <Dialog
                 open={open}
-                onClose={(event) => { handleClose(event, false) }}
+                onClose={(event) => { handleClose(undefined, false) }}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
             >

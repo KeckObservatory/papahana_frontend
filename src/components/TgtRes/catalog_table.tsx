@@ -23,7 +23,7 @@ const CustomToolbarSelect = (props: CTProps) => {
 const CatalogTable = (props: Props) => {
 
 
-    const handleSelect = (indexes: any) => {
+    const handleSelect = (indexes: any[]) => {
         const idx = indexes[0].index
         console.log('idx selected', idx)
         props.setSelIdx(idx)
