@@ -24,8 +24,7 @@ export const TargetResolverDialog = (props: Props) => {
   const [catalog, setCatalog] = React.useState(mockCatalog)
   const [filtCatalog, setFiltCatalog] = React.useState(mockCatalog)
 
-  const launch_target_resolver = (evt: any) => {
-    console.log('target resolver blastoff!!!')
+  const launch_target_resolver = () => {
     setOpen(true)
   }
 
