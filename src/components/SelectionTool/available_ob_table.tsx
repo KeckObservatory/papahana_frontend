@@ -1,4 +1,3 @@
-
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
 import { OBCell } from "../../typings/papahana"
 import Tooltip from '@mui/material/Tooltip'
@@ -10,8 +9,18 @@ interface Props {
     setSelObs: Function
 }
 
+interface SelectedRows {
+    data: {
+        index: number;
+        dataIndex: number;
+    }[];
+    lookup: {
+        [key: number]: boolean;
+    };
+}
+
 interface CTProps {
-    selectedRows: any,
+    selectedRows: SelectedRows,
     setSelObs: Function,
     rows: OBCell[]
 }
@@ -46,7 +55,7 @@ const AvailableOBTable = (props: Props) => {
             <CustomToolbarSelect
                 selectedRows={selectedRows}
                 setSelObs={props.setSelObs}
-                rows={props.rows} 
+                rows={props.rows}
             />
         ),
         selectableRows: 'multiple'

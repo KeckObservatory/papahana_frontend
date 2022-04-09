@@ -24,14 +24,14 @@ export default function UploadDialog(props: Props) {
         setOpen(false);
     };
 
-    const fileLoad = (evt: any) => {
-        console.log(evt.target.files[0])
+    const fileLoad = (evt: React.ChangeEvent<HTMLInputElement>) => {
+        //@ts-ignore
+        const file = evt.target?.files[0] as Blob
         const fileReader = new FileReader()
-        fileReader.readAsText(evt.target.files[0], "UTF-8");
+        fileReader.readAsText(file, "UTF-8");
         fileReader.onload = e => {
             const contents = e.target?.result as string
             const ob: ObservationBlock = contents? JSON.parse(contents): {}
-            console.log("e.target.result", ob);
             props.uploadOBFromJSON(ob);
             setOpen(false)
         };

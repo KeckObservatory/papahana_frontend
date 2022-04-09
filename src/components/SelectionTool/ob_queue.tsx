@@ -7,7 +7,7 @@ import { ObservationBlock, OBCell } from "../../typings/papahana"
 import { Theme } from '@mui/material/styles'
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-const useStyles = makeStyles((theme: any) => ({
+const useStyles = makeStyles((theme: Theme) => ({
     grid: {
         textAlign: 'center',
         margin: theme.spacing(1),

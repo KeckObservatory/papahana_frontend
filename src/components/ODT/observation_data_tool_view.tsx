@@ -24,6 +24,7 @@ import Drawer from '@mui/material/Drawer';
 import { useDrawerOpenContext } from './../App'
 import { animated } from 'react-spring'
 import useBoop from './../../hooks/boop'
+import { AxiosResponse } from 'axios'
 
 const useStyles = makeStyles((theme: Theme) => ({
   grid: {
@@ -75,7 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 
 export interface Props {
-  theme: any | null | undefined
+  theme?: string | null 
   iconStyle: 'circle' | 'triangle' | 'square'
   collapsed: number | boolean,
   collapseStringsAfter: number | false
@@ -104,11 +105,7 @@ export default function ODTView(props: Props) {
       if (newOb._id) {
         setOB(newOb)
       }
-    },
-      (error: any) => {
-        console.error(error)
-      }
-    )
+    })
     .finally( () => {
       setTriggerRender( triggerRender + 1 ) //force dnd component to rerender
     })
@@ -141,7 +138,7 @@ export default function ODTView(props: Props) {
 
   const copyOB = (): void => {
     console.log(`creating new ob from ob ${ob_id}`)
-    ob_api_funcs.post(ob).then((result: any) => {
+    ob_api_funcs.post(ob).then((result: string) => {
       console.log('put result')
       console.log(result)
     })
@@ -149,7 +146,7 @@ export default function ODTView(props: Props) {
 
   const deleteOB = (): void => {
     console.log(`deleting ob ${ob_id}`)
-    ob_api_funcs.remove(ob_id as string).then((result: any) => {
+    ob_api_funcs.remove(ob_id as string).then((result: unknown) => {
       console.log('delete result')
       console.log(result)
     })
@@ -173,17 +170,19 @@ export default function ODTView(props: Props) {
     console.log('ob before add Seq', ob)
     const tmplType = seq.metadata.template_type
     console.log('templateType adding', tmplType)
-    const newOB: any = cloneDeep(ob) // need to deep clone a nested object
+    const newOB: ObservationBlock = cloneDeep(ob) // need to deep clone a nested object
     if (tmplType.includes('sci')) {
       let obs = [...(newOB.observations ?? [])] //need to make a deep copy of observations
       const metadata = seq.metadata as ScienceMetadata
       metadata['sequence_number'] = obs.length + 1
       seq.metadata = metadata
-      obs.push(seq as any)
+      //@ts-ignore
+      obs.push(seq)
       newOB.observations = [...obs]
     }
     else {
-      newOB[tmplType as OBSeqNames] = seq
+      //@ts-ignore
+      newOB[tmplType] = seq
     }
     // triggerBoop(true)
     setOB(newOB)
@@ -286,7 +285,7 @@ export default function ODTView(props: Props) {
     </Paper >
   )
 
-  const handleMouseDown = (e: any) => {
+  const handleMouseDown = () => {
     document.addEventListener("mouseup", handleMouseUp, true);
     document.addEventListener("mousemove", handleMouseMove, true);
   };
@@ -319,7 +318,7 @@ export default function ODTView(props: Props) {
           },
         }}
       >
-        <div onMouseDown={ e => handleMouseDown(e)} className={classes.dragger} />
+        <div onMouseDown={ e => handleMouseDown()} className={classes.dragger} />
         {sideMenu}
       </Drawer>
       {renderRGL()}

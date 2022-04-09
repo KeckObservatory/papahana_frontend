@@ -124,11 +124,16 @@ const updateOBScience = (seqName: string, ob: ObservationBlock, formData: OBSequ
     return newOb
 }
 
-const updateOBTimeConstraint = (ob: ObservationBlock, formData: any): ObservationBlock => {
+interface FormTimeConstraint {
+    start_datetime: string
+    end_datetime: string
+}
+
+const updateOBTimeConstraint = (ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
     let newOb = { ...ob }
     let time_constraints: TimeConstraint[] = []
-    formData['time_constraints'].forEach((timeConstraint: any) => {
-        const ts = [timeConstraint.start_datetime as string, timeConstraint.end_datetime as string]
+    formData['time_constraints'].forEach((timeConstraint: FormTimeConstraint) => {
+        const ts = [timeConstraint.start_datetime, timeConstraint.end_datetime]
         time_constraints.push(ts as [string, string])
     })
     newOb['time_constraints'] = [time_constraints]

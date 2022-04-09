@@ -9,9 +9,9 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { IconButton, Tooltip } from '@mui/material';
 
 interface Props {
-handleDelete: Function
-id: string
-name: string 
+    handleDelete: Function
+    id: string
+    name: string
 }
 
 export const DeleteComponentButton = (props: Props) => {
@@ -19,16 +19,18 @@ export const DeleteComponentButton = (props: Props) => {
 
     const [open, setOpen] = React.useState(false);
     const title = "Delete Component"
-    const msg = "Are you sure you want to delete this component from the Observing Block?" 
+    const msg = "Are you sure you want to delete this component from the Observing Block?"
 
-    const handleClickOpen = (event: any) => {
+    const handleClickOpen = (event: React.MouseEvent<HTMLElement>) => {
         event.stopPropagation()
         setOpen(true);
     };
 
-    const handleClose = (event: any, confirmDelete: boolean ) => {
+    const handleClose = (event?: React.MouseEvent<HTMLElement>, confirmDelete?: boolean) => {
         console.log('confirmDelete for', props.id, props.name, confirmDelete)
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         setOpen(false);
         if (confirmDelete) {
             props.handleDelete(props.id)
