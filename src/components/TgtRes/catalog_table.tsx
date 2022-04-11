@@ -19,9 +19,7 @@ const CustomToolbarSelect = (props: CTProps) => {
     );
 }
 
-
 const CatalogTable = (props: Props) => {
-
 
     const handleSelect = (indexes: any[]) => {
         const idx = indexes[0].index
