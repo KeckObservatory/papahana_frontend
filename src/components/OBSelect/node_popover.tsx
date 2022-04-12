@@ -38,7 +38,7 @@ const PopoverButtons = (props: PButtonProps) => {
             version: "0.1.0",
             ob_type: "engineering",
             instrument: "KCWI",
-            pi_id: observer_context.observer_id,
+            pi_id: JSON.parse(observer_context.observer_id),
             sem_id: ob_select_context.sem_id,
             comment: ""
         }
