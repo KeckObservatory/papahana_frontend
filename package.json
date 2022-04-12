@@ -17,6 +17,7 @@
     "@types/react-beautiful-dnd": "^13.1.2",
     "@types/react-dom": "^17.0.3",
     "@types/react-grid-layout": "^1.1.1",
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.6.7",
     "axios": "^0.21.1",
     "d3": "^6.7.0",
     "d3-celestial": "^0.7.35",
@@ -84,6 +85,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^12.1.2",
     "@types/d3": "^6.7.0",
+    "@types/enzyme": "^3.10.12",
     "@types/jest": "^27.4.1",
     "@types/lodash.debounce": "^4.0.6",
     "@types/mui-datatables": "^3.7.7",
@@ -92,6 +94,7 @@
     "@types/suncalc": "^1.8.1",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
+    "enzyme": "^3.11.0",
     "jest": "^27.5.1",
     "react-test-renderer": "17.0",
     "ts-jest": "^27.1.4"

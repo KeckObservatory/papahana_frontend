@@ -86,7 +86,9 @@ module.exports = {
     },
 
     // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
-    // modulePathIgnorePatterns: [],
+    modulePathIgnorePatterns: [
+        "/rjs_forms/"
+    ],
 
     // Activates notifications for test results
     // notify: false,
@@ -154,9 +156,10 @@ module.exports = {
     // ],
 
     // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-    // testPathIgnorePatterns: [
-    //   "/node_modules/"
-    // ],
+    testPathIgnorePatterns: [
+      "/node_modules/",
+      "/rjs_forms/"
+    ],
 
     // The regexp pattern or array of patterns that Jest uses to detect test files
     // testRegex: [],
