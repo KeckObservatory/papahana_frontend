@@ -65,7 +65,7 @@ export interface ObsContext {
   setObserverId: Function
 }
 
-const init_obs_context: ObsContext = { observer_id: '2003', setObserverId: () => { } }
+const init_obs_context: ObsContext = { observer_id: 'XXXX', setObserverId: () => { } }
 
 const ObserverContext = createContext<ObsContext>(init_obs_context)
 export const useObserverContext = () => useContext(ObserverContext)

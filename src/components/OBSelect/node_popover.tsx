@@ -9,7 +9,8 @@ import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
 import { Container, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
-import { useOBSelectContext } from './ob_select' 
+import { useOBSelectContext } from './ob_select'
+import { useObserverContext } from './../App' 
 
 interface PButtonProps extends Props {
     handleClose: Function
@@ -27,6 +28,7 @@ interface Props {
 const PopoverButtons = (props: PButtonProps) => {
 
     const ob_select_context = useOBSelectContext() 
+    const observer_context = useObserverContext()
 
     const addOB = () => {
         console.log(`creating new ob in ${props.type} id ${props.id}.`)
@@ -36,8 +38,8 @@ const PopoverButtons = (props: PButtonProps) => {
             version: "0.1.0",
             ob_type: "engineering",
             instrument: "KCWI",
-            pi_id: 2003,
-            sem_id: "2017A_U050",
+            pi_id: observer_context.observer_id,
+            sem_id: ob_select_context.sem_id,
             comment: ""
         }
         const status: Status = {

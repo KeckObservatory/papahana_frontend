@@ -88,7 +88,7 @@ export interface OBMetadata {
 	version: string | number;
 	priority: number;
 	ob_type: OBType;
-	pi_id: number;
+	pi_id: number | string;
 	sem_id: string;
 	instrument: Instrument;
 	comment: string

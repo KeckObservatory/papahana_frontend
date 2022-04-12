@@ -80,7 +80,7 @@ export function TopBar(props: Props) {
         >
           Welcome, Observer {props.observer_id}!
         </Typography>
-        <LoginDialog />
+        {/* <LoginDialog /> */}
         <Tooltip title="Toggle on for dark mode">
           <Switch 
             color="secondary"
