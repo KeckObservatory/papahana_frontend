@@ -87,7 +87,7 @@ export const make_all_ob_container = async (sem_id: string, detailedContainers: 
 
 export const make_detailed_containers = async (sem_id: string, containers: Container[]) => { // adds all obs in a special container
    const detailedContainers: DetailedContainer[] = [];
-   containers.forEach(async (container: Container) => {
+   await containers.forEach(async (container: Container) => {
       // let dContainer: Partial<DetailedContainer> = container
       let partialObs: Partial<ObservationBlock>[] = []
       if (sem_id) {
@@ -96,7 +96,6 @@ export const make_detailed_containers = async (sem_id: string, containers: Conta
       // dContainer['ob_details'] = partialObs
       // detailedContainers.push(dContainer as DetailedContainer)
       const dContainer = {...container, 'ob_details': partialObs}
-      console.log('pushing dContainer', dContainer)
       detailedContainers.push(dContainer)
    })
    console.log('containers', containers, 'detailedContainers', detailedContainers)
