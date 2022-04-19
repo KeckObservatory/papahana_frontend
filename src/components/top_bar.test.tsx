@@ -6,7 +6,7 @@ import { shallow } from "enzyme";
 import { handleTheme } from './App'
 import { ThemeProvider } from '@mui/styles';
 
-const [theme, jsonTheme] = handleTheme(true)
+const theme = handleTheme(true)
 
 describe("top-bar", () => {
     it('renders learn react link', async () => {
