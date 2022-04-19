@@ -3,7 +3,6 @@ import MUIDataTable, { DisplayData, MUIDataTableOptions } from "mui-datatables"
 import { Container, Scoby } from "../../typings/papahana";
 import Button from '@mui/material/Button';
 import DropDown from '../drop_down'
-import { useObserverContext } from '../App'
 import { useOBSelectContext } from './ob_select'
 import { container_api_funcs } from '../../api/ApiRoot'
 
@@ -132,10 +131,10 @@ const ContainerTable = (props: Props) => {
     }
 
     const columns = [
-        "ob_id",
+        "name",
         "container_name",
+        "ob_type"
     ]
-
 
     const onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
         console.log('rowData', rowData, 'rowMeta', rowMeta)
@@ -155,7 +154,6 @@ const ContainerTable = (props: Props) => {
         onRowSelectionChange: handleSelect,
         onRowClick: onRowClick
     }
-
 
     return (
         <MUIDataTable

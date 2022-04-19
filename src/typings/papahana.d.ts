@@ -2,7 +2,7 @@ export interface ContainerObs {
 	[key: string]: ObservationBlock[]
 }
 
-export interface SemesterIds { 
+export interface SemesterIds {
 	associations: string[]
 	keck_id: number
 }
@@ -46,7 +46,7 @@ export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 export type OBSequence = Acquisition | Science
 export type OBComponent = MetadataLessOBComponent | OBStandardComponent | string | string[]
 export type MetadataLessOBComponent = OBMetadata | TimeConstraint[] | Status | CommonParameters
-export type OBStandardComponent = Target | OBSequence 
+export type OBStandardComponent = Target | OBSequence
 export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations' | 'metadata' | 'common_parameters' | 'time_constraints' | 'status'
 
 
@@ -71,12 +71,12 @@ export interface Base {
 export interface Status extends Base {
 	executions?: string[]
 	deleted: boolean
-	state?: number 
+	state?: number
 	priority?: number
 	current_seq?: number
 	current_exp_det1?: number
 	current_exp_det2?: number
-	current_step?: number 
+	current_step?: number
 }
 
 export interface Scoby {
@@ -86,6 +86,11 @@ export interface Scoby {
 	container_name?: string
 	ob_id?: string
 	name?: string
+	ra?: string,
+    dec?: string,
+	comment?: string,
+	ob_type?: string,
+	version?: string,
 }
 
 export interface OBCell {
@@ -115,7 +120,7 @@ export interface ObservationBlock extends Base {
 	_ob_id?: string,
 	metadata: OBMetadata;
 	target?: Target;
-	time_constraints: TimeConstraint[][] 
+	time_constraints: TimeConstraint[][]
 	comment: string;
 	observations?: Science[];
 	acquisition: Acquisition;
@@ -309,9 +314,9 @@ export interface Template {
 	template_id: string;
 	metadata: TemplateMetadata;
 	parameters: { [key: string]: TemplateParameter };
-    detector_parameters?: { [key: string]: TemplateParameter }
-    tcs_parameters?: { [key: string]: TemplateParameter }
-    instrument_parameters?: { [key: string]: TemplateParameter }
+	detector_parameters?: { [key: string]: TemplateParameter }
+	tcs_parameters?: { [key: string]: TemplateParameter }
+	instrument_parameters?: { [key: string]: TemplateParameter }
 	name: string,
 }
 
@@ -319,7 +324,7 @@ export interface CommonTemplate {
 	name: string,
 	template_id: string;
 	metadata: TemplateMetadata;
-    detector_parameters: { [key: string]: TemplateParameter }
-    tcs_parameters: { [key: string]: TemplateParameter }
-    instrument_parameters: { [key: string]: TemplateParameter }
+	detector_parameters: { [key: string]: TemplateParameter }
+	tcs_parameters: { [key: string]: TemplateParameter }
+	instrument_parameters: { [key: string]: TemplateParameter }
 }
