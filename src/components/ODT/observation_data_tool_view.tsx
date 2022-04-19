@@ -274,6 +274,7 @@ export default function ODTView(props: Props) {
         </div>
       </Tooltip>
       <ReactJson
+        style={{ marginBottom: '80px' }}
         src={ob as object}
         theme={theme as ThemeKeys | undefined}
         iconStyle={props.iconStyle}

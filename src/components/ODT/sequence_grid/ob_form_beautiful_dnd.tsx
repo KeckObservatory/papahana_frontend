@@ -44,12 +44,14 @@ const useStyles = makeStyles((theme: Theme) =>
         droppableDragging: {
             background: theme.palette.divider,
             padding: GRID,
-            minWidth: '450px'
+            minWidth: '300px',
+            maxWidth: '450px'
         },
         droppable: {
             background: theme.palette.success,
             padding: GRID,
-            minWidth: '450px'
+            minWidth: '300px',
+            maxWidth: '450px'
         },
         accordion: {
             userSelect: "none",
