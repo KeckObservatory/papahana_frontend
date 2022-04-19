@@ -26,16 +26,6 @@ import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 
 const useStyles = makeStyles((theme: Theme) => ({
-    grid: {
-        textAlign: 'left',
-        margin: theme.spacing(1),
-        display: 'flex',
-        flexWrap: 'wrap',
-        '& > *': {
-            margin: theme.spacing(0),
-            width: theme.spacing(50),
-        }
-    },
     buttonBlock: {
         margin: theme.spacing(1),
         display: 'inline-flex',
@@ -49,28 +39,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         // maxWidth: "50%",
         elevation: 5,
     },
-    widepaper: {
-        padding: theme.spacing(2),
-        margin: theme.spacing(1),
-        // height: '500px',
-        elevation: 5,
-        minWidth: theme.spacing(170)
-    },
-    dndGrid: {
-        minWidth: theme.spacing(150),
-        elevation: 5,
-    },
-    dragger: {
-        width: "5px",
-        cursor: "ew-resize",
-        padding: "4px 0 0",
-        borderTop: "1px solid #ddd",
-        position: "absolute",
-        top: 0,
-        right: 0,
-        bottom: 0,
-        zIndex: 100,
-    }
 }))
 
 interface Props {

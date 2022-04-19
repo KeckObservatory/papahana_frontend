@@ -10,40 +10,6 @@ import { useDrawerOpenContext } from './../App'
 import { SideMenu } from './side_menu'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  grid: {
-    textAlign: 'left',
-    margin: theme.spacing(1),
-    display: 'flex',
-    flexWrap: 'wrap',
-    '& > *': {
-      margin: theme.spacing(0),
-      width: theme.spacing(50),
-    }
-  },
-  buttonBlock: {
-    margin: theme.spacing(1),
-    display: 'inline-flex',
-  },
-  templateSelect: {
-  },
-  paper: {
-    padding: theme.spacing(2),
-    margin: theme.spacing(1),
-    width: "100%",
-    // maxWidth: "50%",
-    elevation: 5,
-  },
-  widepaper: {
-    padding: theme.spacing(2),
-    margin: theme.spacing(1),
-    // height: '500px',
-    elevation: 5,
-    minWidth: theme.spacing(170)
-  },
-  dndGrid: {
-    minWidth: theme.spacing(150),
-    elevation: 5,
-  },
   dragger: {
     width: "5px",
     cursor: "ew-resize",
@@ -73,12 +39,7 @@ export default function ODTView(props: Props) {
 
   useEffect(() => {
   }, [])
-
-
-
-
-
-
+  
   const renderRGL = () => {
     const empty = Object.keys(ob).length > 0
     if (empty) {
