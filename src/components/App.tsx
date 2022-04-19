@@ -111,7 +111,7 @@ export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
-  const [drawerWidth, setDrawerWidth] = React.useState(700)
+  const [drawerWidth, setDrawerWidth] = React.useState(400)
   const [observer_id, setObserverId] =
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
