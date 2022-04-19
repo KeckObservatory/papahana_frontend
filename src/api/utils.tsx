@@ -56,8 +56,13 @@ export const get_container_target_metadata = async (sem_id: string, container_id
    let obs: Partial<ObservationBlock>[] = []
    metadata.forEach((md: Partial<ObservationBlock>) => {
       const target = targets.find((t: Partial<ObservationBlock>) => t._id === md._id)
-      const ob = target ? md['target'] = target['target'] : md
-      obs.push(ob)
+      if (target) {
+         md['target'] = target['target']
+      }
+      else {
+      }
+      // const ob = target ? md['target'] = target['target'] : md
+      obs.push(md)
    })
    return obs
 }
