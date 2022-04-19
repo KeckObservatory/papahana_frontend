@@ -10,7 +10,7 @@ import EditContainerNameDialog from './edit_container_name_dialog';
 import { Container, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './ob_select'
-import { useObserverContext } from './../App' 
+import { useObserverContext } from './../App'
 
 interface PButtonProps extends Props {
     handleClose: Function
@@ -27,7 +27,7 @@ interface Props {
 
 const PopoverButtons = (props: PButtonProps) => {
 
-    const ob_select_context = useOBSelectContext() 
+    const ob_select_context = useOBSelectContext()
     const observer_context = useObserverContext()
 
     const addOB = () => {
@@ -56,39 +56,51 @@ const PopoverButtons = (props: PButtonProps) => {
         const _id = JSON.stringify(Date.now()) + 'XXXXXXXXXXX' // _id is not used. this is to get past validation.
         const newOB = { _id: _id, metadata: meta, status: status } as ObservationBlock
         let ob_id: string;
-        ob_api_funcs.post(newOB)
-        .then((obid: string) => {
-            ob_id = obid 
-            return container_api_funcs.get(props.id)
-        })
-        .then((container: Container) => {
-            container.observation_blocks.push(ob_id)
-            //update container and update 
-            return container_api_funcs.put(container._id, container)
-        })
-        .finally(()=>{
-            setTimeout(() => {
-                console.log("new ob added to container. triggering new view")
-                ob_select_context.setTrigger(ob_select_context.trigger + 1)
-                props.handleClose()
-            }, 1000);
-        })
+        if (props.id !== 'all obs') { //post ob and update container
+            ob_api_funcs.post(newOB)
+                .then((obid: string) => {
+                    ob_id = obid
+                    return container_api_funcs.get(props.id)
+                })
+                .then((container: Container) => {
+                    container.observation_blocks.push(ob_id)
+                    //update container and update 
+                    return container_api_funcs.put(container._id, container)
+                })
+                .finally(() => {
+                    setTimeout(() => {
+                        console.log("new ob added to container. triggering new view")
+                        ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                        props.handleClose()
+                    }, 1000);
+                })
+        }
+        else { //ignore containers
+            ob_api_funcs.post(newOB)
+                .finally(() => {
+                    setTimeout(() => {
+                        console.log("new ob added to container. triggering new view")
+                        ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                        props.handleClose()
+                    }, 1000);
+                })
+        }
     }
 
     const removeOBFromContainer = () => {
         console.log(`removing ${props.type} id ${props.id}.`)
         container_api_funcs.get(props.id)
-        .then((container: Container) => {
-            container.observation_blocks.push(props.id)
-            return container_api_funcs.put(container._id, container)
-        })
-        .finally(()=>{
-            setTimeout(() => {
-                console.log("removed ob from container. triggering new view")
-                ob_select_context.setTrigger(ob_select_context.trigger + 1)
-                props.handleClose()
-            }, 1000);
-        })
+            .then((container: Container) => {
+                container.observation_blocks.push(props.id)
+                return container_api_funcs.put(container._id, container)
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    console.log("removed ob from container. triggering new view")
+                    ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                    props.handleClose()
+                }, 1000);
+            })
     }
 
     const selectOB = () => {
