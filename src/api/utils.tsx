@@ -131,9 +131,9 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string): Pro
       .then(async (containers: Container[]) => {
          return await make_detailed_containers(sem_id, containers)
       })
-      .then(async (detailedContainers: DetailedContainer[]) => {
-         return await make_all_ob_container(sem_id, detailedContainers)
-      })
+      // .then(async (detailedContainers: DetailedContainer[]) => {
+      //    return await make_all_ob_container(sem_id, detailedContainers)
+      // })
       .then((detailedContainers: DetailedContainer[]) => {
          console.log('detailedContainer with all obs', detailedContainers)
          const scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
