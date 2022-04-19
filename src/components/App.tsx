@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 
-export const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys | undefined] => {
+export const handleTheme = (darkState: boolean | null | undefined): Theme => {
   const palletType = darkState ? "dark" : "light"
   const mainPrimaryColor = darkState ? '#cf7d34' : lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];
@@ -55,9 +55,7 @@ export const handleTheme = (darkState: boolean | null | undefined): [Theme, Them
       secondary: { main: mainSecondaryColor },
     }
   })
-  let jsonTheme = darkState ? 'bespin' : 'summerfruit:inverted' as ThemeKeys
-  if (darkState) jsonTheme = 'bespin' as ThemeKeys
-  return [theme, jsonTheme]
+  return theme
 }
 
 export interface ObsContext {
@@ -116,7 +114,7 @@ export default function App() {
     useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
 
-  const [theme, jsonTheme] = handleTheme(darkState)
+  const theme = handleTheme(darkState)
 
   const handleThemeChange = (): void => {
     setDarkState(!darkState);
@@ -130,7 +128,7 @@ export default function App() {
           <div className={classes.root}>
             <Main open={drawerOpen ? 'open' : 'closed'} drawerWidth={drawerWidth} >
               <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />
-              <ModuleMenu jsonTheme={jsonTheme} />
+              <ModuleMenu />
               <ToastContainer
                 position="top-right"
                 autoClose={5000}
