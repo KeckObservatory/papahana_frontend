@@ -1,9 +1,9 @@
+import React from 'react';
 import { IconButton, Paper } from '@mui/material'
 import cloneDeep from 'lodash/cloneDeep';
 import { animated } from 'react-spring'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
-import AddIcon from '@mui/icons-material/Add'
-import { Instrument, OBSeqNames, OBSequence, ObservationBlock, ScienceMetadata } from '../../typings/papahana'
+import { Instrument, OBSequence, ObservationBlock, ScienceMetadata } from '../../typings/papahana'
 import SaveIcon from '@mui/icons-material/Save';
 import PublishIcon from '@mui/icons-material/Publish';
 import Tooltip from '@mui/material/Tooltip'
@@ -36,7 +36,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         padding: theme.spacing(2),
         margin: theme.spacing(1),
         width: "100%",
-        // maxWidth: "50%",
         elevation: 5,
     },
 }))
@@ -57,6 +56,9 @@ export const SideMenu = (props: Props) => {
     const [boopStyle, triggerBoop] = useBoop({})
     const classes = useStyles();
     const jsonEditable = true
+
+    const [selAccdExpanded, setSelAccdExpanded] = React.useState(true);
+    const [editAccdExpanded, setEditAccdExpanded] = React.useState(true);
 
     let jsonTheme = darkState ? 'bespin' : 'summerfruit:inverted' as ThemeKeys
     const [theme, setTheme] = useQueryParam('theme', withDefault(StringParam, jsonTheme))
@@ -162,9 +164,21 @@ export const SideMenu = (props: Props) => {
         ob_api_funcs.put(props.ob._id, props.ob)
     }
 
+    const handleAccordionChange = (accd: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
+        if (accd === 'select') {
+            setSelAccdExpanded(!selAccdExpanded)
+        }
+        else if (accd === 'edit') {
+            setEditAccdExpanded(!editAccdExpanded)
+        }
+        else {
+
+        }
+    }
+
     return (
         <Paper className={classes.paper} elevation={3}>
-            <Accordion>
+            <Accordion expanded={selAccdExpanded} onChange={handleAccordionChange('select')}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
@@ -179,7 +193,7 @@ export const SideMenu = (props: Props) => {
                         ob_id={props.ob_id} />
                 </AccordionDetails>
             </Accordion>
-            <Accordion>
+            <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
                     aria-controls="panel1a-content"
