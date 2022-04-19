@@ -98,6 +98,7 @@ const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: Detai
    detailedContainers.forEach((container: DetailedContainer) => {
       const cid = container._id
       container.ob_details.forEach((ob: Partial<ObservationBlock>) => {
+         console.log('making row', ob, container)
          const row = {
             sem_id: sem_id,
             container_id: cid,
