@@ -19,6 +19,7 @@ interface PButtonProps extends Props {
 interface Props {
     id: string,
     type: string
+    text?: string,
     name?: string
     handleOBSelect: Function
     container_names?: Set<string>
@@ -174,7 +175,7 @@ const NodePopover = (props: Props) => {
                     horizontal: 'left',
                 }}
             >
-                <Typography sx={{ p: 2 }}>The content of the {props.type} id {props.id}.</Typography>
+                <Typography sx={{ p: 2 }}>{props.text}</Typography>
                 <PopoverButtons
                     container_names={props.container_names}
                     handleOBSelect={props.handleOBSelect}
