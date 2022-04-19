@@ -102,6 +102,7 @@ export const make_detailed_containers = async (sem_id: string, containers: Conta
 
 const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: DetailedContainer[]) => {
    let scoby: Scoby[] = []
+   console.log('detailedContainer with all obs', detailedContainers)
    detailedContainers.forEach((container: DetailedContainer) => {
       const cid = container._id
       console.log('on detailed container', container)
@@ -133,9 +134,9 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string): Pro
       .then(async (detailedContainers: DetailedContainer[]) => {
          return await make_all_ob_container(sem_id, detailedContainers)
       })
-      .then(async (detailedContainers: DetailedContainer[]) => {
+      .then((detailedContainers: DetailedContainer[]) => {
          console.log('detailedContainer with all obs', detailedContainers)
-         const scoby = await scoby_rows_and_det_containers(sem_id, detailedContainers)
+         const scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
          return [scoby, detailedContainers]
       })
 }
