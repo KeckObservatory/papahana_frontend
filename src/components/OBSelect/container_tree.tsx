@@ -89,8 +89,10 @@ export default function ContainerTree(props: Props) {
 
     const renderTree = (nodes: RenderTree) => {
         const isLeaf = Array.isArray(nodes.children)
+        console.log('rendering', nodes.name, nodes.type, 'is leaf?', isLeaf)
 
-        const text = nodes.ob_details? make_ob_display_text(nodes.ob_details): `${nodes.type} name ${nodes.name}.`
+        const text = nodes.ob_details ? make_ob_display_text(nodes.ob_details)
+                                      : `${nodes.type} name ${nodes.name}.`
         return(
         <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>
             <TreeItem key={Date.now()} nodeId={nodes.id} label={nodes.name}>
