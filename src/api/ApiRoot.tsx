@@ -30,9 +30,9 @@ console.log(BASE_URL)
 
 const axiosInstance = axios.create({
     withCredentials: true,
-    headers: { 
-        'Access-Control-Allow-Origin': '*', 
-        'Content-Type': 'application/json' 
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
     }
 })
 axiosInstance.interceptors.response.use(intResponse, intError);
@@ -144,6 +144,25 @@ const container_remove = (container_id: string): Promise<unknown> => {
         .then(handleResponse)
         .catch(handleError);
 };
+
+export const get_container_ob_metadata = (semid: string, container_id?: string) => {
+    let url = `${SEMESTERS_URL}/${semid}/ob/metadata`
+    url = container_id ? url+`?${container_id}` : url
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
+
+export const get_container_ob_target = (semid: string, container_id?: string) => {
+    let url = `${SEMESTERS_URL}/${semid}/ob/target`
+    url = container_id ? url+`?${container_id}` : url
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
+
 
 export const get_select_funcs = {
     get_template: IS_PRODUCTION ? get_template : mock_get_template,

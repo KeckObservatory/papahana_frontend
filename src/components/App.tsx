@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 
-const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys | undefined] => {
+export const handleTheme = (darkState: boolean | null | undefined): [Theme, ThemeKeys | undefined] => {
   const palletType = darkState ? "dark" : "light"
   const mainPrimaryColor = darkState ? '#cf7d34' : lightBlue[500];
   const mainSecondaryColor = darkState ? deepOrange[900] : deepPurple[500];

@@ -51,7 +51,8 @@
     "start": "REACT_APP_ENVIRONMENT=demobuild PORT=50001 react-scripts start",
     "build": "REACT_APP_ENVIRONMENT=production react-scripts build",
     "demobuild": "REACT_APP_ENVIRONMENT=demobuild react-scripts build",
-    "test": "jest",
+    "jtest": "jest",
+    "test": "react-scripts test --setupFiles ./src/setupTests.ts",
     "test:watch": "jest --watch",
     "eject": "react-scripts eject",
     "preinstall": "npx npm-force-resolutions"
@@ -92,10 +93,14 @@
     "@types/react-jsonschema-form": "^1.7.4",
     "@types/react-router-dom": "^5.1.7",
     "@types/suncalc": "^1.8.1",
+    "ajv": "^8.11.0",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "enzyme": "^3.11.0",
+    "is-glob": "^4.0.3",
     "jest": "^27.5.1",
+    "jest-watch-typeahead": "^1.0.0",
+    "pkg-dir": "^6.0.1",
     "react-test-renderer": "17.0",
     "ts-jest": "^27.1.4"
   }

@@ -81,18 +81,19 @@ export default function ObservationBlockSelecter(props: Props) {
   const observerContext = useObserverContext()
 
   const reset_container_and_ob_select = () => {
-    get_container_list(sem_id).then((lst: string[]) => {
+    get_container_list(sem_id)
+    .then((lst: string[]) => {
       setContainerIdList(lst)
       if (lst.length >= 1) {
         setContainerId(lst[0])
       }
     })
-      .then(() => {
-        get_ob_list(sem_id, container_id).then((lst: string[]) => {
-          setOBList(lst)
-          return lst
-        })
+    .then(() => {
+      get_ob_list(sem_id, container_id).then((lst: string[]) => {
+        setOBList(lst)
+        return lst
       })
+    })
   }
 
   const handle_sem_id_submit = (sid: string) => {
@@ -124,11 +125,6 @@ export default function ObservationBlockSelecter(props: Props) {
           _id: c._id,
           name: c.name
         }))
-        // scoby.forEach((sc: Scoby) => contset.push({
-        //   _id: sc.container_id,
-        //   name: sc.container_name
-
-        // }))
         setContainers(cntners)
         setRows(scoby)
         setContainerIdNames(contset)

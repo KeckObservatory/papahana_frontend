@@ -17,6 +17,21 @@ export interface Container {
 	comment?: string
 }
 
+export interface OBDetail {
+	name: string,
+	_id: string,
+	_ob_id?: string,
+	ra?: string,
+	dec?: string,
+	comment: string,
+	ob_type: string,
+	version: string | number
+}
+
+export interface DetailedContainer extends Container {
+	ob_details: Partial<ObservationBlock>[]
+}
+
 export interface Semester {
 	_id: string
 	comment?: string
@@ -97,6 +112,7 @@ export interface OBMetadata {
 
 export interface ObservationBlock extends Base {
 	_id: string,
+	_ob_id?: string,
 	metadata: OBMetadata;
 	target?: Target;
 	time_constraints: TimeConstraint[][] 
