@@ -95,6 +95,7 @@ export const make_detailed_containers = async (sem_id: string, containers: Conta
       detailedContainer['ob_details'] = partialObs
       detailedContainers.push(detailedContainer as DetailedContainer)
    })
+   console.log('containers', containers, 'detailedContainers', detailedContainers)
    return detailedContainers
 }
 
