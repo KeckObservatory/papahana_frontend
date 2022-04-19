@@ -61,7 +61,6 @@ export const get_container_target_metadata = async (sem_id: string, container_id
       }
       else {
       }
-      // const ob = target ? md['target'] = target['target'] : md
       obs.push(md)
    })
    return obs
@@ -81,7 +80,6 @@ export const make_all_ob_container = async (sem_id: string, detailedContainers: 
    }
    allContainer['ob_details'] = partialObs
    detailedContainers.push(allContainer)
-   // console.log('detailedContainer with all obs', detailedContainers)
    return detailedContainers
 }
 
@@ -94,16 +92,8 @@ export const make_detailed_containers = async (sem_id: string, containers: Conta
          partialObs = await get_container_target_metadata(sem_id, container._id)
       }
       const dContainer: DetailedContainer = {...container, 'ob_details': partialObs}
-      console.log('creating to detailedContainer', dContainer )
       detailedContainers.push(dContainer)
    }
-      // let dContainer: Partial<DetailedContainer> = container
-      // dContainer['ob_details'] = partialObs
-      // detailedContainers.push(dContainer as DetailedContainer)
-      // console.log('creating to detailedContainer', dContainer )
-      // return dContainer
-   // })
-   console.log('containers', containers, 'detailedContainers', detailedContainers)
    return detailedContainers
 }
 
@@ -112,7 +102,6 @@ const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: Detai
    console.log('detailedContainer with all obs', detailedContainers)
    detailedContainers.forEach((container: DetailedContainer) => {
       const cid = container._id
-      console.log('on detailed container', container)
       container.ob_details.forEach((ob: Partial<ObservationBlock>) => {
          console.log('making row', ob, container)
          const row = {

@@ -3,7 +3,7 @@ import TreeView from '@mui/lab/TreeView';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
-import { Container, ObservationBlock } from '../../typings/papahana';
+import { DetailedContainer, ObservationBlock } from '../../typings/papahana';
 import { useObserverContext } from '../App'
 import { get_containers } from '../../api/utils'
 import NodePopover from './node_popover'
@@ -12,7 +12,7 @@ import { get_select_funcs } from '../../api/ApiRoot'
 
 interface Props {
     handleOBSelect: Function
-    containers: Container[]
+    containers: DetailedContainer[]
     setOB: Function
 }
 
@@ -23,26 +23,6 @@ interface RenderTree {
     type: string;
 }
 
-// const containers_to_nodes = async (containers: Container[]): Promise<RenderTree[]> => {
-//     //use the obs themselves to create the nodes
-//     let nodes: any = []
-//     containers.forEach(async (container: Container) => {
-
-//         const obs = await get_select_funcs.get_observation_blocks_from_container(container._id)
-//         console.log('obs', obs)
-//         let node: any = {};
-//         node['name'] = container.name;
-//         node['id'] = container._id;
-//         node['type'] = 'container'
-//         node['children'] = obs.map((ob: ObservationBlock) => {
-//             let leaf: RenderTree = { name: ob.metadata.name, id: ob._id, type: 'ob' }
-//             return leaf
-//         })
-//         nodes.push(node)
-//     })
-//     return nodes
-// }
-
 export interface TreeNode {
     name: string
     id: string;
@@ -50,16 +30,20 @@ export interface TreeNode {
     children: RenderTree[];
 }
 
-const containers_to_nodes = (containers: Container[]): RenderTree[] => {
+const containers_to_nodes = (containers: DetailedContainer[]): RenderTree[] => {
     let nodes: TreeNode[] = []
-    containers.forEach((container: Container) => {
+    containers.forEach((container: DetailedContainer) => {
 
         let node: Partial<TreeNode> = {};
         node['name'] = container.name;
         node['id'] = container._id;
         node['type'] = 'container'
-        node['children'] = container.observation_blocks.map((obStr: string) => {
-            let leaf: RenderTree = { name: obStr, id: obStr, type: 'ob' }
+        node['children'] = container.ob_details.map((ob: Partial<ObservationBlock>) => {
+            let leaf: RenderTree = {
+                name: ob.metadata?.name as string,
+                id: ob._id as string,
+                type: 'ob'
+            }
             return leaf
         })
         nodes.push(node as TreeNode)
@@ -77,23 +61,18 @@ export default function ContainerTree(props: Props) {
         children: undefined
     }
     const [tree, setTree] = React.useState(rootTree as RenderTree)
-    let names = new Set(props.containers.map( (c: Container) => {
+    let names = new Set(props.containers.map((c: DetailedContainer) => {
         return c.name
     }))
 
-    useEffect(() => { 
+    useEffect(() => {
         console.log('container tree triggered')
-
-        names = new Set(props.containers.map( (c: Container) => {
+        names = new Set(props.containers.map((c: DetailedContainer) => {
             return c.name
         }))
         let newTree = { ...rootTree }
         newTree['children'] = containers_to_nodes(props.containers)
         setTree(newTree)
-        // containers_to_nodes(props.containers).then( (nodes: RenderTree[]) => {
-        //     newTree['children'] = nodes
-        //     setTree(newTree)
-        // })
     }, [props.containers])
 
     const renderTree = (nodes: RenderTree) => (

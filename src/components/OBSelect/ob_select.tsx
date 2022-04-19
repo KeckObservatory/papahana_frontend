@@ -7,7 +7,7 @@ import { Paper } from '@mui/material'
 import { useObserverContext } from './../App'
 import ContainerTree from './container_tree'
 import ContainerTable from './container_table'
-import { Container, Scoby, SemesterIds } from '../../typings/papahana';
+import { DetailedContainer, Scoby, SemesterIds } from '../../typings/papahana';
 
 export interface Props {
   handleOBSelect: Function
@@ -22,7 +22,7 @@ interface State {
   container_id: string
   sem_id: string
   rows: Scoby[]
-  containers: Container[]
+  containers: DetailedContainer[]
   containerIdNames: object[]
   trigger: number
 }
@@ -118,10 +118,10 @@ export default function ObservationBlockSelecter(props: Props) {
   useEffect(() => {
     console.log('trigger changed!')
     make_semid_scoby_table_and_containers(ob_select_object.sem_id)
-      .then((scoby_containers: [Scoby[], Container[]]) => {
+      .then((scoby_containers: [Scoby[], DetailedContainer[]]) => {
         const [scoby, cntners] = scoby_containers
         const contset: object[] = []
-        cntners.forEach((c: Container) => contset.push({
+        cntners.forEach((c: DetailedContainer) => contset.push({
           _id: c._id,
           name: c.name
         }))
