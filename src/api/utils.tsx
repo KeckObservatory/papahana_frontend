@@ -81,6 +81,7 @@ export const make_all_ob_container = async (sem_id: string, detailedContainers: 
    }
    allContainer['ob_details'] = partialObs
    detailedContainers.push(allContainer)
+   console.log('detailedContainer with all obs', detailedContainers)
    return detailedContainers
 }
 
@@ -125,14 +126,14 @@ const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: Detai
 
 export const make_semid_scoby_table_and_containers = async (sem_id: string): Promise<[Scoby[], DetailedContainer[]]> => {
    return get_containers(sem_id)
-      .then((containers: Container[]) => {
-         return make_detailed_containers(sem_id, containers)
+      .then(async (containers: Container[]) => {
+         return await make_detailed_containers(sem_id, containers)
       })
-      .then((detailedContainers: DetailedContainer[]) => {
-         return make_all_ob_container(sem_id, detailedContainers)
+      .then(async (detailedContainers: DetailedContainer[]) => {
+         return await make_all_ob_container(sem_id, detailedContainers)
       })
-      .then((detailedContainers: DetailedContainer[]) => {
-         const scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
+      .then(async (detailedContainers: DetailedContainer[]) => {
+         const scoby = await scoby_rows_and_det_containers(sem_id, detailedContainers)
          return [scoby, detailedContainers]
       })
 }
