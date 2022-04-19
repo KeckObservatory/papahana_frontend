@@ -1,7 +1,6 @@
-import { Method, SourceAPI, Document, Semester, Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, OBDetail, DetailedContainer } from "../typings/papahana";
-import { ob_api_funcs, semid_api_funcs, get_select_funcs, get_container_ob_metadata, get_container_ob_target } from './ApiRoot';
+import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer } from "../typings/papahana";
+import { get_select_funcs, get_container_ob_metadata, get_container_ob_target } from './ApiRoot';
 import { ObservationBlock, SemesterIds } from '../typings/papahana'
-import { resolve } from "path";
 
 export const get_sem_id_list = (): Promise<SemesterIds> => {
    //make sem_id list from semesters
@@ -46,7 +45,6 @@ const create_sc_table = async (semesters: string[]) => {
          })
       })
    })
-
    return sem_cons
 }
 
@@ -99,11 +97,9 @@ export const make_detailed_containers = async (sem_id: string, containers: Conta
 
 const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: DetailedContainer[]) => {
    let scoby: Scoby[] = []
-   console.log('detailedContainer with all obs', detailedContainers)
    detailedContainers.forEach((container: DetailedContainer) => {
       const cid = container._id
       container.ob_details.forEach((ob: Partial<ObservationBlock>) => {
-         console.log('making row', ob, container)
          const row = {
             sem_id: sem_id,
             container_id: cid,
@@ -131,79 +127,10 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string): Pro
          return await make_all_ob_container(sem_id, detailedContainers)
       })
       .then((detailedContainers: DetailedContainer[]) => {
-         console.log('detailedContainer with all obs', detailedContainers)
          const scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
          return [scoby, detailedContainers]
       })
 }
-
-export const make_semid_scoby_table_and_containers_bak = async (sem_id: string): Promise<[Scoby[], Container[]]> => {
-   let scoby: Scoby[] = []
-   return get_containers(sem_id)
-      .then(async (containers: Container[]) => { // adds all obs in a special container
-         let obs: ObservationBlock[] = []
-         if (sem_id) {
-            obs = await semid_api_funcs.get_semester_obs(sem_id)
-         }
-
-         let allContainer: DetailedContainer = {
-            name: 'all obs',
-            observation_blocks: [],
-            ob_details: [],
-            _id: 'all obs',
-            sem_id: sem_id
-         }
-         obs.forEach((ob: ObservationBlock) => {
-            allContainer.observation_blocks.push(ob._id)
-         })
-         containers.push(allContainer)
-
-         return containers
-      })
-      .then(async (containers: Container[]) => {
-         containers.forEach(async (container: Container) => {
-            const cid = container._id
-            container.observation_blocks.forEach((ob_id: string) => {
-               const s = {
-                  sem_id: sem_id,
-                  container_id: cid,
-                  ob_id: ob_id,
-                  container_name: container.name
-               }
-               scoby.push(s)
-            })
-         })
-         return [scoby, containers]
-      })
-}
-
-const create_scoby_table = async (sem_cons: [string, string][]): Promise<Scoby[]> => {
-   let rows: Scoby[] = []
-   sem_cons.forEach(async (sem_con: [string, string]) => {
-      const [sem_id, cid] = sem_con
-      const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
-      obs.forEach((ob: ObservationBlock) => {
-         const row = {
-            sem_id: sem_id,
-            container_id: cid,
-            ob_id: ob._id,
-            name: ob.metadata.name
-         } as Scoby
-         rows.push(row)
-      })
-   })
-   return rows
-}
-
-export const make_scoby_table = (): Promise<Scoby[]> => {
-   return get_select_funcs.get_semesters()
-      .then((semesters: SemesterIds) => {
-         return create_sc_table(semesters.associations)
-      })
-      .then((sem_cons: [string, string][]) => create_scoby_table(sem_cons))
-}
-
-
 
 export const get_obs_from_semester = async (sem_id: string): Promise<ContainerObs> => {
    const container_obs = await get_select_funcs.get_semesters()
@@ -255,11 +182,8 @@ export const get_containers = (sem_id: string): Promise<Container[]> => {
    return promise
 }
 
-
-
 export const make_container_list = async (semesters: string[], sem_id: string) => {
    //populates container_list for sem_id
-
    const find_sem_id = (semester: string): boolean => {
       return semester === sem_id
    }
@@ -297,6 +221,7 @@ export const get_ob_list = (sem_id: string, container_id: string): Promise<strin
    })
    return promise
 }
+
 export const make_ob_list = (containers: Container[], container_id: string): string[] => {
    //populates ob_id list for given container_id
    let ob_list: string[] = []
