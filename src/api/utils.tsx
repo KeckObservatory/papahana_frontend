@@ -88,15 +88,18 @@ export const make_all_ob_container = async (sem_id: string, detailedContainers: 
 export const make_detailed_containers = async (sem_id: string, containers: Container[]) => { // adds all obs in a special container
    const detailedContainers: DetailedContainer[] = [];
    containers.forEach(async (container: Container) => {
-      let detailedContainer: Partial<DetailedContainer> = container
+      // let dContainer: Partial<DetailedContainer> = container
       let partialObs: Partial<ObservationBlock>[] = []
       if (sem_id) {
          partialObs = await get_container_target_metadata(sem_id, container._id)
       }
-      detailedContainer['ob_details'] = partialObs
-      detailedContainers.push(detailedContainer as DetailedContainer)
+      // dContainer['ob_details'] = partialObs
+      // detailedContainers.push(dContainer as DetailedContainer)
+      const dContainer = {...container, 'ob_details': partialObs}
+      console.log('pushing dContainer', dContainer)
+      detailedContainers.push(dContainer)
    })
-   // console.log('containers', containers, 'detailedContainers', detailedContainers)
+   console.log('containers', containers, 'detailedContainers', detailedContainers)
    return detailedContainers
 }
 
@@ -131,9 +134,9 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string): Pro
       .then(async (containers: Container[]) => {
          return await make_detailed_containers(sem_id, containers)
       })
-      // .then(async (detailedContainers: DetailedContainer[]) => {
-      //    return await make_all_ob_container(sem_id, detailedContainers)
-      // })
+      .then(async (detailedContainers: DetailedContainer[]) => {
+         return await make_all_ob_container(sem_id, detailedContainers)
+      })
       .then((detailedContainers: DetailedContainer[]) => {
          console.log('detailedContainer with all obs', detailedContainers)
          const scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
