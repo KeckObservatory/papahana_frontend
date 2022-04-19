@@ -156,7 +156,7 @@ export const get_container_ob_metadata = (semid: string, container_id?: string) 
 
 export const get_container_ob_target = (semid: string, container_id?: string) => {
     let url = `${SEMESTERS_URL}/${semid}/ob/target`
-    url = container_id ? url+`?container_id${container_id}` : url
+    url = container_id ? url+`?container_id=${container_id}` : url
     return axiosInstance
         .get(url)
         .then(handleResponse)
