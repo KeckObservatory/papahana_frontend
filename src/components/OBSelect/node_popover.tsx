@@ -155,10 +155,10 @@ const create_ob_text = (ob_details: Partial<ObservationBlock>) => {
     const obType = ob_details?.metadata?.ob_type
     return (
         <React.Fragment>
-            <Typography sx={{ p: 2 }}>Ra: {ra}</Typography>
-            <Typography sx={{ p: 2 }}>Dec: {dec}</Typography>
-            <Typography sx={{ p: 2 }}>OB Type: {obType}</Typography>
-            <Typography sx={{ p: 2 }}>comment: {comment}</Typography>
+            <Typography sx={{ paddingLeft: 2 }}>Ra: {ra}</Typography>
+            <Typography sx={{ paddingLeft: 2 }}>Dec: {dec}</Typography>
+            <Typography sx={{ paddingLeft: 2 }}>OB Type: {obType}</Typography>
+            <Typography sx={{ paddingLeft: 2 }}>comment: {comment}</Typography>
         </React.Fragment>
     )
 }
