@@ -79,20 +79,8 @@ export default function ContainerTree(props: Props) {
         setTree(newTree)
     }, [props.containers])
 
-    const make_ob_display_text = (obd: Partial<ObservationBlock>) => {
-        let text = `OB name: ${obd.metadata?.name}\n`
-        if (obd.target) {
-            text += `RA: ${obd.target.parameters.target_coord_ra} DEC: ${obd.target.parameters.target_coord_dec}\n`
-        }
-        return text
-    }
-
     const renderTree = (nodes: RenderTree) => {
         const isLeaf = !Array.isArray(nodes.children)
-        // console.log('rendering', nodes.name, nodes.type, 'is leaf?', isLeaf)
-
-        const text = nodes.ob_details ? make_ob_display_text(nodes.ob_details)
-                                      : `${nodes.type} name ${nodes.name}.`
         return(
         <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>
             <TreeItem key={Date.now()} nodeId={nodes.id} label={nodes.name}>
@@ -102,7 +90,7 @@ export default function ContainerTree(props: Props) {
                 id={nodes.id}
                 type={nodes.type}
                 container_names={names}
-                text={text}
+                ob_details={nodes.ob_details}
                 setOB={props.setOB}
                 name={nodes.name} />
         </div >

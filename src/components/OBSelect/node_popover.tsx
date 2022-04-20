@@ -19,8 +19,8 @@ interface PButtonProps extends Props {
 interface Props {
     id: string,
     type: string
-    text?: string,
     name?: string
+    ob_details?: Partial<ObservationBlock>
     handleOBSelect: Function
     container_names?: Set<string>
     setOB: Function
@@ -110,6 +110,7 @@ const PopoverButtons = (props: PButtonProps) => {
         props.handleClose()
     }
 
+
     return (
         <div style={{ display: 'grid' }}>
             {props.type === 'semid' &&
@@ -146,6 +147,22 @@ const PopoverButtons = (props: PButtonProps) => {
     )
 }
 
+const create_ob_text = (ob_details: Partial<ObservationBlock>) => {
+    const ra = ob_details?.target?.parameters.target_coord_ra
+    const dec = ob_details?.target?.parameters.target_coord_dec
+    const name = ob_details?.metadata?.name
+    const comment = ob_details?.metadata?.comment
+    const obType = ob_details?.metadata?.ob_type
+    return (
+        <React.Fragment>
+            <Typography>Ra: {ra}</Typography>
+            <Typography>Dec: {dec}</Typography>
+            <Typography>OB Type: {obType}</Typography>
+            <Typography>comment: {comment}</Typography>
+        </React.Fragment>
+    )
+}
+
 const NodePopover = (props: Props) => {
     const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -175,7 +192,8 @@ const NodePopover = (props: Props) => {
                     horizontal: 'left',
                 }}
             >
-                <Typography sx={{ p: 2 }}>{props.text}</Typography>
+                <Typography sx={{ p: 2 }}>{`${props.type} name ${props.name}.`}</Typography>
+                {props.ob_details && create_ob_text(props.ob_details)}
                 <PopoverButtons
                     container_names={props.container_names}
                     handleOBSelect={props.handleOBSelect}
