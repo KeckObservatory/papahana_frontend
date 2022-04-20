@@ -155,10 +155,10 @@ const create_ob_text = (ob_details: Partial<ObservationBlock>) => {
     const obType = ob_details?.metadata?.ob_type
     return (
         <React.Fragment>
-            <Typography>Ra: {ra}</Typography>
-            <Typography>Dec: {dec}</Typography>
-            <Typography>OB Type: {obType}</Typography>
-            <Typography>comment: {comment}</Typography>
+            <Typography sx={{ p: 2 }}>Ra: {ra}</Typography>
+            <Typography sx={{ p: 2 }}>Dec: {dec}</Typography>
+            <Typography sx={{ p: 2 }}>OB Type: {obType}</Typography>
+            <Typography sx={{ p: 2 }}>comment: {comment}</Typography>
         </React.Fragment>
     )
 }
@@ -177,6 +177,8 @@ const NodePopover = (props: Props) => {
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
+    const text = `${props.type[0].toUpperCase() + props.type.slice(1)} Name: ${props.name}.`
+
     return (
         <div style={{ marginLeft: 'auto' }}>
             <IconButton onClick={handleClick} aria-label="more">
@@ -192,7 +194,7 @@ const NodePopover = (props: Props) => {
                     horizontal: 'left',
                 }}
             >
-                <Typography sx={{ p: 2 }}>{`${props.type} name ${props.name}.`}</Typography>
+                <Typography sx={{ p: 2 }}>{text}</Typography>
                 {props.ob_details && create_ob_text(props.ob_details)}
                 <PopoverButtons
                     container_names={props.container_names}
