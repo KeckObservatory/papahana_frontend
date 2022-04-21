@@ -1,4 +1,4 @@
-import React  from 'react';
+import React from 'react';
 import { makeStyles } from "@mui/styles"
 import AppBar from '@mui/material/AppBar';
 import Switch from "@mui/material/Switch"
@@ -10,22 +10,23 @@ import Typography from '@mui/material/Typography'
 import { useDrawerOpenContext } from './App';
 import LoginDialog from './login_dialog';
 import { Theme } from "@mui/material/styles";
+import DoorFrontIcon from '@mui/icons-material/DoorFront';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: { 
+  root: {
     position: "absolute",
     display: "flex"
   },
-  title: { 
+  title: {
     marginLeft: theme.spacing(2),
     flexGrow: 1,
   },
-  appBar: { 
+  appBar: {
   },
   toolbar: {
     paddingRight: theme.spacing(2),
-    paddingLeft: theme.spacing(5) 
+    paddingLeft: theme.spacing(5)
   },
   switch: {
   },
@@ -45,10 +46,16 @@ export function TopBar(props: Props) {
     drawer.setDrawerOpen(!drawer.drawerOpen)
   }
 
-  return( 
-    <AppBar 
+  const handlePortalClick = () => {
+    const url = document.location.origin + '/observers/portal/rel/index.html'
+    console.log(url)
+    window.open(url)
+  }
+
+  return (
+    <AppBar
       position="absolute"
-      className={classes.appBar}  
+      className={classes.appBar}
     >
       <Toolbar
         className={classes.toolbar}
@@ -80,12 +87,21 @@ export function TopBar(props: Props) {
           Welcome, Observer {props.observer_id}!
         </Typography>
         {/* <LoginDialog /> */}
-        <Tooltip title="Toggle on for dark mode">
-          <Switch 
-            color="secondary"
-            checked={props.darkState} 
-            onChange={props.handleThemeChange}/>
+        <Tooltip title="Click Return to Observer Portal">
+          <IconButton
+            aria-label="open drawer"
+            onClick={handlePortalClick}
+          >
+            <DoorFrontIcon />
+          </IconButton>
         </Tooltip>
+        <Tooltip title="Toggle on for dark mode">
+          <Switch
+            color="secondary"
+            checked={props.darkState}
+            onChange={props.handleThemeChange} />
+        </Tooltip>
+
       </Toolbar>
     </AppBar>
   )
