@@ -47,10 +47,11 @@ const CustomToolbarSelect = (props: CTProps) => {
         setContainerName(newcidname)
     }
 
-    const remove_row_references = async (r: { data: any[]; dataIndex: number }) => {
+    const remove_row_references = async (data: any[]) => {
         //TODO: get all containers, filter the ones that need to update,
         // create new containers, and then
-        const [ob_id, container_name] = r.data
+        console.log('inside remove_row_references. data:', data)
+        const [ob_id, name, container_name ] = data  // assumes array is ordered
         //get container
         //@ts-ignore
         const cidname = props.containerIdNames.find(x => { return x.name === container_name })
@@ -76,9 +77,9 @@ const CustomToolbarSelect = (props: CTProps) => {
         }
     }
 
-    const add_obs_to_container = (rows: DA[]) => {
-        let obs = rows.map((r: DA) => {
-            const [_id, cont_name] = r.data
+    const add_obs_to_container = (rows: any[]) => {
+        let obs = rows.map((r: any[]) => {
+            const [_id ] = r // assumes _id is the first element of array
             return _id
         })
         container_api_funcs.get(cidname._id).then((cont: Container) => {
@@ -104,16 +105,14 @@ const CustomToolbarSelect = (props: CTProps) => {
         }
 
         const rows = props.selectedRows.data.map((x: SelectedRowData) => {
-            const row = props.displayData[x.index].data
-            console.log('selected row data', row)
-            return props.displayData[x.index]
+            return props.displayData[x.index].data
         })
 
         console.log('setting selected rows to container ', cidname.name)
         //remove ob reference from each container
         rows.forEach(remove_row_references)
         //add to container, the selected obs
-        add_obs_to_container(rows as DA[])
+        add_obs_to_container(rows)
     }
 
     //@ts-ignore
