@@ -132,20 +132,17 @@ const ContainerTable = (props: Props) => {
     const handleSelect = (indexes: any) => {
     }
 
-
     const columns = [
-        { name: '_id', options: { display: false } },
+        { name: 'ob_id', options: { display: false } },
         { name: 'name' },
         { name: 'container_name' },
         { name: 'ob_type' },
+        { name: 'version', options: { display: false } },
+        { name: 'comment', options: { display: false } },
+        { name: 'ra', options: { display: false } },
+        { name: 'dec', options: { display: false } },
+        { name: 'sem_id', options: { display: false } },
     ]
-
-    // const columns = [
-    //     "_id", 
-    //     "name",
-    //     "container_name",
-    //     "ob_type"
-    // ]
 
     const onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
         console.log('rowData', rowData, 'rowMeta', rowMeta)
