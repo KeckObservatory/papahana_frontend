@@ -104,6 +104,8 @@ const CustomToolbarSelect = (props: CTProps) => {
         }
 
         const rows = props.selectedRows.data.map((x: SelectedRowData) => {
+            const row = props.displayData[x.index].data
+            console.log('selected row data', row)
             return props.displayData[x.index]
         })
 
@@ -130,11 +132,20 @@ const ContainerTable = (props: Props) => {
     const handleSelect = (indexes: any) => {
     }
 
+
     const columns = [
-        "name",
-        "container_name",
-        "ob_type"
+        { name: '_id', options: { display: false } },
+        { name: 'name' },
+        { name: 'container_name' },
+        { name: 'ob_type' },
     ]
+
+    // const columns = [
+    //     "_id", 
+    //     "name",
+    //     "container_name",
+    //     "ob_type"
+    // ]
 
     const onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
         console.log('rowData', rowData, 'rowMeta', rowMeta)
@@ -143,6 +154,7 @@ const ContainerTable = (props: Props) => {
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
         onRowsDelete: () => false,
+        responsive: "standard",
         selectableRows: 'single', //bug multiple will not remove all selected obs from container
         customToolbarSelect: (selectedRows: SelectedRows, displayData: DisplayData) => (
             <CustomToolbarSelect
