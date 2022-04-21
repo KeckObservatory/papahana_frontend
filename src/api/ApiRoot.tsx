@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 import { handleResponse, handleError, intResponse, intError } from './response';
 import { Container, ObservationBlock, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
@@ -36,6 +36,28 @@ const axiosInstance = axios.create({
     }
 })
 axiosInstance.interceptors.response.use(intResponse, intError);
+
+export const get_userinfo = (): Promise<any> => {
+    const LOCAL_HOST = 'https://www3.keck.hawaii.edu';
+    const url = LOCAL_HOST + '/userinfo';
+    console.log('get_userinfo url', url)
+
+    return axiosInstance.get(url)
+    .then( (response: AxiosResponse<any>) => {
+        console.log('got response', response)
+        const ip = response.headers["x-my-real-ip"]
+        return axios.request({
+            url: url,
+            method: "get",
+            withCredentials: true,
+            headers: {
+                'X-My-Real-Ip': ip,
+            },
+        })
+    })
+    .then(handleResponse)
+    .catch(handleError)
+}
 
 const get_semesters = (): Promise<SemesterIds> => {
     const url = `${SEMESTERS_URL}`

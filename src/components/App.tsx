@@ -75,7 +75,7 @@ export interface Drawer {
   setDrawerWidth: Function
 }
 
-const initDrawer = { drawerOpen: true, setDrawerOpen: () => { }, drawerWidth: 700, setDrawerWidth: () => { }}
+const initDrawer = { drawerOpen: true, setDrawerOpen: () => { }, drawerWidth: 700, setDrawerWidth: () => { } }
 
 const DrawerOpenContext = createContext<Drawer>(initDrawer)
 export const useDrawerOpenContext = () => useContext(DrawerOpenContext)
@@ -87,32 +87,32 @@ interface MainProp {
 }
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' && prop !== 'drawerWidth' })<MainProp>
-(({ theme, open, drawerWidth }) => ({
+  (({ theme, open, drawerWidth }) => ({
 
-  flexGrow: 1,
-  padding: theme.spacing(1),
-  transition: theme.transitions.create('margin', {
-    easing: theme.transitions.easing.sharp,
-    duration: theme.transitions.duration.leavingScreen,
-  }),
-  marginLeft: 0,
-  ...(open === 'open' && {
+    flexGrow: 1,
+    padding: theme.spacing(1),
     transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.easeOut,
-      duration: theme.transitions.duration.enteringScreen,
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen,
     }),
-    marginLeft: `${drawerWidth}px`,
-  }),
-}));
+    marginLeft: 0,
+    ...(open === 'open' && {
+      transition: theme.transitions.create('margin', {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen,
+      }),
+      marginLeft: `${drawerWidth}px`,
+    }),
+  }));
 
 export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
   const [drawerWidth, setDrawerWidth] = React.useState(400)
-  const [observer_id, setObserverId] =
-    useQueryParam('observer_id', withDefault(StringParam, '2003'))
 
+  const [observer_id, setObserverId] =
+    useQueryParam('observer_id', withDefault(StringParam, 'Stranger'))
 
   const theme = handleTheme(darkState)
 

@@ -9,7 +9,6 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography'
 import { useDrawerOpenContext } from './App';
 import LoginDialog from './login_dialog';
-// import { DefaultTheme } from '@mui/private-theming'
 import { Theme } from "@mui/material/styles";
 
 
