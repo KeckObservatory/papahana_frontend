@@ -122,8 +122,9 @@ const CustomToolbarSelect = (props: CTProps) => {
 
     const setSelectedOB = () => {
         const row: any = props.selectedRows.data[0] // select first entry of selected rows (should have 1 element)
-        console.log('selecting ob from row', row)
-        const ob_id = row[0] //assumes ob_id is first element
+        const data = props.displayData[row.index].data
+        console.log('selecting ob from row', data)
+        const ob_id = data[0] //assumes ob_id is first element
         props.handleOBSelect(ob_id)
     }
 
