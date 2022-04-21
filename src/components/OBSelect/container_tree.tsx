@@ -79,7 +79,7 @@ export default function ContainerTree(props: Props) {
         setTree(newTree)
     }, [props.containers])
 
-    const renderTree = (nodes: RenderTree, parentNodeId?: string) => {
+    const renderTree = (nodes: RenderTree, parentNodeId: string) => {
         const isLeaf = !Array.isArray(nodes.children)
         return(
         <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>
@@ -106,7 +106,7 @@ export default function ContainerTree(props: Props) {
             defaultExpandIcon={<ChevronRightIcon />}
             sx={{ flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
-            {renderTree(tree)}
+            {renderTree(tree, tree.id)}
         </TreeView>
     )
 }

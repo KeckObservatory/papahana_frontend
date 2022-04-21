@@ -209,6 +209,7 @@ const NodePopover = (props: Props) => {
                 <PopoverButtons
                     container_names={props.container_names}
                     handleOBSelect={props.handleOBSelect}
+                    parentNodeId={props.parentNodeId}
                     handleClose={handleClose}
                     type={props.type}
                     setOB={props.setOB}
