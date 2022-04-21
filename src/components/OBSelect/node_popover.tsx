@@ -90,8 +90,8 @@ const PopoverButtons = (props: PButtonProps) => {
     }
 
     const removeOBFromContainer = () => {
-        console.log(`removing ${props.type} id ${props.id}.`)
         const container_id = props.parentNodeId ? props.parentNodeId : ''
+        console.log(`removing ${props.type} id ${props.id} from container ${container_id}`)
         container_api_funcs.get(container_id)
             .then((container: Container) => {
                 let newCont = {...container}
