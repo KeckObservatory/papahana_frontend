@@ -121,10 +121,14 @@ export default function ObservationBlockSelecter(props: Props) {
       .then((scoby_containers: [Scoby[], DetailedContainer[]]) => {
         const [scoby, cntners] = scoby_containers
         const contset: object[] = []
-        cntners.forEach((c: DetailedContainer) => contset.push({
-          _id: c._id,
-          name: c.name
-        }))
+        cntners.forEach((c: DetailedContainer) => {
+          if (c.name !== 'all obs') {
+            contset.push({
+            _id: c._id,
+            name: c.name
+          })
+          }
+        })
         setContainers(cntners)
         setRows(scoby)
         setContainerIdNames(contset)
