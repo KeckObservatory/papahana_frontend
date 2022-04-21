@@ -79,14 +79,15 @@ export default function ContainerTree(props: Props) {
         setTree(newTree)
     }, [props.containers])
 
-    const renderTree = (nodes: RenderTree) => {
+    const renderTree = (nodes: RenderTree, parentNodeId?: string) => {
         const isLeaf = !Array.isArray(nodes.children)
         return(
         <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>
             <TreeItem key={Date.now()} nodeId={nodes.id} label={nodes.name}>
-                {isLeaf ? null : nodes.children?.map((node) => renderTree(node)) }
+                {isLeaf ? null : nodes.children?.map((node) => renderTree(node, nodes.id)) }
             </TreeItem>
             <NodePopover handleOBSelect={props.handleOBSelect}
+                parentNodeId={parentNodeId}
                 id={nodes.id}
                 type={nodes.type}
                 container_names={names}

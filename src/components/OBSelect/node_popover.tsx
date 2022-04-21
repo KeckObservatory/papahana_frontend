@@ -20,6 +20,7 @@ interface Props {
     id: string,
     type: string
     name?: string
+    parentNodeId?: string
     ob_details?: Partial<ObservationBlock>
     handleOBSelect: Function
     container_names?: Set<string>
@@ -90,10 +91,13 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const removeOBFromContainer = () => {
         console.log(`removing ${props.type} id ${props.id}.`)
-        container_api_funcs.get(props.id)
+        const container_id = props.parentNodeId ? props.parentNodeId : ''
+        container_api_funcs.get(container_id)
             .then((container: Container) => {
-                container.observation_blocks.push(props.id)
-                return container_api_funcs.put(container._id, container)
+                let newCont = {...container}
+                const new_obs = container.observation_blocks.filter( x => x !== props.id)
+                newCont['observation_blocks'] = new_obs
+                return container_api_funcs.put(container._id, newCont)
             })
             .finally(() => {
                 setTimeout(() => {
