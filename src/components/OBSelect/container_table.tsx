@@ -9,6 +9,7 @@ import { container_api_funcs } from '../../api/ApiRoot'
 interface Props {
     rows: Scoby[]
     containerIdNames: object[]
+    handleOBSelect: Function
 }
 
 interface SelectedRowData { index: number; dataIndex: number }
@@ -20,7 +21,8 @@ interface SelectedRows {
 interface CTProps {
     containerIdNames: object[],
     selectedRows: SelectedRows,
-    displayData: DisplayData
+    displayData: DisplayData,
+    handleOBSelect: Function
 }
 
 interface SRD {
@@ -118,8 +120,16 @@ const CustomToolbarSelect = (props: CTProps) => {
     //@ts-ignore
     const names = props.containerIdNames.map(x => x.name)
 
+    const setSelectedOB = () => {
+        const row: any = props.selectedRows.data[0] // select first entry of selected rows (should have 1 element)
+        console.log('selecting ob from row', row)
+        const ob_id = row[0] //assumes ob_id is first element
+        props.handleOBSelect(ob_id)
+    }
+
     return (
         <div className={"custom-toolbar-select"}>
+            <Button onClick={setSelectedOB}>Edit selected OB</Button>
             <Button onClick={setSelectedToContainer}>Add selected to Container</Button>
             <DropDown arr={names} handleChange={handleDropdownChange} value={cidname.name} placeholder={'container'} label={'available containers'} />
         </div>
@@ -156,7 +166,8 @@ const ContainerTable = (props: Props) => {
             <CustomToolbarSelect
                 selectedRows={selectedRows}
                 displayData={displayData}
-                containerIdNames={props.containerIdNames}
+                containerIdNames={ props.containerIdNames }
+                handleOBSelect={ props.handleOBSelect }
             />
         ),
         onRowSelectionChange: handleSelect,

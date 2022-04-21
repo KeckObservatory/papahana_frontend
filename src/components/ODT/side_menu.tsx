@@ -114,7 +114,7 @@ export const SideMenu = (props: Props) => {
                 props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
             })
     }
-    const handleOBSelect = (ob_id: string) => {
+    const handleOBSelect = (ob_id: string) => { //TODO : make context to prevent prop drilling
         console.log(`setting selected ob to ${ob_id}`)
         props.setOBID(ob_id)
         getOB(ob_id)

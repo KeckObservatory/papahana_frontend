@@ -155,7 +155,7 @@ export default function ObservationBlockSelecter(props: Props) {
         />
         <Paper>
           <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
-          <ContainerTable rows={rows} containerIdNames={containerIdNames} />
+          <ContainerTable rows={rows} containerIdNames={containerIdNames} handleOBSelect={props.handleOBSelect} />
         </Paper>
       </div>
     </ OBSelectContext.Provider>
