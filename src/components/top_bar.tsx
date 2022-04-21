@@ -49,7 +49,7 @@ export function TopBar(props: Props) {
   const handlePortalClick = () => {
     const url = document.location.origin + '/observers/portal/rel/index.html'
     console.log(url)
-    window.open(url)
+    window.open(url, "_self")
   }
 
   return (
