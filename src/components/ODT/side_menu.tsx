@@ -90,6 +90,8 @@ export const SideMenu = (props: Props) => {
 
     const copyOB = (): void => {
         console.log(`creating new ob from ob ${props.ob_id}`)
+        const copyName = 'Copy of ' + props.ob.metadata.name
+        props.ob.metadata.name = copyName
         ob_api_funcs.post(props.ob).then((result: string) => {
             console.log('put result')
             console.log(result)
