@@ -93,8 +93,8 @@ export const SideMenu = (props: Props) => {
         let copyOB = { ...props.ob } as any
         const copyName = 'Copy of ' + props.ob.metadata.name
         copyOB.metadata['name'] = copyName
-        delete copyOB.ob._id
-        delete copyOB.ob._ob_id
+        delete copyOB._id
+        delete copyOB._ob_id
         ob_api_funcs.post(copyOB).then((_id: string) => {
             console.log('post result')
             console.log(_id)
