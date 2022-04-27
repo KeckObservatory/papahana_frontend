@@ -92,9 +92,10 @@ export const SideMenu = (props: Props) => {
         console.log(`creating new ob from ob ${props.ob_id}`)
         const copyName = 'Copy of ' + props.ob.metadata.name
         props.ob.metadata.name = copyName
-        ob_api_funcs.post(props.ob).then((result: string) => {
-            console.log('put result')
-            console.log(result)
+        ob_api_funcs.post(props.ob).then((_id: string) => {
+            console.log('post result')
+            console.log(_id)
+            props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
         })
     }
 
