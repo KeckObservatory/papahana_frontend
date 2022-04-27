@@ -56,7 +56,7 @@ const PopoverButtons = (props: PButtonProps) => {
         }
         const newOB = { metadata: meta, status: status } as ObservationBlock
         let ob_id: string;
-        if (props.id !== 'all obs') { //post ob and update container
+        if (props.id !== 'All OBs') { //post ob and update container
             ob_api_funcs.post(newOB)
                 .then((obid: string) => {
                     ob_id = obid

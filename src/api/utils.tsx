@@ -64,12 +64,12 @@ export const get_container_target_metadata = async (sem_id: string, container_id
    return obs
 }
 
-export const make_all_ob_container = async (sem_id: string, detailedContainers: DetailedContainer[]) => { //make synthetic container for all obs
+export const make_all_ob_container = async (sem_id: string, detailedContainers: DetailedContainer[]) => { //make synthetic container for All OBs
    let allContainer: DetailedContainer = {
-      name: 'all obs',
+      name: 'All OBs',
       observation_blocks: [],
       ob_details: [],
-      _id: 'all obs',
+      _id: 'All OBs',
       sem_id: sem_id
    }
    let partialObs: Partial<ObservationBlock>[] = []
@@ -81,7 +81,7 @@ export const make_all_ob_container = async (sem_id: string, detailedContainers: 
    return detailedContainers
 }
 
-export const make_detailed_containers = async (sem_id: string, containers: Container[]) => { // adds all obs in a special container
+export const make_detailed_containers = async (sem_id: string, containers: Container[]) => { // adds All OBs in a special container
    const detailedContainers: DetailedContainer[] = [] 
    for (let idx=0; idx<containers.length; idx++) {
       const container = containers[idx]

@@ -101,8 +101,8 @@ const CustomToolbarSelect = (props: CTProps) => {
             console.log('container name not specified.')
             return
         }
-        if (cidname.name === 'all obs') {
-            console.log('can not add to all obs synthetic container')
+        if (cidname.name === 'All OBs') {
+            console.log('can not add to All OBs synthetic container')
             return
         }
 
