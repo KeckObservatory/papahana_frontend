@@ -54,9 +54,7 @@ const PopoverButtons = (props: PButtonProps) => {
             priority: 0,
             state: 4
         }
-        //@ts-ignore
-        const _id = JSON.stringify(Date.now()) + 'XXXXXXXXXXX' // _id is not used. this is to get past validation.
-        const newOB = { _id: _id, metadata: meta, status: status } as ObservationBlock
+        const newOB = { metadata: meta, status: status } as ObservationBlock
         let ob_id: string;
         if (props.id !== 'all obs') { //post ob and update container
             ob_api_funcs.post(newOB)
