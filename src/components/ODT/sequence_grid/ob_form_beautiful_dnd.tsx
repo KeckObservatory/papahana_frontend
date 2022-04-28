@@ -117,6 +117,7 @@ const sort_forms = (inForms: Partial<ObservationBlock>) => {
     //create an array of [order, component] items 
     keys.forEach( (key: string) => {
         if (oCompKeys.includes(key)) {
+            console.log('key', key)
             ofArr.push([OB_COMPONENT_ORDER[key], key, inForms[key]])
         }
         else {
