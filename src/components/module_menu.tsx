@@ -87,7 +87,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                     variant="fullWidth"
                     aria-label="full width tabs example"
                 >
-                    <Tab label="OBT" {...a11yProps(0)} />
+                    <Tab label="ODT" {...a11yProps(0)} />
                     <Tab label="Planning Tool (Work in progress)" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
