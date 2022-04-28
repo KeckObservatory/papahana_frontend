@@ -58,10 +58,13 @@ const template_to_schema = (template: Template, formName: string): JSONSchema7 =
 
 export default function CommonParametersTemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
+  // const sub_forms = [
+  //  'instrument_parameters',
+  //  'detector_parameters',
+  //  'tcs_parameters'] as unknown as (keyof Template)[]
   const sub_forms = [
    'instrument_parameters',
-   'detector_parameters',
-   'tcs_parameters'] as unknown as (keyof Template)[]
+   'detector_parameters' ] as unknown as (keyof Template)[]
   const [schemas, setSchemas] = React.useState({} as { [id: string]: JSONSchema7})
   const ref = React.useRef(null)
 
