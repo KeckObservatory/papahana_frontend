@@ -16,6 +16,8 @@ export const reorder = (list: Array<unknown>, startIndex: number, endIndex: numb
     return result;
 };
 
+const NOMINALLY_OPEN = ['metadata', 'target']
+
 /**
  * Moves an item from one list to another list.
  */
@@ -39,7 +41,8 @@ export const createAccordianDiv = (provided: DraggableProvided,
     key: string,
     formChild: JSX.Element,
     acc: AccordionClasses,
-    handleDelete: Function) => {
+    handleDelete: Function,
+    expanded?: boolean) => {
     //@ts-ignore
     const className = snapshot.isDragging ? { ...provided.draggableProps, ...acc.accDrag } : acc.acc
     return (
@@ -53,6 +56,7 @@ export const createAccordianDiv = (provided: DraggableProvided,
                 name={key}
                 id={key}
                 handleDelete={handleDelete}
+                expanded={expanded}
             >
                 {formChild}
             </AccordionForm>
@@ -78,8 +82,10 @@ export const create_draggable = (keyValue: [string, OBComponent],
     index: number,
     updateOB: Function,
     acc: AccordionClasses,
-    handleDelete: Function) => {
+    handleDelete: Function,
+    ) => {
     const [key, component] = keyValue
+    const expanded = NOMINALLY_OPEN.includes(key)
     const form = createForm(key, component, updateOB)
     return (
         <Draggable
@@ -87,7 +93,10 @@ export const create_draggable = (keyValue: [string, OBComponent],
             draggableId={key}
             index={index}
         >
-            {(provided, snapshot) => createAccordianDiv(provided, snapshot, key, form, acc, handleDelete)}
+            {
+            (provided, snapshot) => 
+              createAccordianDiv(provided, snapshot, key, form, acc, handleDelete, expanded)
+            }
         </Draggable>
     )
 }
