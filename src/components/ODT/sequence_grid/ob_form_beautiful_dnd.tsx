@@ -19,14 +19,37 @@ import { chunkify, reorder, move, create_draggable } from './dnd_helpers'
 const GRID = 4;
 const ROW_HEIGHT = 45;
 const OB_NAMES: OBSeqNames[] = [
-    'metadata',
-    'acquisition',
-    'observations',
     'target',
+    'metadata',
+    'observations',
     'common_parameters',
     'time_constraints',
-    'status'
+    'status',
+    'acquisition',
 ]
+
+// const OB_COMPONENT_ORDER: OBSeqNames[] = [
+//     ['target', 0],
+//     ['metadata', 1],
+//     ['observations', 2],
+//     ['common_parameters', 3],
+//     ['time_constraints', 4],
+//     ['status', 5],
+//     ['acquisition', 6],
+// ]
+
+const OB_COMPONENT_ORDER: OBSeqNames[] = {
+ 'target': 0,
+ 'metadata': 1,
+ 'observations': 2,
+ 'common_parameters': 3,
+ 'time_constraints': 4,
+ 'status': 5,
+ 'acquisition': 6,
+}
+
+
+const NOMINALLY_CLOSED_COMPONENT = ['time constraints', 'status', 'acquisition']
 const METADATALESS = ['metadata', 'common_parameters', 'status', 'time_constraints']
 
 
@@ -87,6 +110,44 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
+const sort_forms = (inForms: Partial<ObservationBlock>) => {
+    const keys = Object.keys(inForms)
+    const ofArr = [] 
+    oCompKeys = Object.keys(OB_COMPONENT_ORDER)
+    //create an array of [order, component] items 
+    keys.forEach( (key: string) => {
+        if (!oCompKeys.includes(key)) {
+            ofArr.push([OB_COMPONENT_ORDER[key], inForms[key]])
+        }
+        else {
+            ofArr.push([999, key, inForms[key]])
+        }
+    //sort array of [order, component] items
+    ofArr.sort((a, b) => {
+        if(a[0] > b[0]) return 1;
+        if(a[0] < b[0]) return -1;
+        return 0;
+    })
+
+    const sortedForms = {}
+    //create sorted Array
+    ofArr.forEach( (okf) => {
+        [order, key, form] = okf
+        sortedForms[key] = form
+    })
+
+    return sortedForms
+    })
+
+    
+    for (let idx=0; idx < keys.length; idx++) {
+        const key = keys[idx]
+        
+    }
+
+    return outForms
+}
+
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
     // return the components that will generate forms
     let forms: { [k: string]: unknown } = {}
@@ -105,6 +166,9 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
             }
         }
     })
+    console.log('inForms', forms)
+    forms = sort_forms(forms)
+    console.log('sortedForms', forms)
     return forms
 }
 
@@ -149,7 +213,7 @@ const updateOBComponent = (seqName: keyof ObservationBlock, ob: ObservationBlock
         component = formData as MetadataLessOBComponent
     }
     else {
-        component = ob[seqName] as OBStandardComponent 
+        component = ob[seqName] as OBStandardComponent
         let params: { [key: string]: any } = component.parameters
 
         Object.entries(formData).forEach(([key, value]) => {
@@ -157,7 +221,7 @@ const updateOBComponent = (seqName: keyof ObservationBlock, ob: ObservationBlock
         })
         component.parameters = params
     }
-    ob[seqName] = component as any 
+    ob[seqName] = component as any
     return ob as ObservationBlock
 }
 
@@ -174,7 +238,7 @@ export const OBBeautifulDnD = (props: Props) => {
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
-    obItems = chunkify(obItems, nColumns, evenChunks) as any 
+    obItems = chunkify(obItems, nColumns, evenChunks) as any
     const [state, setState] = React.useState(obItems);
 
     React.useEffect(() => {
