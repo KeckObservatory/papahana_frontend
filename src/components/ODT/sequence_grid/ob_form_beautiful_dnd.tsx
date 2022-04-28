@@ -38,7 +38,7 @@ const OB_NAMES: OBSeqNames[] = [
 //     ['acquisition', 6],
 // ]
 
-const OB_COMPONENT_ORDER: OBSeqNames[] = {
+const OB_COMPONENT_ORDER = {
  'target': 0,
  'metadata': 1,
  'observations': 2,
@@ -113,11 +113,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const sort_forms = (inForms: Partial<ObservationBlock>) => {
     const keys = Object.keys(inForms)
     const ofArr = [] 
-    oCompKeys = Object.keys(OB_COMPONENT_ORDER)
+    const oCompKeys = Object.keys(OB_COMPONENT_ORDER)
     //create an array of [order, component] items 
     keys.forEach( (key: string) => {
         if (oCompKeys.includes(key)) {
-            console.log('key', key)
             ofArr.push([OB_COMPONENT_ORDER[key], key, inForms[key]])
         }
         else {
