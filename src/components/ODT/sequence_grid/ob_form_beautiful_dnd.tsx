@@ -315,7 +315,7 @@ export const OBBeautifulDnD = (props: Props) => {
                                     {...provided.droppableProps}
                                 >
                                     {keyValueArr.map((keyValue: [string, unknown], index: number) => (
-                                        create_draggable(keyValue, index, updateOB, acc, handleDelete, expanded)
+                                        create_draggable(keyValue, index, updateOB, acc, handleDelete)
                                     ))}
                                     {provided.placeholder}
                                 </div>
