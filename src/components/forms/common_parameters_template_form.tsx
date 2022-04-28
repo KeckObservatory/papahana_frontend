@@ -71,7 +71,7 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
   React.useEffect(() => {
     const md = props.obComponent.metadata
     let newSchemas = {...schemas}
-    const name = md.name.toLowerCase() // API uses lowercase
+    const name = md.name
     console.log('common parameter template name', name)
     get_template(name)
     .then((template: Template) => {
