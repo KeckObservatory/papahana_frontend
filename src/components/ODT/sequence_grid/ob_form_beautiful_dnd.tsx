@@ -132,7 +132,7 @@ const sort_forms = (inForms: Partial<ObservationBlock>) => {
     const sortedForms = {}
     //create sorted Array
     ofArr.forEach( (okf) => {
-        [order, key, form] = okf
+        const [order, key, form] = okf
         sortedForms[key] = form
     })
 
