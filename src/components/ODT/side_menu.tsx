@@ -184,21 +184,6 @@ export const SideMenu = (props: Props) => {
 
     return (
         <Paper className={classes.paper} elevation={3}>
-            <Accordion expanded={selAccdExpanded} onChange={handleAccordionChange('select')}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography>Observation Block Selection</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <ObservationBlockSelecter
-                        setOB={props.setOB}
-                        handleOBSelect={handleOBSelect}
-                        ob_id={props.ob_id} />
-                </AccordionDetails>
-            </Accordion>
             <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -234,6 +219,21 @@ export const SideMenu = (props: Props) => {
                             <TemplateSelection addSeq={addSeq} instrument={props.instrument} obSequences={Object.keys(props.ob)} />
                         </div>
                     </Tooltip>
+                </AccordionDetails>
+            </Accordion>
+            <Accordion expanded={selAccdExpanded} onChange={handleAccordionChange('select')}>
+                <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                >
+                    <Typography>Observation Block Selection</Typography>
+                </AccordionSummary>
+                <AccordionDetails>
+                    <ObservationBlockSelecter
+                        setOB={props.setOB}
+                        handleOBSelect={handleOBSelect}
+                        ob_id={props.ob_id} />
                 </AccordionDetails>
             </Accordion>
             <Tooltip title="Change the color theme of the OB JSON display">
