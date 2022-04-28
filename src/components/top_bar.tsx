@@ -42,11 +42,14 @@ interface Props {
 export function TopBar(props: Props) {
   const classes = useStyles();
   const drawer = useDrawerOpenContext()
+  const [name, setName] = React.useState('')
 
   useEffect(() => {
 
     get_userinfo().then( (response: any) => {
       console.log('get_userinfo response:', response)
+      const uname = response.Title + ' ' + response.FirstName + ' ' + response.LastName
+      setName(uname)
     })
   }, [])
 
@@ -92,7 +95,7 @@ export function TopBar(props: Props) {
           noWrap
           className={classes.title}
         >
-          Welcome, Observer {props.observer_id}!
+          Welcome, {name}!
         </Typography>
         {/* <LoginDialog /> */}
         <Tooltip title="Click Return to Observer Portal">
