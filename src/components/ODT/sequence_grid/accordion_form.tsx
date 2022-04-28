@@ -64,7 +64,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 export const AccordionForm = (props: AccordianProps) => {
     const transitionTime: number = 0 //ms
-    const defaultExpanded: boolean = props.expanded? props.expanded : true 
+    console.log(props.name, 'props.expanded', props.expanded)
+    const defaultExpanded: boolean = props.expanded? props.expanded : false 
     const classes = useStyles()
     const ref = useRef(null)
     const deletable = !(props.name === 'metadata' || props.name === 'common_parameters')

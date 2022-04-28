@@ -157,9 +157,7 @@ const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
             }
         }
     })
-    console.log('inForms', forms)
     forms = sort_forms(forms)
-    console.log('sortedForms', forms)
     return forms
 }
 
