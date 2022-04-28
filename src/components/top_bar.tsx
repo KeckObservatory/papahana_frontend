@@ -45,7 +45,9 @@ export function TopBar(props: Props) {
 
   useEffect(() => {
 
-    get_userinfo()
+    get_userinfo().then( (response: any) => {
+      console.log('get_userinfo response:', response)
+    })
   }, [])
 
   const handleMenuClick = () => {
