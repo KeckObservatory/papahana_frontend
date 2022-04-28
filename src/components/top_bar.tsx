@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from "@mui/styles"
 import AppBar from '@mui/material/AppBar';
 import Switch from "@mui/material/Switch"
@@ -11,6 +11,7 @@ import { useDrawerOpenContext } from './App';
 import LoginDialog from './login_dialog';
 import { Theme } from "@mui/material/styles";
 import DoorFrontIcon from '@mui/icons-material/DoorFront';
+import { get_userinfo } from './../api/ApiRoot';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -41,6 +42,11 @@ interface Props {
 export function TopBar(props: Props) {
   const classes = useStyles();
   const drawer = useDrawerOpenContext()
+
+  useEffect(() => {
+
+    get_userinfo()
+  }, [])
 
   const handleMenuClick = () => {
     drawer.setDrawerOpen(!drawer.drawerOpen)
