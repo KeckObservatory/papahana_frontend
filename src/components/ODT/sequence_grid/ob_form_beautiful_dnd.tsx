@@ -122,6 +122,7 @@ const sort_forms = (inForms: Partial<ObservationBlock>) => {
         else {
             ofArr.push([999, key, inForms[key]])
         }
+    })
     //sort array of [order, component] items
     ofArr.sort((a, b) => {
         if(a[0] > b[0]) return 1;
@@ -135,17 +136,7 @@ const sort_forms = (inForms: Partial<ObservationBlock>) => {
         const [order, key, form] = okf
         sortedForms[key] = form
     })
-
     return sortedForms
-    })
-
-    
-    for (let idx=0; idx < keys.length; idx++) {
-        const key = keys[idx]
-        
-    }
-
-    return outForms
 }
 
 const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
