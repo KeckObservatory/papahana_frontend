@@ -172,7 +172,17 @@ const ContainerTable = (props: Props) => {
             />
         ),
         onRowSelectionChange: handleSelect,
-        onRowClick: onRowClick
+        onRowClick: onRowClick,
+        setRowProps: (row, dataIndex, rowIndex) => {
+            return {
+                style: { padding: '0px' },
+            };
+        },
+        setTableProps: () => {
+            return {
+                padding: 'none',
+            };
+        },
     }
 
     return (
