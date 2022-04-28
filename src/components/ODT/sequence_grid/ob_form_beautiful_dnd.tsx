@@ -40,8 +40,8 @@ const OB_NAMES: OBSeqNames[] = [
 
 const OB_COMPONENT_ORDER = {
  'target': 0,
- 'metadata': 1,
- 'observations': 2,
+ 'metadata': 2,
+ 'observations': 1,
  'common_parameters': 3,
  'time_constraints': 4,
  'status': 5,
