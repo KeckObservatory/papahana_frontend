@@ -1,14 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import TreeView from '@mui/lab/TreeView';
+import { DetailedContainer, ObservationBlock } from '../../typings/papahana';
+import { useOBSelectContext } from './ob_select'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import TreeItem from '@mui/lab/TreeItem';
-import { DetailedContainer, ObservationBlock } from '../../typings/papahana';
-import { useObserverContext } from '../App'
-import { get_containers } from '../../api/utils'
-import NodePopover from './node_popover'
-import { useOBSelectContext } from './ob_select'
-import { get_select_funcs } from '../../api/ApiRoot'
+import { RenderTreeElement } from './render_tree_element'
+
 
 interface Props {
     handleOBSelect: Function
@@ -16,11 +13,11 @@ interface Props {
     setOB: Function
 }
 
-interface RenderTree {
+export interface RenderTree {
     id: string;
     name: string;
     children?: readonly RenderTree[];
-    ob_details?: Partial<ObservationBlock> ;
+    ob_details?: Partial<ObservationBlock>;
     type: string;
 }
 
@@ -55,6 +52,8 @@ const containers_to_nodes = (containers: DetailedContainer[]): RenderTree[] => {
     return nodes
 }
 
+
+
 export default function ContainerTree(props: Props) {
 
     const ob_select_object = useOBSelectContext()
@@ -79,24 +78,7 @@ export default function ContainerTree(props: Props) {
         setTree(newTree)
     }, [props.containers])
 
-    const renderTree = (nodes: RenderTree, parentNodeId: string) => {
-        const isLeaf = !Array.isArray(nodes.children)
-        return(
-        <div style={{ width: '100%', display: 'flex', alignItems: 'baseline' }}>
-            <TreeItem key={Date.now()} nodeId={nodes.id} label={nodes.name}>
-                {isLeaf ? null : nodes.children?.map((node) => renderTree(node, nodes.id)) }
-            </TreeItem>
-            <NodePopover handleOBSelect={props.handleOBSelect}
-                parentNodeId={parentNodeId}
-                id={nodes.id}
-                type={nodes.type}
-                container_names={names}
-                ob_details={nodes.ob_details}
-                setOB={props.setOB}
-                name={nodes.name} />
-        </div >
-    );
-}
+
 
     return (
         <TreeView
@@ -104,9 +86,17 @@ export default function ContainerTree(props: Props) {
             defaultCollapseIcon={<ExpandMoreIcon />}
             defaultExpanded={['root']}
             defaultExpandIcon={<ChevronRightIcon />}
+            multiSelect={false}
             sx={{ flexGrow: 1, maxWidth: 400, overflowY: 'auto' }}
         >
-            {renderTree(tree, tree.id)}
+            {/* {RenderTree(tree, tree.id)} */}
+            <RenderTreeElement 
+            nodes={tree} 
+            parentNodeId={tree.id}
+            names={names}
+            setOB={props.setOB}
+            handleOBSelect={props.handleOBSelect}
+            />
         </TreeView>
     )
 }

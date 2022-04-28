@@ -24,7 +24,11 @@ interface Props {
     ob_details?: Partial<ObservationBlock>
     handleOBSelect: Function
     container_names?: Set<string>
-    setOB: Function
+    setOB?: Function
+    open?: boolean,
+    handleClose?: Function
+    anchorPos?: object 
+    pid?: string
 }
 
 const PopoverButtons = (props: PButtonProps) => {
@@ -172,31 +176,16 @@ const create_ob_text = (ob_details: Partial<ObservationBlock>) => {
 }
 
 const NodePopover = (props: Props) => {
-    const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-    const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-        setAnchorEl(event.currentTarget);
-    };
-
-    const handleClose = () => {
-        setAnchorEl(null);
-    };
-
-    const open = Boolean(anchorEl);
-    const id = open ? 'simple-popover' : undefined;
 
     const text = `${props.type[0].toUpperCase() + props.type.slice(1)} Name: ${props.name}.`
-
     return (
         <div style={{ marginLeft: 'auto' }}>
-            <IconButton onClick={handleClick} aria-label="more">
-                <MoreVertIcon />
-            </IconButton>
             <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
+                id={props.pid}
+                open={props.open as boolean}
+                anchorReference="anchorPosition"
+                anchorPosition={props.anchorPos as any}
+                onClose={props.handleClose as any}
                 anchorOrigin={{
                     vertical: 'bottom',
                     horizontal: 'left',
@@ -208,7 +197,7 @@ const NodePopover = (props: Props) => {
                     container_names={props.container_names}
                     handleOBSelect={props.handleOBSelect}
                     parentNodeId={props.parentNodeId}
-                    handleClose={handleClose}
+                    handleClose={props.handleClose as Function}
                     type={props.type}
                     setOB={props.setOB}
                     name={props.name}
