@@ -69,12 +69,10 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
     const md = props.obComponent.metadata
     let newSchemas = {...schemas}
     const name = md.name
-    console.log('common parameter template name', name)
     get_template(name)
     .then((template: Template) => {
         sub_forms.forEach( (formName: keyof Template) => {
         const subSchema = template_to_schema(template[formName] as unknown as Template, formName)
-        console.log('subSchema', subSchema)
         newSchemas[formName] = subSchema
       })
       setSchemas(newSchemas)

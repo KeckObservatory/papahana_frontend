@@ -118,6 +118,27 @@ const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: Detai
    return scoby 
 }
 
+export const remove_duplicated_rows = (scoby: Scoby[]) => {
+   const scobyObj: { [key: string]: Scoby} = {}
+   // find duplicates
+   scoby.forEach( (row: Scoby) => {
+      const ob_id = row.ob_id as string
+      const container_id = row.container_id
+      if (scobyObj.hasOwnProperty(ob_id)) { // determine which duplicated row to use
+         const incumbant_row = scobyObj[ob_id]
+         const incumbant_container_id = incumbant_row.container_id
+         if (incumbant_container_id === 'All OBs') { // replace synthetic row with actual.
+            scobyObj[ob_id] = row
+         }
+      }
+      else {
+         scobyObj[ob_id] = row
+      }
+   })
+   const uniqueScoby = Object.values(scobyObj)
+   return uniqueScoby
+}
+
 export const make_semid_scoby_table_and_containers = async (sem_id: string): Promise<[Scoby[], DetailedContainer[]]> => {
    return get_containers(sem_id)
       .then(async (containers: Container[]) => {
@@ -127,7 +148,8 @@ export const make_semid_scoby_table_and_containers = async (sem_id: string): Pro
          return await make_all_ob_container(sem_id, detailedContainers)
       })
       .then((detailedContainers: DetailedContainer[]) => {
-         const scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
+         let scoby = scoby_rows_and_det_containers(sem_id, detailedContainers)
+         scoby = remove_duplicated_rows(scoby)
          return [scoby, detailedContainers]
       })
 }
