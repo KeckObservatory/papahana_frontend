@@ -110,8 +110,6 @@ export const SideMenu = (props: Props) => {
         ob_api_funcs.remove(props.ob_id as string).then((result: unknown) => {
             console.log('delete result')
             console.log(result)
-            props.setOB(() => {})
-            props.setOBID(() => undefined)
             props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
         })
     }
