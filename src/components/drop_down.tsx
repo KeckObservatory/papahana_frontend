@@ -35,6 +35,7 @@ const MakeMenuItem = (value: string, key: number, disabled = false) => {
 const DropDown = (props: MenuProps): JSX.Element => {
     const classes = useStyles()
     const value = props.value ? props.value : "" // MenuItem Value cannot be undefined or null
+    const highlight = props.highlightOnEmpty || true
 
     const menuItems = props.arr?.map((x, idx) => {
         const disabled = props.disabledArr ? props.disabledArr[idx] : false
@@ -50,7 +51,7 @@ const DropDown = (props: MenuProps): JSX.Element => {
         </Select>
     )
 
-    if (props.value && props.highlightOnEmpty) {
+    if (props.value && highlight) {
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel id="error-select-label">{props.label}</InputLabel>
