@@ -47,7 +47,6 @@ export function TopBar(props: Props) {
   useEffect(() => {
 
     get_userinfo().then( (response: any) => {
-      console.log('get_userinfo response:', response)
       const uname = response.Title + ' ' + response.FirstName + ' ' + response.LastName
       setName(uname)
     })
@@ -59,7 +58,6 @@ export function TopBar(props: Props) {
 
   const handlePortalClick = () => {
     const url = document.location.origin + '/observers/portal/rel/index.html'
-    console.log(url)
     window.open(url, "_self")
   }
 

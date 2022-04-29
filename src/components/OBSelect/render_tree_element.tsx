@@ -58,7 +58,6 @@ const CustomContent = React.forwardRef(function CustomContent(
     const handleSelectionClick = (
         event: React.MouseEvent<HTMLDivElement, MouseEvent>,
     ) => {
-        console.log('selection click', event)
         props.onClick?.(event)
         handleSelection(event);
     };
