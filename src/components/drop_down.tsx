@@ -25,6 +25,7 @@ interface MenuProps {
     value?: string | null
     placeholder: string
     label: string
+    highlightOnEmpty?: boolean
 }
 
 const MakeMenuItem = (value: string, key: number, disabled = false) => {
@@ -49,7 +50,7 @@ const DropDown = (props: MenuProps): JSX.Element => {
         </Select>
     )
 
-    if (props.value) {
+    if (props.value && props.highlightOnEmpty) {
         return (
             <FormControl className={classes.formControl}>
                 <InputLabel id="error-select-label">{props.label}</InputLabel>

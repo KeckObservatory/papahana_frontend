@@ -87,7 +87,10 @@ export default function TemplateSelection(props: Props) {
             disabledArr={disabledArr}
             handleChange={handleChange}
             placeholder={'Template'}
-            label={'Select Template to add'} />)
+            label={'Select Template to add'} 
+            highlightOnEmpty={false}
+            />
+            )
 }
 
 TemplateSelection.defaultProps = {
