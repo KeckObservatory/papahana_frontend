@@ -187,7 +187,6 @@ export default function TemplateForm(props: Props): JSX.Element {
 
 
   React.useEffect(() => {
-    console.log('rendering form: ', props.id)
     get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
     setSchema(initSchema)
     })

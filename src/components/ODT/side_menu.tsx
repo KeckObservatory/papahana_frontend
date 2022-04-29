@@ -63,6 +63,9 @@ export const SideMenu = (props: Props) => {
     let jsonTheme = darkState ? 'bespin' : 'summerfruit:inverted' as ThemeKeys
     const [theme, setTheme] = useQueryParam('theme', withDefault(StringParam, jsonTheme))
 
+    //check if can submit ob
+    let obEditable: boolean = 'metadata' in props.ob && typeof (props.ob_id) === "string"
+
     const saveOBasJSON = () => {
         // Create a blob with the data we want to download as a file
         const blob = new Blob([JSON.stringify(props.ob, null, 4)], { type: 'text/plain' })
@@ -184,43 +187,46 @@ export const SideMenu = (props: Props) => {
 
     return (
         <Paper className={classes.paper} elevation={3}>
-            <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-
-                    <Typography>Observation Block/Template Edit</Typography>
-                    {/* <h3>Observation Block Edit/Display</h3> */}
-                </AccordionSummary>
-                <AccordionDetails>
-                    <div className={classes.buttonBlock}>
-                        <Tooltip title="Upload OB to database">
-                            <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
-                                <PublishIcon />
-                            </animated.button>
-                        </Tooltip>
-                        <Tooltip title="Copy OB to new OB">
-                            <IconButton aria-label='copy' onClick={copyOB}>
-                                <FileCopyIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Save OB as JSON">
-                            <IconButton aria-label='copy' onClick={saveOBasJSON}>
-                                <SaveIcon />
-                            </IconButton>
-                        </Tooltip>
-                        <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
-                        <DeleteDialog deleteOB={deleteOB} />
-                    </div>
-                    <Tooltip title="Add template to Selected OB">
-                        <div className={classes.templateSelect}>
-                            <TemplateSelection addSeq={addSeq} instrument={props.instrument} obSequences={Object.keys(props.ob)} />
-                        </div>
-                    </Tooltip>
-                </AccordionDetails>
-            </Accordion>
+            {obEditable &&
+                <React.Fragment>
+                    <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
+                        <AccordionSummary
+                            expandIcon={<ExpandMoreIcon />}
+                            aria-controls="panel1a-content"
+                            id="panel1a-header"
+                        >
+                            <Typography>Observation Block/Template Edit</Typography>
+                            {/* <h3>Observation Block Edit/Display</h3> */}
+                        </AccordionSummary>
+                        <AccordionDetails>
+                            <div className={classes.buttonBlock}>
+                                <Tooltip title="Upload OB to database">
+                                    <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
+                                        <PublishIcon />
+                                    </animated.button>
+                                </Tooltip>
+                                <Tooltip title="Copy OB to new OB">
+                                    <IconButton aria-label='copy' onClick={copyOB}>
+                                        <FileCopyIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <Tooltip title="Save OB as JSON">
+                                    <IconButton aria-label='copy' onClick={saveOBasJSON}>
+                                        <SaveIcon />
+                                    </IconButton>
+                                </Tooltip>
+                                <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
+                                <DeleteDialog deleteOB={deleteOB} />
+                            </div>
+                            <Tooltip title="Add template to Selected OB">
+                                <div className={classes.templateSelect}>
+                                    <TemplateSelection addSeq={addSeq} instrument={props.instrument} obSequences={Object.keys(props.ob)} />
+                                </div>
+                            </Tooltip>
+                        </AccordionDetails>
+                    </Accordion>
+                </React.Fragment>
+            }
             <Accordion expanded={selAccdExpanded} onChange={handleAccordionChange('select')}>
                 <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
