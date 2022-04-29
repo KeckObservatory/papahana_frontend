@@ -152,6 +152,7 @@ export default function ObservationBlockSelecter(props: Props) {
           value={sem_id}
           handleChange={handle_sem_id_submit}
           label={'Semester ID'}
+          highlightOnEmpty={true}
         />
         <Paper>
           <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />

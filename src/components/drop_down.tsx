@@ -70,7 +70,7 @@ const DropDown = (props: MenuProps): JSX.Element => {
 }
 
 DropDown.defaultProps = {
-    highlightOnEmpty: true
+    highlightOnEmpty: false 
 }
 
 export default DropDown

@@ -88,7 +88,6 @@ export default function TemplateSelection(props: Props) {
             handleChange={handleChange}
             placeholder={'Template'}
             label={'Select Template to add'} 
-            highlightOnEmpty={false}
             />
             )
 }
