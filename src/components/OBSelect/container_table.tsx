@@ -143,15 +143,15 @@ const ContainerTable = (props: Props) => {
     }
 
     const columns = [
-        { name: 'ob_id', options: { display: false } },
-        { name: 'name' },
-        { name: 'container_name' },
-        { name: 'ob_type' },
-        { name: 'version', options: { display: false } },
-        { name: 'comment', options: { display: false } },
-        { name: 'ra', options: { display: false } },
-        { name: 'dec', options: { display: false } },
-        { name: 'sem_id', options: { display: false } },
+        { name: 'ob_id', label: 'OB ID', options: { display: false } },
+        { name: 'name', label: 'OB Name' },
+        { name: 'container_name', label: 'Container Name' },
+        { name: 'ob_type', label: 'OB Type' },
+        { name: 'version', label: 'Version', options: { display: false } },
+        { name: 'comment', label: 'Comment', options: { display: false } },
+        { name: 'ra', label: 'RA', options: { display: false } },
+        { name: 'dec', Label: 'Dec', options: { display: false } },
+        { name: 'sem_id', Label: 'Semid', options: { display: false } },
     ]
 
     const onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
