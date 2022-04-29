@@ -112,6 +112,7 @@ export const SideMenu = (props: Props) => {
             console.log(result)
             props.setOB(() => undefined)
             props.setOBID(() => undefined)
+            props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
         })
     }
 
