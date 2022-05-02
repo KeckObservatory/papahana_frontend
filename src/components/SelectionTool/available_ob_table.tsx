@@ -60,6 +60,7 @@ const AvailableOBTable = (props: Props) => {
         ),
         selectableRows: 'multiple'
     }
+    console.log('rows', props.rows)
 
     return (
         <MUIDataTable

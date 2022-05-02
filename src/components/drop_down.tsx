@@ -36,7 +36,6 @@ const DropDown = (props: MenuProps): JSX.Element => {
     const classes = useStyles()
     const value = props.value
     const errorOnEmpty = value==="" && props.highlightOnEmpty===true
-    console.log('errorOnEmpty:', errorOnEmpty, props.value, props.highlightOnEmpty)
 
     const menuItems = props.arr?.map((x, idx) => {
         const disabled = props.disabledArr ? props.disabledArr[idx] : false

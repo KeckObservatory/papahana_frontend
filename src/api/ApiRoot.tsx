@@ -9,7 +9,10 @@ import {
     mock_get_observation_block_from_container,
     mock_get_semesters,
     mock_ob_get,
-    mock_get_semester_obs
+    mock_get_semester_obs,
+    mock_get_container_ob_metadata,
+    mock_get_container_ob_target
+    
 } from '../mocks/mock_utils';
 
 // Define your api url from any source.
@@ -164,7 +167,7 @@ const container_remove = (container_id: string): Promise<unknown> => {
         .catch(handleError);
 };
 
-export const get_container_ob_metadata = (semid: string, container_id?: string) => {
+const get_container_ob_metadata = (semid: string, container_id?: string) => {
     let url = `${SEMESTERS_URL}/${semid}/ob/metadata`
     url = container_id ? url+`?container_id=${container_id}` : url
     return axiosInstance
@@ -173,13 +176,18 @@ export const get_container_ob_metadata = (semid: string, container_id?: string) 
         .catch(handleError);
 }
 
-export const get_container_ob_target = (semid: string, container_id?: string) => {
+const get_container_ob_target = (semid: string, container_id?: string) => {
     let url = `${SEMESTERS_URL}/${semid}/ob/targets`
     url = container_id ? url+`?container_id=${container_id}` : url
     return axiosInstance
         .get(url)
         .then(handleResponse)
         .catch(handleError);
+}
+
+export const get_container_ob_data = {
+    get_container_ob_metadata: IS_PRODUCTION ? get_container_ob_metadata : mock_get_container_ob_metadata,
+    get_container_ob_target: IS_PRODUCTION ? get_container_ob_target: mock_get_container_ob_target
 }
 
 

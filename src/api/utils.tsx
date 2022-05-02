@@ -1,5 +1,5 @@
 import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer } from "../typings/papahana";
-import { get_select_funcs, get_container_ob_metadata, get_container_ob_target } from './ApiRoot';
+import { get_select_funcs, get_container_ob_data } from './ApiRoot';
 import { ObservationBlock, SemesterIds } from '../typings/papahana'
 
 export const get_sem_id_list = (): Promise<SemesterIds> => {
@@ -49,8 +49,8 @@ const create_sc_table = async (semesters: string[]) => {
 }
 
 export const get_container_target_metadata = async (sem_id: string, container_id?: string) => {
-   const metadata = await get_container_ob_metadata(sem_id, container_id)
-   const targets = await get_container_ob_target(sem_id, container_id)
+   const metadata = await get_container_ob_data.get_container_ob_metadata(sem_id, container_id)
+   const targets = await get_container_ob_data.get_container_ob_target(sem_id, container_id)
    let obs: Partial<ObservationBlock>[] = []
    metadata.forEach((md: Partial<ObservationBlock>) => {
       const target = targets.find((t: Partial<ObservationBlock>) => t._id === md._id)

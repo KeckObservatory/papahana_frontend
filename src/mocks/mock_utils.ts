@@ -9,7 +9,21 @@ import { default as mock_obs } from './ob.json'
 import { default as mock_templates } from './templates.json'
 import { default as mock_containers } from './containers-demo.json'
 import { default as mock_instrument_packages } from './instrument_packages.json'
+import { mock_targets, mock_metadata } from './mock_ob_metadata_targets'
 
+export const mock_get_container_ob_metadata = (semid: string, container_id?: string) => {
+   const mockPromise = new Promise<Partial<ObservationBlock[]>>((resolve) => {
+      resolve( mock_metadata as any )
+   })
+   return mockPromise 
+}
+
+export const mock_get_container_ob_target= (semid: string, container_id?: string) => {
+   const mockPromise = new Promise<Partial<ObservationBlock[]>>((resolve) => {
+      resolve( mock_targets as any )
+   })
+   return mockPromise 
+}
 
 export const mock_get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
    const mockPromise = new Promise<InstrumentPackage>((resolve) => {

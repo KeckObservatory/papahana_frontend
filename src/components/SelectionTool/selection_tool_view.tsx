@@ -109,8 +109,8 @@ export const SelectionToolView = (props: Props) => {
         console.log('sem_id changed')
         get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
             const cells = container_obs_to_cells(container_obs)
-            // console.log('got cells to add')
-            // console.log(cells)
+            console.log('got cells to add')
+            console.log(cells)
             setAvlObs(cells)
             setSelObs([])
         })

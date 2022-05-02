@@ -121,7 +121,7 @@ export interface ObservationBlock extends Base {
 	metadata: OBMetadata;
 	target?: Target;
 	time_constraints: TimeConstraint[][]
-	comment: string;
+	comment?: string;
 	observations?: Science[];
 	acquisition: Acquisition;
 	associations: string[];
@@ -221,11 +221,12 @@ export interface TargetParameters {
 	dec_offset?: number,
 	rot_cfg_pa?: number,
 	target_coord_pm_ra?: number,
+	target_coord_pm_dec?: number,
 	pm_dec?: number,
 	d_ra?: number,
 	d_dec?: number,
-	target_coord_epoch?: number,
-	seq_constraint_obstime?: number,
+	target_coord_epoch?: string,
+	seq_constraint_obstime?: string,
 	target_info_magnitude: Magnitude[],
 	wrap?: string,
 	target_info_comment?: string
