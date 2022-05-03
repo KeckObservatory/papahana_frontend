@@ -17,10 +17,10 @@ interface Data {
 const format_values = (values: number[], times: Date[], sd: Scoby, units?: string): Data[] => {
     let data: Data[] = []
     for (let idx = 0; idx < times.length; idx++) {
-        const nm = sd.name? sd.name.replaceAll(/[\W+]+/g, '_') : "unlabled_tgt" 
+        const nm = sd.name ? sd.name.replaceAll(/[\W+]+/g, '_') : "unlabled_tgt"
         const d: Data = {
             time: times[idx], value: values[idx], units: units,
-            type: 'trajectory', 
+            type: 'trajectory',
             tgt: nm,
             ra: sd.ra_deg,
             dec: sd.dec_deg
@@ -112,17 +112,17 @@ const init_static_lines = (svg: any,
     startDate: Date, width: number, height: number, suncalc: any) => {
 
     //get sunrise/sunset times
-    const bars: Date[] = [suncalc.sunsetStart, suncalc.sunset, suncalc.sunrise, suncalc.sunriseEnd] 
-    bars.forEach( (date: Date) => {
-            svg.append('rect')
-                .attr('x', xScale(date))
-                .attr('y', 0)
-                .attr('height', height)
-                .attr('width', 1)
-                .attr('class', 'druler')
-                .style('stroke', 'lightgray')
-                .style("visibility", "visible")
-                .style('opacity', 1);
+    const bars: Date[] = [suncalc.sunsetStart, suncalc.sunset, suncalc.sunrise, suncalc.sunriseEnd]
+    bars.forEach((date: Date) => {
+        svg.append('rect')
+            .attr('x', xScale(date))
+            .attr('y', 0)
+            .attr('height', height)
+            .attr('width', 1)
+            .attr('class', 'druler')
+            .style('stroke', 'lightgray')
+            .style("visibility", "visible")
+            .style('opacity', 1);
     })
 
 
@@ -275,10 +275,32 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
         [marginLeft, width]
     )
 
+    if (chartType === 'altitude') {
+        var yScale = d3.scaleLinear([20, 90],
+            [height, marginTop]
+        )
+        var valueTxt = "Alt [deg]"
+    }
+    else if (chartType === 'air mass') {
+        var yScale = d3.scaleLinear([0, 10],
+            [height, marginTop]
+        )
 
-    const yScale = d3.scaleLinear([20, 90],
-        [height, marginTop]
-    )
+        var valueTxt = "Air Mass []"
+    }
+    else {
+        const values = myData[0].map((x: Data) => {
+            return x.value
+        })
+        const min = Math.min(...values)
+        const max = Math.max(...values)
+        var yScale = d3.scaleLinear([min, max],
+            [height, marginTop]
+        )
+        var valueTxt = "value [?]"
+    }
+
+
 
     let tdx = 0
     const tgts = myData.map(d => {
@@ -391,6 +413,5 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
     const xTxtOffset = xOffset + 40
     const yOffset = marginLeft
     const yTxtOffset = yOffset - 60
-    const valueTxt = "Alt [deg]"
     add_axes(svg, xScale, yScale, width, height, xOffset, xTxtOffset, yOffset, yTxtOffset, valueTxt)
 }
