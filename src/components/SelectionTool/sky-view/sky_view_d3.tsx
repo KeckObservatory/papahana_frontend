@@ -261,6 +261,7 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
     lngLatEl: LngLatEl
 ) => {
     const myData = make_data(scoby_deg, chartType, date, lngLatEl)
+    console.log('myData', myData)
     if (myData.length <= 0) return
     const startDate = myData[0][0].time
     const endDate = myData[0][myData[0].length - 1].time
