@@ -48,7 +48,7 @@ export default function SkyView(props: Props) {
         if (s.ra && s.dec) {
             let sd = {...s, 
                ra_deg: util.ra_dec_to_deg(s.ra, false),
-               dec_deg: util.ra_dec_to_deg(s.dec, false)
+               dec_deg: util.ra_dec_to_deg(s.dec, true)
             }
             scoby_deg.push(sd)
         }
