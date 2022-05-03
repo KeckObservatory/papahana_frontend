@@ -1,5 +1,5 @@
 import * as d3 from 'd3'
-import { Target } from '../../../typings/papahana'
+import { Scoby, Target } from '../../../typings/papahana'
 import * as util from './sky_view_util'
 import { LngLatEl } from './sky_view'
 import * as SunCalc from 'suncalc'
@@ -14,14 +14,15 @@ interface Data {
     dec?: number,
 }
 
-const format_values = (values: number[], times: Date[], target: Target, units?: string): Data[] => {
+const format_values = (values: number[], times: Date[], sd: Scoby, units?: string): Data[] => {
     let data: Data[] = []
     for (let idx = 0; idx < times.length; idx++) {
         const d: Data = {
             time: times[idx], value: values[idx], units: units,
-            type: 'trajectory', tgt: target.parameters.target_info_name,
-            ra: target.parameters.ra_deg,
-            dec: target.parameters.dec_deg
+            type: 'trajectory', 
+            tgt: sd.name as string,
+            ra: sd.ra_deg,
+            dec: sd.dec_deg
 
         }
         data.push(d)
@@ -41,7 +42,7 @@ const check_calc = (nadir: Date, offset: number = 600) => {
     console.log('dec', dec)
 }
 
-const make_data = (targets: Target[], chartType: string, date: Date, lngLatEl: LngLatEl) => {
+const make_data = (scoby_deg: Scoby[], chartType: string, date: Date, lngLatEl: LngLatEl) => {
 
     const nadir = util.get_nadir(lngLatEl, date)
     // check_calc(nadir)
@@ -49,10 +50,10 @@ const make_data = (targets: Target[], chartType: string, date: Date, lngLatEl: L
     let myData: Data[][] = []
     let mergedData: Data[] = []
 
-    targets.forEach((target: Target) => {
+    scoby_deg.forEach((sd: Scoby) => {
         // const azAlt = util.ra_dec_to_az_alt(target.ra_deg as number, target.dec_deg as number, nadir, lngLatEl)
-        const values = get_chart_data(target, times, chartType, date, lngLatEl)
-        const data = format_values(values, times, target, 'degrees')
+        const values = get_chart_data(sd, times, chartType, date, lngLatEl)
+        const data = format_values(values, times, sd, 'degrees')
         mergedData = [...mergedData, ...data]
         myData.push(data)
 
@@ -178,10 +179,10 @@ const formatDate = (date: Date) => {
         minuteFormatted + morning;
 }
 
-const get_chart_data = (target: Target, times: Date[], chartType: string, date: Date, lngLatEl: LngLatEl, offset: number = 600): number[] => {
+const get_chart_data = (sd: Scoby, times: Date[], chartType: string, date: Date, lngLatEl: LngLatEl, offset: number = 600): number[] => {
     let val;
-    const ra = target.parameters.ra_deg as number
-    const dec = target.parameters.dec_deg as number
+    const ra = sd.ra_deg as number
+    const dec = sd.dec_deg as number
     switch (chartType) {
         case 'altitude': {
             val = util.get_target_traj(ra, dec, times, date, lngLatEl, offset)
@@ -254,11 +255,11 @@ const bisectDate = d3.bisector(function (d: any) { return d.time; }).left;
 export const skyview = (svg: any, chartType: string, outerHeight: number, outerWidth: number,
     marginLeft: number, marginRight: number,
     marginTop: number, marginBottom: number,
-    targets: Target[],
+    scoby_deg: Scoby[],
     date: Date,
     lngLatEl: LngLatEl
 ) => {
-    const myData = make_data(targets, chartType, date, lngLatEl)
+    const myData = make_data(scoby_deg, chartType, date, lngLatEl)
     if (myData.length <= 0) return
     const startDate = myData[0][0].time
     const endDate = myData[0][myData[0].length - 1].time

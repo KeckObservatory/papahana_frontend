@@ -1,7 +1,7 @@
 import React from 'react';
 import { useD3 } from '../../../hooks/useD3'
 import * as d3 from 'd3'
-import { OBCell, Target } from '../../../typings/papahana'
+import { OBCell, Scoby, Target } from '../../../typings/papahana'
 import * as util from './sky_view_util'
 import {skyview} from './sky_view_d3'
 import { useQueryParam, NumericObjectParam, withDefault, DateParam } from 'use-query-params'
@@ -9,7 +9,7 @@ import { useQueryParam, NumericObjectParam, withDefault, DateParam } from 'use-q
 interface Props {
     outerHeight: number
     outerWidth: number
-    selObs: OBCell[]
+    selObs: Scoby[]
     chartType: string
     marginLeft: number;
     marginRight: number;
@@ -43,22 +43,22 @@ export default function SkyView(props: Props) {
         d3.selectAll("svg > *").remove(); // clear old scales and points
     }, [props.selObs, props.chartType])
 
-    let targets: Target[] = []
-    props.selObs.forEach((obSel: OBCell) => {
-        if (obSel.target) targets.push(obSel.target)
-    })
-
-    targets = targets.map((target: Target) => {
-        target.parameters.ra_deg = util.ra_dec_to_deg(target.parameters.target_coord_ra, false)
-        target.parameters.dec_deg = util.ra_dec_to_deg(target.parameters.target_coord_dec, true)
-        return target
+    let scoby_deg: Scoby[] = []
+    props.selObs.forEach((s: Scoby) => {
+        if (s.ra && s.dec) {
+            let sd = {...s, 
+               ra_deg: util.ra_dec_to_deg(s.ra, false),
+               dec_deg: util.ra_dec_to_deg(s.dec, false)
+            }
+            scoby_deg.push(sd)
+        }
     })
 
     let ref = useD3((svg: any) => { skyview(svg, 
          props.chartType, props.outerHeight, props.outerWidth,
          props.marginLeft, props.marginRight, props.marginTop, 
          props.marginBottom,
-         targets,
+         scoby_deg,
          date,
          lngLatEl,
          ) })

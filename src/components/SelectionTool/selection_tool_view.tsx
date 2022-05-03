@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext } from 'react'
 import { useObserverContext } from './../App'
-import { get_obs_from_semester, get_sem_id_list } from '../../api/utils'
-import { ContainerObs, OBCell, ObservationBlock, SemesterIds } from '../../typings/papahana'
+import { get_obs_from_semester, get_sem_id_list, make_semid_scoby_table_and_containers } from '../../api/utils'
+import { ContainerObs, DetailedContainer, OBCell, ObservationBlock, Scoby, SemesterIds } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import Paper from '@mui/material/Paper'
@@ -42,8 +42,8 @@ interface Props {
 }
 
 interface State {
-    selObs: OBCell[];
-    avlObs: OBCell[];
+    selObs: Scoby[];
+    avlObs: Scoby[];
     sem_id: string
     semIdList: string[]
     chartType: string;
@@ -64,12 +64,7 @@ const container_obs_to_cells = (container_obs: any) => {
     Object.entries(container_obs).forEach((cid_obs: any) => {
         const cid = cid_obs[0]
         const obs = cid_obs[1]
-        const cidCell = { id: cid, type: 'container' }
-        //cells.push(cidCell) //ignore containers for now
-        console.log(cid_obs)
         obs.forEach((ob: ObservationBlock, idx: number) => {
-
-            console.log('ob target', ob.target)
             const obCell: OBCell = {
                 cid: cid,
                 name: ob.metadata.name,
@@ -102,19 +97,29 @@ export const SelectionToolView = (props: Props) => {
 
 
     useEffect(() => {
-        get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
-            const cells = container_obs_to_cells(container_obs)
-            setAvlObs(cells)
+        // get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
+        //     const cells = container_obs_to_cells(container_obs)
+        //     setAvlObs(cells)
+        // })
+        make_semid_scoby_table_and_containers(sem_id).then( (scoby_cont: [Scoby[], DetailedContainer[]] ) => {
+            const [scoby, cont] = scoby_cont
+            setAvlObs(scoby)
         })
+
     }, [])
 
     useEffect(() => {
         console.log('sem_id changed')
-        get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
-            const cells = container_obs_to_cells(container_obs)
-            console.log('got cells to add', container_obs)
-            console.log(cells)
-            setAvlObs(cells)
+        // get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
+        //     const cells = container_obs_to_cells(container_obs)
+        //     console.log(cells)
+        //     setAvlObs(cells)
+        //     setSelObs([])
+        // })
+
+        make_semid_scoby_table_and_containers(sem_id).then( (scoby_cont: [Scoby[], DetailedContainer[]] ) => {
+            const [scoby, cont] = scoby_cont
+            setAvlObs(scoby)
             setSelObs([])
         })
     }, [sem_id])

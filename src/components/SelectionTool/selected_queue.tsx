@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper'
 import Tooltip from '@mui/material/Tooltip'
 import { useEffect } from 'react'
 import { makeStyles } from '@mui/styles'
-import { OBCell } from "../../typings/papahana"
+import { OBCell, Scoby } from "../../typings/papahana"
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 import OBSubmit from './ob_submit'
 
@@ -40,7 +40,7 @@ const useStyles = makeStyles((theme: any) => ({
 }))
 
 interface Props {
-    selObs: OBCell[];
+    selObs: Scoby[];
     setSelObs: Function;
 }
 

@@ -1,11 +1,11 @@
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
-import { OBCell } from "../../typings/papahana"
+import { OBCell, Scoby } from "../../typings/papahana"
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton';
 import FilterIcon from '@mui/icons-material/Filter';
 
 interface Props {
-    rows: OBCell[],
+    rows: Scoby[],
     setSelObs: Function
 }
 
@@ -22,7 +22,7 @@ interface SelectedRows {
 interface CTProps {
     selectedRows: SelectedRows,
     setSelObs: Function,
-    rows: OBCell[]
+    rows: Scoby[]
 }
 
 const CustomToolbarSelect = (props: CTProps) => {
