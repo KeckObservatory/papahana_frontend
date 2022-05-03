@@ -105,7 +105,7 @@ export const ra_dec_to_az_alt_bak = (ra: number, dec: number, date?: Date, lng: 
 export const ra_dec_to_az_alt = (ra: number, dec: number, date: Date, lngLatEl: LngLatEl, offset: number = 600): [number, number] => {
     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
     13.3 & 13.4*/
-    const hourAngle = (get_gmt(date, offset) - lngLatEl.lng - ra) % 360
+    const hourAngle = (get_gmt(date, offset) + lngLatEl.lng - ra) % 360
     const tanAzNum = sind(hourAngle)
     const tanAzDen = cosd(hourAngle) * sind(lngLatEl.lat) - tand(dec) * cosd(lngLatEl.lat)
     const az = Math.atan2(tanAzNum, tanAzDen) //radians
