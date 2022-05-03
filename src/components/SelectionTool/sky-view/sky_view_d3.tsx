@@ -17,7 +17,7 @@ interface Data {
 const format_values = (values: number[], times: Date[], sd: Scoby, units?: string): Data[] => {
     let data: Data[] = []
     for (let idx = 0; idx < times.length; idx++) {
-        const nm = sd.name? sd.name.replaceAll(' ', '_') : "unlabled_tgt" 
+        const nm = sd.name? sd.name.replaceAll(/[\W+]+/g, '_') : "unlabled_tgt" 
         const d: Data = {
             time: times[idx], value: values[idx], units: units,
             type: 'trajectory', 
@@ -215,7 +215,7 @@ const init_hovors = (svg: any, tgts: string[], height: number) => {
     //dots appear over line when cursored over
     for (const idx in tgts) {
         svg.append('circle')
-            .attr('class', 'marker ' + JSON.stringify(idx))
+            .attr('class', 'marker' + tgts[idx])
             .attr('cx', 100)
             .attr('cy', 100)
             .attr('r', 5)
@@ -318,6 +318,7 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
             const d1 = myData[idx][i]
             if (!d1) continue
             d = xpoint.getTime() - d0.time.getTime() > d1.time.getTime() - xpoint.getTime() ? d1 : d0;
+            // svg.selectAll('.marker.' + myData[idx][0].tgt)
             svg.selectAll('.marker.' + myData[idx][0].tgt)
                 .attr('cx', xScale(d.time))
                 .attr('cy', yScale(d.value))
