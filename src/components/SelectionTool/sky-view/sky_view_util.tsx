@@ -23,37 +23,6 @@ export const get_gmt = (date?: Date, offset: number = 600) => {
     return ThetaGMST 
 }
 
-// export const get_gmt = (date?: Date, offset: number = 600) => {
-//     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
-//     12.1 & 12.4*/
-//     if (!date) date = new Date()
-//     const JD = date_to_juld(date, offset)
-//     const T = (JD - 2451545.0) / 36525 // 12.1
-//     const Theta0 = 280.460_618_37
-//         + 360.98564736629 * (JD - 2451545.0)
-//         + T * T * 0.000387933
-//         - T * T * T / 38710000 // 12.4
-
-//     let gmt = Theta0 % 360
-//     if (gmt < 0) gmt += 360
-//     return gmt
-// }
-
-export const get_gmt_bak = (date?: Date, offset: number = 600) => {
-    /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
-    12.1 & 12.3*/
-    if (!date) date = new Date()
-    const JD = date_to_juld(date, offset)
-    const T = (JD - 2_451_545.0) / 36_525 // 12.1
-    const Theta0 = 100.46061837 + 8640184.812855 * T
-        + .000387933 * T * T
-        - T * T * T / 38_710_000 // 12.4
-
-    let gmt = Theta0 % 360
-    if (gmt < 0) gmt += 360
-    return gmt
-}
-
 export const ra_dec_to_deg = (time: string, dec = false) => {
     let [hours, min, sec] = time.split(':')
     let deg
@@ -155,20 +124,6 @@ export const get_target_traj = (ra: number, dec: number, times: Date[], lngLatEl
     return traj
 }
 
-const air_mass_bak = (alt: number) => {
-    const y = KECK_ELEVATION / ATMOSPHERE_HEIGHT
-    const z = RADIUS_EARTH / ATMOSPHERE_HEIGHT
-    const a2 = ATMOSPHERE_HEIGHT * ATMOSPHERE_HEIGHT
-    const r = RADIUS_EARTH + KECK_ELEVATION
-    const g = ATMOSPHERE_HEIGHT - KECK_ELEVATION
-    const firstTerm = (r * r) * sind(alt) * sind(alt) / ATMOSPHERE_HEIGHT
-    const secondTerm = 2 * RADIUS_EARTH * (g) / a2
-    const thirdTerm = y * y
-    const forthTerm = (y + z) * sind(alt)
-    const X = Math.sqrt(firstTerm + secondTerm - thirdTerm + 1) - forthTerm
-    return X
-}
-
 const air_mass = (alt: number) => { // Homogeneous spherical atmosphsere with elevated observer
     const y = KECK_ELEVATION / ATMOSPHERE_HEIGHT
     const z = RADIUS_EARTH / ATMOSPHERE_HEIGHT
@@ -196,7 +151,7 @@ export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: 
         * cosd(dec)
         - sind(dec) * cosd(hourAngle)
     const tanq = numerator / denominator
-    return Math.atan(tanq) % Math.PI / 2
+    return Math.atan(tanq) * 180 / Math.PI 
 }
 
 export const get_parallactic_angle = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600): number[] => {

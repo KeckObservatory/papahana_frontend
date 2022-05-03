@@ -288,6 +288,13 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
 
         var valueTxt = "Air Mass []"
     }
+    else if (chartType === 'parallactic angle') {
+        var yScale = d3.scaleLinear([-90, 90],
+            [height, marginTop]
+        )
+
+        var valueTxt = "Parallactic Angle [deg]"
+    }
     else {
         const values = myData[0].map((x: Data) => {
             return x.value
