@@ -155,7 +155,7 @@ export const get_target_traj = (ra: number, dec: number, times: Date[], lngLatEl
     return traj
 }
 
-const air_mass = (alt: number) => {
+const air_mass_bak = (alt: number) => {
     const y = KECK_ELEVATION / ATMOSPHERE_HEIGHT
     const z = RADIUS_EARTH / ATMOSPHERE_HEIGHT
     const a2 = ATMOSPHERE_HEIGHT * ATMOSPHERE_HEIGHT
@@ -165,6 +165,20 @@ const air_mass = (alt: number) => {
     const secondTerm = 2 * RADIUS_EARTH * (g) / a2
     const thirdTerm = y * y
     const forthTerm = (y + z) * sind(alt)
+    const X = Math.sqrt(firstTerm + secondTerm - thirdTerm + 1) - forthTerm
+    return X
+}
+
+const air_mass = (alt: number) => { // Homogeneous spherical atmosphsere with elevated observer
+    const y = KECK_ELEVATION / ATMOSPHERE_HEIGHT
+    const z = RADIUS_EARTH / ATMOSPHERE_HEIGHT
+    const a2 = ATMOSPHERE_HEIGHT * ATMOSPHERE_HEIGHT
+    const r = RADIUS_EARTH + KECK_ELEVATION
+    const g = ATMOSPHERE_HEIGHT - KECK_ELEVATION
+    const firstTerm = (r * r) * cosd(alt) * cosd(alt) / ( a2 )
+    const secondTerm = 2 * RADIUS_EARTH * (g) / a2
+    const thirdTerm = y * y
+    const forthTerm = (y + z) * cosd(alt)
     const X = Math.sqrt(firstTerm + secondTerm - thirdTerm + 1) - forthTerm
     return X
 }
