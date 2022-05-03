@@ -5,7 +5,7 @@ export const KECK_LONG = 360 - 155.4747 // Keck Observatory longitude west of Gr
 const KECK_LAT = 19.8260 //[deg]
 const KECK_ELEVATION = 4.1449752 // km
 const RADIUS_EARTH = 6378.1000 // km
-const ATMOSPHERE_HEIGHT = 10.000 // km
+const ATMOSPHERE_HEIGHT = 50.000 // km
 
 
 export const date_to_juld = (date: Date, offset: number = 600) => {
