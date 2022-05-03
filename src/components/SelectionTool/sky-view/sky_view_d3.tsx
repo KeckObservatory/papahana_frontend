@@ -53,7 +53,7 @@ const make_data = (scoby_deg: Scoby[], chartType: string, date: Date, lngLatEl: 
 
     scoby_deg.forEach((sd: Scoby) => {
         // const azAlt = util.ra_dec_to_az_alt(target.ra_deg as number, target.dec_deg as number, nadir, lngLatEl)
-        const values = get_chart_data(sd, times, chartType, date, lngLatEl)
+        const values = get_chart_data(sd, times, chartType, lngLatEl)
         const data = format_values(values, times, sd, 'degrees')
         mergedData = [...mergedData, ...data]
         myData.push(data)
@@ -180,18 +180,18 @@ const formatDate = (date: Date) => {
         minuteFormatted + morning;
 }
 
-const get_chart_data = (sd: Scoby, times: Date[], chartType: string, date: Date, lngLatEl: LngLatEl, offset: number = 600): number[] => {
+const get_chart_data = (sd: Scoby, times: Date[], chartType: string, lngLatEl: LngLatEl, offset: number = 600): number[] => {
     let val;
     const ra = sd.ra_deg as number
     const dec = sd.dec_deg as number
     switch (chartType) {
         case 'altitude': {
-            val = util.get_target_traj(ra, dec, times, date, lngLatEl, offset)
+            val = util.get_target_traj(ra, dec, times, lngLatEl, offset)
             val = val.map((azAlt: any) => azAlt[1]) as number[]
             break;
         }
         case 'air mass': {
-            val = util.get_air_mass(ra, dec, times, date, lngLatEl, offset)
+            val = util.get_air_mass(ra, dec, times, lngLatEl, offset)
             break;
         }
         case 'parallactic angle': {
@@ -203,7 +203,7 @@ const get_chart_data = (sd: Scoby, times: Date[], chartType: string, date: Date,
             break;
         }
         default: {
-            val = util.get_target_traj(ra, dec, times, date, lngLatEl, offset)
+            val = util.get_target_traj(ra, dec, times, lngLatEl, offset)
             val = val.map((azAlt: any) => azAlt[1]) as number[]
         }
     }
