@@ -17,7 +17,7 @@ interface Data {
 const format_values = (values: number[], times: Date[], sd: Scoby, units?: string): Data[] => {
     let data: Data[] = []
     for (let idx = 0; idx < times.length; idx++) {
-        const nm = sd.name? sd.name.replace(' ', '_') : "unlabled_tgt" 
+        const nm = sd.name? sd.name.replaceAll(' ', '_') : "unlabled_tgt" 
         const d: Data = {
             time: times[idx], value: values[idx], units: units,
             type: 'trajectory', 
