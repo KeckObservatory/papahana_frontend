@@ -215,7 +215,7 @@ const init_hovors = (svg: any, tgts: string[], height: number) => {
     //dots appear over line when cursored over
     for (const idx in tgts) {
         svg.append('circle')
-            .attr('class', 'marker ' + tgts[idx])
+            .attr('class', 'marker ' + JSON.stringify(idx))
             .attr('cx', 100)
             .attr('cy', 100)
             .attr('r', 5)
