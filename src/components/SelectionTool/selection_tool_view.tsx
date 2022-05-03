@@ -63,17 +63,20 @@ const container_obs_to_cells = (container_obs: any) => {
     let uid = 0
     Object.entries(container_obs).forEach((cid_obs: any) => {
         const cid = cid_obs[0]
-        const obs = cid_obs[1].splice(0, 1, 1)
+        const obs = cid_obs[1]
         const cidCell = { id: cid, type: 'container' }
         //cells.push(cidCell) //ignore containers for now
+        console.log(cid_obs)
         obs.forEach((ob: ObservationBlock, idx: number) => {
+
+            console.log('ob target', ob.target)
             const obCell: OBCell = {
                 cid: cid,
                 name: ob.metadata.name,
                 type: 'ob',
                 id: JSON.stringify(uid),
                 ra: ob.target?.parameters.target_coord_ra,
-                dec: ob.target?.parameters.target_coord_dec
+                dec: ob.target?.parameters.target_coord_dec 
             }
             const tgt = ob.target
             if (tgt) obCell['target'] = tgt
@@ -109,14 +112,14 @@ export const SelectionToolView = (props: Props) => {
         console.log('sem_id changed')
         get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
             const cells = container_obs_to_cells(container_obs)
-            console.log('got cells to add')
+            console.log('got cells to add', container_obs)
             console.log(cells)
             setAvlObs(cells)
             setSelObs([])
         })
     }, [sem_id])
 
-    useEffect(() => { 
+    useEffect(() => {
         console.log('planning tool: changed')
         get_sem_id_list()
             .then((semesters: SemesterIds) => {
@@ -153,10 +156,10 @@ export const SelectionToolView = (props: Props) => {
                         setAvlObs={setAvlObs}
                         /> */}
                     {/* <EnhancedTable rows={avlObs} /> */}
-                    <AvailableOBTable rows={avlObs} setSelObs={setSelObs}/>
+                    <AvailableOBTable rows={avlObs} setSelObs={setSelObs} />
                 </Grid>
                 <Grid item xs={6}>
-                    <SelectedQueue selObs={selObs} setSelObs={setSelObs}/>
+                    <SelectedQueue selObs={selObs} setSelObs={setSelObs} />
                 </Grid>
                 <Grid item xs={4}>
                     <DropDown

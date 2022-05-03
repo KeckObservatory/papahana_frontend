@@ -600,7 +600,7 @@ def generate_common_parameters():
 
 
 @remove_none_values_in_dict
-def generate_sidereal_target():
+def generate_sidereal_target_parameters():
     schema = {
         'target_info_name': randString(),
         'target_coord_ra': generate_ra(),
@@ -617,8 +617,8 @@ def generate_sidereal_target():
 
 
 @remove_none_values_in_dict
-def generate_nonsidereal_target():
-    schema = generate_sidereal_target()
+def generate_nonsidereal_target_parameters():
+    schema = generate_sidereal_target_parameters()
     schema['target_coord_dra'] = randFloat()
     schema['target_coord_ddec'] = randFloat()
 
@@ -626,21 +626,38 @@ def generate_nonsidereal_target():
 
 
 @remove_none_values_in_dict
-def generate_mos_target():
-    schema = generate_sidereal_target()
+def generate_mos_target_parameters():
+    schema = generate_sidereal_target_parameters()
     schema['inst_cfg_mask'] = "Science Mask 101"
 
     return schema
 
 
 @remove_none_values_in_dict
+def generate_target_metadata():
+    name = 'standard stars #' + str(random.randint(0, 9))
+    schema = {
+        'name': name,
+        'ui_name': name.upper(),
+        'version': "0.1.0",
+        'template_type': 'target',
+    }
+    return schema
+
+def generate_target(): 
+    parameters = random.choice([generate_sidereal_target_parameters(),
+                                 generate_nonsidereal_target_parameters(),
+                                 generate_mos_target_parameters()])
+    metadata = generate_target_metadata()
+    return {"metadata":metadata, "parameters":parameters}
+
+@remove_none_values_in_dict
 def generate_observation_block(nLen, maxArr, inst='KCWI', _id=None):
+    tgt = generate_target()
     schema = {
         '_id': str(randInt(1000000, 9999999)),
         'metadata': generate_metadata(maxArr),
-        'target': random.choice([None, generate_sidereal_target(),
-                                 generate_nonsidereal_target(),
-                                 generate_mos_target()]),
+        'target': random.choice([None, tgt, tgt, tgt]),
         'acquisition': generate_acquisition(nLen, maxArr, inst),
         'observations': generate_science(inst),
         'associations': randArrStr(nLen, maxArr),

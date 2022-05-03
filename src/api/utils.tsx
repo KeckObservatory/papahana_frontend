@@ -166,6 +166,7 @@ export const get_obs_from_semester = async (sem_id: string): Promise<ContainerOb
       })
       .then((sem_cons: [string, string][]) => {
          const container_obs: ContainerObs = {}
+         console.log('container_obs', container_obs)
          sem_cons.forEach(async (sem_cid: [string, string]) => {
             const cid = sem_cid[1]
             const obs = await get_select_funcs.get_observation_blocks_from_container(cid)
