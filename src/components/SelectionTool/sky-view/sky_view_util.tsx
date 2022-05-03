@@ -9,36 +9,35 @@ const ATMOSPHERE_HEIGHT = 10.000 // km
 
 
 export const date_to_juld = (date: Date, offset: number = 600) => {
-    // return date.getTime()/86400000 + 2440587.5
-    return (date.getTime() / 86400000) - (offset / 1440) + 2440587.5
+    return (date.getTime() / 86400000) - (offset / 1440) + 2440587.5 //negative offset
+}
+
+export const get_gmt = (date?: Date, offset: number = 600) => {
+    if (!date) date = new Date()
+    const JD = date_to_juld(date, offset)
+    const T = (JD - 2451545) / 36525;
+    let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T 
+    + .093104 * (T**2) - ( 6.2 * 10**-6 ) * ( T**3 )
+    ThetaGMST = ( ThetaGMST % ( 86400 * ( ThetaGMST / Math.abs(ThetaGMST) ) ) / 240) % 360
+
+    return ThetaGMST 
 }
 
 // export const get_gmt = (date?: Date, offset: number = 600) => {
+//     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
+//     12.1 & 12.4*/
 //     if (!date) date = new Date()
 //     const JD = date_to_juld(date, offset)
-//     const T = (JD - 2451545) / 36525;
-//     let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T 
-//     + .093104 * (T**2) - ( 6.2 * 10**-6 ) * ( T**3 )
-//     ThetaGMST = ( ThetaGMST % ( 86400 * ( ThetaGMST / Math.abs(ThetaGMST) ) ) / 240) % 360
+//     const T = (JD - 2451545.0) / 36525 // 12.1
+//     const Theta0 = 280.460_618_37
+//         + 360.98564736629 * (JD - 2451545.0)
+//         + T * T * 0.000387933
+//         - T * T * T / 38710000 // 12.4
 
-//     return ThetaGMST 
+//     let gmt = Theta0 % 360
+//     if (gmt < 0) gmt += 360
+//     return gmt
 // }
-
-export const get_gmt = (date?: Date, offset: number = 600) => {
-    /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
-    12.1 & 12.4*/
-    if (!date) date = new Date()
-    const JD = date_to_juld(date, offset)
-    const T = (JD - 2451545.0) / 36525 // 12.1
-    const Theta0 = 280.460_618_37
-        + 360.98564736629 * (JD - 2451545.0)
-        + T * T * 0.000387933
-        - T * T * T / 38710000 // 12.4
-
-    let gmt = Theta0 % 360
-    if (gmt < 0) gmt += 360
-    return gmt
-}
 
 export const get_gmt_bak = (date?: Date, offset: number = 600) => {
     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
