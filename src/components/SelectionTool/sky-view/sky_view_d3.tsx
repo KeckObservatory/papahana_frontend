@@ -282,7 +282,7 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
         var valueTxt = "Alt [deg]"
     }
     else if (chartType === 'air mass') {
-        var yScale = d3.scaleLinear([0, 10],
+        var yScale = d3.scaleLinear([0, 3],
             [height, marginTop]
         )
 
