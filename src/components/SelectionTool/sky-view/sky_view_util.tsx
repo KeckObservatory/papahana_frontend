@@ -13,19 +13,18 @@ export const date_to_juld = (date: Date, offset: number = 600) => {
     return (date.getTime() / 86400000) - (offset / 1440) + 2440587.5
 }
 
-export const get_gmt = (date?: Date, offset: number = 600) => {
-    /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
-    12.1 & 12.4*/
-    if (!date) date = new Date()
-    const JD = date_to_juld(date, offset)
-    const T = (JD - 2451545) / 36525;
-    let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T 
-    + .093104 * (T * T) - (6.2 * 10**-6) * (T * T * T);
-    ThetaGMST = ( ( ThetaGMST % ( 86400 * (ThetaGMST / Math.abs(ThetaGMST) ) ) ) / 240 ) % 360
-    return ThetaGMST 
-}
+// export const get_gmt = (date?: Date, offset: number = 600) => {
+//     if (!date) date = new Date()
+//     const JD = date_to_juld(date, offset)
+//     const T = (JD - 2451545) / 36525;
+//     let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T 
+//     + .093104 * (T**2) - ( 6.2 * 10**-6 ) * ( T**3 )
+//     ThetaGMST = ( ThetaGMST % ( 86400 * ( ThetaGMST / Math.abs(ThetaGMST) ) ) / 240) % 360
 
-export const get_gmt_bak_2 = (date?: Date, offset: number = 600) => {
+//     return ThetaGMST 
+// }
+
+export const get_gmt = (date?: Date, offset: number = 600) => {
     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
     12.1 & 12.4*/
     if (!date) date = new Date()
