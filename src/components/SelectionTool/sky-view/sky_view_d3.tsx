@@ -14,13 +14,13 @@ interface Data {
     dec?: number,
 }
 
-const format_values = (values: number[], times: Date[], sd: Scoby, units?: string): Data[] => {
+const format_values = (values: number[], times: Date[], sd: Scoby, units: string, chartType: string): Data[] => {
     let data: Data[] = []
     for (let idx = 0; idx < times.length; idx++) {
         const nm = sd.name ? sd.name.replaceAll(/[\W+]+/g, '_') : "unlabled_tgt"
         const d: Data = {
             time: times[idx], value: values[idx], units: units,
-            type: 'trajectory',
+            type: chartType,
             tgt: nm,
             ra: sd.ra_deg,
             dec: sd.dec_deg
@@ -31,30 +31,16 @@ const format_values = (values: number[], times: Date[], sd: Scoby, units?: strin
     return data
 }
 
-const check_calc = (nadir: Date, offset: number = 600) => {
-    console.log('nadir', nadir)
-    console.log('juld', util.date_to_juld(nadir, offset))
-    console.log('gst', util.get_gmt(nadir))
-    console.log('lst', util.get_gmt(nadir) - util.KECK_LONG)
-    let [ra, dec] = ["17:31:16", "+33:27:43"] as any[]
-    ra = util.ra_dec_to_deg(ra, false)
-    dec = util.ra_dec_to_deg(dec, true)
-    console.log('ra', ra)
-    console.log('dec', dec)
-}
-
-const make_data = (scoby_deg: Scoby[], chartType: string, date: Date, lngLatEl: LngLatEl) => {
+const make_data = (scoby_deg: Scoby[], units: string, chartType: string, date: Date, lngLatEl: LngLatEl ) => {
 
     const nadir = util.get_nadir(lngLatEl, date)
-    // check_calc(nadir)
     const times = util.get_times(nadir, 105)
     let myData: Data[][] = []
     let mergedData: Data[] = []
 
     scoby_deg.forEach((sd: Scoby) => {
-        // const azAlt = util.ra_dec_to_az_alt(target.ra_deg as number, target.dec_deg as number, nadir, lngLatEl)
         const values = get_chart_data(sd, times, chartType, lngLatEl)
-        const data = format_values(values, times, sd, 'degrees')
+        const data = format_values(values, times, sd, units, chartType)
         mergedData = [...mergedData, ...data]
         myData.push(data)
 
@@ -260,14 +246,20 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
     date: Date,
     lngLatEl: LngLatEl
 ) => {
-    const myData = make_data(scoby_deg, chartType, date, lngLatEl)
+    const height = outerHeight - marginTop - marginBottom
+    const width = outerWidth - marginRight - marginLeft
+
+    if (chartType==='altitude') var units = 'degrees'
+    else if (chartType==='air mass') var units = ''
+    else if (chartType==='parallactic angle') var units = 'degrees'
+    else if (chartType==='lunar angle') var units = 'degrees'
+    else units = ''
+
+    const myData = make_data(scoby_deg, units, chartType, date, lngLatEl)
     console.log('myData', myData)
     if (myData.length <= 0) return
     const startDate = myData[0][0].time
     const endDate = myData[0][myData[0].length - 1].time
-
-    const height = outerHeight - marginTop - marginBottom
-    const width = outerWidth - marginRight - marginLeft
 
     const suncalc = SunCalc.getTimes(startDate, lngLatEl.lng, lngLatEl.lat)
 
@@ -280,6 +272,7 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
             [height, marginTop]
         )
         var valueTxt = "Alt [deg]"
+        var units = 'degrees'
     }
     else if (chartType === 'air mass') {
         var yScale = d3.scaleLinear([0, 5],

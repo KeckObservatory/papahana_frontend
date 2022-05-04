@@ -66,33 +66,33 @@ const CreateDiv = (props: CreateDivProps) => {
     )
 }
 
-const DragDiv = (obCell: OBCell) => {
+const DragDiv = (row: Scoby) => {
 
     return (
         <div>
             <p>
-                OB name: {obCell.name}
+                OB name: {row.name}
             </p>
             <p>
-                Type: {obCell.type}
+                Type: {row.ob_type}
             </p>
-            {obCell.ra && <p> Ra: {obCell.ra} Dec: {obCell.dec} </p>}
+            {row.ra && <p> Ra: {row.ra} Dec: {row.dec} </p>}
         </div>
     )
 }
 
-const create_draggable = (obCell: OBCell, idx: number) => {
+const create_draggable = (row : Scoby, idx: number) => {
     return (
         <Draggable
-            key={obCell.id}
-            draggableId={obCell.id}
+            key={row.ob_id}
+            draggableId={row.ob_id as string}
             index={idx}
         >
             {(provided, snapshot) => CreateDiv(
                 {
                     provided: provided,
                     snapshot: snapshot,
-                    formChild: DragDiv(obCell)
+                    formChild: DragDiv(row)
 
                 })
             }
@@ -146,7 +146,7 @@ const SelectedQueue = (props: Props) => {
         props.setSelObs(newObs)
     }
 
-    const create_droppable = (obs: any, key: string, tooltip: string, title: string) => {
+    const create_droppable = (rows: Scoby[], key: string, tooltip: string, title: string) => {
         return (
             <Paper className={classes.paper} elevation={3}>
                 <Tooltip title={tooltip}>
@@ -162,9 +162,9 @@ const SelectedQueue = (props: Props) => {
                                 ref={provided.innerRef}
                                 {...provided.droppableProps}
                             >
-                                {obs !== undefined &&
-                                    obs.map((obCell: OBCell, idx: number) => {
-                                        return (create_draggable(obCell, idx))
+                                {rows !== undefined &&
+                                    rows.map((row: Scoby, idx: number) => {
+                                        return (create_draggable(row, idx))
                                     })
                                 }
                                 {provided.placeholder}
