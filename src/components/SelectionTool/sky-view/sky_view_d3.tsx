@@ -295,6 +295,13 @@ export const skyview = (svg: any, chartType: string, outerHeight: number, outerW
 
         var valueTxt = "Parallactic Angle [deg]"
     }
+    else if (chartType === 'lunar angle') {
+        var yScale = d3.scaleLinear([-90, 90],
+            [height, marginTop]
+        )
+
+        var valueTxt = "Lunar Angle [deg]"
+    }
     else {
         const values = myData[0].map((x: Data) => {
             return x.value

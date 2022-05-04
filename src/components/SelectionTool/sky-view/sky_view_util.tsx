@@ -174,7 +174,7 @@ const angular_separation = (lon1: number, lat1: number, lon2: number, lat2: numb
     const numerator2 = clat1 * slat2 - slat1 * clat2 * cdlon
     const denominator = slat1 * slat2 + clat1 * clat2 * cdlon
     const numerator = Math.sqrt(numerator1 * numerator1 + numerator2 * numerator2)
-    return Math.atan(numerator / denominator) % Math.PI / 2
+    return Math.atan(numerator / denominator) * 180 / Math.PI
 }
 
 export const get_lunar_angle = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl): number[] => {
