@@ -140,7 +140,8 @@ const air_mass = (alt: number) => { // Homogeneous spherical atmosphsere with el
 
 export const get_air_mass = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600) => {
     const azAlt = get_target_traj(ra, dec, times, lngLatEl, offset)
-    const airmass = azAlt.map((a: [number, number]) => { return air_mass(a[1]) })
+    const airmass = azAlt.map((a: [number, number]) => { return 1/cosd(a[1]) })
+    // const airmass = azAlt.map((a: [number, number]) => { return air_mass(a[1]) })
     return airmass
 }
 
