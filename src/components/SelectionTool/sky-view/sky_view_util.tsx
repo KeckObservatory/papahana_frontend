@@ -130,21 +130,22 @@ const air_mass = (alt: number) => { // Homogeneous spherical atmosphsere with el
     const a2 = ATMOSPHERE_HEIGHT * ATMOSPHERE_HEIGHT
     const r = RADIUS_EARTH + KECK_ELEVATION
     const g = ATMOSPHERE_HEIGHT - KECK_ELEVATION
-    const firstTerm = (r * r) * cosd(alt) * cosd(alt) / ( a2 )
+    const zenith = 90 - alt
+    const firstTerm = (r * r) * cosd(zenith) * cosd(zenith) / ( a2 )
     const secondTerm = 2 * RADIUS_EARTH * (g) / a2
     const thirdTerm = y * y
-    const forthTerm = (y + z) * cosd(alt)
+    const forthTerm = (y + z) * cosd(zenith)
     const X = Math.sqrt(firstTerm + secondTerm - thirdTerm + 1) - forthTerm
     return X
 }
 
 export const get_air_mass = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600) => {
     const azAlt = get_target_traj(ra, dec, times, lngLatEl, offset)
-    const airmass = azAlt.map((a: [number, number]) => { 
-        const zenith = 90 - a[1]
-        return 1/cosd(zenith) 
-    })
-    // const airmass = azAlt.map((a: [number, number]) => { return air_mass(a[1]) })
+    // const airmass = azAlt.map((a: [number, number]) => { 
+    //     const zenith = 90 - a[1]
+    //     return 1/cosd(zenith) 
+    // })
+    const airmass = azAlt.map((a: [number, number]) => { return air_mass(a[1]) })
     return airmass
 }
 
