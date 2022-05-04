@@ -11,6 +11,7 @@ import SkyView from './sky-view/sky_view'
 import DropDown from '../drop_down'
 import AvailableOBTable from './available_ob_table'
 import SelectedQueue from './selected_queue'
+import FormControl from '@mui/material/FormControl'
 
 const useStyles = makeStyles((theme: any) => ({
     grid: {
@@ -71,7 +72,7 @@ const container_obs_to_cells = (container_obs: any) => {
                 type: 'ob',
                 id: JSON.stringify(uid),
                 ra: ob.target?.parameters.target_coord_ra,
-                dec: ob.target?.parameters.target_coord_dec 
+                dec: ob.target?.parameters.target_coord_dec
             }
             const tgt = ob.target
             if (tgt) obCell['target'] = tgt
@@ -101,7 +102,7 @@ export const SelectionToolView = (props: Props) => {
         //     const cells = container_obs_to_cells(container_obs)
         //     setAvlObs(cells)
         // })
-        make_semid_scoby_table_and_containers(sem_id).then( (scoby_cont: [Scoby[], DetailedContainer[]] ) => {
+        make_semid_scoby_table_and_containers(sem_id).then((scoby_cont: [Scoby[], DetailedContainer[]]) => {
             const [scoby, cont] = scoby_cont
             setAvlObs(scoby)
         })
@@ -117,7 +118,7 @@ export const SelectionToolView = (props: Props) => {
         //     setSelObs([])
         // })
 
-        make_semid_scoby_table_and_containers(sem_id).then( (scoby_cont: [Scoby[], DetailedContainer[]] ) => {
+        make_semid_scoby_table_and_containers(sem_id).then((scoby_cont: [Scoby[], DetailedContainer[]]) => {
             const [scoby, cont] = scoby_cont
             setAvlObs(scoby)
             setSelObs([])
@@ -144,23 +145,18 @@ export const SelectionToolView = (props: Props) => {
     const classes = useStyles()
     return (
         <div>
-            <DropDown
-                placeholder={'semester id'}
-                arr={semIdList}
-                value={sem_id}
-                handleChange={handleSemIdSubmit}
-                label={'Semester ID'}
-            />
+            <FormControl sx={{ m: 2, width: 150 }}>
+                <DropDown
+                    placeholder={'semester id'}
+                    arr={semIdList}
+                    value={sem_id}
+                    handleChange={handleSemIdSubmit}
+                    label={'Semester ID'}
+                    highlightOnEmpty={true}
+                />
+            </FormControl>
             <Grid container spacing={1} className={classes.grid}>
                 <Grid item xs={6}>
-                    {/* <OBQueue 
-                        sem_id={sem_id}
-                        selObs={selObs}
-                        setSelObs={setSelObs}
-                        avlObs={avlObs}
-                        setAvlObs={setAvlObs}
-                        /> */}
-                    {/* <EnhancedTable rows={avlObs} /> */}
                     <AvailableOBTable rows={avlObs} setSelObs={setSelObs} />
                 </Grid>
                 <Grid item xs={6}>

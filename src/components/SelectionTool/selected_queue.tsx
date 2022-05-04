@@ -1,4 +1,4 @@
-
+import React from 'react';
 import Paper from '@mui/material/Paper'
 import Tooltip from '@mui/material/Tooltip'
 import { useEffect } from 'react'
@@ -81,7 +81,7 @@ const DragDiv = (row: Scoby) => {
     )
 }
 
-const create_draggable = (row : Scoby, idx: number) => {
+const create_draggable = (row: Scoby, idx: number) => {
     return (
         <Draggable
             key={row.ob_id}
@@ -100,23 +100,6 @@ const create_draggable = (row : Scoby, idx: number) => {
     )
 }
 
-/**
- * Moves an item from one list to another list.
- */
-const move = (source: any, destination: any, droppableSource: any, droppableDestination: any) => {
-    const sourceClone = Array.from(source);
-    const destClone = Array.from(destination);
-    const [removed] = sourceClone.splice(droppableSource.index, 1);
-
-    destClone.splice(droppableDestination.index, 0, removed);
-
-    const result: any = {};
-    result[droppableSource.droppableId] = sourceClone;
-    result[droppableDestination.droppableId] = destClone;
-
-    return result;
-};
-
 const reorder = (list: Array<any>, startIndex: number, endIndex: number) => {
     const result = Array.from(list);
     const [removed] = result.splice(startIndex, 1);
@@ -124,11 +107,27 @@ const reorder = (list: Array<any>, startIndex: number, endIndex: number) => {
     return result;
 };
 
+interface NookProps {
+    row?: Scoby
+}
+
+const SubmittedNook = (props: NookProps) => {
+    return (
+        <Paper elevation={3}>
+            <Tooltip title={'Submitted OB'}>
+                <h3>Submitted OB</h3>
+            </Tooltip>
+            { props.row && DragDiv(props.row) }
+        </Paper >
+    )
+}
+
 
 const SelectedQueue = (props: Props) => {
 
     const classes = useStyles();
     const selTitle = "Selected OBs"
+    const submitTitle = "Submited OB"
     const selTooltip = "Observation Blocks in queue"
 
     useEffect(() => {
@@ -136,6 +135,8 @@ const SelectedQueue = (props: Props) => {
 
     useEffect(() => {
     }, [])
+
+    const [submittedOB, changeSubmittedOB] = React.useState({} as Scoby)
 
     const onDragEnd = (result: any) => {
         const { source, destination } = result;
@@ -146,13 +147,20 @@ const SelectedQueue = (props: Props) => {
         props.setSelObs(newObs)
     }
 
-    const create_droppable = (rows: Scoby[], key: string, tooltip: string, title: string) => {
+    const onSubmitOB = (result: any) => {
+        changeSubmittedOB(props.selObs[0])
+    }
+
+
+
+
+    const create_droppable = (rows: Scoby[], key: string, tooltip: string, title: string, onSubmitOB: Function) => {
         return (
             <Paper className={classes.paper} elevation={3}>
                 <Tooltip title={tooltip}>
                     <h3>{title}</h3>
                 </Tooltip>
-                <OBSubmit/>
+                <OBSubmit onSubmitOB={ onSubmitOB } />
                 <Droppable key={key} droppableId={key}>
                     {(provided: any, snapshot: any) => {
                         return (
@@ -175,9 +183,14 @@ const SelectedQueue = (props: Props) => {
         )
     }
     return (
-        <DragDropContext onDragEnd={onDragEnd}>
-            {create_droppable(props.selObs, 'selObs', selTooltip, selTitle)}
-        </DragDropContext>
+        <React.Fragment>
+            <DragDropContext onDragEnd={onDragEnd}>
+                <SubmittedNook row={submittedOB} />
+            </DragDropContext>
+            <DragDropContext onDragEnd={onDragEnd}>
+                {create_droppable(props.selObs, 'selObs', selTooltip, selTitle, onSubmitOB)}
+            </DragDropContext>
+        </React.Fragment>
     )
 }
 

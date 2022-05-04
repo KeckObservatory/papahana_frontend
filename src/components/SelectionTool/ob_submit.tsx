@@ -6,7 +6,11 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-export default function OBSubmit() {
+interface Props {
+  onSubmitOB: Function
+}
+
+export default function OBSubmit(props: Props) {
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -16,6 +20,11 @@ export default function OBSubmit() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleYes = () => {
+    props.onSubmitOB()
+    handleClose()
+  }
 
   return (
     <div>
@@ -38,7 +47,7 @@ export default function OBSubmit() {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>No</Button>
-          <Button onClick={handleClose} autoFocus>
+          <Button onClick={handleYes} autoFocus>
             Yes 
           </Button>
         </DialogActions>

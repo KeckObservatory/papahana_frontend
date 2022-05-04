@@ -60,12 +60,23 @@ const AvailableOBTable = (props: Props) => {
         ),
         selectableRows: 'multiple'
     }
-    console.log('rows', props.rows)
+
+    const columns = [
+        { name: 'ob_id', label: 'OB ID', options: { display: false } },
+        { name: 'name', label: 'OB Name' },
+        { name: 'container_name', label: 'Container Name' },
+        { name: 'ob_type', label: 'OB Type' },
+        { name: 'version', label: 'Version', options: { display: false } },
+        { name: 'comment', label: 'Comment', options: { display: false } },
+        { name: 'ra', label: 'RA', options: { display: true} },
+        { name: 'dec', Label: 'Dec', options: { display: true} },
+        { name: 'sem_id', Label: 'Semid', options: { display: false } },
+    ]
 
     return (
         <MUIDataTable
             data={props.rows}
-            columns={['id', 'name', 'type', 'ra', 'dec', 'cid']}
+            columns={columns}
             options={options}
             title={'Available OBS'} />
     )
