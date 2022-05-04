@@ -113,7 +113,7 @@ interface NookProps {
 
 const SubmittedNook = (props: NookProps) => {
     return (
-        <Paper elevation={3}>
+        <Paper elevation={3} sx={{margin: '4px', minWidth: '80px', padding: '9px'}}>
             <Tooltip title={'Submitted OB'}>
                 <h3>Submitted OB</h3>
             </Tooltip>

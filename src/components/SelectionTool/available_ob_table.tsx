@@ -1,5 +1,5 @@
 import MUIDataTable, { MUIDataTableOptions } from "mui-datatables"
-import { OBCell, Scoby } from "../../typings/papahana"
+import { Scoby } from "../../typings/papahana"
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton';
 import FilterIcon from '@mui/icons-material/Filter';
@@ -31,17 +31,14 @@ const CustomToolbarSelect = (props: CTProps) => {
         const selectedIdxs = Object.keys(props.selectedRows.lookup)
         //@ts-ignore
         const selObs = selectedIdxs.map(idx => props.rows[idx])
-        console.log("click! current selected rows", props.selectedRows);
         props.setSelObs(selObs)
     };
     return (
-        <div className={"custom-toolbar-select"}>
-            <Tooltip title={"icon 2"}>
-                <IconButton onClick={handleClick}>
-                    <FilterIcon />
-                </IconButton>
-            </Tooltip>
-        </div>
+        <Tooltip title={"Chart Selected OBs"}>
+            <IconButton onClick={handleClick}>
+                <FilterIcon />
+            </IconButton>
+        </Tooltip>
     );
 }
 
@@ -68,8 +65,8 @@ const AvailableOBTable = (props: Props) => {
         { name: 'ob_type', label: 'OB Type' },
         { name: 'version', label: 'Version', options: { display: false } },
         { name: 'comment', label: 'Comment', options: { display: false } },
-        { name: 'ra', label: 'RA', options: { display: true} },
-        { name: 'dec', Label: 'Dec', options: { display: true} },
+        { name: 'ra', label: 'RA', options: { display: true } },
+        { name: 'dec', Label: 'Dec', options: { display: true } },
         { name: 'sem_id', Label: 'Semid', options: { display: false } },
     ]
 
