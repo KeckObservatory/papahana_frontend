@@ -50,7 +50,7 @@
   "scripts": {
     "start": "REACT_APP_ENVIRONMENT=demobuild PORT=50001 react-scripts start",
     "build": "REACT_APP_ENVIRONMENT=production react-scripts build",
-    "demobuild": "REACT_APP_ENVIRONMENT=demobuild react-scripts build",
+    "devbuild": "REACT_APP_ENVIRONMENT=development react-scripts build",
     "jtest": "jest",
     "test": "react-scripts test --setupFiles ./src/setupTests.ts",
     "test:watch": "jest --watch",

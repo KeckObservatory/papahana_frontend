@@ -18,11 +18,16 @@ import {
 // Define your api url from any source.
 // Pulling from your .env file when on the server or from localhost when locally
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
-console.log(`is PRODUCTION? set to ${IS_PRODUCTION}`)
-var PRODUCTION_URL = 'https://www3build.keck.hawaii.edu/api/ddoi/'
-// var PRODUCTION_URL = 'http://vm-odbbuild.keck.hawaii.edu:50001/'
+const IS_DEVELOPMENT: boolean = process.env.REACT_APP_ENVIRONMENT === 'development'
+const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT
+
+console.log(`is BUILD ? set to ${IS_BUILD}`)
+console.log(`is DEVELOPMENT ? set to ${IS_DEVELOPMENT}`)
+var DEVELOPMENT_URL = 'https://www3build.keck.hawaii.edu/api/ddoi/'
+var PRODUCTION_URL = 'https://www3.keck.hawaii.edu/api/ddoi/'
 var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
-var BASE_URL = IS_PRODUCTION ? PRODUCTION_URL : DEV_URL // sets for production vs dev
+var BASE_URL = IS_BUILD ? PRODUCTION_URL : DEV_URL // sets for production vs test 
+BASE_URL = IS_DEVELOPMENT ? DEVELOPMENT_URL : BASE_URL
 var OB_URL = BASE_URL + 'obsBlocks'
 var CONTAINER_URL = BASE_URL + 'containers'
 var SEMESTERS_URL = BASE_URL + 'semesterIds'
@@ -186,21 +191,21 @@ const get_container_ob_target = (semid: string, container_id?: string) => {
 }
 
 export const get_container_ob_data = {
-    get_container_ob_metadata: IS_PRODUCTION ? get_container_ob_metadata : mock_get_container_ob_metadata,
-    get_container_ob_target: IS_PRODUCTION ? get_container_ob_target: mock_get_container_ob_target
+    get_container_ob_metadata: IS_BUILD ? get_container_ob_metadata : mock_get_container_ob_metadata,
+    get_container_ob_target: IS_BUILD ? get_container_ob_target: mock_get_container_ob_target
 }
 
 
 export const get_select_funcs = {
-    get_template: IS_PRODUCTION ? get_template : mock_get_template,
-    get_semesters: IS_PRODUCTION ? get_semesters : mock_get_semesters,
-    get_containers: IS_PRODUCTION ? get_containers : mock_get_containers,
-    get_observation_blocks_from_container: IS_PRODUCTION ? get_observation_blocks_from_container : mock_get_observation_block_from_container,
-    get_instrument_package: IS_PRODUCTION ? get_instrument_package : mock_get_instrument_package
+    get_template: IS_BUILD ? get_template : mock_get_template,
+    get_semesters: IS_BUILD ? get_semesters : mock_get_semesters,
+    get_containers: IS_BUILD ? get_containers : mock_get_containers,
+    get_observation_blocks_from_container: IS_BUILD ? get_observation_blocks_from_container : mock_get_observation_block_from_container,
+    get_instrument_package: IS_BUILD ? get_instrument_package : mock_get_instrument_package
 }
 
 export const ob_api_funcs = {
-    get: IS_PRODUCTION ? ob_get : mock_ob_get,
+    get: IS_BUILD ? ob_get : mock_ob_get,
     post: ob_post,
     put: ob_put,
     remove: ob_remove,
@@ -214,5 +219,5 @@ export const container_api_funcs = {
 }
 
 export const semid_api_funcs = {
-    get_semester_obs: IS_PRODUCTION ? get_semester_obs : mock_get_semester_obs
+    get_semester_obs: IS_BUILD ? get_semester_obs : mock_get_semester_obs
 }
