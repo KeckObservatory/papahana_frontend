@@ -155,8 +155,7 @@ export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: 
     const denominator: number = tand(lngLatEl.lat)
         * cosd(dec)
         - sind(dec) * cosd(hourAngle)
-    const tanq = numerator / denominator
-    return Math.atan(tanq) * 180 / Math.PI 
+    return Math.atan2(numerator, denominator) * 180 / Math.PI 
 }
 
 export const get_parallactic_angle = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600): number[] => {
