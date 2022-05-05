@@ -19,7 +19,7 @@ import {
 // Pulling from your .env file when on the server or from localhost when locally
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 console.log(`is PRODUCTION? set to ${IS_PRODUCTION}`)
-var PRODUCTION_URL = 'https://www3.keck.hawaii.edu/api/ddoi/'
+var PRODUCTION_URL = 'https://www3build.keck.hawaii.edu/api/ddoi/'
 // var PRODUCTION_URL = 'http://vm-odbbuild.keck.hawaii.edu:50001/'
 var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
 var BASE_URL = IS_PRODUCTION ? PRODUCTION_URL : DEV_URL // sets for production vs dev
