@@ -46,10 +46,10 @@ export function TopBar(props: Props) {
 
   useEffect(() => {
 
-    get_userinfo().then( (response: any) => {
-      const uname = response.Title + ' ' + response.FirstName + ' ' + response.LastName
-      setName(uname)
-    })
+    // get_userinfo().then( (response: any) => {
+    //   const uname = response.Title + ' ' + response.FirstName + ' ' + response.LastName
+    //   setName(uname)
+    // })
   }, [])
 
   const handleMenuClick = () => {
