@@ -16,6 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "4px 0 0",
     borderTop: "1px solid #ddd",
     position: "absolute",
+    height: "100%",
     top: 0,
     right: 0,
     bottom: 0,
