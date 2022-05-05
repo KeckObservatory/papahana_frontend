@@ -23,18 +23,20 @@ const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT
 
 console.log(`is BUILD ? set to ${IS_BUILD}`)
 console.log(`is DEVELOPMENT ? set to ${IS_DEVELOPMENT}`)
-var DEVELOPMENT_URL = 'https://www3build.keck.hawaii.edu/api/ddoi/'
-var PRODUCTION_URL = 'https://www3.keck.hawaii.edu/api/ddoi/'
-var DEV_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
-var BASE_URL = IS_BUILD ? PRODUCTION_URL : DEV_URL // sets for production vs test 
+var DEVELOPMENT_URL = 'https://www3build.keck.hawaii.edu'
+var PRODUCTION_URL = 'https://www3.keck.hawaii.edu'
+var TEST_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
+var BASE_URL = IS_BUILD ? PRODUCTION_URL : TEST_URL // sets for production vs test 
+
 BASE_URL = IS_DEVELOPMENT ? DEVELOPMENT_URL : BASE_URL
-var OB_URL = BASE_URL + 'obsBlocks'
-var CONTAINER_URL = BASE_URL + 'containers'
-var SEMESTERS_URL = BASE_URL + 'semesterIds'
-var INSTRUMENT_URL = BASE_URL + 'instrumentPackages'
-var TEMPLATE_URL = BASE_URL + '/templates'
+var API_URL = BASE_URL + '/api/ddoi'
+
+var OB_URL = API_URL + 'obsBlocks'
+var CONTAINER_URL = API_URL + 'containers'
+var SEMESTERS_URL = API_URL + 'semesterIds'
+var INSTRUMENT_URL = API_URL + 'instrumentPackages'
 console.log('backend url set to')
-console.log(BASE_URL)
+console.log(API_URL)
 
 const axiosInstance = axios.create({
     withCredentials: true,
@@ -46,8 +48,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.response.use(intResponse, intError);
 
 export const get_userinfo = (): Promise<any> => {
-    const LOCAL_HOST = 'https://www3.keck.hawaii.edu';
-    const url = LOCAL_HOST + '/userinfo';
+    const url = BASE_URL + '/userinfo';
     return axiosInstance.get(url)
     .then( (response: AxiosResponse<any>) => {
         const ip = response.headers["x-my-real-ip"]
