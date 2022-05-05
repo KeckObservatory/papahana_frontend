@@ -49,11 +49,11 @@ const TabPanel = (props: TabPanelProps) => {
             aria-labelledby={`simple-tab-${index}`}
             {...other}
         >
-        {value === index && (
-        <Box className={classes.panel} p={3}>
-          {children}
-        </Box>
-      )}
+            {value === index && (
+                <Box className={classes.panel} p={3}>
+                    {children}
+                </Box>
+            )}
         </div>
     );
 }
@@ -70,31 +70,31 @@ interface ModuleMenuProps {
 
 export const ModuleMenu = (props: ModuleMenuProps) => {
     const classes = useStyles();
-    const [value, setValue] = React.useState(0);
+    const [tabIdx, setTabIdx] = React.useState(0);
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
+        setTabIdx(newValue);
     };
 
     return (
         <div className={classes.moduleMain}>
             <AppBar position="static" className={classes.tabs}>
                 <Tabs
-                    value={value}
+                    value={tabIdx}
                     onChange={handleChange}
                     indicatorColor="secondary"
                     textColor="inherit"
                     variant="fullWidth"
-                    aria-label="full width tabs example"
+                    aria-label="full width tabs"
                 >
                     <Tab label="ODT" {...a11yProps(0)} />
                     <Tab label="Planning Tool (Work in progress)" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
-            <TabPanel value={value} index={0}>
-                <ODTView/>
+            <TabPanel value={tabIdx} index={0}>
+                <ODTView />
             </TabPanel>
-            <TabPanel value={value} index={1}>
+            <TabPanel value={tabIdx} index={1}>
                 <SelectionToolView />
             </TabPanel>
         </ div >

@@ -150,7 +150,7 @@ export const get_air_mass = (ra: number, dec: number, times: Date[], lngLatEl: L
 }
 
 export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: LngLatEl, offset: number = 600) => {
-    const hourAngle = (get_gmt(date, offset) - ra) % 360
+    const hourAngle = (get_gmt(date, offset) + lngLatEl.lng - ra) % 360
     const numerator = sind(hourAngle)
     const denominator: number = tand(lngLatEl.lat)
         * cosd(dec)

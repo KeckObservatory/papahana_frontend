@@ -3,6 +3,9 @@ import { Scoby } from "../../typings/papahana"
 import Tooltip from '@mui/material/Tooltip'
 import IconButton from '@mui/material/IconButton';
 import FilterIcon from '@mui/icons-material/Filter';
+import Button from '@mui/material/Button';
+import Radio from "@mui/material/Radio";
+import Checkbox from "@mui/material/Checkbox";
 
 interface Props {
     rows: Scoby[],
@@ -35,12 +38,24 @@ const CustomToolbarSelect = (props: CTProps) => {
     };
     return (
         <Tooltip title={"Chart Selected OBs"}>
-            <IconButton onClick={handleClick}>
+            {/* <IconButton onClick={handleClick}>
                 <FilterIcon />
-            </IconButton>
+            </IconButton> */}
+            <Button variant="outlined" onClick={handleClick}>Select OBs</Button>
         </Tooltip>
     );
 }
+
+const CustomCheckbox = (props: any) => {
+    let newProps = Object.assign({}, props);
+    newProps.color = props['data-description'] === 'row-select' ? 'secondary' : 'primary';
+
+    return (
+        <Tooltip title='select row'>
+            <Checkbox {...newProps} />
+        </Tooltip>
+    );
+};
 
 const AvailableOBTable = (props: Props) => {
 
@@ -48,6 +63,7 @@ const AvailableOBTable = (props: Props) => {
         filterType: 'dropdown',
         onRowsDelete: () => false,
         selectableRowsHeader: false,
+        selectableRowsHideCheckboxes: false,
         customToolbarSelect: selectedRows => (
             <CustomToolbarSelect
                 selectedRows={selectedRows}
@@ -75,7 +91,9 @@ const AvailableOBTable = (props: Props) => {
             data={props.rows}
             columns={columns}
             options={options}
-            title={'Available OBS'} />
+            title={'Available OBS'}
+            components={{ Checkbox: CustomCheckbox }}
+        />
     )
 }
 

@@ -54,7 +54,7 @@ interface State {
 const defaultState: State = {
     avlObs: [],
     selObs: [],
-    sem_id: '2017A_U033',
+    sem_id: '',
     semIdList: [],
     chartType: 'altitude'
 }
@@ -98,10 +98,6 @@ export const SelectionToolView = (props: Props) => {
 
 
     useEffect(() => {
-        // get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
-        //     const cells = container_obs_to_cells(container_obs)
-        //     setAvlObs(cells)
-        // })
         make_semid_scoby_table_and_containers(sem_id).then((scoby_cont: [Scoby[], DetailedContainer[]]) => {
             const [scoby, cont] = scoby_cont
             setAvlObs(scoby)
@@ -110,14 +106,6 @@ export const SelectionToolView = (props: Props) => {
     }, [])
 
     useEffect(() => {
-        console.log('sem_id changed')
-        // get_obs_from_semester(sem_id).then((container_obs: ContainerObs) => {
-        //     const cells = container_obs_to_cells(container_obs)
-        //     console.log(cells)
-        //     setAvlObs(cells)
-        //     setSelObs([])
-        // })
-
         make_semid_scoby_table_and_containers(sem_id).then((scoby_cont: [Scoby[], DetailedContainer[]]) => {
             const [scoby, cont] = scoby_cont
             setAvlObs(scoby)
@@ -126,7 +114,6 @@ export const SelectionToolView = (props: Props) => {
     }, [sem_id])
 
     useEffect(() => {
-        console.log('planning tool: changed')
         get_sem_id_list()
             .then((semesters: SemesterIds) => {
                 setSemIdList(() => [...semesters.associations])
@@ -134,7 +121,6 @@ export const SelectionToolView = (props: Props) => {
     }, [])
 
     const handleSemIdSubmit = (new_sem_id: string) => {
-        // console.log('submit button pressed')
         setSemId(new_sem_id)
     }
 
@@ -144,7 +130,7 @@ export const SelectionToolView = (props: Props) => {
 
     const classes = useStyles()
     return (
-        <div>
+        <React.Fragment>
             <FormControl sx={{ m: 2, width: 150 }}>
                 <DropDown
                     placeholder={'semester id'}
@@ -178,6 +164,6 @@ export const SelectionToolView = (props: Props) => {
                     </Paper >
                 </Grid>
             </Grid>
-        </div>
+        </React.Fragment>
     )
 }
