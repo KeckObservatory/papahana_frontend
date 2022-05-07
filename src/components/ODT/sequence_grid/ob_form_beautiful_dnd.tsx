@@ -28,16 +28,6 @@ const OB_NAMES: OBSeqNames[] = [
     'acquisition',
 ]
 
-// const OB_COMPONENT_ORDER: OBSeqNames[] = [
-//     ['target', 0],
-//     ['metadata', 1],
-//     ['observations', 2],
-//     ['common_parameters', 3],
-//     ['time_constraints', 4],
-//     ['status', 5],
-//     ['acquisition', 6],
-// ]
-
 const OB_COMPONENT_ORDER = {
  'target': 0,
  'common_parameters': 1,
@@ -197,7 +187,7 @@ const updateOBTimeConstraint = (ob: ObservationBlock, formData: OBSequence): Obs
 
 const updateOBCommonParameters = (ob: ObservationBlock, formData: OBSequence, subFormName: string) => {
     let newOB = { ...ob }
-    newOB['common_parameters'][subFormName] = formData
+    //newOB['common_parameters'][subFormName] = formData
     console.log('new common parameters for', subFormName, formData)
     return newOB
 }
@@ -257,7 +247,6 @@ export const OBBeautifulDnD = (props: Props) => {
             }
             else if (subFormName) { //common parameters
                 newOb = updateOBCommonParameters(newOb, formData, subFormName)
-
             }
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
