@@ -185,14 +185,20 @@ interface FormTimeConstraint {
 }
 
 const updateOBTimeConstraint = (ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
-    let newOb = { ...ob }
+    let newOB = { ...ob }
     let time_constraints: TimeConstraint[] = []
     formData['time_constraints'].forEach((timeConstraint: FormTimeConstraint) => {
         const ts = [timeConstraint.start_datetime, timeConstraint.end_datetime]
         time_constraints.push(ts as [string, string])
     })
-    newOb['time_constraints'] = [time_constraints]
-    return newOb
+    newOB['time_constraints'] = [time_constraints]
+    return newOB
+}
+
+const updateOBCommonParameters = (ob: ObservationBlock, formData: OBSequence, subFormName: string) => {
+    let newOB = { ...ob }
+    newOB['common_parameters'][subFormName] = formData
+    return newOB
 }
 
 const updateOBComponent = (seqName: keyof ObservationBlock, ob: ObservationBlock, formData: { [key: string]: any }): ObservationBlock => {
@@ -238,7 +244,7 @@ export const OBBeautifulDnD = (props: Props) => {
         setState(() => obItems)
     }, [props.triggerRender])
 
-    const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence) => {
+    const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence, subFormName?: string) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...props.ob }
             //handle observations
@@ -247,6 +253,10 @@ export const OBBeautifulDnD = (props: Props) => {
             }
             else if (seqName.includes('time_constraints')) {
                 newOb = updateOBTimeConstraint(newOb, formData)
+            }
+            else if (subFormName) { //common parameters
+                newOb = updateOBCommonParameters(newOb, formData, subFormName)
+
             }
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
