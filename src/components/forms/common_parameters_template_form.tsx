@@ -85,7 +85,7 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
   const handleChange = (evt: ISubmitEvent<CommonParameters>, formName: keyof CommonParameters): void => {
     let newFormData = { ...props.obComponent }
     newFormData[formName] = evt.formData
-    console.log('new subform data', formName, evt.formData)
+    // console.log('new subform data', formName, evt.formData)
     props.updateOB(props.id, newFormData, formName)
   }
 

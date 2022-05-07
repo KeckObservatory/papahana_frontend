@@ -198,6 +198,7 @@ const updateOBTimeConstraint = (ob: ObservationBlock, formData: OBSequence): Obs
 const updateOBCommonParameters = (ob: ObservationBlock, formData: OBSequence, subFormName: string) => {
     let newOB = { ...ob }
     newOB['common_parameters'][subFormName] = formData
+    console.log('new common parameters for', subFormName, formData)
     return newOB
 }
 
