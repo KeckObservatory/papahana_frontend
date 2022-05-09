@@ -32,7 +32,8 @@ export default function ODTView(props: Props) {
   const instrument: Instrument = 'KCWI'
   const classes = useStyles();
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
-  const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}')
+  // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
+  const initOB = {}
   const [ob, setOB] = useState(initOB as ObservationBlock)
   const [triggerRender, setTriggerRender] = useState(0)
 
