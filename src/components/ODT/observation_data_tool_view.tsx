@@ -94,7 +94,8 @@ export default function ODTView(props: Props) {
           },
         }}
       >
-        <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
+        {/* <div onMouseDown={e => handleMouseDown()} className={classes.dragger} /> */}
+        <div style={{resize: 'horizontal'}} >
         <SideMenu
           ob_id={ob_id}
           setOBID={setOBID}
@@ -104,6 +105,7 @@ export default function ODTView(props: Props) {
           setTriggerRender={setTriggerRender}
           instrument={instrument}
         />
+        </div>
       </Drawer>
       {renderRGL()}
       <Autosave ob={ob} />
