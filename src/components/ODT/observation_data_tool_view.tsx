@@ -16,7 +16,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: "4px 0 0",
     borderTop: "1px solid #ddd",
     position: "absolute",
-    height: "100%",
+    // height: "100%",
+    height: '1000px',
     top: 0,
     right: 0,
     bottom: 0,
@@ -94,8 +95,7 @@ export default function ODTView(props: Props) {
           },
         }}
       >
-        {/* <div onMouseDown={e => handleMouseDown()} className={classes.dragger} /> */}
-        <div style={{resize: 'horizontal'}} >
+        <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
         <SideMenu
           ob_id={ob_id}
           setOBID={setOBID}
@@ -105,7 +105,6 @@ export default function ODTView(props: Props) {
           setTriggerRender={setTriggerRender}
           instrument={instrument}
         />
-        </div>
       </Drawer>
       {renderRGL()}
       <Autosave ob={ob} />
