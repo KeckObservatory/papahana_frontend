@@ -91,7 +91,6 @@ export const SelectionToolView = (props: Props) => {
 
     //setting drawer to always closed
     const drawerOpenContext = useDrawerOpenContext()
-    drawerOpenContext.setDrawerOpen(false)
 
     const [avlObs, setAvlObs] = useState(defaultState.avlObs)
     const [selObs, setSelObs] = useState(defaultState.selObs)
@@ -107,6 +106,8 @@ export const SelectionToolView = (props: Props) => {
             const [scoby, cont] = scoby_cont
             setAvlObs(scoby)
         })
+        console.log('setting drawer to closed')
+        drawerOpenContext.setDrawerOpen(false)
 
     }, [])
 
