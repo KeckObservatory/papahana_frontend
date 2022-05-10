@@ -12,6 +12,7 @@ import DropDown from '../drop_down'
 import AvailableOBTable from './available_ob_table'
 import SelectedQueue from './selected_queue'
 import FormControl from '@mui/material/FormControl'
+import { useDrawerOpenContext } from './../App'
 
 const useStyles = makeStyles((theme: any) => ({
     grid: {
@@ -87,6 +88,10 @@ const container_obs_to_cells = (container_obs: any) => {
 export const SelectionToolView = (props: Props) => {
 
     const chartTypes = ['altitude', 'air mass', 'parallactic angle', 'lunar angle']
+
+    //setting drawer to always closed
+    const drawerOpenContext = useDrawerOpenContext()
+    drawerOpenContext.setDrawerOpen(false)
 
     const [avlObs, setAvlObs] = useState(defaultState.avlObs)
     const [selObs, setSelObs] = useState(defaultState.selObs)
