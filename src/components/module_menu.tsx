@@ -7,6 +7,7 @@ import AppBar from '@mui/material/AppBar';
 import ODTView from './ODT/observation_data_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { SelectionToolView } from './SelectionTool/selection_tool_view';
+import { useDrawerOpenContext } from './App'
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
     moduleMain: {
@@ -72,7 +73,19 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
     const classes = useStyles();
     const [tabIdx, setTabIdx] = React.useState(0);
 
+    //setting drawer to always closed
+    const drawerOpenContext = useDrawerOpenContext()
+
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+
+        if (newValue === 1) {
+            console.log('setting drawer to closed')
+            drawerOpenContext.setDrawerOpen(false)
+        }
+        else {
+            console.log('setting drawer to open')
+            drawerOpenContext.setDrawerOpen(true)
+        }
         setTabIdx(newValue);
     };
 
