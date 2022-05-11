@@ -12,7 +12,7 @@ import {
     mock_get_semester_obs,
     mock_get_container_ob_metadata,
     mock_get_container_ob_target
-    
+
 } from '../mocks/mock_utils';
 
 // Define your api url from any source.
@@ -50,19 +50,19 @@ axiosInstance.interceptors.response.use(intResponse, intError);
 export const get_userinfo = (): Promise<any> => {
     const url = BASE_URL + '/userinfo';
     return axiosInstance.get(url)
-    .then( (response: AxiosResponse<any>) => {
-        const ip = response.headers["x-my-real-ip"]
-        return axios.request({
-            url: url,
-            method: "get",
-            withCredentials: true,
-            headers: {
-                'X-My-Real-Ip': ip,
-            },
+        .then((response: AxiosResponse<any>) => {
+            const ip = response.headers["x-my-real-ip"]
+            return axios.request({
+                url: url,
+                method: "get",
+                withCredentials: true,
+                headers: {
+                    'X-My-Real-Ip': ip,
+                },
+            })
         })
-    })
-    .then(handleResponse)
-    .catch(handleError)
+        .then(handleResponse)
+        .catch(handleError)
 }
 
 const get_semesters = (): Promise<SemesterIds> => {
@@ -91,7 +91,10 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
 
 
 const get_template = (name: string, ip_version: string = '0.1.0', inst: string = 'KCWI'): Promise<{ [key: string]: Template }> => {
-    const url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}&ip_version=${ip_version}`
+    let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}&ip_version=${ip_version}`
+    if (name.includes('target')) {
+        url += '&parameter_order=true'
+    }
     return axiosInstance
         .get(url)
         .then(handleResponse)
@@ -175,7 +178,7 @@ const container_remove = (container_id: string): Promise<unknown> => {
 
 const get_container_ob_metadata = (semid: string, container_id?: string) => {
     let url = `${SEMESTERS_URL}/${semid}/ob/metadata`
-    url = container_id ? url+`?container_id=${container_id}` : url
+    url = container_id ? url + `?container_id=${container_id}` : url
     return axiosInstance
         .get(url)
         .then(handleResponse)
@@ -184,7 +187,7 @@ const get_container_ob_metadata = (semid: string, container_id?: string) => {
 
 const get_container_ob_target = (semid: string, container_id?: string) => {
     let url = `${SEMESTERS_URL}/${semid}/ob/targets`
-    url = container_id ? url+`?container_id=${container_id}` : url
+    url = container_id ? url + `?container_id=${container_id}` : url
     return axiosInstance
         .get(url)
         .then(handleResponse)
@@ -193,7 +196,7 @@ const get_container_ob_target = (semid: string, container_id?: string) => {
 
 export const get_container_ob_data = {
     get_container_ob_metadata: IS_BUILD ? get_container_ob_metadata : mock_get_container_ob_metadata,
-    get_container_ob_target: IS_BUILD ? get_container_ob_target: mock_get_container_ob_target
+    get_container_ob_target: IS_BUILD ? get_container_ob_target : mock_get_container_ob_target
 }
 
 

@@ -316,6 +316,7 @@ export interface TemplateParameter {
 export interface Template {
 	template_id: string;
 	metadata: TemplateMetadata;
+	parameter_order?: string[]
 	parameters: { [key: string]: TemplateParameter };
 	detector_parameters?: { [key: string]: TemplateParameter }
 	tcs_parameters?: { [key: string]: TemplateParameter }

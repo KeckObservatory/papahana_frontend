@@ -150,6 +150,19 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
   return formData
 }
 
+const sort_template = (template: Template): Template => {
+  if (!template.parameter_order) {
+    return template
+  }
+  let params = {}  as { [key: string]: TemplateParameter };
+  let paramOrder = template.parameter_order 
+  paramOrder.forEach((param: string) => {
+    params[param] = template.parameters[param]
+  })
+  let sortedTemplate = { ...template, 'parameters': params }
+  return sortedTemplate
+}
+
 export const get_schema = async (obComponent: OBComponent, id: string): Promise<JSONSchema7> => {
   let sch: JSONSchema7 = {}
   if (id === 'metadata') {
@@ -166,6 +179,9 @@ export const get_schema = async (obComponent: OBComponent, id: string): Promise<
     const md = obComponent.metadata
     if (md) {
       await get_template(md.name).then((template: Template) => {
+        if (template.parameter_order) {
+          template = sort_template(template)
+        }
         const sche = template_to_schema(template)
         sch = sche as JSONSchema7
         return sch

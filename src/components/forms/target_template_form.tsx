@@ -44,6 +44,5 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
         onChange={handleChange}
         onError={log("errors")} ><div></div></Form>
     </div>
-
   )
 }
