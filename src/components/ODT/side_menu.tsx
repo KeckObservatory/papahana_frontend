@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { createContext, useContext } from 'react';
 import { IconButton, Paper } from '@mui/material'
 import cloneDeep from 'lodash/cloneDeep';
 import { animated } from 'react-spring'
@@ -17,6 +17,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
+import { get_ob_list, get_container_list } from '../../api/utils'
 
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
@@ -24,6 +25,27 @@ import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
+
+
+export interface OBSelectContextObject {
+  sem_id: string,
+  setSemId: Function,
+  reset_container_and_ob_select: Function,
+  trigger: number,
+  setTrigger: Function
+}
+
+const init_object: OBSelectContextObject = {
+    sem_id: '',
+    setSemId: () => {},
+    reset_container_and_ob_select: () => { },
+    trigger: 0,
+    setTrigger: () => { }
+}
+
+
+const OBSelectContext = createContext<OBSelectContextObject>(init_object)
+export const useOBSelectContext = () => useContext(OBSelectContext)
 
 const useStyles = makeStyles((theme: Theme) => ({
     buttonBlock: {
@@ -53,6 +75,9 @@ interface Props {
 export const SideMenu = (props: Props) => {
 
     const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
+
+    const [sem_id, setSemId] =
+        useQueryParam('sem_id', withDefault(StringParam, ''))
     const [boopStyle, triggerBoop] = useBoop({})
     const classes = useStyles();
     const jsonEditable = true
@@ -63,8 +88,41 @@ export const SideMenu = (props: Props) => {
     let jsonTheme = darkState ? 'bespin' : 'summerfruit:inverted' as ThemeKeys
     const [theme, setTheme] = useQueryParam('theme', withDefault(StringParam, jsonTheme))
 
+
+    const [containerIdList, setContainerIdList] = React.useState([] as string[])
+    const [trigger, setTrigger] = React.useState(0)
+    const [obList, setOBList] = React.useState([] as string[])
+
+    const [container_id, setContainerId] =
+        useQueryParam('container_id', withDefault(StringParam, 'all'))
+
     //check if can submit ob
     let obEditable: boolean = 'metadata' in props.ob && typeof (props.ob_id) === "string"
+
+
+    const reset_container_and_ob_select = () => {
+        get_container_list(sem_id)
+            .then((lst: string[]) => {
+                setContainerIdList(lst)
+                if (lst.length >= 1) {
+                    setContainerId(lst[0])
+                }
+            })
+            .then(() => {
+                get_ob_list(sem_id, container_id).then((lst: string[]) => {
+                    setOBList(lst)
+                    return lst
+                })
+            })
+    }
+
+    const ob_select_object = {
+        sem_id: sem_id,
+        setSemId: setSemId,
+        reset_container_and_ob_select: reset_container_and_ob_select,
+        trigger: trigger,
+        setTrigger: setTrigger
+    }
 
     const saveOBasJSON = () => {
         // Create a blob with the data we want to download as a file
@@ -111,6 +169,7 @@ export const SideMenu = (props: Props) => {
             console.log('delete result')
             console.log(result)
             props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
+            setTrigger(trigger + 1) //force sidebar to rerender
         })
     }
 
@@ -187,80 +246,83 @@ export const SideMenu = (props: Props) => {
     }
 
     return (
-        <Paper className={classes.paper} elevation={3}>
-            {obEditable &&
-                <React.Fragment>
-                    <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
-                        <AccordionSummary
-                            expandIcon={<ExpandMoreIcon />}
-                            aria-controls="panel1a-content"
-                            id="panel1a-header"
-                        >
-                            <Typography>Observation Block/Template Edit</Typography>
-                            {/* <h3>Observation Block Edit/Display</h3> */}
-                        </AccordionSummary>
-                        <AccordionDetails>
-                            <div className={classes.buttonBlock}>
-                                <Tooltip title="Upload OB to database">
-                                    <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
-                                        <PublishIcon />
-                                    </animated.button>
-                                </Tooltip>
-                                <Tooltip title="Copy OB to new OB">
-                                    <IconButton aria-label='copy' onClick={copyOB}>
-                                        <FileCopyIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <Tooltip title="Save OB as JSON">
-                                    <IconButton aria-label='copy' onClick={saveOBasJSON}>
-                                        <SaveIcon />
-                                    </IconButton>
-                                </Tooltip>
-                                <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
-                                <DeleteDialog deleteOB={deleteOB} />
-                            </div>
-                            <Tooltip title="Add template to Selected OB">
-                                <div className={classes.templateSelect}>
-                                    <TemplateSelection addSeq={addSeq} instrument={props.instrument} obSequences={Object.keys(props.ob)} />
+
+        <OBSelectContext.Provider value={ob_select_object}>
+            <Paper className={classes.paper} elevation={3}>
+                {obEditable &&
+                    <React.Fragment>
+                        <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography>Observation Block/Template Edit</Typography>
+                                {/* <h3>Observation Block Edit/Display</h3> */}
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <div className={classes.buttonBlock}>
+                                    <Tooltip title="Upload OB to database">
+                                        <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
+                                            <PublishIcon />
+                                        </animated.button>
+                                    </Tooltip>
+                                    <Tooltip title="Copy OB to new OB">
+                                        <IconButton aria-label='copy' onClick={copyOB}>
+                                            <FileCopyIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <Tooltip title="Save OB as JSON">
+                                        <IconButton aria-label='copy' onClick={saveOBasJSON}>
+                                            <SaveIcon />
+                                        </IconButton>
+                                    </Tooltip>
+                                    <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
+                                    <DeleteDialog deleteOB={deleteOB} />
                                 </div>
-                            </Tooltip>
-                        </AccordionDetails>
-                    </Accordion>
-                </React.Fragment>
-            }
-            <Accordion expanded={selAccdExpanded} onChange={handleAccordionChange('select')}>
-                <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                >
-                    <Typography>Observation Block Selection</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                    <ObservationBlockSelecter
-                        setOB={props.setOB}
-                        handleOBSelect={handleOBSelect}
-                        ob_id={props.ob_id} />
-                </AccordionDetails>
-            </Accordion>
-            <Tooltip title="Change the color theme of the OB JSON display">
-                <div>
-                    <JsonViewTheme
-                        theme={theme as ThemeKeys | null | undefined}
-                        setTheme={setTheme}
-                    />
-                </div>
-            </Tooltip>
-            <ReactJson
-                style={{ marginBottom: '80px' }}
-                src={props.ob as object}
-                theme={theme as ThemeKeys | undefined}
-                iconStyle={'circle'}
-                collapsed={1}
-                collapseStringsAfterLength={15}
-                enableClipboard={true}
-                onEdit={handleEdit}
-            />
-        </Paper >
+                                <Tooltip title="Add template to Selected OB">
+                                    <div className={classes.templateSelect}>
+                                        <TemplateSelection addSeq={addSeq} instrument={props.instrument} obSequences={Object.keys(props.ob)} />
+                                    </div>
+                                </Tooltip>
+                            </AccordionDetails>
+                        </Accordion>
+                    </React.Fragment>
+                }
+                <Accordion expanded={selAccdExpanded} onChange={handleAccordionChange('select')}>
+                    <AccordionSummary
+                        expandIcon={<ExpandMoreIcon />}
+                        aria-controls="panel1a-content"
+                        id="panel1a-header"
+                    >
+                        <Typography>Observation Block Selection</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <ObservationBlockSelecter
+                            setOB={props.setOB}
+                            handleOBSelect={handleOBSelect}
+                            ob_id={props.ob_id} />
+                    </AccordionDetails>
+                </Accordion>
+                <Tooltip title="Change the color theme of the OB JSON display">
+                    <div>
+                        <JsonViewTheme
+                            theme={theme as ThemeKeys | null | undefined}
+                            setTheme={setTheme}
+                        />
+                    </div>
+                </Tooltip>
+                <ReactJson
+                    style={{ marginBottom: '80px' }}
+                    src={props.ob as object}
+                    theme={theme as ThemeKeys | undefined}
+                    iconStyle={'circle'}
+                    collapsed={1}
+                    collapseStringsAfterLength={15}
+                    enableClipboard={true}
+                    onEdit={handleEdit}
+                />
+            </Paper >
+        </OBSelectContext.Provider>
     )
 }
