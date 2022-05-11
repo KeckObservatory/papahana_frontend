@@ -170,6 +170,8 @@ export const SideMenu = (props: Props) => {
             console.log(result)
             props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
             setTrigger(trigger + 1) //force sidebar to rerender
+            props.setOB({} as ObservationBlock)
+            props.setOBID('')
         })
     }
 
