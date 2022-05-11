@@ -9,7 +9,7 @@ import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
 import { Container, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
-import { useOBSelectContext } from './ob_select'
+import { useOBSelectContext } from './../ODT/side_menu'
 import { useObserverContext } from './../App'
 
 interface PButtonProps extends Props {

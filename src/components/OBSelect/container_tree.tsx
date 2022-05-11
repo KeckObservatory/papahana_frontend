@@ -1,7 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import TreeView from '@mui/lab/TreeView';
 import { DetailedContainer, ObservationBlock } from '../../typings/papahana';
-import { useOBSelectContext } from './ob_select'
+import { useOBSelectContext } from './../ODT/side_menu'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RenderTreeElement } from './render_tree_element'
