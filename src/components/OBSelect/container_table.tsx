@@ -112,7 +112,7 @@ const CustomToolbarSelect = (props: CTProps) => {
 
         console.log('setting selected rows to container ', cidname.name)
         //remove ob reference from each container
-        rows.forEach(remove_row_references)
+        // rows.forEach(remove_row_references)
         //add to container, the selected obs
         add_obs_to_container(rows)
     }
