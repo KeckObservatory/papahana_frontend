@@ -9,7 +9,7 @@ const ATMOSPHERE_HEIGHT = 50.000 // km
 
 
 export const date_to_juld = (date: Date, offset: number = 600) => {
-    return (date.getTime() / 86400000) + (offset / 1440) + 2440587.5 //negative offset
+    return (date.getTime() / 86400000) + 2440587.5 //negative offset
 }
 
 export const get_gmt = (date?: Date, offset: number = 600) => {
