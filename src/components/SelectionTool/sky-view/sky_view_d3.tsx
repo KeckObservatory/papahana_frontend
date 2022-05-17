@@ -166,22 +166,22 @@ const formatDate = (date: Date) => {
         minuteFormatted + morning;
 }
 
-const get_chart_data = (sd: Scoby, times: Date[], chartType: string, lngLatEl: LngLatEl, offset: number = 600): number[] => {
+const get_chart_data = (sd: Scoby, times: Date[], chartType: string, lngLatEl: LngLatEl): number[] => {
     let val;
     const ra = sd.ra_deg as number
     const dec = sd.dec_deg as number
     switch (chartType) {
         case 'altitude': {
-            val = util.get_target_traj(ra, dec, times, lngLatEl, offset)
+            val = util.get_target_traj(ra, dec, times, lngLatEl)
             val = val.map((azAlt: any) => azAlt[1]) as number[]
             break;
         }
         case 'air mass': {
-            val = util.get_air_mass(ra, dec, times, lngLatEl, offset)
+            val = util.get_air_mass(ra, dec, times, lngLatEl)
             break;
         }
         case 'parallactic angle': {
-            val = util.get_parallactic_angle(ra, dec, times, lngLatEl, offset)
+            val = util.get_parallactic_angle(ra, dec, times, lngLatEl)
             break;
         }
         case 'lunar angle': {
@@ -189,7 +189,7 @@ const get_chart_data = (sd: Scoby, times: Date[], chartType: string, lngLatEl: L
             break;
         }
         default: {
-            val = util.get_target_traj(ra, dec, times, lngLatEl, offset)
+            val = util.get_target_traj(ra, dec, times, lngLatEl)
             val = val.map((azAlt: any) => azAlt[1]) as number[]
         }
     }

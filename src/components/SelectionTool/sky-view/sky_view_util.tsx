@@ -8,13 +8,13 @@ const RADIUS_EARTH = 6378.1000 // km
 const ATMOSPHERE_HEIGHT = 50.000 // km
 
 
-export const date_to_juld = (date: Date, offset: number = 600) => {
-    return (date.getTime() / 86400000) + 2440587.5 //negative offset
+export const date_to_juld = (date: Date) => {
+    return (date.getTime() / 86400000) + 2440587.5 //do not offset
 }
 
-export const get_gmt = (date?: Date, offset: number = 600) => {
+export const get_gmt = (date?: Date) => {
     if (!date) date = new Date()
-    const JD = date_to_juld(date, offset)
+    const JD = date_to_juld(date)
     const T = (JD - 2451545) / 36525;
     let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T 
     + .093104 * (T**2) - ( 6.2 * 10**-6 ) * ( T**3 )
@@ -58,23 +58,10 @@ const tand = (deg: number): number => {
     return Math.tan(Math.PI / 180 * deg)
 }
 
-export const ra_dec_to_az_alt_bak = (ra: number, dec: number, date?: Date, lng: number = KECK_LONG, lat: number = KECK_LAT, offset: number = 600): [number, number] => {
-    if (!date) date = new Date()
-    const hourAngle = get_gmt(date, offset) - lng - ra
-    const sinAlt = sind(dec) * sind(lat)
-        + cosd(dec) * cosd(lat) * cosd(hourAngle)
-    const alt = Math.asin(sinAlt)
-    const cosA = (sind(dec) - Math.sin(alt) * sind(lat))
-        / Math.cos(alt) * cosd(lat)
-    const A = Math.acos(cosA)
-    const az = Math.sin(hourAngle) < 0 ? A : 2 * Math.PI - A
-    return [(180 / Math.PI * az) % 360, (180 / Math.PI * alt)]
-}
-
-export const ra_dec_to_az_alt = (ra: number, dec: number, date: Date, lngLatEl: LngLatEl, offset: number = 600): [number, number] => {
+export const ra_dec_to_az_alt = (ra: number, dec: number, date: Date, lngLatEl: LngLatEl): [number, number] => {
     /* Taken from Jean Meeus's Astronomical Algorithms textbook. Using equations
     13.3 & 13.4*/
-    const hourAngle = (get_gmt(date, offset) + lngLatEl.lng - ra) % 360
+    const hourAngle = (get_gmt(date) + lngLatEl.lng - ra) % 360
     const tanAzNum = sind(hourAngle)
     const tanAzDen = cosd(hourAngle) * sind(lngLatEl.lat) - tand(dec) * cosd(lngLatEl.lat)
     const az = Math.atan2(tanAzNum, tanAzDen) //radians
@@ -116,10 +103,10 @@ export const get_times = (nadir: Date, nPoints: number = 20) => {
 }
 
 
-export const get_target_traj = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600): [number, number][] => {
+export const get_target_traj = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl): [number, number][] => {
     let traj: [number, number][] = []
     times.forEach((d: Date) => {
-        traj.push(ra_dec_to_az_alt(ra, dec, d, lngLatEl, offset))
+        traj.push(ra_dec_to_az_alt(ra, dec, d, lngLatEl))
     })
     return traj
 }
@@ -139,8 +126,8 @@ const air_mass = (alt: number) => { // Homogeneous spherical atmosphsere with el
     return X
 }
 
-export const get_air_mass = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600) => {
-    const azAlt = get_target_traj(ra, dec, times, lngLatEl, offset)
+export const get_air_mass = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl) => {
+    const azAlt = get_target_traj(ra, dec, times, lngLatEl)
     // const airmass = azAlt.map((a: [number, number]) => { 
     //     const zenith = 90 - a[1]
     //     return 1/cosd(zenith) 
@@ -149,8 +136,8 @@ export const get_air_mass = (ra: number, dec: number, times: Date[], lngLatEl: L
     return airmass
 }
 
-export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: LngLatEl, offset: number = 600) => {
-    const hourAngle = (get_gmt(date, offset) + lngLatEl.lng - ra) % 360
+export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: LngLatEl) => {
+    const hourAngle = (get_gmt(date) + lngLatEl.lng - ra) % 360
     const numerator = sind(hourAngle)
     const denominator: number = tand(lngLatEl.lat)
         * cosd(dec)
@@ -158,10 +145,10 @@ export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: 
     return Math.atan2(numerator, denominator) * 180 / Math.PI 
 }
 
-export const get_parallactic_angle = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl, offset: number = 600): number[] => {
+export const get_parallactic_angle = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl): number[] => {
     let ang: number[] = []
     times.forEach((date: Date) => {
-        ang.push(parallatic_angle(ra, dec, date, lngLatEl, offset))
+        ang.push(parallatic_angle(ra, dec, date, lngLatEl))
     })
     return ang
 }
