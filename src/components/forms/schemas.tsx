@@ -248,7 +248,14 @@ export const uiMetadataSchema: UiSchema = {
   },
 }
 
-export const uiTargetSchema: UiSchema = { }
+export const uiTargetSchema: UiSchema = { 
+  target_coord_dec: {
+    "ui:help": "DD:MM:SS"
+  },
+  target_coord_ra: {
+    "ui:help": "HH:MM:SS"
+  }
+}
 
 export const uiSignatureSchema: UiSchema = {
   pi_id: {
