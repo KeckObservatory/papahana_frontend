@@ -41,8 +41,8 @@ export default function SkyView(props: Props) {
 
     React.useEffect(() => {
         // d3.selectAll("svg > *").remove(); // clear old scales and points
-        // d3.selectAll('#sky-view').remove(); // clear old scales and points
-        d3.selectAll('g > *').remove(); // clear old scales and points
+        d3.select('#sky-view').selectAll("svg > * ").remove(); // clear old scales and points
+        // d3.selectAll('g > *').remove(); // clear old scales and points
     }, [props.selObs, props.chartType])
 
     let scoby_deg: Scoby[] = []
