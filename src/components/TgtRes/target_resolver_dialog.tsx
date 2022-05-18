@@ -5,6 +5,9 @@ import { IconButton } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import Aladin from './aladin'
 import TemplateForm from '../forms/template_form';
 import { OBComponent, Target } from './../../typings/papahana';
@@ -32,7 +35,8 @@ export const TargetResolverDialog = (props: Props) => {
     setOpen(false);
   };
   return (
-    <div>
+    <React.Fragment>
+      <Typography sx={{marginTop: "12px"}} >Target Resolver</Typography>
       <Tooltip title="Launch Image resolver">
         <IconButton aria-label='launch' onClick={launch_target_resolver}>
           <LaunchIcon />
@@ -51,7 +55,7 @@ export const TargetResolverDialog = (props: Props) => {
               catalogRows={catalog}
               target={props.obComponent as Target} />
             <div style={{ width: '500px', margin: '5px', padding: '5px' }}>
-              <CatalogTable 
+              <CatalogTable
                 rows={filtCatalog}
                 setFiltCatalog={setFiltCatalog}
                 selIdx={selIdx}
@@ -59,7 +63,10 @@ export const TargetResolverDialog = (props: Props) => {
             </div>
           </div>
         </DialogContent>
+        <DialogActions>
+          <Button onClick={close_target_resolver}>Exit</Button>
+        </DialogActions>
       </Dialog>
-    </div >
+    </React.Fragment>
   )
 }
