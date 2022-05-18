@@ -49,36 +49,6 @@ const CustomToolbarSelect = (props: CTProps) => {
         setContainerName(newcidname)
     }
 
-    const remove_row_references = async (data: any[]) => {
-        //TODO: get all containers, filter the ones that need to update,
-        // create new containers, and then
-        console.log('inside remove_row_references. data:', data)
-        const [ob_id, name, container_name ] = data  // assumes array is ordered
-        //get container
-        //@ts-ignore
-        const cidname = props.containerIdNames.find(x => { return x.name === container_name })
-        if (cidname) { // ignores synthetic containers 
-            //@ts-ignore
-            await container_api_funcs.get(cidname._id).then((container: Container) => {
-                //make new container that is missing ob
-                const oldLength = container.observation_blocks.length
-                const new_observation_blocks =
-                    container.observation_blocks.filter((_id: string) => {
-                        return _id !== ob_id
-                    })
-                console.log('old container obs', container.observation_blocks, 'new container obs', new_observation_blocks)
-                container.observation_blocks = new_observation_blocks
-                if (container.observation_blocks.length !== oldLength) {
-
-                    //@ts-ignore
-                    console.log('container', cidname.name, cidname._id, 'changing to', container)
-                    //@ts-ignore
-                    return container_api_funcs.put(cidname._id, container)
-                }
-            })
-        }
-    }
-
     const add_obs_to_container = (rows: any[]) => {
         let obs = rows.map((r: any[]) => {
             const [_id ] = r // assumes _id is the first element of array
@@ -111,8 +81,6 @@ const CustomToolbarSelect = (props: CTProps) => {
         })
 
         console.log('setting selected rows to container ', cidname.name)
-        //remove ob reference from each container
-        // rows.forEach(remove_row_references)
         //add to container, the selected obs
         add_obs_to_container(rows)
     }
@@ -156,6 +124,7 @@ const ContainerTable = (props: Props) => {
 
     const onRowClick = (rowData: string[], rowMeta: { dataIndex: number, rowIndex: number }) => {
         console.log('rowData', rowData, 'rowMeta', rowMeta)
+        //todo include node popover componnet
     }
 
     const options: MUIDataTableOptions = {

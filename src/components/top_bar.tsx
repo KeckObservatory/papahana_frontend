@@ -75,7 +75,7 @@ export function TopBar(props: Props) {
           aria-label="open drawer"
           onClick={handleMenuClick}
         >
-          <MenuIcon />
+          <MenuIcon id='sidebar-menu-icon'/>
         </IconButton>
         <Typography
           component="h1"
@@ -101,7 +101,7 @@ export function TopBar(props: Props) {
             aria-label="open drawer"
             onClick={handlePortalClick}
           >
-            <DoorFrontIcon />
+            <DoorFrontIcon id="observer-portal-icon" />
           </IconButton>
         </Tooltip>
         <Tooltip title="Toggle on for dark mode">
