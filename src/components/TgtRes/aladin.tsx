@@ -33,7 +33,7 @@ const add_selected_catalog = (aladin: any, win: any, catalogRow: CatalogRow) => 
     const ra = catalogRow[5]
     const dec = catalogRow[6]
     // const id0 = catalogRow[3]
-    const options = { }
+    const options = {}
     cat.addSources(win.A.source(ra, dec, options));
 }
 
@@ -118,6 +118,7 @@ export default function Aladin(props: Props) {
     }
 
     React.useEffect(() => {
+
         const aladinStyle = document.createElement('link')
         aladinStyle.href = "https://aladin.u-strasbg.fr/AladinLite/api/v2/latest/aladin.min.css"
         aladinStyle.rel = 'stylesheet'
@@ -133,6 +134,9 @@ export default function Aladin(props: Props) {
         script.async = true
         script.onload = scriptloaded
         document.body.appendChild(script)
+    }, [])
+
+    React.useEffect(() => {
 
         // Custom CSS, TODO -- ask Tyler what the project standard is
         const extraStyle = document.createElement('style');
