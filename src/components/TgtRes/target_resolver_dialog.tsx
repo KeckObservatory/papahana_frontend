@@ -24,7 +24,8 @@ export const TargetResolverDialog = (props: Props) => {
 
   const [open, setOpen] = React.useState(false)
   const [selIdx, setSelIdx] = React.useState(undefined as number | undefined)
-  const [catalog, setCatalog] = React.useState(mockCatalog)
+  // const [catalog, setCatalog] = React.useState(mockCatalog)
+  const [catalog, setCatalog] = React.useState([])
   const [filtCatalog, setFiltCatalog] = React.useState(mockCatalog)
 
   const launch_target_resolver = () => {
@@ -54,13 +55,13 @@ export const TargetResolverDialog = (props: Props) => {
               setSelIdx={setSelIdx}
               catalogRows={catalog}
               target={props.obComponent as Target} />
-            <div style={{ width: '500px', margin: '5px', padding: '5px' }}>
+            {/* <div style={{ width: '500px', margin: '5px', padding: '5px' }}>
               <CatalogTable
                 rows={filtCatalog}
                 setFiltCatalog={setFiltCatalog}
                 selIdx={selIdx}
                 setSelIdx={setSelIdx} />
-            </div>
+            </div> */}
           </div>
         </DialogContent>
         <DialogActions>
