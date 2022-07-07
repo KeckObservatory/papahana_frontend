@@ -113,7 +113,8 @@ export interface OBMetadata {
 	pi_id: number | string;
 	sem_id: string;
 	instrument: Instrument;
-	comment: string
+	comment: string;
+	tags?: string[];
 }
 
 
@@ -123,6 +124,7 @@ export interface ObservationBlock extends Base {
 	metadata: OBMetadata;
 	target?: Target;
 	time_constraints: TimeConstraint[][]
+	common_parameters?: CommonTemplate,
 	comment?: string;
 	observations?: Science[];
 	acquisition: Acquisition;

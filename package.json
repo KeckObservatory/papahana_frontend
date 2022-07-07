@@ -24,6 +24,7 @@
     "d3-force": "^2.1.1",
     "dayjs": "^1.10.7",
     "lodash": "^4.17.21",
+    "material-ui-chip-input": "^1.1.0",
     "mui-datatables": "^4.0.0",
     "npm-force-resolutions": "^0.0.10",
     "query-string": "^7.0.0",

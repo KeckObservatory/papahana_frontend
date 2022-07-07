@@ -5,6 +5,7 @@ import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import ODTView from './ODT/observation_data_tool_view';
+import ODTGlobeView from './ODTGlobe/global_observing_definition_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { SelectionToolView } from './SelectionTool/selection_tool_view';
 import { useDrawerOpenContext } from './App'
@@ -71,14 +72,14 @@ interface ModuleMenuProps {
 
 export const ModuleMenu = (props: ModuleMenuProps) => {
     const classes = useStyles();
-    const [tabIdx, setTabIdx] = React.useState(0);
+    const [tabIdx, setTabIdx] = React.useState(1);
 
     //setting drawer to always closed
     const drawerOpenContext = useDrawerOpenContext()
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 
-        if (newValue === 1) {
+        if (newValue >= 1) {
             console.log('setting drawer to closed')
             drawerOpenContext.setDrawerOpen(false)
         }
@@ -101,6 +102,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                     aria-label="full width tabs"
                 >
                     <Tab label="ODT" {...a11yProps(0)} />
+                    <Tab label="Global ODT" {...a11yProps(0)} />
                     <Tab label="Planning Tool (Work in progress)" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
@@ -108,6 +110,9 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                 <ODTView />
             </TabPanel>
             <TabPanel value={tabIdx} index={1}>
+                <ODTGlobeView />
+            </TabPanel>
+            <TabPanel value={tabIdx} index={2}>
                 <SelectionToolView />
             </TabPanel>
         </ div >
