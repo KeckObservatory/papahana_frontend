@@ -44,8 +44,6 @@ const format_rows = (rowData: Array<Array<any>>) => {
 const CustomToolbarSelect = (props: CTProps) => {
 
     const [open, setOpen] = useState(false);
-    const [activeStep, setActiveStep] = useState(0);
-
     const selRows = props.selectedRows.data.map((idxDidx: SelectedRowData) => {
         const selRow = props.displayData.find(dd => dd.dataIndex === idxDidx.dataIndex) as any
         return selRow.data
@@ -60,10 +58,6 @@ const CustomToolbarSelect = (props: CTProps) => {
     const handle_close = () => {
         setOpen(false);
     };
-
-    const open_new_stepper = () => {
-
-    }
 
     return (
         <div className={"custom-toolbar-select"}>

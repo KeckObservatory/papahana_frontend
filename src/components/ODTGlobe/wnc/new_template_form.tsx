@@ -18,10 +18,11 @@ const NewTemplateForm = function (props: Props) {
 
   const handleChange = (evt: ISubmitEvent<OBComponent>, es?: ErrorSchema) => {
     //@ts-ignore
-    let formData = { ...evt.formData }
+    let newOBComponent = props.parentState.obComponent
+    newOBComponent.parameters = evt.formData as object
     props.setParentState({
         ...props.parentState,
-        formData
+        obComponent: newOBComponent 
     })
   }
 
@@ -29,7 +30,7 @@ const NewTemplateForm = function (props: Props) {
       <Form className={classes.form}
         schema={schema}
         uiSchema={uiSchema as rUiSchema}
-        formData={props.parentState.formData}
+        formData={props.parentState.obComponent.parameters}
         onChange={handleChange}
         onError={log("errors")} ><div></div></Form>
     )

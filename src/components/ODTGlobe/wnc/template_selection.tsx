@@ -54,7 +54,7 @@ const TemplateSelection = function (props: Props) {
             props.setParentState({
                 template,
                 id: templateName,
-                formData: seq,
+                obComponent: seq,
             })
         })
     }

@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TemplateSelection from './template_selection';
 import NewTemplateForm from './new_template_form';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import TextField from '@mui/material/TextField';
-import DialogActions from '@mui/material/DialogActions';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { SelectedRows } from '../ob_table';
-import { DisplayData } from "mui-datatables"
 import { Template } from '../../../typings/papahana';
 import OBBatchWriter from './ob_batch_writer';
 
@@ -22,9 +17,15 @@ interface Props {
     rows: Array<object>
 }
 
+export interface OBComponent {
+    metadata: any,
+    parameters: any 
+}
+
+
 export interface State {
     id: string,
-    formData: object,
+    obComponent: OBComponent, //todo define as ob component
     template: Template,
 }
 
@@ -33,7 +34,7 @@ const steps = ['Select available template', 'Fill out template', 'Submit OB batc
 
 const WNCStepperDialogContent = function (props: Props) {
 
-    const initState: State = { id: 'undefined', formData: {}, template: {} as Template }
+    const initState: State = { id: 'undefined', obComponent: {metadata: {}, parameters: {}} as OBComponent, template: {} as Template }
 
     const [state, setState] = useState(initState)
 
