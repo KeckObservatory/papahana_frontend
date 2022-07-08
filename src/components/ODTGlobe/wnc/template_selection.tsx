@@ -13,7 +13,7 @@ interface Props {
 
 const get_template_list = async (rows: Array<any>) => {
     //you can always add targets
-    let templateList: string[] = ['siderial_target', 'nonsiderial_target', 'multi_object_target']
+    let templateList: string[] = ['sidereal_target', 'non_siderial_target', 'multi_object_target']
     const instruments = new Set(rows.map(row => row.instrument)) as any
     if (instruments.size === 1) {
         const inst = instruments.entries().next().value[0]
