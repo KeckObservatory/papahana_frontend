@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { get_all_obs } from '../../api/utils';
+import { semid_api_funcs } from '../../api/ApiRoot';
+import { get_sem_id_list } from '../../api/utils';
 import { ObservationBlock, Science } from '../../typings/papahana';
 import OBTable from './ob_table'
 
@@ -7,19 +8,43 @@ interface Props {
 
 }
 
+export interface GlobalTableRow {
+    ob_id: string,
+    name?: string,
+    ob_type: string,
+    sem_id: string,
+    instrument: string,
+    tags?: string[],
+    target?: string,
+    acquisition?: string,
+    common_parameters?: string,
+    observations?: string
+}
+
+const get_all_ob_rows = async (): Promise<GlobalTableRow[]> => {
+
+    let rows: GlobalTableRow[] = []
+    const sem_ids = await get_sem_id_list()
+    await sem_ids.associations.forEach(async (sem_id: string) => {
+        const obs = await semid_api_funcs.get_semester_obs(sem_id)
+        const obRows = obs_to_rows(obs)
+        rows = [...rows, ...obRows]
+    })
+
+    console.log('all ob rows length: ', rows.length)
+    return (rows)
+}
 
 const obs_to_rows = (obs: ObservationBlock[]) => {
-    let rows: object[] = []
+    let rows: GlobalTableRow[] = []
     obs.forEach((ob: ObservationBlock) => {
-        let nseq: number = 0 
+        let nseq: number = 0
         ob.observations?.forEach((seq: Science) => {
             nseq++
         }
         )
-
-        const seqLabel = `Num. sequences: ${nseq}` 
-
-        let row = {
+        const seqLabel = `Num. sequences: ${nseq}`
+        let row: GlobalTableRow = {
             ob_id: ob._id,
             name: ob.metadata.name,
             ob_type: ob.metadata.ob_type,
@@ -29,7 +54,7 @@ const obs_to_rows = (obs: ObservationBlock[]) => {
             target: ob.target?.metadata.name,
             acquisition: ob.acquisition.metadata.ui_name,
             common_parameters: ob.common_parameters?.metadata.ui_name,
-            observations: seqLabel 
+            observations: seqLabel
         }
         rows.push(row)
     })
@@ -38,17 +63,13 @@ const obs_to_rows = (obs: ObservationBlock[]) => {
 
 export default function ODTGlobeView(props: Props) {
 
-    const [obs, setObs] = useState([] as ObservationBlock[])
     const [rows, setRows] = useState([] as object[])
-
 
     useEffect(() => {
         const get_rows = async () => {
-            const obs = await get_all_obs()
-            console.log()
-            const rows = obs_to_rows(obs)
-            console.log(rows)
-            setRows(rows)
+            const obRows = await get_all_ob_rows ()
+            console.log(obRows)
+            setRows(obRows)
         }
         get_rows()
     }, [])
