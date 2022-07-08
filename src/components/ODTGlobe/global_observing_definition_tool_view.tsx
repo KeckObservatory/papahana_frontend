@@ -44,7 +44,9 @@ export default function ODTGlobeView(props: Props) {
 
     useEffect(() => {
         const get_rows = async () => {
-            const rows = obs_to_rows(await get_all_obs())
+            const obs = await get_all_obs()
+            console.log()
+            const rows = obs_to_rows(obs)
             console.log(rows)
             setRows(rows)
         }
