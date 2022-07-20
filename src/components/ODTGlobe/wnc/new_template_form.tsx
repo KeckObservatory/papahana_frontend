@@ -16,6 +16,8 @@ const NewTemplateForm = function (props: Props) {
     const schema = template_to_schema(props.parentState.template)
     const uiSchema = schemas.getUiSchema(props.parentState.id)
 
+
+
   const handleChange = (evt: ISubmitEvent<OBComponent>, es?: ErrorSchema) => {
     //@ts-ignore
     let newOBComponent = props.parentState.obComponent

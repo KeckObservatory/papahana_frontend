@@ -45,6 +45,7 @@ export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
 export type OBComponent = MetadataLessOBComponent | OBStandardComponent | string | string[]
+export type TemplateComponent = Science | Acquisition | Target
 export type MetadataLessOBComponent = OBMetadata | TimeConstraint[] | Status | CommonParameters
 export type OBStandardComponent = Target | OBSequence
 export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations' | 'metadata' | 'common_parameters' | 'time_constraints' | 'status'

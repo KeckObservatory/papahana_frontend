@@ -37,6 +37,7 @@ const OBBatchWriter = function (props: Props) {
 
     const [idx, setIdx] = useState(0)
     const [ob, setOB] = useState({} as ObservationBlock)
+    const [rowLabel, setRowLabel] = useState("")
     const [progress, setProgress] = React.useState(0);
     const [overwrite, setOverwrite] = useState(false)
     const rowLen = props.rows.length
@@ -49,7 +50,9 @@ const OBBatchWriter = function (props: Props) {
         if (idx >= rowLen) {
             return
         }
+
         const row = props.rows[idx]
+        setRowLabel(`name: ${row.name} sem_id: ${row.sem_id}`)
         const ob_id = row.ob_id
         console.log('row', row, 'obComponent', props.parentState.obComponent)
         //get and display ob
@@ -116,7 +119,7 @@ const OBBatchWriter = function (props: Props) {
                             proposedComponent={props.parentState.obComponent}
                         />
                     )}
-                    {/* <div>{JSON.stringify(props.rows[idx])}</div> */}
+                    <div>{rowLabel}</div>
                     <Button onClick={handleConfirm}>Confirm overwrite row {idx + 1}</Button>
                     <Button onClick={handleSkip}>Skip</Button>
                 </React.Fragment>

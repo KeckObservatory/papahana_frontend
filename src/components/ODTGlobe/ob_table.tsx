@@ -1,13 +1,11 @@
 
 import { useState, useEffect } from 'react';
 import MUIDataTable, { DisplayData, MUIDataTableOptions } from "mui-datatables"
-import { Container, ObservationBlock, Scoby } from "../../typings/papahana";
 import Button from '@mui/material/Button';
-import { useOBSelectContext } from './../ODT/side_menu'
-import { container_api_funcs, ob_api_funcs } from '../../api/ApiRoot'
 import ChipInput from 'material-ui-chip-input'
 import Dialog from '@mui/material/Dialog';
 import WNCStepperDialogContent from './wnc/wnc_stepper_dialog_content';
+import ComponentInput from './EditComponent/component_input';
 
 interface Props {
     rows: object[]
@@ -26,15 +24,15 @@ interface CTProps {
 }
 
 const format_rows = (rowData: Array<Array<any>>) => {
-    const rows = rowData.map( (rd) => {
+    const rows = rowData.map((rd) => {
         let row: any = {}
-        columnNames.map( (n: string, idx: number) => {
-            let val = rd[idx] 
+        columnNames.map((n: string, idx: number) => {
+            let val = rd[idx]
             if (typeof val === 'object') {
                 val = val.props.children
             }
             row[n] = val
-        }) 
+        })
         return row
     })
     return rows
@@ -77,23 +75,6 @@ const TagsInput = (value: string, tableMeta: any, updateValue: any) => {
 
     return (
         <ChipInput />
-    )
-}
-
-const ComponentInput = (value: string, tableMeta: any, updateValue: any) => {
-
-    const editComponent = () => {
-        // console.log('value', value, 'tableMeta', tableMeta, 'updateValue', updateValue)
-        const ob_id = tableMeta.rowData[0]
-        const comp = tableMeta.columnData.name
-        console.log('id', ob_id, 'component:', comp, 'component name:', value)
-        ob_api_funcs.get(ob_id).then((ob: any) => {
-            console.log('component', ob[comp] as any)
-        })
-    }
-
-    return (
-        <Button onClick={editComponent}>{value}</Button>
     )
 }
 
