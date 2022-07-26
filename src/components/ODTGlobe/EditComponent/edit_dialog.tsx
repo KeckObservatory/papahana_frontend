@@ -28,9 +28,11 @@ const EditDialog = (props: Props) => {
 
     const [template, setTemplate] = useState({} as Template)
     const [component, setComponent] = useState({} as TemplateComponent)
-    const [compKey, setCompKey] = useState('')
     const [schema, setSchema] = useState({})
     const [uiSchema, setUISchema] = useState({})
+    const [ob, setOB] = useState({} as ObservationBlock)
+
+    const compKey = props.tableMeta.columnData.name as keyof ObservationBlock
 
     useEffect(() => {
     }, [])
@@ -38,12 +40,11 @@ const EditDialog = (props: Props) => {
     const editComponent = () => {
         console.log('value', props.value, 'tableMeta', props.tableMeta)
         const ob_id = props.tableMeta.rowData[0]
-        const compKey = props.tableMeta.columnData.name as keyof ObservationBlock
-        setCompKey(compKey)
         console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
             const comp = ob[compKey] as TemplateComponent
             setComponent(comp)
+            setOB(ob)
             const templateName = comp.metadata.name
             console.log('component', component)
             console.log('template name', templateName)
@@ -70,12 +71,23 @@ const EditDialog = (props: Props) => {
         setOpen(false);
     };
 
+
     const handleChange = (evt: ISubmitEvent<any>, es?: ErrorSchema) => {
         //@ts-ignore
         let newOBComponent = props.parentState.obComponent
         newOBComponent.parameters = evt.formData as object
         setComponent(newOBComponent)
-    }
+        }
+
+    const handleSubmit = () => {
+        //@ts-ignore
+        let newOBComponent = props.parentState.obComponent
+        let newOB =  {...ob}
+        newOB[compKey] = newOBComponent
+
+        const ob_id = props.tableMeta.rowData[0]
+        ob_api_funcs.put(ob_id, newOB)
+        }
 
 
     return (
@@ -96,6 +108,7 @@ const EditDialog = (props: Props) => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
+                    <Button onClick={handleSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
         </React.Fragment>
