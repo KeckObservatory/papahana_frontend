@@ -26,7 +26,6 @@ const EditDialog = (props: Props) => {
     const [open, setOpen] = useState(false);
 
 
-    const [template, setTemplate] = useState({} as Template)
     const [component, setComponent] = useState({} as TemplateComponent)
     const [schema, setSchema] = useState({})
     const [uiSchema, setUISchema] = useState({})
@@ -51,7 +50,6 @@ const EditDialog = (props: Props) => {
 
             get_template(templateName).then((template: Template) => {
                 console.log('template retrieved', template)
-                setTemplate(template)
                 const schema = template_to_schema(template)
                 const uiSchema = schemas.getUiSchema(compKey)
                 setSchema(schema)
@@ -74,7 +72,7 @@ const EditDialog = (props: Props) => {
 
     const handleChange = (evt: ISubmitEvent<any>, es?: ErrorSchema) => {
         //@ts-ignore
-        let newOBComponent = props.parentState.obComponent
+        let newOBComponent = {...component}
         newOBComponent.parameters = evt.formData as object
         setComponent(newOBComponent)
         }
