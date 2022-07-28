@@ -1,14 +1,33 @@
 import React, { useState } from 'react';
-import Button from "@mui/material/Button"
-import { ob_api_funcs } from "../../../api/ApiRoot"
-import { get_template } from "../../../api/utils"
-import { ObservationBlock, Template, TemplateComponent} from "../../../typings/papahana";
+import { ObservationBlock } from "../../../typings/papahana";
 import EditDialog from './edit_dialog';
+import EditCPDialog from './edit_cp_dialog';
 
 
 const ComponentInput = (value: string, tableMeta: any, updateValue: any) => {
+
+    const compKey = tableMeta.columnData.name as keyof ObservationBlock
+
+    const component_dialog = (compKey: string) => {
+        if (compKey === 'observations') {
+            return (
+                <EditDialog value={value} tableMeta={tableMeta} />
+            )
+        }
+        else if (compKey === 'common_parameters') {
+            return (
+                <EditCPDialog value={value} tableMeta={tableMeta} />
+            )
+        }
+        else {
+            return (
+                <EditDialog value={value} tableMeta={tableMeta} />
+            )
+        }
+    }
     return (
-        <EditDialog value={value} tableMeta={tableMeta} />
+        value &&
+        component_dialog(compKey)
     )
 }
 

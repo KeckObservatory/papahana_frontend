@@ -12,6 +12,7 @@ import LoginDialog from './login_dialog';
 import { Theme } from "@mui/material/styles";
 import DoorFrontIcon from '@mui/icons-material/DoorFront';
 import { get_userinfo } from './../api/ApiRoot';
+import { UserInfo } from '../typings/ddoi_api';
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -46,7 +47,7 @@ export function TopBar(props: Props) {
 
   useEffect(() => {
 
-    get_userinfo().then( (response: any) => {
+    get_userinfo().then( (response: UserInfo) => {
       const uname = response.Title + ' ' + response.FirstName + ' ' + response.LastName
       setName(uname)
     })

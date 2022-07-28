@@ -8,6 +8,7 @@ import { Autosave } from './autosave'
 import Drawer from '@mui/material/Drawer';
 import { useDrawerOpenContext } from './../App'
 import { SideMenu } from './side_menu'
+import { ob_api_funcs } from './../../api/ApiRoot';
 
 const useStyles = makeStyles((theme: Theme) => ({
   dragger: {
@@ -41,11 +42,17 @@ export default function ODTView(props: Props) {
   const drawer = useDrawerOpenContext()
 
   useEffect(() => {
+    if (ob_id) {
+        ob_api_funcs.get(ob_id).then( (initOb: ObservationBlock) => {
+          setOB(initOb)
+        })
+
+    }
   }, [])
   
   const renderRGL = () => {
-    const empty = Object.keys(ob).length > 0
-    if (empty) {
+    const notEmpty = Object.keys(ob).length > 0
+    if (notEmpty) {
       return (
         <OBBeautifulDnD
           ob={ob}

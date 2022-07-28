@@ -40,7 +40,7 @@ interface Props {
   id: string
 }
 
-const template_to_schema = (template: Template, formName: string): JSONSchema7 => {
+export const template_to_schema = (template: Template, formName: string): JSONSchema7 => {
   let schema: Partial<JsonSchema> = {}
   schema.title = formName 
   schema.type = 'object'

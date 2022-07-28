@@ -1,7 +1,15 @@
 import axios, { AxiosResponse } from 'axios';
 
 import { handleResponse, handleError, intResponse, intError } from './response';
-import { Container, ObservationBlock, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
+import {
+    Container,
+    ObservationBlock,
+    SemesterIds,
+    Instrument,
+    InstrumentPackage,
+    Template
+} from './../typings/papahana'
+import { OBTableRow, UserInfo } from './../typings/ddoi_api'
 import {
     mock_get_instrument_package,
     mock_get_template,
@@ -47,20 +55,17 @@ const axiosInstance = axios.create({
 })
 axiosInstance.interceptors.response.use(intResponse, intError);
 
-export const get_userinfo = (): Promise<any> => {
+export const get_userinfo = (): Promise<UserInfo> => {
     const url = BASE_URL + '/userinfo';
     return axiosInstance.get(url)
-        .then((response: AxiosResponse<any>) => {
-            const ip = response.headers["x-my-real-ip"]
-            return axios.request({
-                url: url,
-                method: "get",
-                withCredentials: true,
-                headers: {
-                    'X-My-Real-Ip': ip,
-                },
-            })
-        })
+        .then(handleResponse)
+        .catch(handleError)
+}
+
+export const get_ob_table = (): Promise<OBTableRow> => {
+    const url = API_URL + '/search/ob/tableview';
+    return axiosInstance
+        .get(url)
         .then(handleResponse)
         .catch(handleError)
 }

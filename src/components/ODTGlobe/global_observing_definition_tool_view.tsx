@@ -3,26 +3,30 @@ import { semid_api_funcs } from '../../api/ApiRoot';
 import { get_sem_id_list } from '../../api/utils';
 import { ObservationBlock, Science } from '../../typings/papahana';
 import OBTable from './ob_table'
+import { OBTableRow, GlobalTableRow } from '../../typings/ddoi_api'
 
 interface Props {
 
 }
 
-export interface GlobalTableRow {
-    ob_id: string,
-    name?: string,
-    ob_type: string,
-    sem_id: string,
-    instrument: string,
-    tags?: string[],
-    target?: string,
-    acquisition?: string,
-    common_parameters?: string,
-    observations?: string
+
+const get_all_ob_rows_bak = async (): Promise<GlobalTableRow[]> => {
+
+    let rows: GlobalTableRow[] = []
+    const sem_ids = await get_sem_id_list()
+    for (let idx = 0; idx < sem_ids.associations.length; idx++) {
+        const sem_id = sem_ids.associations[idx]
+        const obs = await semid_api_funcs.get_semester_obs(sem_id)
+        const obRows = obs_to_rows(obs)
+        rows = [...rows, ...obRows]
+        console.log('ob rows length: ', rows.length)
+    }
+
+    console.log('final ob rows length: ', rows.length)
+    return (rows)
 }
 
 const get_all_ob_rows = async (): Promise<GlobalTableRow[]> => {
-
     let rows: GlobalTableRow[] = []
     const sem_ids = await get_sem_id_list()
     for (let idx = 0; idx < sem_ids.associations.length; idx++) {
