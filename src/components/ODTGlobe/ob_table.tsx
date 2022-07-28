@@ -6,6 +6,7 @@ import ChipInput from 'material-ui-chip-input'
 import Dialog from '@mui/material/Dialog';
 import WNCStepperDialogContent from './wnc/wnc_stepper_dialog_content';
 import ComponentInput from './EditComponent/component_input';
+import EditOBInput from './EditComponent/edit_ob_input';
 
 interface Props {
     rows: object[]
@@ -84,6 +85,9 @@ const columnNames = [
 
 const columns = [
     { name: 'ob_id', label: 'OB ID', options: { display: false } },
+    { name: 'edit_ob', label: 'Edit OB', options: { 
+        customBodyRender: EditOBInput,
+    } },
     { name: 'name', label: 'OB Name' },
     { name: 'sem_id', label: 'Semid' },
     { name: 'instrument', label: 'Instrument' },
