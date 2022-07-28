@@ -9,6 +9,7 @@ import ODTGlobeView from './ODTGlobe/global_observing_definition_tool_view';
 import { ThemeKeys } from 'react-json-view';
 import { SelectionToolView } from './SelectionTool/selection_tool_view';
 import { useDrawerOpenContext } from './App'
+import { NumberParam, useQueryParam, withDefault } from 'use-query-params'
 
 const useStyles = makeStyles((theme: DefaultTheme) => ({
     moduleMain: {
@@ -72,7 +73,8 @@ interface ModuleMenuProps {
 
 export const ModuleMenu = (props: ModuleMenuProps) => {
     const classes = useStyles();
-    const [tabIdx, setTabIdx] = React.useState(1);
+    // const [tabIdx, setTabIdx] = React.useState(1);
+    const [tabIdx, setTabIdx] = useQueryParam('tab_index', withDefault(NumberParam, 1));
 
     //setting drawer to always closed
     const drawerOpenContext = useDrawerOpenContext()
