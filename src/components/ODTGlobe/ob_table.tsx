@@ -84,7 +84,7 @@ const columnNames = [
 ]
 
 const columns = [
-    { name: 'ob_id', label: 'OB ID', options: { display: false } },
+    { name: '_id', label: 'OB ID', options: { display: false } },
     { name: 'edit_ob', label: 'Edit OB', options: { 
         customBodyRender: EditOBInput,
     } },

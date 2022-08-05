@@ -9,7 +9,7 @@ const ComponentInput = (value: string, tableMeta: any, updateValue: any) => {
     const compKey = tableMeta.columnData.name as keyof ObservationBlock
 
     const component_dialog = (compKey: string) => {
-        if (compKey === 'observations') {
+        if (compKey === 'number_sequences') {
             return (
                 <EditDialog value={value} tableMeta={tableMeta} />
             )
