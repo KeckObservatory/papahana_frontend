@@ -10,12 +10,21 @@ import { default as mock_templates } from './templates.json'
 import { default as mock_containers } from './containers-demo.json'
 import { default as mock_instrument_packages } from './instrument_packages.json'
 import { mock_targets, mock_metadata } from './mock_ob_metadata_targets'
+import { default as mock_ob_table_rows } from './ob_table_rows.json'
+import { OBTableRow } from '../typings/ddoi_api';
 
 export const mock_get_container_ob_metadata = (semid: string, container_id?: string) => {
    const mockPromise = new Promise<Partial<ObservationBlock[]>>((resolve) => {
       resolve( mock_metadata as any )
    })
    return mockPromise 
+}
+
+export const mock_get_ob_table = () => {
+   const mockPromise = new Promise<OBTableRow[]>( (resolve) => {
+      resolve(mock_ob_table_rows as OBTableRow[])
+   })
+   return mockPromise
 }
 
 export const mock_get_container_ob_target= (semid: string, container_id?: string) => {

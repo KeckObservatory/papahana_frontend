@@ -1,5 +1,6 @@
 
 export interface OBTableRow { 
+_id: string
 acquisition: string
 common_parameters: string
 instrument: string
@@ -8,7 +9,7 @@ ob_name: string
 ob_type: string
 sem_id: string
 tags: string[]
-target?: string
+target_name?: string
 }
 
 // to be replaced by OBTableRow when api is complete

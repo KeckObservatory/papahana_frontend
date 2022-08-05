@@ -19,7 +19,8 @@ import {
     mock_ob_get,
     mock_get_semester_obs,
     mock_get_container_ob_metadata,
-    mock_get_container_ob_target
+    mock_get_container_ob_target,
+    mock_get_ob_table
 
 } from '../mocks/mock_utils';
 
@@ -62,7 +63,7 @@ export const get_userinfo = (): Promise<UserInfo> => {
         .catch(handleError)
 }
 
-export const get_ob_table = (): Promise<OBTableRow> => {
+const get_ob_table = (): Promise<OBTableRow[]> => {
     const url = API_URL + '/search/ob/tableview';
     return axiosInstance
         .get(url)
@@ -229,4 +230,8 @@ export const container_api_funcs = {
 
 export const semid_api_funcs = {
     get_semester_obs: IS_BUILD ? get_semester_obs : mock_get_semester_obs
+}
+
+export const ob_table_funcs = {
+    get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table 
 }

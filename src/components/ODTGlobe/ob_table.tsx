@@ -80,7 +80,7 @@ const TagsInput = (value: string, tableMeta: any, updateValue: any) => {
 }
 
 const columnNames = [
-    'ob_id', 'name', 'sem_id', 'instrument', 'ob_type', 'target', 'acquisition', 'observations', 'common_parameters', 'tags'
+    '_id', 'ob_name', 'sem_id', 'instrument', 'ob_type', 'target_name', 'acquisition', 'number_sequences', 'common_parameters', 'tags'
 ]
 
 const columns = [
@@ -88,12 +88,12 @@ const columns = [
     { name: 'edit_ob', label: 'Edit OB', options: { 
         customBodyRender: EditOBInput,
     } },
-    { name: 'name', label: 'OB Name' },
+    { name: 'ob_name', label: 'OB Name' },
     { name: 'sem_id', label: 'Semid' },
     { name: 'instrument', label: 'Instrument' },
     { name: 'ob_type', label: 'OB Type' },
     {
-        name: 'target', label: 'Target',
+        name: 'target_name', label: 'Target',
         options: {
             customBodyRender: ComponentInput,
         }
@@ -105,7 +105,7 @@ const columns = [
         }
     },
     {
-        name: 'observations', label: 'Sequences',
+        name: 'number_sequences', label: 'Sequences',
         options: {
             customBodyRender: ComponentInput,
         }
