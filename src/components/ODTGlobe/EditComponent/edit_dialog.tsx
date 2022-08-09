@@ -72,22 +72,24 @@ const EditDialog = (props: Props) => {
 
     const handleChange = (evt: ISubmitEvent<any>, es?: ErrorSchema) => {
         //@ts-ignore
-        let newOBComponent = {...component}
+        let newOBComponent = { ...component }
         newOBComponent.parameters = evt.formData as object
         setComponent(newOBComponent)
-        }
+    }
 
     const handleSubmit = () => {
-        let newOBComponent = {...component}
+        let newOBComponent = { ...component }
 
-        let newOB =  {...ob}
+        let newOB = { ...ob }
 
         //@ts-ignore
         newOB[compKey] = newOBComponent
 
         const ob_id = props.tableMeta.rowData[0]
-        ob_api_funcs.put(ob_id, newOB)
-        }
+        ob_api_funcs.put(ob_id, newOB).finally(() => {
+            setOpen(false);
+        })
+    }
 
 
     return (
