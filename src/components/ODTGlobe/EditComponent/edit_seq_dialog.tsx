@@ -1,17 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import Button from "@mui/material/Button"
-import { Template, ObservationBlock, CommonParameters } from "../../../typings/papahana";
+import { Template, TemplateComponent, ObservationBlock, Science } from "../../../typings/papahana";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { JSONSchema7 } from 'json-schema'
-import * as form_schemas from './../../forms/schemas'
-import { useStyles, Form, log } from './../../forms/template_form'
-import { template_to_schema } from './../../forms/common_parameters_template_form'
+import * as formSchemas from './../../forms/schemas'
+import { useStyles, Form, log, template_to_schema } from './../../forms/template_form'
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
+import { UiSchema } from "react-jsonschema-form"
+import { ErrorSchema } from 'react-jsonschema-form';
 import { ob_api_funcs } from '../../../api/ApiRoot';
 import { get_template } from '../../../api/utils';
+import { JSONSchema7 } from 'json-schema'
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
@@ -23,43 +24,45 @@ interface Props {
     tableMeta: any;
 }
 
-const EditCPDialog = (props: Props) => {
+const EditSeqDialog = (props: Props) => {
 
     const ref = React.useRef(null)
     const classes = useStyles()
     const [open, setOpen] = useState(false);
 
 
-    const [component, setComponent] = useState({} as CommonParameters)
-    const [schemas, setSchemas] = useState({} as { [id: string]: JSONSchema7 })
+    const [component, setComponent] = useState([] as Science[])
+    const [schemas, setSchemas] = useState([] as JSONSchema7[] )
+    const [uiSchemas, setUISchemas] = useState([] as UiSchema[])
     const [ob, setOB] = useState({} as ObservationBlock)
 
-    const compKey = props.tableMeta.columnData.name as keyof ObservationBlock
+    let compKey = props.tableMeta.columnData.name as keyof ObservationBlock
+    compKey = compKey.includes('number_sequences') ? 'observations' : compKey
 
-    const uiSchema = form_schemas.getUiSchema(compKey)
-    const sub_forms = [
-        'instrument_parameters',
-        'detector_parameters',
-        'tcs_parameters'] as unknown as (keyof CommonParameters)[]
     useEffect(() => {
-
     }, [])
 
     const editComponent = () => {
+        console.log('value', props.value, 'tableMeta', props.tableMeta)
         const ob_id = props.tableMeta.rowData[0]
+        console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
-            const comp = ob[compKey] as CommonParameters
+            const comp = ob[compKey] as Science[]
             setComponent(comp)
             setOB(ob)
-            const templateName = comp.metadata.name
-            let newSchemas = { ...schemas }
-            get_template(templateName).then((template: Template) => {
-                sub_forms.forEach((formName: keyof Template) => {
-                    const subTemplate = template[formName] as unknown as Template
-                    const schema = template_to_schema(subTemplate, formName)
-                    newSchemas[formName] = schema
+
+            comp.forEach((sci: Science) => {
+                const templateName = sci.metadata.name
+                // console.log('sequence component', sci)
+                // console.log('template name', templateName)
+
+                get_template(templateName).then((template: Template) => {
+                    // console.log('template retrieved', template)
+                    const schema = template_to_schema(template)
+                    const uiSchema = formSchemas.getUiSchema(compKey)
+                    setSchemas((currSchemas) => [...currSchemas, schema])
+                    setUISchemas((currUISchemas) => [...currUISchemas, uiSchema])
                 })
-                setSchemas(newSchemas)
             })
 
         })
@@ -76,15 +79,15 @@ const EditCPDialog = (props: Props) => {
     };
 
 
-    const handleChange = (evt: ISubmitEvent<any>, formName: keyof CommonParameters) => {
+    const handleSeqChange = (idx: number, evt: ISubmitEvent<any>, es?: ErrorSchema) => {
         //@ts-ignore
-        let newComponent = { ...component } as any
-        newComponent[formName] = evt.formData
-        setComponent(newComponent)
+        let newOBComponent = [ ...component ]
+        newOBComponent[idx].parameters = evt.formData as object
+        setComponent(newOBComponent)
     }
 
     const handleSubmit = () => {
-        let newOBComponent = { ...component }
+        let newOBComponent = [...component]
         let newOB = { ...ob }
         //@ts-ignore
         newOB[compKey] = newOBComponent
@@ -94,18 +97,22 @@ const EditCPDialog = (props: Props) => {
         })
     }
 
+
     const dialog_content = () => {
         return (
             <div ref={ref} className={classes.root}>
-                {sub_forms.map((formName: keyof CommonParameters) => {
+                {component.map((seq: Science, idx: number) => {
                     //@ts-ignore
-                    const formData = component[formName]
-                    const schema = schemas[formName]
-                    const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => {
-                        handleChange(evt, formName)
+                    const formData = seq.parameters
+                    const schema = schemas[idx]
+                    console.log('formData', formData, 'schema', schema)
+                    const uiSchema = uiSchemas[idx]
+                    const formName = 'sequence_'+idx
+                    const handleSubChange = (evt: ISubmitEvent<any>, es?: ErrorSchema) => {
+                        handleSeqChange(idx, evt, es)
                     }
                     return (
-                        <Accordion key={formName}>
+                        <Accordion key={formName} >
                             <AccordionSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1a-content"
@@ -138,7 +145,7 @@ const EditCPDialog = (props: Props) => {
             </Button>
             {open && (
                 <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>Edit Common Parameters</DialogTitle>
+                    <DialogTitle>Edit Sequences</DialogTitle>
                     <DialogContent>
                         {dialog_content()}
                     </DialogContent>
@@ -152,4 +159,4 @@ const EditCPDialog = (props: Props) => {
     )
 }
 
-export default EditCPDialog
+export default EditSeqDialog

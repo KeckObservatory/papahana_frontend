@@ -1,14 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import Button from "@mui/material/Button"
-import { Template, OBComponent, TemplateComponent, ObservationBlock } from "../../../typings/papahana";
+import { Template, TemplateComponent, ObservationBlock, Target, Acquisition } from "../../../typings/papahana";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
 import * as schemas from './../../forms/schemas'
-import { useStyles, init_form_data, get_schema, Form, log, template_to_schema } from './../../forms/template_form'
+import { useStyles, Form, log, template_to_schema } from './../../forms/template_form'
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { ErrorSchema } from 'react-jsonschema-form';
 import { ob_api_funcs } from '../../../api/ApiRoot';
@@ -26,7 +24,7 @@ const EditDialog = (props: Props) => {
     const [open, setOpen] = useState(false);
 
 
-    const [component, setComponent] = useState({} as TemplateComponent)
+    const [component, setComponent] = useState({} as Acquisition | Target )
     const [schema, setSchema] = useState({})
     const [uiSchema, setUISchema] = useState({})
     const [ob, setOB] = useState({} as ObservationBlock)
@@ -42,7 +40,7 @@ const EditDialog = (props: Props) => {
         const ob_id = props.tableMeta.rowData[0]
         console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
-            const comp = ob[compKey] as TemplateComponent
+            const comp = ob[compKey] as Acquisition | Target 
             setComponent(comp)
             setOB(ob)
             const templateName = comp.metadata.name
@@ -98,7 +96,7 @@ const EditDialog = (props: Props) => {
             </Button>
             {open && (
                 <Dialog open={open} onClose={handleClose}>
-                    <DialogTitle>Subscribe</DialogTitle>
+                    <DialogTitle>Edit {compKey[0].toUpperCase() + compKey.substring(1)}</DialogTitle>
                     <DialogContent>
                         <Form className={classes.form}
                             schema={schema}
