@@ -58,7 +58,7 @@ const EditCPDialog = (props: Props) => {
             setComponent(comp)
             setOB(ob)
             const templateName = comp.metadata.name
-            console.log('component', component)
+            console.log('component', comp)
             console.log('template name', templateName)
             let newSchemas = { ...schemas }
             get_template(templateName).then((template: Template) => {
@@ -92,13 +92,14 @@ const EditCPDialog = (props: Props) => {
     }
 
     const handleSubmit = () => {
-        //@ts-ignore
-        let newOBComponent = props.parentState.obComponent
+        let newOBComponent = { ...component }
         let newOB = { ...ob }
+        //@ts-ignore
         newOB[compKey] = newOBComponent
-
         const ob_id = props.tableMeta.rowData[0]
-        ob_api_funcs.put(ob_id, newOB)
+        ob_api_funcs.put(ob_id, newOB).finally(() => {
+            setOpen(false);
+        })
     }
 
 
@@ -114,6 +115,7 @@ const EditCPDialog = (props: Props) => {
                     <div ref={ref} className={classes.root}>
                         {sub_forms.map((formName: keyof CommonParameters) => {
                             //@ts-ignore
+                            console.log('cp form name', formName)
                             const formData = component[formName]
                             const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName)
                             return (

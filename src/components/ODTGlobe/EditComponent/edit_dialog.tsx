@@ -80,12 +80,9 @@ const EditDialog = (props: Props) => {
 
     const handleSubmit = () => {
         let newOBComponent = { ...component }
-
         let newOB = { ...ob }
-
         //@ts-ignore
         newOB[compKey] = newOBComponent
-
         const ob_id = props.tableMeta.rowData[0]
         ob_api_funcs.put(ob_id, newOB).finally(() => {
             setOpen(false);
