@@ -64,7 +64,8 @@ const EditCPDialog = (props: Props) => {
             get_template(templateName).then((template: Template) => {
                 console.log('template retrieved', template)
                 sub_forms.forEach((formName: keyof Template) => {
-                    const schema = template_to_schema(template, formName)
+                    const subTemplate = template[formName] as unknown as Template
+                    const schema = template_to_schema(subTemplate, formName)
                     console.log('schema for form', formName, schema)
                     newSchemas[formName] = schema
                 })
@@ -131,7 +132,7 @@ const EditCPDialog = (props: Props) => {
                                         <Typography variant={"h6"} >{formName}</Typography>
                                     </AccordionSummary>
                                     <AccordionDetails >
-                                        {schemas &&
+                                        {schema &&
                                             <Form className={classes.form}
                                                 schema={schema}
                                                 formData={formData}
