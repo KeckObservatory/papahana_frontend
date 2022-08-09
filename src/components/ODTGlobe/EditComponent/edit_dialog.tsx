@@ -31,7 +31,8 @@ const EditDialog = (props: Props) => {
     const [uiSchema, setUISchema] = useState({})
     const [ob, setOB] = useState({} as ObservationBlock)
 
-    const compKey = props.tableMeta.columnData.name as keyof ObservationBlock
+    let compKey = props.tableMeta.columnData.name as keyof ObservationBlock
+    compKey = compKey.includes('target_name')? 'target' : compKey
 
     useEffect(() => {
     }, [])
