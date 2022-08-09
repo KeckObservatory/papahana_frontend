@@ -65,6 +65,7 @@ const EditCPDialog = (props: Props) => {
                 console.log('template retrieved', template)
                 sub_forms.forEach((formName: keyof Template) => {
                     const schema = template_to_schema(template, formName)
+                    console.log('schema for form', formName, schema)
                     newSchemas[formName] = schema
                 })
                 setSchemas(newSchemas)
@@ -117,6 +118,7 @@ const EditCPDialog = (props: Props) => {
                             //@ts-ignore
                             console.log('cp form name', formName)
                             const formData = component[formName]
+                            const schema = schemas[formName]
                             const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName)
                             return (
                                 <Accordion key={formName}>
@@ -129,9 +131,9 @@ const EditCPDialog = (props: Props) => {
                                         <Typography variant={"h6"} >{formName}</Typography>
                                     </AccordionSummary>
                                     <AccordionDetails >
-                                        {schemas[formName] &&
+                                        {schemas &&
                                             <Form className={classes.form}
-                                                schema={schemas[formName]}
+                                                schema={schema}
                                                 formData={formData}
                                                 onChange={handleSubChange}
                                                 onError={log("errors")}><div></div></Form>
@@ -141,12 +143,6 @@ const EditCPDialog = (props: Props) => {
                             )
                         })}
                     </div>
-                    {/* <Form className={classes.form}
-                        schema={schema}
-                        uiSchema={uiSchema as rUiSchema}
-                        formData={component.parameters}
-                        onChange={handleChange as any}
-                        onError={log("errors")} ><div></div></Form> */}
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={handleClose}>Cancel</Button>
