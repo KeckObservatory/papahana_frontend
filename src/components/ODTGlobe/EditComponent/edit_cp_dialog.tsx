@@ -50,23 +50,17 @@ const EditCPDialog = (props: Props) => {
     }, [])
 
     const editComponent = () => {
-        console.log('value', props.value, 'tableMeta', props.tableMeta)
         const ob_id = props.tableMeta.rowData[0]
-        console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
-            const comp = ob[compKey] as CommonParameters 
+            const comp = ob[compKey] as CommonParameters
             setComponent(comp)
             setOB(ob)
             const templateName = comp.metadata.name
-            console.log('component', comp)
-            console.log('template name', templateName)
             let newSchemas = { ...schemas }
             get_template(templateName).then((template: Template) => {
-                console.log('template retrieved', template)
                 sub_forms.forEach((formName: keyof Template) => {
                     const subTemplate = template[formName] as unknown as Template
                     const schema = template_to_schema(subTemplate, formName)
-                    console.log('schema for form', formName, schema)
                     newSchemas[formName] = schema
                 })
                 setSchemas(newSchemas)
@@ -111,13 +105,13 @@ const EditCPDialog = (props: Props) => {
             <Button variant="outlined" onClick={handleClickOpen}>
                 {props.value}
             </Button>
+            open && (
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Subscribe</DialogTitle>
                 <DialogContent>
                     <div ref={ref} className={classes.root}>
                         {sub_forms.map((formName: keyof CommonParameters) => {
                             //@ts-ignore
-                            console.log('cp form name', formName)
                             const formData = component[formName]
                             const schema = schemas[formName]
                             const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName)
@@ -150,6 +144,7 @@ const EditCPDialog = (props: Props) => {
                     <Button onClick={handleSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
+            )
         </React.Fragment>
     )
 }
