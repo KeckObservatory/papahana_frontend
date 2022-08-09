@@ -78,9 +78,11 @@ const EditDialog = (props: Props) => {
         }
 
     const handleSubmit = () => {
-        //@ts-ignore
-        let newOBComponent = props.parentState.obComponent
+        let newOBComponent = {...component}
+
         let newOB =  {...ob}
+
+        //@ts-ignore
         newOB[compKey] = newOBComponent
 
         const ob_id = props.tableMeta.rowData[0]
