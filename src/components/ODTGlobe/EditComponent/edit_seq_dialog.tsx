@@ -43,9 +43,9 @@ const EditSeqDialog = (props: Props) => {
     }, [])
 
     const editComponent = () => {
-        console.log('value', props.value, 'tableMeta', props.tableMeta)
+        // console.log('value', props.value, 'tableMeta', props.tableMeta)
         const ob_id = props.tableMeta.rowData[0]
-        console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
+        // console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
             const comp = ob[compKey] as Science[]
             setComponent(comp)
@@ -105,7 +105,7 @@ const EditSeqDialog = (props: Props) => {
                     //@ts-ignore
                     const formData = seq.parameters
                     const schema = schemas[idx]
-                    console.log('formData', formData, 'schema', schema)
+                    // console.log('formData', formData, 'schema', schema)
                     const uiSchema = uiSchemas[idx]
                     const formName = 'sequence_'+idx
                     const handleSubChange = (evt: ISubmitEvent<any>, es?: ErrorSchema) => {
