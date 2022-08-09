@@ -98,6 +98,41 @@ const EditCPDialog = (props: Props) => {
         })
     }
 
+    const dialog_content = () => {
+        return (
+            <div ref={ref} className={classes.root}>
+                {sub_forms.map((formName: keyof CommonParameters) => {
+                    //@ts-ignore
+                    const formData = component[formName]
+                    const schema = schemas[formName]
+                    const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => {
+                        handleChange(evt, formName)
+                    }
+                    return (
+                        <Accordion key={formName}>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                                aria-label="Expand"
+                            >
+                                <Typography variant={"h6"} >{formName}</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails >
+                                {schema &&
+                                    <Form className={classes.form}
+                                        schema={schema}
+                                        formData={formData}
+                                        onChange={handleSubChange}
+                                        onError={log("errors")}><div></div></Form>
+                                }
+                            </AccordionDetails>
+                        </Accordion>
+                    )
+                })}
+            </div>
+        )
+    }
 
     return (
 
@@ -105,46 +140,18 @@ const EditCPDialog = (props: Props) => {
             <Button variant="outlined" onClick={handleClickOpen}>
                 {props.value}
             </Button>
-            open && (
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Subscribe</DialogTitle>
-                <DialogContent>
-                    <div ref={ref} className={classes.root}>
-                        {sub_forms.map((formName: keyof CommonParameters) => {
-                            //@ts-ignore
-                            const formData = component[formName]
-                            const schema = schemas[formName]
-                            const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName)
-                            return (
-                                <Accordion key={formName}>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                        aria-label="Expand"
-                                    >
-                                        <Typography variant={"h6"} >{formName}</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails >
-                                        {schema &&
-                                            <Form className={classes.form}
-                                                schema={schema}
-                                                formData={formData}
-                                                onChange={handleSubChange}
-                                                onError={log("errors")}><div></div></Form>
-                                        }
-                                    </AccordionDetails>
-                                </Accordion>
-                            )
-                        })}
-                    </div>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSubmit}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-            )
+            {open && (
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Subscribe</DialogTitle>
+                    <DialogContent>
+                        {dialog_content()}
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleSubmit}>Submit</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
         </React.Fragment>
     )
 }

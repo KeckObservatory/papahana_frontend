@@ -96,23 +96,23 @@ const EditDialog = (props: Props) => {
             <Button variant="outlined" onClick={handleClickOpen}>
                 {props.value}
             </Button>
-            open && (
-            <Dialog open={open} onClose={handleClose}>
-                <DialogTitle>Subscribe</DialogTitle>
-                <DialogContent>
-                    <Form className={classes.form}
-                        schema={schema}
-                        uiSchema={uiSchema as rUiSchema}
-                        formData={component.parameters}
-                        onChange={handleChange as any}
-                        onError={log("errors")} ><div></div></Form>
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose}>Cancel</Button>
-                    <Button onClick={handleSubmit}>Submit</Button>
-                </DialogActions>
-            </Dialog>
-            )
+            {open && (
+                <Dialog open={open} onClose={handleClose}>
+                    <DialogTitle>Subscribe</DialogTitle>
+                    <DialogContent>
+                        <Form className={classes.form}
+                            schema={schema}
+                            uiSchema={uiSchema as rUiSchema}
+                            formData={component.parameters}
+                            onChange={handleChange as any}
+                            onError={log("errors")} ><div></div></Form>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={handleClose}>Cancel</Button>
+                        <Button onClick={handleSubmit}>Submit</Button>
+                    </DialogActions>
+                </Dialog>
+            )}
         </React.Fragment>
     )
 }
