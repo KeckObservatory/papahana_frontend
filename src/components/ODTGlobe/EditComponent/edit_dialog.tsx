@@ -32,7 +32,7 @@ const EditDialog = (props: Props) => {
     const [ob, setOB] = useState({} as ObservationBlock)
 
     let compKey = props.tableMeta.columnData.name as keyof ObservationBlock
-    compKey = compKey.includes('target_name')? 'target' : compKey
+    compKey = compKey.includes('target_name') ? 'target' : compKey
 
     useEffect(() => {
     }, [])
@@ -96,6 +96,7 @@ const EditDialog = (props: Props) => {
             <Button variant="outlined" onClick={handleClickOpen}>
                 {props.value}
             </Button>
+            open && (
             <Dialog open={open} onClose={handleClose}>
                 <DialogTitle>Subscribe</DialogTitle>
                 <DialogContent>
@@ -111,6 +112,7 @@ const EditDialog = (props: Props) => {
                     <Button onClick={handleSubmit}>Submit</Button>
                 </DialogActions>
             </Dialog>
+            )
         </React.Fragment>
     )
 }
