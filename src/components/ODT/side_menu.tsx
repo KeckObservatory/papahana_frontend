@@ -18,7 +18,6 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import { get_ob_list, get_container_list } from '../../api/utils'
-
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
 import { ob_api_funcs } from '../../api/ApiRoot';
@@ -28,16 +27,16 @@ import { Theme } from '@mui/material/styles'
 
 
 export interface OBSelectContextObject {
-  sem_id: string,
-  setSemId: Function,
-  reset_container_and_ob_select: Function,
-  trigger: number,
-  setTrigger: Function
+    sem_id: string,
+    setSemId: Function,
+    reset_container_and_ob_select: Function,
+    trigger: number,
+    setTrigger: Function
 }
 
 const init_object: OBSelectContextObject = {
     sem_id: '',
-    setSemId: () => {},
+    setSemId: () => { },
     reset_container_and_ob_select: () => { },
     trigger: 0,
     setTrigger: () => { }
@@ -70,6 +69,7 @@ interface Props {
     triggerRender: number,
     setTriggerRender: Function,
     instrument: Instrument,
+    setInstrument: Function
 }
 
 export const SideMenu = (props: Props) => {
@@ -87,8 +87,6 @@ export const SideMenu = (props: Props) => {
 
     let jsonTheme = darkState ? 'bespin' : 'summerfruit:inverted' as ThemeKeys
     const [theme, setTheme] = useQueryParam('theme', withDefault(StringParam, jsonTheme))
-
-
     const [containerIdList, setContainerIdList] = React.useState([] as string[])
     const [trigger, setTrigger] = React.useState(0)
     const [obList, setOBList] = React.useState([] as string[])
@@ -98,7 +96,6 @@ export const SideMenu = (props: Props) => {
 
     //check if can submit ob
     let obEditable: boolean = 'metadata' in props.ob && typeof (props.ob_id) === "string"
-
 
     const reset_container_and_ob_select = () => {
         get_container_list(sem_id)
@@ -214,13 +211,6 @@ export const SideMenu = (props: Props) => {
         props.setTriggerRender(props.triggerRender + 1)
     }
 
-    const createOB = () => {
-        const newOB = { metadata: {} } as ObservationBlock
-        // triggerBoop(true)
-        props.setOB(newOB)
-    }
-
-
     const onEdit = (e: InteractionProps) => {
         //ob was edited. in react json viewer
         // triggerBoop(true)
@@ -302,6 +292,7 @@ export const SideMenu = (props: Props) => {
                     <AccordionDetails>
                         <ObservationBlockSelecter
                             setOB={props.setOB}
+                            setInstrument={props.setInstrument}
                             handleOBSelect={handleOBSelect}
                             ob_id={props.ob_id} />
                     </AccordionDetails>

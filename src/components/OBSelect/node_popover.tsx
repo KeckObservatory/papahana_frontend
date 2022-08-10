@@ -7,7 +7,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddContainerDialog from './add_container_dialog';
 import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
-import { Container, ObservationBlock, Status } from '../../typings/papahana';
+import { Container, Instrument, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './../ODT/side_menu'
 import { useObserverContext } from './../App'
@@ -26,6 +26,7 @@ interface Props {
     handleOBSelect: Function
     container_names?: Set<string>
     setOB?: Function
+    setInstrument: Function
     open?: boolean,
     handleClose?: Function
     anchorPos?: object 
@@ -40,7 +41,7 @@ const PopoverButtons = (props: PButtonProps) => {
     const addOB = (inst: string) => {
         console.log(`creating new ${inst} ob in ${props.type} id ${props.id}.`)
         const meta = {
-            name: "Made by ODT",
+            name: `Made by ODT for ${inst}`,
             priority: 0,
             version: "0.1.0",
             ob_type: "engineering",
@@ -85,6 +86,7 @@ const PopoverButtons = (props: PButtonProps) => {
                 .finally(() => {
                     setTimeout(() => {
                         console.log("new ob added to container. triggering new view")
+                        props.setInstrument(newOB.metadata.instrument as Instrument)
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
                         props.handleClose()
                     }, 1000);
@@ -201,6 +203,7 @@ const NodePopover = (props: Props) => {
                     handleClose={props.handleClose as Function}
                     type={props.type}
                     setOB={props.setOB}
+                    setInstrument={props.setInstrument}
                     name={props.name}
                     id={props.id} />
             </Popover>

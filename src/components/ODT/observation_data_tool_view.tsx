@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { Instrument, ObservationBlock } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
-import { useQueryParam, StringParam } from 'use-query-params'
+import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import { Autosave } from './autosave'
 import Drawer from '@mui/material/Drawer';
@@ -31,7 +31,8 @@ export interface Props {
 }
 
 export default function ODTView(props: Props) {
-  const instrument: Instrument = 'KCWI'
+
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
   const classes = useStyles();
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
@@ -110,7 +111,8 @@ export default function ODTView(props: Props) {
           setOB={setOB}
           triggerRender={triggerRender}
           setTriggerRender={setTriggerRender}
-          instrument={instrument}
+          instrument={instrument as Instrument}
+          setInstrument={setInstrument}
         />
       </Drawer>
       {renderRGL()}

@@ -153,7 +153,7 @@ export type GSMode = 'Automatic' | 'Operator' | 'User'
 export type PO = 'REF' | 'IFU'
 export type Slicer = 'Small' | 'Medium' | 'Large'
 export type Grating = 'BL' | 'BM' | 'BH1' | 'BH2' | 'RL' | 'RM' | 'RH1' | 'RH2'
-export type Instrument = 'KCWI' | 'DEIMOS' | 'MOSFIRE'
+export type Instrument = 'KCWI' | 'DEIMOS' | 'MOSFIRE' | 'KPF'
 
 export interface KCWIAcquisition extends BaseSequence {
 	parameters: KCWIAcquisitionParameters

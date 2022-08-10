@@ -13,6 +13,7 @@ export interface Props {
   handleOBSelect: Function
   ob_id: string | undefined | null
   setOB: Function
+  setInstrument: Function
 }
 
 interface State {
@@ -106,7 +107,7 @@ export default function ObservationBlockSelecter(props: Props) {
           highlightOnEmpty={true}
         />
         <Paper>
-          <ContainerTree setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
+          <ContainerTree setInstrument={props.setInstrument} setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
           <ContainerTable rows={rows} containerIdNames={containerIdNames} handleOBSelect={props.handleOBSelect} />
         </Paper>
       </React.Fragment>

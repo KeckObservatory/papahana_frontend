@@ -13,17 +13,18 @@ import AddIcon from '@mui/icons-material/Add';
 import Typography from '@mui/material/Typography';
 import { blue } from '@mui/material/colors';
 import DropDown from './../drop_down'
+import { Instrument } from '../../typings/papahana';
 
-const Instruments = ['KCWI', 'KPF'];
+const Instruments: Instrument[] = ['KCWI', 'KPF'];
 
 export interface SimpleDialogProps {
     open: boolean;
-    inst: string;
-    onClose: (value?: string) => void;
+    inst: Instrument;
+    onClose: (value?: Instrument) => void;
 }
 
 export interface Props {
-    addOB: (inst: string) => void;
+    addOB: (inst: Instrument) => void;
 }
 
 function SelectInstrumentDialog(props: SimpleDialogProps) {
@@ -33,7 +34,7 @@ function SelectInstrumentDialog(props: SimpleDialogProps) {
         onClose();
     };
 
-    const set_inst = (newInst: string) => {
+    const set_inst = (newInst: Instrument) => {
         console.log('instrument selected', newInst)
         onClose(newInst)
 
@@ -60,7 +61,7 @@ export default function SelectInstrument(props: Props) {
         setOpen(true);
     };
 
-    const handleClose = (newInst?: string) => {
+    const handleClose = (newInst?: Instrument) => {
         setOpen(false);
         if (newInst) {
             setInst(newInst);

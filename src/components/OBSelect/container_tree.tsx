@@ -11,6 +11,7 @@ interface Props {
     handleOBSelect: Function
     containers: DetailedContainer[]
     setOB: Function
+    setInstrument: Function
 }
 
 export interface RenderTree {
@@ -95,6 +96,7 @@ export default function ContainerTree(props: Props) {
             parentNodeId={tree.id}
             names={names}
             setOB={props.setOB}
+            setInstrument={props.setInstrument}
             handleOBSelect={props.handleOBSelect}
             />
         </TreeView>
