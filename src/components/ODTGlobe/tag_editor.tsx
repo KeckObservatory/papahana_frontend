@@ -1,6 +1,7 @@
 import React from 'react';
 import ChipInput from 'material-ui-chip-input'
 import { tag_functions } from './../../api/ApiRoot'
+import Chip from '@mui/material/Chip';
 
 
 interface Props {

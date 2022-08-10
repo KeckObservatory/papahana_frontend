@@ -11,6 +11,7 @@ import { Container, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './../ODT/side_menu'
 import { useObserverContext } from './../App'
+import SelectInstrument from './select_instrument'
 
 interface PButtonProps extends Props {
     handleClose: Function
@@ -36,14 +37,14 @@ const PopoverButtons = (props: PButtonProps) => {
     const ob_select_context = useOBSelectContext()
     const observer_context = useObserverContext()
 
-    const addOB = () => {
-        console.log(`creating new ob in ${props.type} id ${props.id}.`)
+    const addOB = (inst: string) => {
+        console.log(`creating new ${inst} ob in ${props.type} id ${props.id}.`)
         const meta = {
             name: "Made by ODT",
             priority: 0,
             version: "0.1.0",
             ob_type: "engineering",
-            instrument: "KCWI",
+            instrument: inst,
             pi_id: JSON.parse(observer_context.observer_id),
             sem_id: ob_select_context.sem_id,
             comment: ""
@@ -129,7 +130,7 @@ const PopoverButtons = (props: PButtonProps) => {
             }
             {props.type === 'container' &&
                 <div style={{ display: 'flex' }}>
-                    <Button onClick={addOB}>add new OB</Button>
+                    <SelectInstrument addOB={addOB}/>
                     <RemoveContainerDialog
                         name={props.name as string}
                         container_id={props.id}
