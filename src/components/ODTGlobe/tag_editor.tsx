@@ -9,7 +9,6 @@ interface Props {
 }
 
 const TagEditor = (props: Props) => {
-    console.log('TagEditor Inputs', props.tags, props.tableMeta)
     const ob_id = props.tableMeta.rowData[0]
     const [tags, setTags] = React.useState(props.tags)
 
@@ -23,13 +22,16 @@ const TagEditor = (props: Props) => {
     const handleDeleteChip = (chip: any, idx: number) => {
         console.log('deleting chip', chip, idx)
         tag_functions.delete_tag(ob_id, chip)
-        setTags((oldTags) => oldTags.splice(idx, 1))
+        setTags((oldTags) => {
+            const newTags = [...oldTags]
+            newTags.splice(idx, 1)
+            return newTags 
+        })
     }
-
 
     return (
         <ChipInput 
-        value={props.tags}
+        value={tags}
         onAdd={(chip) => handleAddChip(chip)}
         onDelete={(chip, index) => handleDeleteChip(chip, index)}
         />
