@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from 'react';
 import MUIDataTable, { DisplayData, MUIDataTableOptions } from "mui-datatables"
 import Button from '@mui/material/Button';
-import ChipInput from 'material-ui-chip-input'
+import TagEditor from './tag_editor'
 import Dialog from '@mui/material/Dialog';
 import WNCStepperDialogContent from './wnc/wnc_stepper_dialog_content';
 import ComponentInput from './EditComponent/component_input';
@@ -71,11 +70,14 @@ const CustomToolbarSelect = (props: CTProps) => {
     );
 }
 
-const TagsInput = (value: string, tableMeta: any, updateValue: any) => {
-    // console.log('Inputs', value, tableMeta.rowData, updateValue)
+const TagsInput = (value: string[], tableMeta: any, updateValue: any) => {
+    console.log('Inputs', value, tableMeta.rowData, updateValue)
 
     return (
-        <ChipInput />
+        <TagEditor
+          tags={value}
+          tableMeta={tableMeta}
+        />
     )
 }
 

@@ -34,7 +34,7 @@ console.log(`is BUILD ? set to ${IS_BUILD}`)
 console.log(`is DEVELOPMENT ? set to ${IS_DEVELOPMENT}`)
 var DEVELOPMENT_URL = 'https://www3build.keck.hawaii.edu'
 var PRODUCTION_URL = 'https://www3.keck.hawaii.edu'
-var TEST_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
+var TEST_URL = 'http://localhost:50000/v0' //use locally or for testing (npm start or npm run demobuild)
 var BASE_URL = IS_BUILD ? PRODUCTION_URL : TEST_URL // sets for production vs test 
 
 BASE_URL = IS_DEVELOPMENT ? DEVELOPMENT_URL : BASE_URL
@@ -44,6 +44,7 @@ var OB_URL = API_URL + 'obsBlocks'
 var CONTAINER_URL = API_URL + 'containers'
 var SEMESTERS_URL = API_URL + 'semesterIds'
 var INSTRUMENT_URL = API_URL + 'instrumentPackages'
+var TAG_URL = API_URL + 'tags'
 console.log('backend url set to')
 console.log(API_URL)
 
@@ -200,6 +201,25 @@ const get_container_ob_target = (semid: string, container_id?: string) => {
         .catch(handleError);
 }
 
+
+const add_tag = (ob_id: string, tag: string): Promise<string> => {
+    let url = TAG_URL + '/add'
+    url = `?tag_name=${tag}&ob_id=${ob_id}`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+const delete_tag = (ob_id: string, tag: string): Promise<string> => {
+    let url = TAG_URL + '/delete'
+    url = `?tag_name=${tag}&ob_id=${ob_id}`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
 export const get_container_ob_data = {
     get_container_ob_metadata: IS_BUILD ? get_container_ob_metadata : mock_get_container_ob_metadata,
     get_container_ob_target: IS_BUILD ? get_container_ob_target : mock_get_container_ob_target
@@ -234,4 +254,9 @@ export const semid_api_funcs = {
 
 export const ob_table_funcs = {
     get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table 
+}
+
+export const tag_functions = {
+    add_tag: add_tag,
+    delete_tag: delete_tag 
 }
