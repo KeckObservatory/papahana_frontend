@@ -649,8 +649,7 @@ def generate_target_metadata(templateName):
 
 def generate_target(): 
     parameters, metadata = random.choice([generate_sidereal_target_parameters(),
-                                 generate_nonsidereal_target_parameters(),
-                                 generate_mos_target_parameters()])
+                                 generate_nonsidereal_target_parameters()])
     return {"metadata":metadata, "parameters":parameters}
 
 @remove_none_values_in_dict
