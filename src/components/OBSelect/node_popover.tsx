@@ -76,6 +76,7 @@ const PopoverButtons = (props: PButtonProps) => {
                 .finally(() => {
                     setTimeout(() => {
                         console.log(`new ob ${ob_id} added to container. triggering new view`)
+                        ob_select_context.setTrigger(ob_select_context.trigger + 1)
                         props.handleOBSelect(ob_id)
                         props.handleClose()
                     }, 1000);
@@ -90,6 +91,7 @@ const PopoverButtons = (props: PButtonProps) => {
                     setTimeout(() => {
                         console.log(`new ob ${ob_id} added to container. triggering new view`)
                         props.setInstrument(newOB.metadata.instrument as Instrument)
+                        ob_select_context.setTrigger(ob_select_context.trigger + 1)
                         props.handleOBSelect(ob_id)
                         props.handleClose()
                     }, 1000);
