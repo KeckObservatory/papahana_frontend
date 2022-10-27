@@ -17,6 +17,7 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
 
   React.useEffect(() => {
     get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
+      console.log('target schema', initSchema, props.obComponent, props.id)
       setSchema(initSchema)
     })
   }, [])

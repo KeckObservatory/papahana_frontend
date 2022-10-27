@@ -178,16 +178,13 @@ export const get_schema = async (obComponent: OBComponent, id: string): Promise<
     //@ts-ignore line
     const md = obComponent.metadata
     if (md) {
-      await get_template(md.name).then((template: Template) => {
-        if (template.parameter_order) {
-          template = sort_template(template)
-        }
-        const sche = template_to_schema(template)
-        sch = sche as JSONSchema7
-        return sch
-      }).catch(err => {
-        console.error(`TemplateForm err: ${err}`)
-      })
+      let template = await get_template(md.name)
+      if (template.parameter_order) {
+        template = sort_template(template)
+      }
+      const sche = template_to_schema(template)
+      sch = sche as JSONSchema7
+      return sch
     }
   }
   return sch
