@@ -51,7 +51,7 @@ export default function ODTView(props: Props) {
   }, [])
 
   useEffect(() => { //ensure instrument matches the selected ob
-    if(ob.metadata) setInstrument(ob.metadata.instrument)
+    if(ob.metadata) setInstrument(ob.metadata.instrument.toUpperCase())
   }, [ob])
 
   const renderRGL = () => {
