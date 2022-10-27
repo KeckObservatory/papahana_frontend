@@ -44,13 +44,16 @@ export default function ODTView(props: Props) {
 
   useEffect(() => {
     if (ob_id) {
-        ob_api_funcs.get(ob_id).then( (initOb: ObservationBlock) => {
-          setOB(initOb)
-        })
-
+      ob_api_funcs.get(ob_id).then((initOb: ObservationBlock) => {
+        setOB(initOb)
+      })
     }
   }, [])
-  
+
+  useEffect(() => { //ensure instrument matches the selected ob
+    setInstrument(ob.metadata.instrument)
+  }, [ob])
+
   const renderRGL = () => {
     const notEmpty = Object.keys(ob).length > 0
     if (notEmpty) {
