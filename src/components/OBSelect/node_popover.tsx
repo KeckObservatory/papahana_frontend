@@ -79,7 +79,7 @@ const PopoverButtons = (props: PButtonProps) => {
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
                         props.handleOBSelect(ob_id)
                         props.handleClose()
-                    }, 1000);
+                    }, 250);
                 })
         }
         else { //ignore containers
@@ -94,7 +94,7 @@ const PopoverButtons = (props: PButtonProps) => {
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
                         props.handleOBSelect(ob_id)
                         props.handleClose()
-                    }, 1000);
+                    }, 250);
                 })
         }
     }
