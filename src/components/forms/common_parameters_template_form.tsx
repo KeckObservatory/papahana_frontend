@@ -72,8 +72,11 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
     get_template(name)
     .then((template: Template) => {
         sub_forms.forEach( (formName: keyof Template) => {
-        const subSchema = template_to_schema(template[formName] as unknown as Template, formName)
-        newSchemas[formName] = subSchema
+        const tmpl = template[formName] as unknown as Template
+        if (tmpl) {
+          const subSchema = template_to_schema(tmpl, formName)
+          newSchemas[formName] = subSchema
+        }
       })
       setSchemas(newSchemas)
     }).catch(err => {
