@@ -15,7 +15,7 @@ import { blue } from '@mui/material/colors';
 import DropDown from './../drop_down'
 import { Instrument } from '../../typings/papahana';
 
-const Instruments: Instrument[] = ['KCWI', 'KPF'];
+const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC'];
 
 export interface SimpleDialogProps {
     open: boolean;
