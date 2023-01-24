@@ -38,9 +38,9 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
    return promise
 }
 
-export const get_template = (name: string): Promise<Template> => {
+export const get_template = (name: string, instrument='KCWI'): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
-      get_select_funcs.get_template(name).then((templateObject: { [key: string]: Template }) => {
+      get_select_funcs.get_template(name, instrument).then((templateObject: { [key: string]: Template }) => {
          const template = templateObject[name]
          resolve(template)
       }).catch(err => {

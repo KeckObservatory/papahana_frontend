@@ -64,7 +64,7 @@ export default function TemplateSelection(props: Props) {
 
 
     const handleChange = (templateName: string) => {
-        get_template(templateName).then((template: Template) => {
+        get_template(templateName, props.instrument).then((template: Template) => {
             console.log('template name created', templateName)
             let seq = {
                 'metadata': template.metadata,
