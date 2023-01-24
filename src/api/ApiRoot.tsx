@@ -97,8 +97,8 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
 }
 
 
-const get_template = (name: string, ip_version: string = '0.1.0', inst: string = 'KCWI'): Promise<{ [key: string]: Template }> => {
-    let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}&ip_version=${ip_version}`
+const get_template = (name: string, inst: string='KCWI'): Promise<{ [key: string]: Template }> => {
+    let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}`
     if (name.includes('target')) {
         url += '&parameter_order=true'
     }
