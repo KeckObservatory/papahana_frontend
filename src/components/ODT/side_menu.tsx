@@ -24,6 +24,7 @@ import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
+import { isUndefined } from 'lodash';
 
 
 export interface OBSelectContextObject {
@@ -93,6 +94,8 @@ export const SideMenu = (props: Props) => {
 
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
+
+    const ob_sel = useOBSelectContext()
 
     //check if can submit ob
     let obEditable: boolean = 'metadata' in props.ob && typeof (props.ob_id) === "string"
@@ -222,7 +225,11 @@ export const SideMenu = (props: Props) => {
     const handleEdit = jsonEditable ? onEdit : false
     const handleSubmit = () => {
         triggerBoop(false)
-        ob_api_funcs.put(props.ob._id, props.ob)
+        ob_api_funcs.put(props.ob._id, props.ob).then((response: any) => {
+            
+            ob_sel.setTrigger((oldTrigger: number) => {return oldTrigger+1})
+
+        })
     }
 
     const handleAccordionChange = (accd: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
