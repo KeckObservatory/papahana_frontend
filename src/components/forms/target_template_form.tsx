@@ -6,6 +6,7 @@ import { JSONSchema7 } from 'json-schema'
 import * as schemas from './schemas'
 import { useStyles, init_form_data, Props, get_schema, Form, log } from './template_form'
 import { TargetResolverDialog } from "../TgtRes/target_resolver_dialog";
+import { StringParam, useQueryParam, withDefault } from "use-query-params";
 
 export default function TargetTemplateForm(props: Props): JSX.Element {
   const classes = useStyles()
@@ -14,9 +15,10 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   let initFormData = init_form_data(props.obComponent, props.id)
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
-    get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
+    get_schema(props.obComponent, instrument, props.id).then((initSchema: JSONSchema7) => {
       console.log('target schema', initSchema, props.obComponent, props.id)
       setSchema(initSchema)
     })

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ErrorSchema, IChangeEvent, UiSchema } from 'react-jsonschema-form';
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { OBComponent, Template } from '../../../typings/papahana';
-import { useStyles, init_form_data, get_schema, Form, log, template_to_schema } from './../../forms/template_form'
+import { useStyles, Form, log, template_to_schema } from './../../forms/template_form'
 import * as schemas from './../../forms/schemas'
 import { State } from './wnc_stepper_dialog_content'
 
