@@ -226,8 +226,8 @@ export const SideMenu = (props: Props) => {
     const handleSubmit = () => {
         triggerBoop(false)
         ob_api_funcs.put(props.ob._id, props.ob).then((response: any) => {
-            
-            ob_sel.setTrigger((oldTrigger: number) => {return oldTrigger+1})
+            console.log('triggering new side menu build', ob_sel.trigger ) 
+            ob_sel.setTrigger(ob_sel.trigger+1)
 
         })
     }
