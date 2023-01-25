@@ -193,7 +193,7 @@ export const SideMenu = (props: Props) => {
         const tmplType = seq.metadata.template_type
         console.log('templateType adding', tmplType)
         const newOB: ObservationBlock = cloneDeep(props.ob) // need to deep clone a nested object
-        if (tmplType.includes('sci')) {
+        if (tmplType.includes('sci') || tmplType.includes('calibration')) {
             let obs = [...(newOB.observations ?? [])] //need to make a deep copy of observations
             const metadata = seq.metadata as ScienceMetadata
             metadata['sequence_number'] = obs.length + 1
