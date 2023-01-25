@@ -11,6 +11,7 @@ import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { ErrorSchema } from 'react-jsonschema-form';
 import { ob_api_funcs } from '../../../api/ApiRoot';
 import { get_template } from '../../../api/utils';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface Props {
     value: any;
@@ -24,6 +25,7 @@ const EditDialog = (props: Props) => {
     const [open, setOpen] = useState(false);
 
 
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
     const [component, setComponent] = useState({} as Acquisition | Target )
     const [schema, setSchema] = useState({})
     const [uiSchema, setUISchema] = useState({})
@@ -47,7 +49,7 @@ const EditDialog = (props: Props) => {
             console.log('component', component)
             console.log('template name', templateName)
 
-            get_template(templateName).then((template: Template) => {
+            get_template(templateName, instrument).then((template: Template) => {
                 console.log('template retrieved', template)
                 const schema = template_to_schema(template)
                 const uiSchema = schemas.getUiSchema(compKey)

@@ -18,6 +18,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface Props {
     value: any;
@@ -35,6 +36,8 @@ const EditSeqDialog = (props: Props) => {
     const [schemas, setSchemas] = useState([] as JSONSchema7[] )
     const [uiSchemas, setUISchemas] = useState([] as UiSchema[])
     const [ob, setOB] = useState({} as ObservationBlock)
+
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
     let compKey = props.tableMeta.columnData.name as keyof ObservationBlock
     compKey = compKey.includes('number_sequences') ? 'observations' : compKey
@@ -56,7 +59,7 @@ const EditSeqDialog = (props: Props) => {
                 // console.log('sequence component', sci)
                 // console.log('template name', templateName)
 
-                get_template(templateName).then((template: Template) => {
+                get_template(templateName, instrument).then((template: Template) => {
                     // console.log('template retrieved', template)
                     const schema = template_to_schema(template)
                     const uiSchema = formSchemas.getUiSchema(compKey)

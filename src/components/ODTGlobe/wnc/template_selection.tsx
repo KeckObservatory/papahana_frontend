@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { get_select_funcs } from '../../../api/ApiRoot';
 import { get_template } from '../../../api/utils';
 import { Template } from '../../../typings/papahana';
@@ -28,6 +29,7 @@ const get_template_list = async (rows: Array<any>) => {
 
 const TemplateSelection = function (props: Props) {
     const [templateList, setTemplateList] = useState([] as string[])
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
     useEffect(() => {
         get_template_list(props.rows).
             then((tpNames: string[]) => {
@@ -38,7 +40,7 @@ const TemplateSelection = function (props: Props) {
 
     const handleChange = (templateName: string) => {
 
-        get_template(templateName).then((template: Template) => {
+        get_template(templateName, instrument).then((template: Template) => {
             console.log('template name created', template)
             let seq = {
                 'metadata': template.metadata,

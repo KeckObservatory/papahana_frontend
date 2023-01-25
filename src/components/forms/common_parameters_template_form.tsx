@@ -13,6 +13,7 @@ import { get_template } from "../../api/utils";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { StringParam, useQueryParam, withDefault } from "use-query-params";
 
 const Form = withTheme(MaterialUITheme)
 
@@ -64,12 +65,13 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
    'tcs_parameters'] as unknown as (keyof Template)[]
   const [schemas, setSchemas] = React.useState({} as { [id: string]: JSONSchema7})
   const ref = React.useRef(null)
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
     const md = props.obComponent.metadata
     let newSchemas = {...schemas}
     const name = md.name
-    get_template(name)
+    get_template(name, instrument)
     .then((template: Template) => {
         sub_forms.forEach( (formName: keyof Template) => {
         const tmpl = template[formName] as unknown as Template

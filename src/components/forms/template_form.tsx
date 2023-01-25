@@ -8,6 +8,7 @@ import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob
 import { DefaultTheme, makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
+import { StringParam, useQueryParam, withDefault } from "use-query-params";
 
 export const Form = withTheme(MaterialUITheme)
 
@@ -163,7 +164,7 @@ const sort_template = (template: Template): Template => {
   return sortedTemplate
 }
 
-export const get_schema = async (obComponent: OBComponent, id: string): Promise<JSONSchema7> => {
+export const get_schema = async (obComponent: OBComponent, instrument: string, id: string): Promise<JSONSchema7> => {
   let sch: JSONSchema7 = {}
   if (id === 'metadata') {
     sch = schemas.metadataSchema as JSONSchema7
@@ -178,7 +179,7 @@ export const get_schema = async (obComponent: OBComponent, id: string): Promise<
     //@ts-ignore line
     const md = obComponent.metadata
     if (md) {
-      let template = await get_template(md.name)
+      let template = await get_template(md.name, instrument)
       if (template.parameter_order) {
         template = sort_template(template)
       }
@@ -198,9 +199,10 @@ export default function TemplateForm(props: Props): JSX.Element {
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
 
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
-    get_schema(props.obComponent, props.id).then((initSchema: JSONSchema7) => {
+    get_schema(props.obComponent, instrument, props.id).then((initSchema: JSONSchema7) => {
     setSchema(initSchema)
     })
   }, [])

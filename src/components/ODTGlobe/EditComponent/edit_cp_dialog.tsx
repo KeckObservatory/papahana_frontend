@@ -17,6 +17,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface Props {
     value: any;
@@ -29,6 +30,7 @@ const EditCPDialog = (props: Props) => {
     const classes = useStyles()
     const [open, setOpen] = useState(false);
 
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
     const [component, setComponent] = useState({} as CommonParameters)
     const [schemas, setSchemas] = useState({} as { [id: string]: JSONSchema7 })
@@ -53,7 +55,7 @@ const EditCPDialog = (props: Props) => {
             setOB(ob)
             const templateName = comp.metadata.name
             let newSchemas = { ...schemas }
-            get_template(templateName).then((template: Template) => {
+            get_template(templateName, instrument).then((template: Template) => {
                 sub_forms.forEach((formName: keyof Template) => {
                     const subTemplate = template[formName] as unknown as Template
                     const schema = template_to_schema(subTemplate, formName)
