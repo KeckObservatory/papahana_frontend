@@ -43,6 +43,7 @@ const EditDialog = (props: Props) => {
         console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
             const comp = ob[compKey] as Acquisition | Target 
+            setInstrument(ob.metadata.instrument)
             setComponent(comp)
             setOB(ob)
             const templateName = comp.metadata.name

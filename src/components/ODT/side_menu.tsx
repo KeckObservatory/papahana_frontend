@@ -95,6 +95,8 @@ export const SideMenu = (props: Props) => {
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
 
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+
     //check if can submit ob
     let obEditable: boolean = 'metadata' in props.ob && typeof (props.ob_id) === "string"
 
@@ -176,6 +178,7 @@ export const SideMenu = (props: Props) => {
     const getOB = (new_ob_id: string): void => {
         ob_api_funcs.get(new_ob_id).then((newOb: ObservationBlock) => {
             if (newOb._id) {
+                setInstrument(newOb.metadata.instrument)
                 props.setOB(newOb)
             }
         })

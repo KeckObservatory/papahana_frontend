@@ -50,6 +50,7 @@ const EditSeqDialog = (props: Props) => {
         const ob_id = props.tableMeta.rowData[0]
         // console.log('id', ob_id, 'component:', compKey, 'component name:', props.value)
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
+            setInstrument(ob.metadata.instrument)
             const comp = ob[compKey] as Science[]
             setComponent(comp)
             setOB(ob)

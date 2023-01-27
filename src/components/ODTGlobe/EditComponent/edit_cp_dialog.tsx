@@ -51,6 +51,7 @@ const EditCPDialog = (props: Props) => {
         const ob_id = props.tableMeta.rowData[0]
         ob_api_funcs.get(ob_id).then((ob: ObservationBlock) => {
             const comp = ob[compKey] as CommonParameters
+            setInstrument(ob.metadata.instrument)
             setComponent(comp)
             setOB(ob)
             const templateName = comp.metadata.name

@@ -8,6 +8,7 @@ import { ob_api_funcs } from '../../../api/ApiRoot';
 import ComponentCompare from './component_compare';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface Props {
     parentState: ParentState
@@ -45,6 +46,8 @@ const OBBatchWriter = function (props: Props) {
     const isSequence = componentKey === 'observations';
     console.log('n rows', rowLen, 'componentKey', componentKey)
 
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+
     useEffect(() => {
         //get ob component
         if (idx >= rowLen) {
@@ -57,6 +60,7 @@ const OBBatchWriter = function (props: Props) {
         console.log('row', row, 'obComponent', props.parentState.obComponent)
         //get and display ob
         ob_api_funcs.get(ob_id).then((aob: ObservationBlock) => {
+            setInstrument(ob.metadata.instrument)
             setOB(aob)
             if (Object.keys(ob).includes(componentKey)) {
                 setOverwrite(true)
