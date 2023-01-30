@@ -93,7 +93,7 @@ export const SideMenu = (props: Props) => {
     const [trigger, setTrigger] = React.useState(0)
     const [obList, setOBList] = React.useState([] as string[])
 
-    const [validatorReport, setValidatorReport ] = React.useState({})
+    const [validatorReport, setValidatorReport ] = React.useState({} as {[key: string]: string })
 
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
@@ -232,7 +232,7 @@ export const SideMenu = (props: Props) => {
         triggerBoop(false)
         ob_api_funcs.put(props.ob._id, props.ob)
         .then((response: any) => {
-            setValidatorReport(response)
+            // setValidatorReport(response)
         })
         .finally( () => {
             console.log('triggering new side menu build', trigger ) 

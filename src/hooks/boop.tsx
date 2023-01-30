@@ -24,6 +24,7 @@ interface Args {
 };
 
 interface SpringStyle {
+  color?: string,
   transform?: SpringValue<string>;
 };
 

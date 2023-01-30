@@ -7,22 +7,26 @@ import useBoop from '../../hooks/boop';
 
 interface Props {
     validatorReport: { [key: string]: string }
-
 }
+
 const OBValidator = (props: Props) => {
     let isError = Object.keys(props.validatorReport).length > 0
 
+    const color = isError ? 'red': 'green'
     const [boopStyle, triggerBoop] = useBoop({})
-    triggerBoop(isError)
+    React.useEffect( () => {
+        triggerBoop(isError)
+        console.log('boop style', boopStyle)
+    }, [isError])
 
 
     const handleOpen = () => {
-
+        triggerBoop(false)
     }
 
     return (
-        <Tooltip title="Upload OB to database">
-            <animated.button aria-label='upload' onClick={handleOpen} style={boopStyle}>
+        <Tooltip title="View OB Validation Report">
+            <animated.button aria-label='upload' onClick={handleOpen} style={{ color: color, ...boopStyle }}>
                 { isError ? <ErrorIcon />:<CheckCircleIcon /> }
             </animated.button>
         </Tooltip>
