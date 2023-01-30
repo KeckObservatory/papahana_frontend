@@ -25,6 +25,7 @@ import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
 import { isUndefined } from 'lodash';
+import OBValidator from './ob_validator';
 
 
 export interface OBSelectContextObject {
@@ -91,6 +92,8 @@ export const SideMenu = (props: Props) => {
     const [containerIdList, setContainerIdList] = React.useState([] as string[])
     const [trigger, setTrigger] = React.useState(0)
     const [obList, setOBList] = React.useState([] as string[])
+
+    const [validatorReport, setValidatorReport ] = React.useState({})
 
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
@@ -186,7 +189,7 @@ export const SideMenu = (props: Props) => {
                 props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
             })
     }
-    const handleOBSelect = (ob_id: string) => { //TODO : make context to prevent prop drilling
+    const handleOBSelect = (ob_id: string) => {
         console.log(`setting selected ob to ${ob_id}`)
         props.setOBID(ob_id)
         getOB(ob_id)
@@ -224,9 +227,14 @@ export const SideMenu = (props: Props) => {
     }
 
     const handleEdit = jsonEditable ? onEdit : false
+
     const handleSubmit = () => {
         triggerBoop(false)
-        ob_api_funcs.put(props.ob._id, props.ob).then((response: any) => {
+        ob_api_funcs.put(props.ob._id, props.ob)
+        .then((response: any) => {
+            setValidatorReport(response)
+        })
+        .finally( () => {
             console.log('triggering new side menu build', trigger ) 
             setTrigger(trigger+1)
         })
@@ -278,6 +286,7 @@ export const SideMenu = (props: Props) => {
                                     </Tooltip>
                                     <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
                                     <DeleteDialog deleteOB={deleteOB} />
+                                    <OBValidator validatorReport={validatorReport}/>
                                 </div>
                                 <Tooltip title="Add template to Selected OB">
                                     <div className={classes.templateSelect}>
