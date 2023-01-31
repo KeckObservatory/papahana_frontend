@@ -104,7 +104,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                     aria-label="full width tabs"
                 >
                     <Tab label="ODT" {...a11yProps(0)} />
-                    <Tab label="Global ODT" {...a11yProps(0)} />
+                    <Tab label="Global ODT (Work in progress)" {...a11yProps(0)} />
                     <Tab label="Planning Tool (Work in progress)" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>

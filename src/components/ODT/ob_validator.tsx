@@ -4,20 +4,22 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import { animated } from 'react-spring';
 import Tooltip from '@mui/material/Tooltip';
 import useBoop from '../../hooks/boop';
+import { ValidatorReport } from '../../typings/papahana';
 
 interface Props {
-    validatorReport: { [key: string]: string }
+    validatorReport: ValidatorReport 
 }
 
 const OBValidator = (props: Props) => {
-    let isError = Object.keys(props.validatorReport).length > 0
+    
+    let msg = !props.validatorReport.valid? 'OB is partially defined' : 'OB is fully defined'
 
-    const color = isError ? 'red': 'green'
+    const color = !props.validatorReport.valid ? 'red': 'green'
     const [boopStyle, triggerBoop] = useBoop({})
     React.useEffect( () => {
-        triggerBoop(isError)
+        triggerBoop(!props.validatorReport.valid)
         console.log('boop style', boopStyle)
-    }, [isError])
+    }, [props.validatorReport])
 
 
     const handleOpen = () => {
@@ -25,9 +27,9 @@ const OBValidator = (props: Props) => {
     }
 
     return (
-        <Tooltip title="View OB Validation Report">
+        <Tooltip title={`View OB Validation Report. ${msg}`}>
             <animated.button aria-label='upload' onClick={handleOpen} style={{ color: color, ...boopStyle }}>
-                { isError ? <ErrorIcon />:<CheckCircleIcon /> }
+                { props.validatorReport ? <CheckCircleIcon /> : <ErrorIcon />}
             </animated.button>
         </Tooltip>
     )

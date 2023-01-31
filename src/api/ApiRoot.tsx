@@ -7,7 +7,8 @@ import {
     SemesterIds,
     Instrument,
     InstrumentPackage,
-    Template
+    Template,
+    ValidatorReport
 } from './../typings/papahana'
 import { OBTableRow, UserInfo } from './../typings/ddoi_api'
 import {
@@ -138,7 +139,7 @@ const ob_post = (ob: object): Promise<string> => {
         .then(handleResponse)
 };
 
-const ob_put = (ob_id: string, ob: ObservationBlock): Promise<unknown> => {
+const ob_put = (ob_id: string, ob: ObservationBlock): Promise<ValidatorReport> => {
     const url = `${OB_URL}?ob_id=${ob_id}`
     return axiosInstance
         .put(url, ob)

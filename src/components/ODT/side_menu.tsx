@@ -3,7 +3,7 @@ import { IconButton, Paper } from '@mui/material'
 import cloneDeep from 'lodash/cloneDeep';
 import { animated } from 'react-spring'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
-import { Instrument, OBSequence, ObservationBlock, ScienceMetadata } from '../../typings/papahana'
+import { Instrument, OBSequence, ObservationBlock, ScienceMetadata, ValidatorReport } from '../../typings/papahana'
 import SaveIcon from '@mui/icons-material/Save';
 import PublishIcon from '@mui/icons-material/Publish';
 import Tooltip from '@mui/material/Tooltip'
@@ -93,7 +93,7 @@ export const SideMenu = (props: Props) => {
     const [trigger, setTrigger] = React.useState(0)
     const [obList, setOBList] = React.useState([] as string[])
 
-    const [validatorReport, setValidatorReport ] = React.useState({} as {[key: string]: string })
+    const [validatorReport, setValidatorReport ] = React.useState({valid: true, errors: {}} as ValidatorReport)
 
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
@@ -231,7 +231,7 @@ export const SideMenu = (props: Props) => {
     const handleSubmit = () => {
         triggerBoop(false)
         ob_api_funcs.put(props.ob._id, props.ob)
-        .then((response: any) => {
+        .then((response: ValidatorReport) => {
             // setValidatorReport(response)
         })
         .finally( () => {

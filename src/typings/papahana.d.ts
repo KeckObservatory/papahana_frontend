@@ -1,3 +1,10 @@
+
+export interface ValidatorReport {
+	valid: boolean
+	errors: { [key: string]: string }
+
+}
+
 export interface ContainerObs {
 	[key: string]: ObservationBlock[]
 }
