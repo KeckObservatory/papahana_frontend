@@ -30,7 +30,6 @@ export interface OBContext {
   ob: ObservationBlock,
   ob_id: string | null | undefined,
   setOBID: Function
-  getOB: Function,
   setOB: Function
   handleOBSelect: Function
 }
@@ -39,7 +38,6 @@ const init_ob_context: OBContext = {
   ob: {} as ObservationBlock,
   ob_id: '',
   setOBID: () => { },
-  getOB: () => { },
   setOB: () => { },
   handleOBSelect: () => { }
 }
@@ -131,7 +129,6 @@ export default function ODTView(props: Props) {
     ob: ob,
     ob_id: ob_id,
     setOBID: setOBID,
-    getOB: getOB,
     setOB: setOB,
     handleOBSelect: handleOBSelect
   }
