@@ -36,7 +36,8 @@ export const mock_get_container_ob_target= (semid: string, container_id?: string
 
 export const mock_get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
    const mockPromise = new Promise<InstrumentPackage>((resolve) => {
-      const ip = mock_instrument_packages
+      const ips = mock_instrument_packages
+      const ip = ips.find((ip) => ip.metadata.instrument === instrument)
       resolve(ip as any as InstrumentPackage)
    })
    return mockPromise

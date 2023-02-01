@@ -7,89 +7,256 @@ import StepContent from '@mui/material/StepContent';
 import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import { CommonParameters, Instrument, InstrumentPackage, OBComponent, ObservationBlock, Recipe, Status, Template } from '../../typings/papahana';
+import DropDown from '../drop_down';
+import { get_select_funcs } from '../../api/ApiRoot';
+import { useObserverContext } from '../App';
+import { useOBSelectContext } from '../ODT/side_menu';
 
-const steps = [
-  {
-    label: 'Select campaign settings',
-    description: `For each ad campaign that you create, you can control how much
-              you're willing to spend on clicks and conversions, which networks
-              and geographical locations you want your ads to show on, and more.`,
-  },
-  {
-    label: 'Create an ad group',
-    description:
-      'An ad group contains one or more ads which target a shared set of keywords.',
-  },
-  {
-    label: 'Create an ad',
-    description: `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`,
-  },
-];
+const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC'];
+const OBTypes: string[] = ['Science', 'Calibratoin', 'Blank'];
 
-export default function VerticalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
+interface Props {
+    setOpen: Function
+}
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
 
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
 
-  const handleReset = () => {
-    setActiveStep(0);
-  };
+const OBRecipeStepper = (props: Props) => {
 
-  return (
-    <Box sx={{ maxWidth: 400 }}>
-      <Stepper activeStep={activeStep} orientation="vertical">
-        {steps.map((step, index) => (
-          <Step key={step.label}>
-            <StepLabel
-              optional={
-                index === 2 ? (
-                  <Typography variant="caption">Last step</Typography>
-                ) : null
-              }
-            >
-              {step.label}
-            </StepLabel>
-            <StepContent>
-              <Typography>{step.description}</Typography>
-              <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-                  <Button
-                    disabled={index === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
-              </Box>
-            </StepContent>
-          </Step>
-        ))}
-      </Stepper>
-      {activeStep === steps.length && (
-        <Paper square elevation={0} sx={{ p: 3 }}>
-          <Typography>All steps completed - you&apos;re finished</Typography>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
-            Reset
-          </Button>
-        </Paper>
-      )}
-    </Box>
-  );
+    const [activeStep, setActiveStep] = React.useState(0);
+    const [inst, setInst] = React.useState('' as Instrument);
+    const [recipe, setRecipe] = React.useState( {} as Recipe );
+    const [recipes, setRecipes] = React.useState([] as string[]);
+    const [ip, setIP] = React.useState({} as InstrumentPackage)
+
+    const observer_context = useObserverContext()
+    const ob_select_context = useOBSelectContext()
+
+    React.useEffect(() => {
+
+        const get_recipes = async (instrument: Instrument) => {
+            const instPack = await get_select_funcs.get_instrument_package(instrument)
+            console.log('ip for instrument', inst, instPack)
+            if (instPack) {
+                const recipeNames = Object.keys(instPack.recipes)
+                setRecipes(recipeNames)
+                setIP(instPack)
+            }
+        }
+        get_recipes(inst)
+    }, [inst])
+
+    const generate_ob_from_recipe = () => {
+        const templateNames = recipe.recipe
+        const meta = {
+            name: `Made by ODT for ${inst} using ${recipe.ui_name} recipe`,
+            priority: 0,
+            version: "0.1.0",
+            ob_type: recipe.ob_type,
+            instrument: inst,
+            pi_id: JSON.parse(observer_context.observer_id),
+            sem_id: ob_select_context.sem_id,
+            comment: ""
+        }
+        const status: Status = {
+            current_exp_det1: 0,
+            current_exp_det2: 0,
+            current_seq: 0,
+            current_step: 0,
+            deleted: false,
+            executions: [],
+            priority: 0,
+            state: 4
+        }
+        const newOB = { metadata: meta, status: status } as any 
+        templateNames.forEach(async (tName: string) => {
+            const templateObj = await get_select_funcs.get_template(tName)
+            const [key, template] = Object.entries(templateObj)[0]
+            let comp = {
+                'metadata': template.metadata,
+            } as any
+            if (tName.includes('common')) {
+                comp = comp as CommonParameters
+                comp['detector_parameters'] = {}
+                comp['instrument_parameters'] = {}
+                comp['tcs_parameters'] = {}
+            }
+            else {
+                comp['parameters'] = {}
+            }
+            const tType = template.metadata.template_type
+            if (tType.includes('science' ) || tType.includes('calibration')) {
+                newOB['observations'] = [comp]
+            }
+            else {
+                newOB[template.metadata.template_type] = comp
+            }
+        })
+
+        return (newOB as ObservationBlock)
+
+    }
+
+    const set_inst = (newInst: Instrument) => {
+        console.log('instrument selected', newInst)
+        setInst(newInst)
+    }
+
+    const set_type = (newType: string) => {
+        console.log('type selected', newType)
+        const newRecipe = ip.recipes[newType] 
+        setRecipe(newRecipe)
+    }
+
+
+    const stepComponents = [
+        {
+            label: 'Select Instrument',
+            component: <DropDown
+                placeholder={'instrument'}
+                value={inst}
+                arr={Instruments}
+                handleChange={set_inst}
+                label={'Instrument'}
+            />
+        },
+        {
+            label: 'Select OB Recipe',
+            component: <DropDown
+                placeholder={'Recipe'}
+                value={recipe.name}
+                arr={recipes}
+                handleChange={set_type}
+                label={'OB Recipe'}
+            />
+        }
+    ]
+
+    const handleNext = () => {
+        if (inst) {
+            setActiveStep((prevActiveStep) => prevActiveStep + 1);
+        }
+        else {
+            console.log('instrument is missing')
+        }
+    };
+
+    const handleBack = () => {
+        setActiveStep((prevActiveStep) => prevActiveStep - 1);
+    };
+
+    const handleCreateOB = () => {
+        // setActiveStep(0);
+        const newOB = generate_ob_from_recipe()
+        console.log('created new ob', newOB)
+        props.setOpen(false)
+    };
+
+    return (
+        <Box sx={{ maxWidth: 400 }}>
+            <Stepper activeStep={activeStep} orientation="vertical">
+                {stepComponents.map((step, index) => (
+                    <Step key={step.label}>
+                        <StepLabel
+                            optional={
+                                index === 2 ? (
+                                    <Typography variant="caption">Last step</Typography>
+                                ) : null
+                            }
+                        >
+                            {step.label}
+                        </StepLabel>
+                        <StepContent>
+                            <Box sx={{ mb: 2 }}>
+                                <div>
+                                    {step.component}
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleNext}
+                                        sx={{ mt: 1, mr: 1 }}
+                                    >
+                                        {index === stepComponents.length - 1 ? 'Finish' : 'Continue'}
+                                    </Button>
+                                    <Button
+                                        disabled={index === 0}
+                                        onClick={handleBack}
+                                        sx={{ mt: 1, mr: 1 }}
+                                    >
+                                        Back
+                                    </Button>
+                                </div>
+                            </Box>
+                        </StepContent>
+                    </Step>
+                ))}
+            </Stepper>
+            {activeStep === stepComponents.length && (
+                <Paper square elevation={0} sx={{ p: 3 }}>
+                    <Typography>All steps completed - OB is ready to be created</Typography>
+                    <Button onClick={handleCreateOB} sx={{ mt: 1, mr: 1 }}>
+                        Create OB
+                    </Button>
+                    <Button
+                        onClick={handleBack}
+                        sx={{ mt: 1, mr: 1 }}
+                    >
+                        Back
+                    </Button>
+                </Paper>
+            )}
+        </Box>
+    );
+}
+
+interface DialogProps {
+    open: boolean
+    onClose: Function
+    setOpen: Function
+}
+
+export const OBWizardDialog = (props: DialogProps) => {
+
+    const { onClose, open, setOpen } = props;
+
+    const handleClose = () => {
+        onClose();
+    };
+
+    return (
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>OB Wizard</DialogTitle>
+            <OBRecipeStepper setOpen={setOpen} />
+        </Dialog>
+    )
+}
+
+interface ButtonProps {
+
+}
+
+export const OBWizardButton = (props: ButtonProps) => {
+
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+    return (
+        <div>
+            <Button variant="outlined" onClick={handleClickOpen}>
+                New OB From Recipe
+            </Button>
+            <OBWizardDialog
+                open={open}
+                setOpen={setOpen}
+                onClose={handleClose}
+            />
+        </div>
+    )
 }

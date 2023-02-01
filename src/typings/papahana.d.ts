@@ -95,9 +95,9 @@ export interface Scoby {
 	ob_id?: string
 	name?: string
 	ra?: string,
-    dec?: string,
-	ra_deg?:  number,
-    dec_deg?: number,
+	dec?: string,
+	ra_deg?: number,
+	dec_deg?: number,
 	comment?: string,
 	ob_type?: string,
 	version?: string,
@@ -283,13 +283,21 @@ export interface GUIDER {
 
 export type InstrumentPackage = KCWIInstrumentPackage
 
+export interface Recipe {
+	name: string,
+	ui_name: string,
+	recipe: string[]
+	ob_type: TemplateType
+}
+
 interface KCWIInstrumentPackage extends Base {
 	metadata: IP_METADATA
 	optical_parameters: OPICAL_PARAMETERS
 	guider: GUIDER
 	configurable_elements: string[]
 	pointing_origins: string[]
-	common_parameters: string
+	common_parameters: string,
+	recipes: { [key: string]: Recipe },
 	template_list: { [key: string]: string }
 }
 
@@ -308,10 +316,17 @@ export interface InstrumentPackageTemplates {
 	[key: string]: string
 }
 
-export type TemplateType = "acq" | "sci" | "config"
+export type TemplateType = "acqusition" | "science" | "calibration" | "common_parameters"
 
 export interface TemplateMetadata extends Metadata {
-
+	instrument: Instrument,
+	name: string,
+	script: string,
+	script_version: string,
+	sequence_number: number,
+	template_type: TemplateType,
+	ui_name: string,
+	version: string 
 }
 
 export interface TemplateParameter {

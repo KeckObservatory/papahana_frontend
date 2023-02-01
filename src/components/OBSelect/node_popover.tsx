@@ -12,6 +12,7 @@ import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './../ODT/side_menu'
 import { useObserverContext } from './../App'
 import SelectInstrument from './select_instrument'
+import { OBWizardButton } from './ob_wizard';
 
 interface PButtonProps extends Props {
     handleClose: Function
@@ -138,6 +139,7 @@ const PopoverButtons = (props: PButtonProps) => {
             {props.type === 'container' &&
                 <div style={{ display: 'flex' }}>
                     <SelectInstrument addOB={addOB}/>
+                    <OBWizardButton />
                     <RemoveContainerDialog
                         name={props.name as string}
                         container_id={props.id}
