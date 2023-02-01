@@ -5,11 +5,11 @@ import Button from '@mui/material/Button';
 import DropDown from '../drop_down'
 import { useOBSelectContext } from './../ODT/side_menu'
 import { container_api_funcs } from '../../api/ApiRoot'
+import { useOBContext } from '../ODT/observation_data_tool_view';
 
 interface Props {
     rows: Scoby[]
     containerIdNames: object[]
-    handleOBSelect: Function
 }
 
 interface SelectedRowData { index: number; dataIndex: number }
@@ -22,7 +22,6 @@ interface CTProps {
     containerIdNames: object[],
     selectedRows: SelectedRows,
     displayData: DisplayData,
-    handleOBSelect: Function
 }
 
 interface SRD {
@@ -39,6 +38,7 @@ const CustomToolbarSelect = (props: CTProps) => {
     const [cidname, setContainerName] = useState({ _id: '', name: '' })
 
     const ob_select_object = useOBSelectContext()
+    const ob_context = useOBContext()
 
     const handleDropdownChange = (selName: string) => {
         console.log('changed', selName)
@@ -93,7 +93,7 @@ const CustomToolbarSelect = (props: CTProps) => {
         const data = props.displayData[row.index].data
         console.log('selecting ob from row', data)
         const ob_id = data[0] //assumes ob_id is first element
-        props.handleOBSelect(ob_id)
+        ob_context.handleOBSelect(ob_id)
     }
 
     return (
@@ -137,7 +137,6 @@ const ContainerTable = (props: Props) => {
                 selectedRows={selectedRows}
                 displayData={displayData}
                 containerIdNames={ props.containerIdNames }
-                handleOBSelect={ props.handleOBSelect }
             />
         ),
         onRowSelectionChange: handleSelect,

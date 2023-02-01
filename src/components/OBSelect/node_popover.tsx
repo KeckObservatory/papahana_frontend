@@ -13,6 +13,8 @@ import { useOBSelectContext } from './../ODT/side_menu'
 import { useObserverContext } from './../App'
 import SelectInstrument from './select_instrument'
 import { OBWizardButton } from './ob_wizard';
+import { useOBContext } from '../ODT/observation_data_tool_view';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface PButtonProps extends Props {
     handleClose: Function
@@ -24,10 +26,7 @@ interface Props {
     name?: string
     parentNodeId?: string
     ob_details?: Partial<ObservationBlock>
-    handleOBSelect: Function
     container_names?: Set<string>
-    setOB?: Function
-    setInstrument: Function
     open?: boolean,
     handleClose?: Function
     anchorPos?: object 
@@ -38,6 +37,9 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const ob_select_context = useOBSelectContext()
     const observer_context = useObserverContext()
+
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const ob_context = useOBContext()
 
     const addOB = (inst: string) => {
         console.log(`creating new ${inst} ob in ${props.type} id ${props.id}.`)
@@ -78,7 +80,7 @@ const PopoverButtons = (props: PButtonProps) => {
                     setTimeout(() => {
                         console.log(`new ob ${ob_id} added to container. triggering new view`)
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
-                        props.handleOBSelect(ob_id)
+                        ob_context.handleOBSelect(ob_id)
                         props.handleClose()
                     }, 250);
                 })
@@ -91,9 +93,9 @@ const PopoverButtons = (props: PButtonProps) => {
                 .finally(() => {
                     setTimeout(() => {
                         console.log(`new ob ${ob_id} added to container. triggering new view`)
-                        props.setInstrument(newOB.metadata.instrument as Instrument)
+                        setInstrument(newOB.metadata.instrument as Instrument)
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
-                        props.handleOBSelect(ob_id)
+                        ob_context.handleOBSelect(ob_id)
                         props.handleClose()
                     }, 250);
                 })
@@ -121,7 +123,7 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const selectOB = () => {
         console.log(`selecting ${props.type} id ${props.id}.`)
-        props.handleOBSelect(props.id)
+        ob_context.handleOBSelect(props.id)
         props.handleClose()
     }
 
@@ -205,12 +207,9 @@ const NodePopover = (props: Props) => {
                 {props.ob_details && create_ob_text(props.ob_details)}
                 <PopoverButtons
                     container_names={props.container_names}
-                    handleOBSelect={props.handleOBSelect}
                     parentNodeId={props.parentNodeId}
                     handleClose={props.handleClose as Function}
                     type={props.type}
-                    setOB={props.setOB}
-                    setInstrument={props.setInstrument}
                     name={props.name}
                     id={props.id} />
             </Popover>

@@ -8,12 +8,9 @@ import ContainerTree from './container_tree'
 import ContainerTable from './container_table'
 import { DetailedContainer, Scoby, SemesterIds } from '../../typings/papahana';
 import { useOBSelectContext } from './../ODT/side_menu'
+import { useOBContext } from '../ODT/observation_data_tool_view';
 
 export interface Props {
-  handleOBSelect: Function
-  ob_id: string | undefined | null
-  setOB: Function
-  setInstrument: Function
 }
 
 interface State {
@@ -61,11 +58,11 @@ export default function ObservationBlockSelecter(props: Props) {
     ob_sel.reset_container_and_ob_select()
   }
 
-  useEffect(() => { 
+  useEffect(() => {
     get_sem_id_list()
       .then((semesters: SemesterIds) => {
         observerContext.setObserverId(semesters.keck_id)
-        Array.isArray(semesters.associations)? setSemIdList(semesters.associations) : setSemIdList([])
+        Array.isArray(semesters.associations) ? setSemIdList(semesters.associations) : setSemIdList([])
       })
       .then(() => {
         ob_sel.setTrigger(ob_sel.trigger + 1)
@@ -83,9 +80,9 @@ export default function ObservationBlockSelecter(props: Props) {
         cntners.forEach((c: DetailedContainer) => {
           if (c.name !== 'All OBs') {
             contset.push({
-            _id: c._id,
-            name: c.name
-          })
+              _id: c._id,
+              name: c.name
+            })
           }
         })
         setContainers(cntners)
@@ -97,19 +94,21 @@ export default function ObservationBlockSelecter(props: Props) {
 
 
   return (
-      <React.Fragment>
-        <DropDown
-          placeholder={'semester id'}
-          arr={semIdList}
-          value={ob_sel.sem_id}
-          handleChange={handle_sem_id_submit}
-          label={'Semester ID'}
-          highlightOnEmpty={true}
+    <React.Fragment>
+      <DropDown
+        placeholder={'semester id'}
+        arr={semIdList}
+        value={ob_sel.sem_id}
+        handleChange={handle_sem_id_submit}
+        label={'Semester ID'}
+        highlightOnEmpty={true}
+      />
+      <Paper>
+        <ContainerTree
+          containers={containers}
         />
-        <Paper>
-          <ContainerTree setInstrument={props.setInstrument} setOB={props.setOB} containers={containers} handleOBSelect={props.handleOBSelect} />
-          <ContainerTable rows={rows} containerIdNames={containerIdNames} handleOBSelect={props.handleOBSelect} />
-        </Paper>
-      </React.Fragment>
+        <ContainerTable rows={rows} containerIdNames={containerIdNames}/>
+      </Paper>
+    </React.Fragment>
   )
 }

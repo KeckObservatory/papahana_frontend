@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { createContext, useContext, useCallback, useEffect, useState } from 'react'
 import { Instrument, ObservationBlock } from '../../typings/papahana'
 import { makeStyles } from '@mui/styles'
 import { Theme } from '@mui/material/styles'
@@ -26,6 +26,25 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }))
 
+export interface OBContext {
+  ob: ObservationBlock,
+  ob_id: string | null | undefined,
+  setOBID: Function
+  getOB: Function,
+  setOB: Function
+  handleOBSelect: Function
+}
+
+const init_ob_context: OBContext = {
+  ob: {} as ObservationBlock,
+  ob_id: '',
+  setOBID: () => { },
+  getOB: () => { },
+  setOB: () => { },
+  handleOBSelect: () => { }
+}
+const OBContext = createContext<OBContext>(init_ob_context)
+export const useOBContext = () => useContext(OBContext)
 
 export interface Props {
 }
@@ -51,7 +70,7 @@ export default function ODTView(props: Props) {
   }, [])
 
   useEffect(() => { //ensure instrument matches the selected ob
-    if(ob.metadata) setInstrument(ob.metadata.instrument.toUpperCase())
+    if (ob.metadata) setInstrument(ob.metadata.instrument.toUpperCase())
   }, [ob])
 
   const renderRGL = () => {
@@ -90,36 +109,59 @@ export default function ODTView(props: Props) {
     }
   }, []);
 
+
+  const getOB = (new_ob_id: string): void => {
+    ob_api_funcs.get(new_ob_id).then((newOb: ObservationBlock) => {
+      if (newOb._id) {
+        setInstrument(newOb.metadata.instrument)
+        setOB(newOb)
+      }
+    })
+      .finally(() => {
+        setTriggerRender(triggerRender + 1) //force dnd component to rerender
+      })
+  }
+  const handleOBSelect = (ob_id: string) => {
+    console.log(`setting selected ob to ${ob_id}`)
+    setOBID(ob_id)
+    getOB(ob_id)
+  }
+
+  const obContext: OBContext = {
+    ob: ob,
+    ob_id: ob_id,
+    setOBID: setOBID,
+    getOB: getOB,
+    setOB: setOB,
+    handleOBSelect: handleOBSelect
+  }
+
   return (
     <div>
-      <Drawer
-        anchor={'left'}
-        open={drawer.drawerOpen}
-        variant="persistent"
-        sx={{
-          width: drawer.drawerWidth,
-          flexShrink: 0,
-          '& .MuiDrawer-paper': {
+      <OBContext.Provider value={obContext}>
+        <Drawer
+          anchor={'left'}
+          open={drawer.drawerOpen}
+          variant="persistent"
+          sx={{
             width: drawer.drawerWidth,
-            marginTop: '68px',
-            boxSizing: 'border-box',
-          },
-        }}
-      >
-        <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
-        <SideMenu
-          ob_id={ob_id}
-          setOBID={setOBID}
-          ob={ob}
-          setOB={setOB}
-          triggerRender={triggerRender}
-          setTriggerRender={setTriggerRender}
-          instrument={instrument as Instrument}
-          setInstrument={setInstrument}
-        />
-      </Drawer>
-      {renderRGL()}
-      <Autosave ob={ob} />
+            flexShrink: 0,
+            '& .MuiDrawer-paper': {
+              width: drawer.drawerWidth,
+              marginTop: '68px',
+              boxSizing: 'border-box',
+            },
+          }}
+        >
+          <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
+          <SideMenu
+            triggerRender={triggerRender}
+            setTriggerRender={setTriggerRender}
+          />
+        </Drawer>
+        {renderRGL()}
+        <Autosave ob={ob} />
+      </OBContext.Provider>
     </div>
   )
 }

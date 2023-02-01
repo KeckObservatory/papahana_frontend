@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react';
 import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template} from '../../typings/papahana';
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface Props {
-    instrument: Instrument;
     obSequences: string[];
     addSeq: Function;
 }
@@ -45,16 +45,17 @@ export default function TemplateSelection(props: Props) {
     const [templates, setTemplates] = useState({} as InstrumentPackageTemplates)
     const [templateList, setTemplateList] = useState([] as string[])
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
     useEffect(() => {
-        get_instrument_package(props.instrument)
+        get_instrument_package(instrument as Instrument)
             .then((ip: InstrumentPackage) => {
                 const [templateList, disList] = create_drop_down_list(ip.template_list, props.obSequences)
                 setTemplates(ip.template_list)
                 setTemplateList(templateList)
                 setDisabledArr(disList)
             })
-    }, [props.instrument])
+    }, [instrument])
 
     useEffect(() => {
         const [templateList, disList] = create_drop_down_list(templates, props.obSequences)
@@ -64,7 +65,7 @@ export default function TemplateSelection(props: Props) {
 
 
     const handleChange = (templateName: string) => {
-        get_template(templateName, props.instrument).then((template: Template) => {
+        get_template(templateName, instrument).then((template: Template) => {
             console.log('template name created', templateName)
             let seq = {
                 'metadata': template.metadata,

@@ -14,9 +14,6 @@ interface RenderTreeProps {
     nodes: RenderTree
     parentNodeId: string
     names: Set<string>
-    setOB: Function
-    setInstrument: Function
-    handleOBSelect: Function
 }
 
 const CustomContent = React.forwardRef(function CustomContent(
@@ -130,14 +127,10 @@ export const RenderTreeElement = (props: RenderTreeProps) => {
                             names={props.names}
                             nodes={node}
                             parentNodeId={props.nodes.id}
-                            setOB={props.setOB}
-                            setInstrument={props.setInstrument}
-                            handleOBSelect={props.handleOBSelect}
                         />
                     ))}
             </CustomTreeItem>
             <NodePopover
-                handleOBSelect={props.handleOBSelect}
                 anchorPos={anchorPos}
                 parentNodeId={props.parentNodeId}
                 id={props.nodes.id}
@@ -147,8 +140,6 @@ export const RenderTreeElement = (props: RenderTreeProps) => {
                 type={props.nodes.type}
                 container_names={props.names}
                 ob_details={props.nodes.ob_details}
-                setOB={props.setOB}
-                setInstrument={props.setInstrument}
                 name={props.nodes.name} />
         </div >
     );

@@ -5,13 +5,11 @@ import { useOBSelectContext } from './../ODT/side_menu'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { RenderTreeElement } from './render_tree_element'
+import { useOBContext } from '../ODT/observation_data_tool_view';
 
 
 interface Props {
-    handleOBSelect: Function
     containers: DetailedContainer[]
-    setOB: Function
-    setInstrument: Function
 }
 
 export interface RenderTree {
@@ -58,6 +56,7 @@ const containers_to_nodes = (containers: DetailedContainer[]): RenderTree[] => {
 export default function ContainerTree(props: Props) {
 
     const ob_select_object = useOBSelectContext()
+
     const rootTree: RenderTree = {
         id: 'root',
         name: ob_select_object.sem_id,
@@ -95,9 +94,6 @@ export default function ContainerTree(props: Props) {
             nodes={tree} 
             parentNodeId={tree.id}
             names={names}
-            setOB={props.setOB}
-            setInstrument={props.setInstrument}
-            handleOBSelect={props.handleOBSelect}
             />
         </TreeView>
     )
