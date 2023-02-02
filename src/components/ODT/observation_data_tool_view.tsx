@@ -145,6 +145,7 @@ export default function ODTView(props: Props) {
             flexShrink: 0,
             '& .MuiDrawer-paper': {
               width: drawer.drawerWidth,
+              transition: 'width 0.25s',
               marginTop: '68px',
               boxSizing: 'border-box',
             },
