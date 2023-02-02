@@ -18,6 +18,7 @@ import {
     mock_get_observation_block_from_container,
     mock_get_semesters,
     mock_ob_get,
+    mock_ob_post,
     mock_get_semester_obs,
     mock_get_container_ob_metadata,
     mock_get_container_ob_target,
@@ -237,7 +238,7 @@ export const get_select_funcs = {
 
 export const ob_api_funcs = {
     get: IS_BUILD ? ob_get : mock_ob_get,
-    post: ob_post,
+    post: IS_BUILD ? ob_post : mock_ob_post,
     put: ob_put,
     remove: ob_remove,
 };

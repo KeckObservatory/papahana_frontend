@@ -11,9 +11,12 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import { CommonParameters, Instrument, InstrumentPackage, OBComponent, ObservationBlock, Recipe, Status, Template } from '../../typings/papahana';
 import DropDown from '../drop_down';
-import { get_select_funcs } from '../../api/ApiRoot';
+import { get_select_funcs, ob_api_funcs } from '../../api/ApiRoot';
 import { useObserverContext } from '../App';
 import { useOBSelectContext } from '../ODT/side_menu';
+import { useOBContext } from '../ODT/observation_data_tool_view';
+import { resolve } from 'path';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC'];
 const OBTypes: string[] = ['Science', 'Calibratoin', 'Blank'];
@@ -28,12 +31,13 @@ const OBRecipeStepper = (props: Props) => {
 
     const [activeStep, setActiveStep] = React.useState(0);
     const [inst, setInst] = React.useState('' as Instrument);
-    const [recipe, setRecipe] = React.useState( {} as Recipe );
+    const [recipe, setRecipe] = React.useState({} as Recipe);
     const [recipes, setRecipes] = React.useState([] as string[]);
     const [ip, setIP] = React.useState({} as InstrumentPackage)
 
     const observer_context = useObserverContext()
     const ob_select_context = useOBSelectContext()
+    const ob_context = useOBContext()
 
     React.useEffect(() => {
 
@@ -71,7 +75,7 @@ const OBRecipeStepper = (props: Props) => {
             priority: 0,
             state: 4
         }
-        const newOB = { metadata: meta, status: status } as any 
+        const newOB = { metadata: meta, status: status } as any
         templateNames.forEach(async (tName: string) => {
             const templateObj = await get_select_funcs.get_template(tName)
             const [key, template] = Object.entries(templateObj)[0]
@@ -88,7 +92,7 @@ const OBRecipeStepper = (props: Props) => {
                 comp['parameters'] = {}
             }
             const tType = template.metadata.template_type
-            if (tType.includes('science' ) || tType.includes('calibration')) {
+            if (tType.includes('science') || tType.includes('calibration')) {
                 newOB['observations'] = [comp]
             }
             else {
@@ -107,7 +111,7 @@ const OBRecipeStepper = (props: Props) => {
 
     const set_type = (newType: string) => {
         console.log('type selected', newType)
-        const newRecipe = ip.recipes[newType] 
+        const newRecipe = ip.recipes[newType]
         setRecipe(newRecipe)
     }
 
@@ -152,7 +156,21 @@ const OBRecipeStepper = (props: Props) => {
         // setActiveStep(0);
         const newOB = generate_ob_from_recipe()
         console.log('created new ob', newOB)
-        props.setOpen(false)
+
+        let ob_id: string
+
+        ob_api_funcs.post(newOB)
+            .then((obid: string) => {
+                ob_id = obid
+            })
+            .finally(() => {
+                setTimeout(() => {
+                    console.log(`new ob ${ob_id} added to container. triggering new view`)
+                    ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                    ob_context.handleOBSelect(ob_id)
+                    props.setOpen(false)
+                }, 250);
+            })
     };
 
     return (

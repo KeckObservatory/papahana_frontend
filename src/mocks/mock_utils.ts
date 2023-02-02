@@ -12,6 +12,7 @@ import { default as mock_instrument_packages } from './instrument_packages.json'
 import { mock_targets, mock_metadata } from './mock_ob_metadata_targets'
 import { default as mock_ob_table_rows } from './ob_table_rows.json'
 import { OBTableRow } from '../typings/ddoi_api';
+import { resolve } from 'dns';
 
 export const mock_get_container_ob_metadata = (semid: string, container_id?: string) => {
    const mockPromise = new Promise<Partial<ObservationBlock[]>>((resolve) => {
@@ -106,6 +107,13 @@ export const mock_get_observation_block_from_container = (container_id: string):
       const idx = Math.floor(Math.random() * obsChunks.length)
       const obs = obsChunks[idx] as ObservationBlock[]
       resolve(obs)
+   })
+   return mockPromise
+}
+
+export const mock_ob_post = (ob: ObservationBlock): Promise<string> => {
+   const mockPromise = new Promise<string>((resolve) => {
+       resolve('12345abcdefg')
    })
    return mockPromise
 }
