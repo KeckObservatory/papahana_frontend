@@ -153,7 +153,6 @@ const OBRecipeStepper = (props: Props) => {
     };
 
     const handleCreateOB = () => {
-        // setActiveStep(0);
         const newOB = generate_ob_from_recipe()
         console.log('created new ob', newOB)
 

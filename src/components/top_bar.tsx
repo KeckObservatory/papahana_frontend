@@ -8,11 +8,11 @@ import Tooltip from '@mui/material/Tooltip';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography'
 import { useDrawerOpenContext } from './App';
-import LoginDialog from './login_dialog';
 import { Theme } from "@mui/material/styles";
 import DoorFrontIcon from '@mui/icons-material/DoorFront';
 import { get_userinfo } from './../api/ApiRoot';
 import { UserInfo } from '../typings/ddoi_api';
+import SideMenuWidthControl from './side_menu_width_control'
 
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -47,13 +47,14 @@ export function TopBar(props: Props) {
 
   useEffect(() => {
 
-    get_userinfo().then( (response: UserInfo) => {
+    get_userinfo().then((response: UserInfo) => {
       const uname = response.Title + ' ' + response.FirstName + ' ' + response.LastName
       setName(uname)
     })
   }, [])
 
   const handleMenuClick = () => {
+    drawer.setDrawerWidth(400)
     drawer.setDrawerOpen(!drawer.drawerOpen)
   }
 
@@ -70,14 +71,17 @@ export function TopBar(props: Props) {
       <Toolbar
         className={classes.toolbar}
       >
-        <IconButton
-          // edge="start"
-          // color="inherit"
-          aria-label="open drawer"
-          onClick={handleMenuClick}
-        >
-          <MenuIcon id='sidebar-menu-icon'/>
-        </IconButton>
+        <Tooltip title={'Toggle side menu'}>
+          <IconButton
+            // edge="start"
+            // color="inherit"
+            aria-label="open drawer"
+            onClick={handleMenuClick}
+          >
+            <MenuIcon id='sidebar-menu-icon' />
+          </IconButton>
+        </Tooltip>
+        <SideMenuWidthControl />
         <Typography
           component="h1"
           variant="h6"
@@ -96,8 +100,7 @@ export function TopBar(props: Props) {
         >
           Welcome, {name}!
         </Typography>
-        {/* <LoginDialog /> */}
-        <Tooltip title="Click Return to Observer Portal">
+        <Tooltip title="Return to Observer Portal">
           <IconButton
             aria-label="open drawer"
             onClick={handlePortalClick}
