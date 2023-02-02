@@ -90,22 +90,22 @@ export default function ODTView(props: Props) {
     }
   }
 
-  const handleMouseDown = () => {
-    document.addEventListener("mouseup", handleMouseUp, true);
-    document.addEventListener("mousemove", handleMouseMove, true);
-  };
+  // const handleMouseDown = () => {
+  //   document.addEventListener("mouseup", handleMouseUp, true);
+  //   document.addEventListener("mousemove", handleMouseMove, true);
+  // };
 
-  const handleMouseUp = () => {
-    document.removeEventListener("mouseup", handleMouseUp, true);
-    document.removeEventListener("mousemove", handleMouseMove, true);
-  };
+  // const handleMouseUp = () => {
+  //   document.removeEventListener("mouseup", handleMouseUp, true);
+  //   document.removeEventListener("mousemove", handleMouseMove, true);
+  // };
 
-  const handleMouseMove = useCallback((e: MouseEvent) => {
-    const newWidth = e.clientX - document.body.offsetLeft;
-    if (newWidth > 50 && newWidth < 1500) {
-      drawer.setDrawerWidth(newWidth);
-    }
-  }, []);
+  // const handleMouseMove = useCallback((e: MouseEvent) => {
+  //   const newWidth = e.clientX - document.body.offsetLeft;
+  //   if (newWidth > 50 && newWidth < 1500) {
+  //     drawer.setDrawerWidth(newWidth);
+  //   }
+  // }, []);
 
 
   const getOB = (new_ob_id: string): void => {
@@ -150,7 +150,7 @@ export default function ODTView(props: Props) {
             },
           }}
         >
-          <div onMouseDown={e => handleMouseDown()} className={classes.dragger} />
+          {/* <div onMouseDown={e => handleMouseDown()} className={classes.dragger} /> */}
           <SideMenu
             triggerRender={triggerRender}
             setTriggerRender={setTriggerRender}

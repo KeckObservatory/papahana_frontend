@@ -4,7 +4,7 @@ import './App.css';
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { lightBlue, deepOrange, deepPurple } from '@mui/material/colors';
-import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
+import { BooleanParam, NumberParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
 import { ThemeKeys } from 'react-json-view'
 import { TopBar } from './top_bar'
 import { ModuleMenu } from './module_menu'
@@ -109,7 +109,7 @@ export default function App() {
   const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
-  const [drawerWidth, setDrawerWidth] = React.useState(400)
+  const [drawerWidth, setDrawerWidth] = useQueryParam('drawerWidth', withDefault(NumberParam, 400)); 
 
   const [observer_id, setObserverId] =
     useQueryParam('observer_id', withDefault(StringParam, 'Stranger'))
