@@ -568,7 +568,7 @@ def generate_common_parameters():
             "inst_cfg_slicer": random.choice(["slicer1", "slicer2"]),
             "inst_cfg_blockingfilter": random.choice(["filter1", "filter2"]),
             "inst_cfg_hatch": random.choice(["open", "closed"]),
-            "inst_cfg_polarimeter": random.choice(["Sky", "Polar", "Lense"]),
+            "inst_cfg_polarimeter": random.choice(["Sky", "Polar", "Lens"]),
             "inst_cfg_ifu":  random.choice([ "Home", "Large", "Medium", "Small", "FPCam", "Aux" ]),
             "inst_cfg1_filter": random.choice([ "Home", "Large", "Medium", "Small", "FPCam", "Aux" ]),
             "inst_cfg2_filter": random.choice([ "Home", "Large", "Medium", "Small", "FPCam", "Aux" ]),

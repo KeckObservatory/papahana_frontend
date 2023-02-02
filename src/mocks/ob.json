@@ -5,7 +5,7 @@
             "name": "standard stars #7",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 8765,
             "sem_id": "2021B_N057",
             "instrument": "KCWI"
@@ -67,7 +67,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -111,7 +111,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -128,7 +128,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -145,7 +145,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 3
@@ -270,7 +270,7 @@
             "name": "standard stars #7",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 7644,
             "sem_id": "2019A_U124",
             "instrument": "KCWI",
@@ -327,7 +327,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -344,7 +344,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -400,7 +400,7 @@
                 "inst_cfg_slicer": "slicer2",
                 "inst_cfg_blockingfilter": "filter1",
                 "inst_cfg_hatch": "open",
-                "inst_cfg_polarimeter": "Lense",
+                "inst_cfg_polarimeter": "Lens",
                 "inst_cfg_ifu": "Aux",
                 "inst_cfg1_filter": "FPCam",
                 "inst_cfg2_filter": "Small",
@@ -447,7 +447,7 @@
             "name": "standard stars #9",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 5555,
             "sem_id": "2018A_U043",
             "instrument": "KCWI"
@@ -568,7 +568,7 @@
             "name": "standard stars #1",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 8899,
             "sem_id": "2018A_U045",
             "instrument": "KCWI",
@@ -627,7 +627,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -684,7 +684,7 @@
                 "inst_cfg_slicer": "slicer1",
                 "inst_cfg_blockingfilter": "filter2",
                 "inst_cfg_hatch": "closed",
-                "inst_cfg_polarimeter": "Lense",
+                "inst_cfg_polarimeter": "Lens",
                 "inst_cfg_ifu": "Medium",
                 "inst_cfg1_filter": "FPCam",
                 "inst_cfg2_filter": "Medium",
@@ -731,7 +731,7 @@
             "name": "standard stars #0",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 7644,
             "sem_id": "2019A_U123",
             "instrument": "KCWI",
@@ -790,7 +790,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -807,7 +807,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -824,7 +824,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -868,7 +868,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 3
@@ -912,7 +912,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 4
@@ -988,7 +988,7 @@
             "name": "standard stars #7",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 7766,
             "sem_id": "2017A_U033",
             "instrument": "KCWI",
@@ -1020,7 +1020,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -1064,7 +1064,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -1108,7 +1108,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -1152,7 +1152,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 3
@@ -1196,7 +1196,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 4
@@ -1302,7 +1302,7 @@
             "name": "standard stars #8",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 1144,
             "sem_id": "2019B_U159",
             "instrument": "KCWI",
@@ -1365,7 +1365,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -1409,7 +1409,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -1453,7 +1453,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -1481,7 +1481,7 @@
                 "inst_cfg_slicer": "slicer2",
                 "inst_cfg_blockingfilter": "filter2",
                 "inst_cfg_hatch": "closed",
-                "inst_cfg_polarimeter": "Lense",
+                "inst_cfg_polarimeter": "Lens",
                 "inst_cfg_ifu": "Small",
                 "inst_cfg1_filter": "FPCam",
                 "inst_cfg2_filter": "Home",
@@ -1546,7 +1546,7 @@
             "name": "standard stars #3",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 8899,
             "sem_id": "2018A_U043",
             "instrument": "KCWI"
@@ -1636,7 +1636,7 @@
             "name": "standard stars #4",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 5555,
             "sem_id": "2019A_U124",
             "instrument": "KCWI"
@@ -1667,7 +1667,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -1711,7 +1711,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -1728,7 +1728,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -1784,7 +1784,7 @@
                 "inst_cfg_slicer": "slicer1",
                 "inst_cfg_blockingfilter": "filter2",
                 "inst_cfg_hatch": "closed",
-                "inst_cfg_polarimeter": "Lense",
+                "inst_cfg_polarimeter": "Lens",
                 "inst_cfg_ifu": "FPCam",
                 "inst_cfg1_filter": "Large",
                 "inst_cfg2_filter": "Small",
@@ -1845,7 +1845,7 @@
             "name": "standard stars #7",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 9998,
             "sem_id": "2018B_U016",
             "instrument": "KCWI"
@@ -1905,7 +1905,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -2004,7 +2004,7 @@
             "name": "standard stars #4",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 1144,
             "sem_id": "2018A_U045",
             "instrument": "KCWI"
@@ -2062,7 +2062,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -2079,7 +2079,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -2096,7 +2096,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -2140,7 +2140,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 3
@@ -2241,7 +2241,7 @@
             "name": "standard stars #8",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 8877,
             "sem_id": "2021B_U056",
             "instrument": "KCWI",
@@ -2328,11 +2328,11 @@
             "name": "standard stars #1",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 7799,
             "sem_id": "2021A_N140",
             "instrument": "KCWI",
-            "comment": "I hear the jury?s still out on science."
+            "comment": "I hear the jury?s still out on Science."
         },
         "acquisition": {
             "metadata": {
@@ -2360,7 +2360,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -2377,7 +2377,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -2473,11 +2473,11 @@
             "name": "standard stars #9",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 5555,
             "sem_id": "2018A_U044",
             "instrument": "KCWI",
-            "comment": "I hear the jury?s still out on science."
+            "comment": "I hear the jury?s still out on Science."
         },
         "target": {
             "metadata": {
@@ -2532,7 +2532,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -2576,7 +2576,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -2593,7 +2593,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -2714,7 +2714,7 @@
             "name": "standard stars #3",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 7766,
             "sem_id": "2018A_U045",
             "instrument": "KCWI",
@@ -2777,7 +2777,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -2794,7 +2794,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -2900,7 +2900,7 @@
             "name": "standard stars #4",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 5555,
             "sem_id": "2019A_U124",
             "instrument": "KCWI"
@@ -2960,7 +2960,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -2977,7 +2977,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -3034,7 +3034,7 @@
                 "inst_cfg_slicer": "slicer1",
                 "inst_cfg_blockingfilter": "filter1",
                 "inst_cfg_hatch": "closed",
-                "inst_cfg_polarimeter": "Lense",
+                "inst_cfg_polarimeter": "Lens",
                 "inst_cfg_ifu": "Medium",
                 "inst_cfg1_filter": "Medium",
                 "inst_cfg2_filter": "Medium",
@@ -3080,7 +3080,7 @@
             "name": "standard stars #1",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 9998,
             "sem_id": "2021A_U073",
             "instrument": "KCWI",
@@ -3220,7 +3220,7 @@
             "name": "standard stars #1",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 8877,
             "sem_id": "2019B_U160",
             "instrument": "KCWI",
@@ -3252,7 +3252,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -3296,7 +3296,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -3340,7 +3340,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -3384,7 +3384,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 3
@@ -3491,7 +3491,7 @@
             "name": "standard stars #3",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 7644,
             "sem_id": "2020B_U048",
             "instrument": "KCWI",
@@ -3548,7 +3548,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -3565,7 +3565,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 1
@@ -3609,7 +3609,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 2
@@ -3653,7 +3653,7 @@
                     "name": "KCWI_ifu_sci_dither",
                     "ui_name": "KCWI dither",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 3
@@ -3757,7 +3757,7 @@
             "name": "standard stars #7",
             "version": 0.1,
             "priority": 100,
-            "ob_type": "science",
+            "ob_type": "Science",
             "pi_id": 8877,
             "sem_id": "2021A_U073",
             "instrument": "KCWI"
@@ -3813,7 +3813,7 @@
                     "name": "KCWI_ifu_sci_stare",
                     "ui_name": "KCWI stare",
                     "instrument": "KCWI",
-                    "template_type": "science",
+                    "template_type": "Science",
                     "version": 0.1,
                     "script": "KCWI_ifu_sci_stare",
                     "sequence_number": 0
@@ -3841,7 +3841,7 @@
                 "inst_cfg_slicer": "slicer2",
                 "inst_cfg_blockingfilter": "filter1",
                 "inst_cfg_hatch": "open",
-                "inst_cfg_polarimeter": "Lense",
+                "inst_cfg_polarimeter": "Lens",
                 "inst_cfg_ifu": "FPCam",
                 "inst_cfg1_filter": "Home",
                 "inst_cfg2_filter": "Medium",
