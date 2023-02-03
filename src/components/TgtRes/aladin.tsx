@@ -1,6 +1,6 @@
 import React from "react"
 import { CatalogRow, Target } from "../../typings/papahana";
-import { ra_dec_to_deg } from './../SelectionTool/sky-view/sky_view_util'
+import { ra_dec_to_deg } from '../sky-view/sky_view_util'
 interface Props {
     target: Target
     selIdx: number | undefined
