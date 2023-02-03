@@ -214,7 +214,7 @@ export const SideMenu = (props: Props) => {
 
         <OBSelectContext.Provider value={ob_select_object}>
             <Paper sx={{
-                padding: '8px',
+                padding: '4px',
                 margin: '4px',
                 width: "100%",
                 elevation: 5,

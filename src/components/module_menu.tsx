@@ -77,7 +77,7 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
         } >
             <AppBar position="static" sx={
                 {
-                    marginTop: '36px',
+                    marginTop: '28px',
                     height: "50px",
                     display: "flex",
                     width: '100%',
