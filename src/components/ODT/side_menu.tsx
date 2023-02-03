@@ -22,9 +22,6 @@ import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
 import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
-import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
-import { isUndefined } from 'lodash';
 import OBValidator from './ob_validator';
 import { useOBContext } from './observation_data_tool_view';
 
@@ -49,21 +46,6 @@ const init_object: OBSelectContextObject = {
 const OBSelectContext = createContext<OBSelectContextObject>(init_object)
 export const useOBSelectContext = () => useContext(OBSelectContext)
 
-const useStyles = makeStyles((theme: Theme) => ({
-    buttonBlock: {
-        margin: theme.spacing(1),
-        display: 'inline-flex',
-    },
-    templateSelect: {
-    },
-    paper: {
-        padding: theme.spacing(2),
-        margin: theme.spacing(1),
-        width: "100%",
-        elevation: 5,
-    },
-}))
-
 interface Props {
     triggerRender: number,
     setTriggerRender: Function,
@@ -76,7 +58,6 @@ export const SideMenu = (props: Props) => {
     const [sem_id, setSemId] =
         useQueryParam('sem_id', withDefault(StringParam, ''))
     const [boopStyle, triggerBoop] = useBoop({})
-    const classes = useStyles();
     const jsonEditable = true
 
     const [selAccdExpanded, setSelAccdExpanded] = React.useState(true);
@@ -88,7 +69,7 @@ export const SideMenu = (props: Props) => {
     const [trigger, setTrigger] = React.useState(0)
     const [obList, setOBList] = React.useState([] as string[])
 
-    const [validatorReport, setValidatorReport ] = React.useState({valid: true, errors: {}} as ValidatorReport)
+    const [validatorReport, setValidatorReport] = React.useState({ valid: true, errors: {} } as ValidatorReport)
 
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
@@ -208,13 +189,13 @@ export const SideMenu = (props: Props) => {
     const handleSubmit = () => {
         triggerBoop(false)
         ob_api_funcs.put(ob_context.ob._id, ob_context.ob)
-        .then((response: ValidatorReport) => {
-            // setValidatorReport(response)
-        })
-        .finally( () => {
-            console.log('triggering new side menu build', trigger ) 
-            setTrigger(trigger+1)
-        })
+            .then((response: ValidatorReport) => {
+                // setValidatorReport(response)
+            })
+            .finally(() => {
+                console.log('triggering new side menu build', trigger)
+                setTrigger(trigger + 1)
+            })
     }
 
     const handleAccordionChange = (accd: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -232,7 +213,12 @@ export const SideMenu = (props: Props) => {
     return (
 
         <OBSelectContext.Provider value={ob_select_object}>
-            <Paper className={classes.paper} elevation={3}>
+            <Paper sx={{
+                padding: '8px',
+                margin: '4px',
+                width: "100%",
+                elevation: 5,
+            }} elevation={3}>
                 {obEditable &&
                     <React.Fragment>
                         <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
@@ -245,7 +231,10 @@ export const SideMenu = (props: Props) => {
                                 {/* <h3>Observation Block Edit/Display</h3> */}
                             </AccordionSummary>
                             <AccordionDetails>
-                                <div className={classes.buttonBlock}>
+                                <div style={{
+                                    margin: '4px',
+                                    display: 'inline-flex',
+                                }}>
                                     <Tooltip title="Upload OB to database">
                                         <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
                                             <PublishIcon />
@@ -263,13 +252,13 @@ export const SideMenu = (props: Props) => {
                                     </Tooltip>
                                     <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
                                     <DeleteDialog deleteOB={deleteOB} />
-                                    <OBValidator validatorReport={validatorReport}/>
+                                    <OBValidator validatorReport={validatorReport} />
                                 </div>
                                 <Tooltip title="Add template to Selected OB">
-                                    <div className={classes.templateSelect}>
-                                        <TemplateSelection 
-                                        addSeq={addSeq} 
-                                        obSequences={Object.keys(ob_context.ob)} />
+                                    <div>
+                                        <TemplateSelection
+                                            addSeq={addSeq}
+                                            obSequences={Object.keys(ob_context.ob)} />
                                     </div>
                                 </Tooltip>
                             </AccordionDetails>
@@ -285,7 +274,7 @@ export const SideMenu = (props: Props) => {
                         <Typography>Observation Block Selection</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <ObservationBlockSelecter/>
+                        <ObservationBlockSelecter />
                     </AccordionDetails>
                 </Accordion>
                 <Tooltip title="Change the color theme of the OB JSON display">

@@ -1,7 +1,5 @@
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react'
-import { Instrument, ObservationBlock } from '../../typings/papahana'
-import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
+import { ObservationBlock } from '../../typings/papahana'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import { Autosave } from './autosave'
@@ -9,22 +7,6 @@ import Drawer from '@mui/material/Drawer';
 import { useDrawerOpenContext } from './../App'
 import { SideMenu } from './side_menu'
 import { ob_api_funcs } from './../../api/ApiRoot';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  dragger: {
-    width: "5px",
-    cursor: "ew-resize",
-    padding: "4px 0 0",
-    borderTop: "1px solid #ddd",
-    position: "absolute",
-    // height: "100%",
-    height: '1000px',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 100,
-  }
-}))
 
 export interface OBContext {
   ob: ObservationBlock,
@@ -50,7 +32,6 @@ export interface Props {
 export default function ODTView(props: Props) {
 
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
-  const classes = useStyles();
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
   const initOB = {}
@@ -151,7 +132,6 @@ export default function ODTView(props: Props) {
             },
           }}
         >
-          {/* <div onMouseDown={e => handleMouseDown()} className={classes.dragger} /> */}
           <SideMenu
             triggerRender={triggerRender}
             setTriggerRender={setTriggerRender}

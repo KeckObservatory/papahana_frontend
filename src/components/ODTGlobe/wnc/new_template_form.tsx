@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ErrorSchema, IChangeEvent, UiSchema } from 'react-jsonschema-form';
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { OBComponent, Template } from '../../../typings/papahana';
-import { useStyles, Form, log, template_to_schema } from './../../forms/template_form'
+import { Form, log, template_to_schema } from './../../forms/template_form'
 import * as schemas from './../../forms/schemas'
 import { State } from './wnc_stepper_dialog_content'
 
@@ -12,7 +12,6 @@ interface Props {
 }
 
 const NewTemplateForm = function (props: Props) {
-    const classes = useStyles()
     const schema = template_to_schema(props.parentState.template)
     const uiSchema = schemas.getUiSchema(props.parentState.id)
 
@@ -29,7 +28,7 @@ const NewTemplateForm = function (props: Props) {
   }
 
     return (
-      <Form className={classes.form}
+      <Form 
         schema={schema}
         uiSchema={uiSchema as rUiSchema}
         formData={props.parentState.obComponent.parameters}

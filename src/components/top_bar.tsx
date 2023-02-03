@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from "@mui/styles"
 import AppBar from '@mui/material/AppBar';
 import Switch from "@mui/material/Switch"
 import IconButton from '@mui/material/IconButton';
@@ -14,26 +13,6 @@ import { get_userinfo } from './../api/ApiRoot';
 import { UserInfo } from '../typings/ddoi_api';
 import SideMenuWidthControl from './side_menu_width_control'
 
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    position: "absolute",
-    display: "flex"
-  },
-  title: {
-    marginLeft: theme.spacing(2),
-    flexGrow: 1,
-  },
-  appBar: {
-  },
-  toolbar: {
-    paddingRight: theme.spacing(2),
-    paddingLeft: theme.spacing(5)
-  },
-  switch: {
-  },
-}))
-
 interface Props {
   observer_id: string
   darkState: boolean
@@ -41,7 +20,6 @@ interface Props {
 }
 
 export function TopBar(props: Props) {
-  const classes = useStyles();
   const drawer = useDrawerOpenContext()
   const [name, setName] = React.useState('')
 

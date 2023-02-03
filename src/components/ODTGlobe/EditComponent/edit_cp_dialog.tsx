@@ -7,7 +7,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import { JSONSchema7 } from 'json-schema'
 import * as form_schemas from './../../forms/schemas'
-import { useStyles, Form, log } from './../../forms/template_form'
+import { Form, log } from './../../forms/template_form'
 import { template_to_schema } from './../../forms/common_parameters_template_form'
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { ob_api_funcs } from '../../../api/ApiRoot';
@@ -27,7 +27,6 @@ interface Props {
 const EditCPDialog = (props: Props) => {
 
     const ref = React.useRef(null)
-    const classes = useStyles()
     const [open, setOpen] = useState(false);
 
     const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
@@ -99,7 +98,12 @@ const EditCPDialog = (props: Props) => {
 
     const dialog_content = () => {
         return (
-            <div ref={ref} className={classes.root}>
+            <div ref={ref} style={{
+                textAlign: 'left',
+                margin: '0px',
+                display: 'flex',
+                flexWrap: 'wrap',
+            }}>
                 {sub_forms.map((formName: keyof CommonParameters) => {
                     //@ts-ignore
                     const formData = component[formName]
@@ -119,7 +123,7 @@ const EditCPDialog = (props: Props) => {
                             </AccordionSummary>
                             <AccordionDetails >
                                 {schema &&
-                                    <Form className={classes.form}
+                                    <Form
                                         schema={schema}
                                         formData={formData}
                                         onChange={handleSubChange}

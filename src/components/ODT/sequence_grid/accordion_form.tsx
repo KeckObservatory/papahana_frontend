@@ -6,8 +6,6 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, Tooltip } from '@mui/material';
 import OpenWithIcon from '@mui/icons-material/OpenWith';
-import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
 import { ObservationBlock } from "../../../typings/papahana"
 import { DeleteComponentButton } from './delete_component_button'
 
@@ -29,53 +27,25 @@ interface AccordianProps extends withHeightWidthProps {
     expanded?: boolean
 }
 
-
-const rowHeight: number = 45
-
-const useStyles = makeStyles((theme: Theme) => ({
-        root: {
-            position: 'relative',
-            justifyContent: 'center',
-        },
-        heading: {
-            fontWeight: theme.typography.fontWeightRegular,
-            fontSize: '1.25rem',
-            marginTop: theme.spacing(1),
-        },
-        cell: {
-            margin: theme.spacing(0),
-            padding: theme.spacing(0),
-            minHeight: rowHeight,
-            // backgroundColor: 'grey',
-        },
-        templateAccordian: {
-            padding: theme.spacing(0),
-            margin: theme.spacing(0),
-            alignItems: 'center',
-        },
-        accordianSummary: {
-            height: theme.spacing(3),
-            backgroundColor: theme.palette.divider,
-            padding: theme.spacing(0),
-        },
-    }),
-)
-
-
 export const AccordionForm = (props: AccordianProps) => {
     const transitionTime: number = 0 //ms
-    const defaultExpanded: boolean = props.expanded? props.expanded : false 
-    const classes = useStyles()
+    const defaultExpanded: boolean = props.expanded ? props.expanded : false
     const ref = useRef(null)
     const deletable = !(props.name === 'metadata' || props.name === 'common_parameters')
 
     return (
-        <Accordion sx={{backgroundColor: 'divider'}} ref={ref}
+        <Accordion sx={{ backgroundColor: 'divider' }} ref={ref}
             defaultExpanded={defaultExpanded}
             TransitionProps={{ timeout: transitionTime }}
         >
             <AccordionSummary
-                className={classes.accordianSummary}
+                sx={
+                    {
+                        height: '12px',
+                        // backgroundColor: theme.palette.divider,
+                        padding: '0px',
+                    }
+                }
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls="panel1a-content"
                 id="panel1a-header"
@@ -91,15 +61,21 @@ export const AccordionForm = (props: AccordianProps) => {
                         <OpenWithIcon />
                     </IconButton>
 
-                 </Tooltip>
-                {deletable && 
-                    <DeleteComponentButton handleDelete={props.handleDelete} id={props.id} name={props.name}/>
+                </Tooltip>
+                {deletable &&
+                    <DeleteComponentButton handleDelete={props.handleDelete} id={props.id} name={props.name} />
                 }
-                <Typography variant={"h6"} className={classes.heading}>{props.name.toUpperCase()}</Typography>
+                <Typography variant={"h6"} sx={
+                    {
+                        fontWeight: 10,
+                        fontSize: '1.25rem',
+                        marginTop: '4px',
+                    }
+                }>{props.name.toUpperCase()}</Typography>
             </AccordionSummary>
             <AccordionDetails >
                 {props.children}
             </AccordionDetails>
         </Accordion>
-        )
+    )
 }

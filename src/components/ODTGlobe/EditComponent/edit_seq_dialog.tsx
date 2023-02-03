@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as formSchemas from './../../forms/schemas'
-import { useStyles, Form, log, template_to_schema } from './../../forms/template_form'
+import { Form, log, template_to_schema } from './../../forms/template_form'
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { UiSchema } from "react-jsonschema-form"
 import { ErrorSchema } from 'react-jsonschema-form';
@@ -28,12 +28,11 @@ interface Props {
 const EditSeqDialog = (props: Props) => {
 
     const ref = React.useRef(null)
-    const classes = useStyles()
     const [open, setOpen] = useState(false);
 
 
     const [component, setComponent] = useState([] as Science[])
-    const [schemas, setSchemas] = useState([] as JSONSchema7[] )
+    const [schemas, setSchemas] = useState([] as JSONSchema7[])
     const [uiSchemas, setUISchemas] = useState([] as UiSchema[])
     const [ob, setOB] = useState({} as ObservationBlock)
 
@@ -85,7 +84,7 @@ const EditSeqDialog = (props: Props) => {
 
     const handleSeqChange = (idx: number, evt: ISubmitEvent<any>, es?: ErrorSchema) => {
         //@ts-ignore
-        let newOBComponent = [ ...component ]
+        let newOBComponent = [...component]
         newOBComponent[idx].parameters = evt.formData as object
         setComponent(newOBComponent)
     }
@@ -104,14 +103,19 @@ const EditSeqDialog = (props: Props) => {
 
     const dialog_content = () => {
         return (
-            <div ref={ref} className={classes.root}>
+            <div ref={ref} style={{
+                textAlign: 'left',
+                margin: '0px',
+                display: 'flex',
+                flexWrap: 'wrap',
+            }}>
                 {component.map((seq: Science, idx: number) => {
                     //@ts-ignore
                     const formData = seq.parameters
                     const schema = schemas[idx]
                     // console.log('formData', formData, 'schema', schema)
                     const uiSchema = uiSchemas[idx]
-                    const formName = 'sequence_'+idx
+                    const formName = 'sequence_' + idx
                     const handleSubChange = (evt: ISubmitEvent<any>, es?: ErrorSchema) => {
                         handleSeqChange(idx, evt, es)
                     }
@@ -127,7 +131,7 @@ const EditSeqDialog = (props: Props) => {
                             </AccordionSummary>
                             <AccordionDetails >
                                 {schema &&
-                                    <Form className={classes.form}
+                                    <Form
                                         schema={schema}
                                         formData={formData}
                                         onChange={handleSubChange}

@@ -44,13 +44,13 @@ export const createAccordianDiv = (provided: DraggableProvided,
     handleDelete: Function,
     expanded?: boolean) => {
     //@ts-ignore
-    const className = snapshot.isDragging ? { ...provided.draggableProps, ...acc.accDrag } : acc.acc
+    const style = snapshot.isDragging ? { ...provided.draggableProps, ...acc.accDrag } : acc.acc
     return (
         <div
             ref={provided.innerRef}
             {...provided.draggableProps}
             {...provided.dragHandleProps}
-            className={className}
+            style={style}
         >
             <AccordionForm
                 name={key}

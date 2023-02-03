@@ -9,25 +9,7 @@ import { DefaultTheme, makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { StringParam, useQueryParam, withDefault } from "use-query-params";
-
 export const Form = withTheme(MaterialUITheme)
-
-export const useStyles = makeStyles((theme: DefaultTheme) => ({
-  root: {
-    textAlign: 'left',
-    margin: theme.spacing(0),
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  form: {
-    margin: theme.spacing(0),
-    padding: theme.spacing(0),
-  },
-  tab: {
-    minWidth: theme.spacing(15),
-    width: 'flex'
-  }
-}))
 
 export interface Props {
   obComponent: OBComponent
@@ -192,7 +174,6 @@ export const get_schema = async (obComponent: OBComponent, instrument: string, i
 }
 
 export default function TemplateForm(props: Props): JSX.Element {
-  const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
   const uiSchema = schemas.getUiSchema(props.id)
   let initFormData = init_form_data(props.obComponent, props.id)
@@ -220,8 +201,13 @@ export default function TemplateForm(props: Props): JSX.Element {
   }
 
   return (
-    <div ref={ref} className={classes.root}>
-      <Form className={classes.form}
+    <div ref={ref} style={{
+    textAlign: 'left',
+    margin: '0px',
+    display: 'flex',
+    flexWrap: 'wrap',
+    }}>
+      <Form
         schema={schema}
         uiSchema={uiSchema as rUiSchema}
         formData={formData}

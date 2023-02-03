@@ -4,12 +4,17 @@ import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 // import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import * as schemas from './schemas'
-import { useStyles, init_form_data, Props, get_schema, Form, log } from './template_form'
+import { init_form_data, get_schema, Form, log } from './template_form'
 import { TargetResolverDialog } from "../TgtRes/target_resolver_dialog";
 import { StringParam, useQueryParam, withDefault } from "use-query-params";
 
+interface Props {
+  obComponent: OBComponent
+  updateOB: Function
+  id: string
+}
+
 export default function TargetTemplateForm(props: Props): JSX.Element {
-  const classes = useStyles()
   const [schema, setSchema] = React.useState({} as JSONSchema7)
   const uiSchema = schemas.getUiSchema(props.id)
   let initFormData = init_form_data(props.obComponent, props.id)
@@ -38,9 +43,14 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   }
 
   return (
-    <div ref={ref} className={classes.root}>
+    <div ref={ref} style={{
+      textAlign: 'left',
+      margin: '0px',
+      display: 'flex',
+      flexWrap: 'wrap',
+    }}>
       <TargetResolverDialog id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
-      <Form className={classes.form}
+      <Form
         schema={schema}
         uiSchema={uiSchema as rUiSchema}
         formData={formData}

@@ -1,8 +1,6 @@
 //@ts-nocheck
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import React from "react";
-import { Theme, createStyles } from '@mui/material/styles'
-import { makeStyles } from '@mui/styles'
 import {
     MetadataLessOBComponent,
     OBComponent,
@@ -29,13 +27,13 @@ const OB_NAMES: OBSeqNames[] = [
 ]
 
 const OB_COMPONENT_ORDER = {
- 'target': 0,
- 'common_parameters': 1,
- 'metadata': 2,
- 'time_constraints': 3,
- 'status': 4,
- 'observations': 5,
- 'acquisition': 6,
+    'target': 0,
+    'common_parameters': 1,
+    'metadata': 2,
+    'time_constraints': 3,
+    'status': 4,
+    'observations': 5,
+    'acquisition': 6,
 }
 
 
@@ -48,64 +46,12 @@ interface AccordionClasses {
     accDrag: any
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-    createStyles({
-        root: {
-            display: 'flex',
-            justifyContent: 'space-between'
-        },
-        droppableDragging: {
-            background: theme.palette.divider,
-            padding: GRID,
-            minWidth: '300px',
-            maxWidth: '450px'
-        },
-        droppable: {
-            background: theme.palette.success,
-            padding: GRID,
-            minWidth: '300px',
-            maxWidth: '450px'
-        },
-        accordion: {
-            userSelect: "none",
-            padding: GRID * 2,
-            margin: `0 0 ${GRID}px 0`,
-        },
-        accordionDragging: {
-            userSelect: "none",
-            padding: GRID * 2,
-            margin: `0 0 ${GRID}px 0`,
-            background: theme.palette.primary,
-        },
-        heading: {
-            fontWeight: theme.typography.fontWeightRegular,
-            fontSize: '1.25rem',
-            marginTop: theme.spacing(1)
-        },
-        cell: {
-            margin: theme.spacing(0),
-            padding: theme.spacing(0),
-            minHeight: ROW_HEIGHT,
-        },
-        templateAccordian: {
-            padding: theme.spacing(1),
-            margin: theme.spacing(1),
-            alignItems: 'center',
-            backgroundColor: theme.palette.divider,
-        },
-        accordianSummary: {
-            height: theme.spacing(3),
-            padding: theme.spacing(0)
-        }
-    }),
-);
-
 const sort_forms = (inForms: Partial<ObservationBlock>) => {
     const keys = Object.keys(inForms)
-    const ofArr = [] 
+    const ofArr = []
     const oCompKeys = Object.keys(OB_COMPONENT_ORDER)
     //create an array of [order, component] items 
-    keys.forEach( (key: string) => {
+    keys.forEach((key: string) => {
         if (oCompKeys.includes(key)) {
             ofArr.push([OB_COMPONENT_ORDER[key], key, inForms[key]])
         }
@@ -115,14 +61,14 @@ const sort_forms = (inForms: Partial<ObservationBlock>) => {
     })
     //sort array of [order, component] items
     ofArr.sort((a, b) => {
-        if(a[0] > b[0]) return 1;
-        if(a[0] < b[0]) return -1;
+        if (a[0] > b[0]) return 1;
+        if (a[0] < b[0]) return -1;
         return 0;
     })
 
     const sortedForms = {}
     //create sorted Array
-    ofArr.forEach( (okf) => {
+    ofArr.forEach((okf) => {
         const [order, key, form] = okf
         sortedForms[key] = form
     })
@@ -218,7 +164,6 @@ interface Props {
 }
 
 export const OBBeautifulDnD = (props: Props) => {
-    const classes = useStyles()
     const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
     let obItems = Object.entries(obComponents)
     const nColumns = 3
@@ -298,16 +243,40 @@ export const OBBeautifulDnD = (props: Props) => {
         props.setTriggerRender(props.triggerRender + 1)
     }
 
-    const acc: AccordionClasses = { acc: classes.accordion, accDrag: classes.accordionDragging }
+    const acc: AccordionClasses = {
+        acc: {
+            userSelect: "none",
+            padding: '8px',
+            margin: '0 0 4px 0',
+        }, accDrag: {
+            userSelect: "none",
+            padding: '8px',
+            margin: '0 0 4px 0',
+        }
+    }
     return (
-        <div className={classes.root}>
+        <div style={{
+            display: 'flex',
+            justifyContent: 'space-between'
+        }}>
             <div style={{ display: "flex" }}>
                 <DragDropContext onDragEnd={onDragEnd}>
                     {state.map((keyValueArr: any[], ind: number) => (
                         <Droppable key={ind} droppableId={`${ind}`}>
                             {(provided, snapshot) => (
                                 <div
-                                    className={snapshot.isDraggingOver ? classes.droppableDragging : classes.droppable}
+                                    style={snapshot.isDraggingOver ? {
+                                        padding: '4px',
+                                        minWidth: '300px',
+                                        maxWidth: '450px'
+                                    }
+                                        :
+                                        {
+                                            padding: '4px',
+                                            minWidth: '300px',
+                                            maxWidth: '450px'
+                                        }
+                                    }
                                     ref={provided.innerRef}
                                     {...provided.droppableProps}
                                 >

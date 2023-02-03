@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import * as schemas from './../../forms/schemas'
-import { useStyles, Form, log, template_to_schema } from './../../forms/template_form'
+import { Form, log, template_to_schema } from './../../forms/template_form'
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { ErrorSchema } from 'react-jsonschema-form';
 import { ob_api_funcs } from '../../../api/ApiRoot';
@@ -18,10 +18,7 @@ interface Props {
     tableMeta: any;
 }
 
-
-
 const EditDialog = (props: Props) => {
-    const classes = useStyles()
     const [open, setOpen] = useState(false);
 
 
@@ -101,7 +98,7 @@ const EditDialog = (props: Props) => {
                 <Dialog open={open} onClose={handleClose}>
                     <DialogTitle>Edit {compKey[0].toUpperCase() + compKey.substring(1)}</DialogTitle>
                     <DialogContent>
-                        <Form className={classes.form}
+                        <Form
                             schema={schema}
                             uiSchema={uiSchema as rUiSchema}
                             formData={component.parameters}

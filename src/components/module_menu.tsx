@@ -5,8 +5,6 @@ import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import ODTView from './ODT/observation_data_tool_view';
 import ODTGlobeView from './ODTGlobe/global_observing_definition_tool_view';
-import { ThemeKeys } from 'react-json-view';
-import { SelectionToolView } from './SelectionTool/selection_tool_view';
 import { useDrawerOpenContext } from './App'
 import { NumberParam, useQueryParam, withDefault } from 'use-query-params'
 
@@ -95,7 +93,6 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                 >
                     <Tab label="ODT" {...a11yProps(0)} />
                     <Tab label="Global ODT (Work in progress)" {...a11yProps(0)} />
-                    <Tab label="Planning Tool (Work in progress)" {...a11yProps(1)} />
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIdx} index={0}>
@@ -103,9 +100,6 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
             </TabPanel>
             <TabPanel value={tabIdx} index={1}>
                 <ODTGlobeView />
-            </TabPanel>
-            <TabPanel value={tabIdx} index={2}>
-                <SelectionToolView />
             </TabPanel>
         </ div >
     )
