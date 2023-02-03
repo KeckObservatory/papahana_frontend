@@ -1,5 +1,4 @@
 import React from 'react';
-import { DefaultTheme, makeStyles } from "@mui/styles"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
@@ -11,30 +10,6 @@ import { SelectionToolView } from './SelectionTool/selection_tool_view';
 import { useDrawerOpenContext } from './App'
 import { NumberParam, useQueryParam, withDefault } from 'use-query-params'
 
-const useStyles = makeStyles((theme: DefaultTheme) => ({
-    moduleMain: {
-        width: '100%'
-    },
-    tabs: {
-        marginTop: theme.spacing(9),
-        // height: theme.spacing(10),
-        position: "absolute",
-        display: "flex",
-        width: '100%',
-        // padding: theme.spacing(2),
-    },
-    items: {
-        // marginTop: theme.spacing(12),
-        position: "relative",
-        // height: '100%',
-        width: '100%',
-        display: "flex"
-    },
-    panel: {
-        width: '100%',
-    }
-}))
-
 interface TabPanelProps {
     children?: React.ReactNode;
     index: number;
@@ -42,10 +17,14 @@ interface TabPanelProps {
 }
 
 const TabPanel = (props: TabPanelProps) => {
-    const classes = useStyles();
     const { children, value, index, ...other } = props;
     return (
-        <div className={classes.items}
+        <div style={{
+            position: "absolute",
+            width: '100%',
+            display: "flex",
+            marginTop: '80px'
+        }}
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
@@ -53,7 +32,7 @@ const TabPanel = (props: TabPanelProps) => {
             {...other}
         >
             {value === index && (
-                <Box className={classes.panel} p={3}>
+                <Box sx={{width: '100%'}} p={3}>
                     {children}
                 </Box>
             )}
@@ -72,8 +51,6 @@ interface ModuleMenuProps {
 }
 
 export const ModuleMenu = (props: ModuleMenuProps) => {
-    const classes = useStyles();
-    // const [tabIdx, setTabIdx] = React.useState(1);
     const [tabIdx, setTabIdx] = useQueryParam('tab_index', withDefault(NumberParam, 1));
 
     //setting drawer to always closed
@@ -93,8 +70,21 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
     };
 
     return (
-        <div className={classes.moduleMain}>
-            <AppBar position="static" className={classes.tabs}>
+        <div style={
+            {
+                marginTop: '36px',
+                display: "flex",
+                width: '100%',
+            }
+        } >
+            <AppBar position="static" sx={
+                {
+                    marginTop: '36px',
+                    height: "50px",
+                    display: "flex",
+                    width: '100%',
+                }
+            }>
                 <Tabs
                     value={tabIdx}
                     onChange={handleChange}

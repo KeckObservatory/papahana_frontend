@@ -66,10 +66,12 @@ export function TopBar(props: Props) {
   return (
     <AppBar
       position="absolute"
-      className={classes.appBar}
     >
       <Toolbar
-        className={classes.toolbar}
+        sx={{
+          paddingRight: '8px',
+          paddingLeft: '20px'
+        }}
       >
         <Tooltip title={'Toggle side menu'}>
           <IconButton
@@ -87,7 +89,12 @@ export function TopBar(props: Props) {
           variant="h6"
           color="inherit"
           noWrap
-          className={classes.title}
+          sx={
+            {
+              marginLeft: '8px',
+              flexGrow: 1,
+            }
+          }
         >
           Papahana Demo
         </Typography>
@@ -96,7 +103,12 @@ export function TopBar(props: Props) {
           variant="h6"
           color="inherit"
           noWrap
-          className={classes.title}
+          sx={
+            {
+              marginLeft: '8px',
+              flexGrow: 1,
+            }
+          }
         >
           Welcome, {name}!
         </Typography>
