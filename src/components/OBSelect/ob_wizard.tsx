@@ -57,7 +57,7 @@ const OBRecipeStepper = (props: Props) => {
         }
     }, [inst])
 
-    const generate_ob_from_recipe = () => {
+    const generate_ob_from_recipe = async () => {
         const templateNames = recipe.recipe
         const meta = {
             name: `Made by ODT for ${inst} using ${recipe.metadata.ui_name} recipe`,
@@ -80,7 +80,8 @@ const OBRecipeStepper = (props: Props) => {
             state: 4
         }
         const newOB = { metadata: meta, status: status } as any
-        templateNames.forEach(async (tName: string) => {
+        for (let idx = 0; idx<templateNames.length; idx++) {
+            const tName = templateNames[idx]
             const templateObj = await get_select_funcs.get_template(tName, inst)
             const [key, template] = Object.entries(templateObj)[0]
             let comp = {
@@ -102,10 +103,8 @@ const OBRecipeStepper = (props: Props) => {
             else {
                 newOB[template.metadata.template_type] = comp
             }
-        })
-
+        }
         return (newOB as ObservationBlock)
-
     }
 
     const set_inst = (newInst: Instrument) => {
@@ -156,8 +155,8 @@ const OBRecipeStepper = (props: Props) => {
         setActiveStep((prevActiveStep) => prevActiveStep - 1);
     };
 
-    const handleCreateOB = () => {
-        const newOB = generate_ob_from_recipe()
+    const handleCreateOB = async () => {
+        const newOB = await generate_ob_from_recipe()
         console.log('created new ob', newOB)
 
         let ob_id: string
