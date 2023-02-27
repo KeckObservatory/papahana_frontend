@@ -30,7 +30,8 @@ interface Props {
 const OBRecipeStepper = (props: Props) => {
 
     const [activeStep, setActiveStep] = React.useState(0);
-    const [inst, setInst] = React.useState('' as Instrument);
+    // const [inst, setInst] = React.useState('' as Instrument);
+    const [inst, setInst] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
     const [recipe, setRecipe] = React.useState({} as Recipe);
     const [recipes, setRecipes] = React.useState([] as Recipe[]);
     const [ip, setIP] = React.useState({} as InstrumentPackage)
@@ -52,7 +53,7 @@ const OBRecipeStepper = (props: Props) => {
             }
         }
         if (inst) {
-            get_recipes(inst)
+            get_recipes(inst as Instrument)
         }
     }, [inst])
 
