@@ -94,7 +94,15 @@ const OBRecipeStepper = (props: Props) => {
                 comp['tcs_parameters'] = {}
             }
             else {
-                comp['parameters'] = {}
+                let params = {}
+                const paramsKeys = Object.keys(template.parameters)
+                for (let jdx = 0; jdx<paramsKeys.length; jdx++){
+                    const key = paramsKeys[jdx] 
+                    const param= template.parameters[key]
+                    //@ts-ignore
+                    params[key] = param.default && param.default 
+                }
+                comp['parameters'] = params 
             }
             const tType = template.metadata.template_type
             if (tType.includes('science') || tType.includes('calibration')) {
