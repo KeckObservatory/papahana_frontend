@@ -51,7 +51,9 @@ const OBRecipeStepper = (props: Props) => {
                 setIP(instPack)
             }
         }
-        get_recipes(inst)
+        if (inst) {
+            get_recipes(inst)
+        }
     }, [inst])
 
     const generate_ob_from_recipe = () => {
@@ -112,7 +114,7 @@ const OBRecipeStepper = (props: Props) => {
 
     const set_type = (newType: string) => {
         console.log('type selected', newType)
-        const newRecipe = recipes.find( (recipe: Recipe) => recipe.metadata.ui_name === newType )
+        const newRecipe = recipes.find((recipe: Recipe) => recipe.metadata.ui_name === newType)
         setRecipe(newRecipe as Recipe)
     }
 
@@ -133,7 +135,7 @@ const OBRecipeStepper = (props: Props) => {
             component: <DropDown
                 placeholder={'Recipe'}
                 value={recipe?.metadata?.ui_name}
-                arr={recipes.map( (recipe: Recipe) => recipe.metadata.ui_name)}
+                arr={recipes.map((recipe: Recipe) => recipe.metadata.ui_name)}
                 handleChange={set_type}
                 label={'OB Recipe'}
             />
