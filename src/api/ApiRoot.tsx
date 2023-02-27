@@ -8,7 +8,8 @@ import {
     Instrument,
     InstrumentPackage,
     Template,
-    ValidatorReport
+    ValidatorReport,
+    Recipe
 } from './../typings/papahana'
 import { OBTableRow, UserInfo } from './../typings/ddoi_api'
 import {
@@ -22,7 +23,8 @@ import {
     mock_get_semester_obs,
     mock_get_container_ob_metadata,
     mock_get_container_ob_target,
-    mock_get_ob_table
+    mock_get_ob_table,
+    mock_get_instrument_recipes
 
 } from '../mocks/mock_utils';
 
@@ -98,8 +100,15 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
         .catch(handleError);
 }
 
+const get_instrument_recipes = (instrument: Instrument): Promise<Recipe[]> => {
+    const url = `${INSTRUMENT_URL}/${instrument}/recipes`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
 
-const get_template = (name: string, inst: string='KCWI'): Promise<{ [key: string]: Template }> => {
+const get_template = (name: string, inst: string = 'KCWI'): Promise<{ [key: string]: Template }> => {
     let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}`
     if (name.includes('target')) {
         url += '&parameter_order=true'
@@ -233,7 +242,8 @@ export const get_select_funcs = {
     get_semesters: IS_BUILD ? get_semesters : mock_get_semesters,
     get_containers: IS_BUILD ? get_containers : mock_get_containers,
     get_observation_blocks_from_container: IS_BUILD ? get_observation_blocks_from_container : mock_get_observation_block_from_container,
-    get_instrument_package: IS_BUILD ? get_instrument_package : mock_get_instrument_package
+    get_instrument_package: IS_BUILD ? get_instrument_package : mock_get_instrument_package,
+    get_instrument_recipes: IS_BUILD ? get_instrument_recipes : mock_get_instrument_recipes
 }
 
 export const ob_api_funcs = {
@@ -255,10 +265,10 @@ export const semid_api_funcs = {
 }
 
 export const ob_table_funcs = {
-    get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table 
+    get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table
 }
 
 export const tag_functions = {
     add_tag: add_tag,
-    delete_tag: delete_tag 
+    delete_tag: delete_tag
 }

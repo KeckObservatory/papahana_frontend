@@ -68,96 +68,6 @@
 			"REF",
 			"Imaging"
 		],
-		"recipes": {
-			"science_direct_sidereal_target": {
-				"name": "science_direct_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Direct Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_direct",
-					"kcwi_ifu_sci_stare",
-					"sideriel_target"
-				]
-			},
-			"science_offset_sidereal_target": {
-				"name": "science_offset_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Offset Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_offset",
-					"kcwi_ifu_sci_stare",
-					"sideriel_target"
-				]
-			},
-			"science_direct_non_sidereal_target": {
-				"name": "science_direct_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Direct Non Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_direct",
-					"kcwi_ifu_sci_stare",
-					"non_sideriel_target"
-				]
-			},
-			"science_offset_non_sidereal_target": {
-				"name": "science_offset_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Offset Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_offset",
-					"kcwi_ifu_sci_stare",
-					"sideriel_target"
-				]
-			},
-			"science_direct_dithered_sidereal_target": {
-				"name": "science_direct_dithered_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Direct Dithered Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_direct",
-					"kcwi_ifu_sci_dither",
-					"sideriel_target"
-				]
-			},
-			"science_offset_dithered_sidereal_target": {
-				"name": "science_offset_dithered_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Offset Dithered Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_offset",
-					"kcwi_ifu_sci_dither",
-					"sideriel_target"
-				]
-			},
-			"science_direct_dithered_non_sidereal_target": {
-				"name": "science_direct_dithered_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Direct Dithered Non Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_direct",
-					"kcwi_ifu_sci_dither",
-					"non_sideriel_target"
-				]
-			},
-			"science_offset_dithered_non_sidereal_target": {
-				"name": "science_offset_dithered_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Offset Dithered Siderial Science Target",
-				"recipe": [
-					"kcwi_common_parameters",
-					"kcwi_ifu_acq_offset",
-					"kcwi_ifu_sci_dither",
-					"sideriel_target"
-				]
-			}
-		},
 		"template_list": {
 			"kcwi_common_parameters": "0.1.0",
 			"kcwi_ifu_acq_direct": "0.1.1",
@@ -189,59 +99,6 @@
 			"EM_SKY",
 			"REF"
 		],
-		"recipes": {
-			"science_sidereal_target": {
-				"name": "science_dithered_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Siderial Science Target",
-				"recipe": [
-					"kpf_common_parameters",
-					"kpf_acq",
-					"kpf_sci",
-					"sideriel_target"
-				]
-			},
-			"science_non_sidereal_target": {
-				"name": "science_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Non Siderial Science Target",
-				"recipe": [
-					"kpf_common_parameters",
-					"kpf_acq",
-					"kpf_sci",
-					"non_sideriel_target"
-				]
-			},
-			"science_kpf_target": {
-				"name": "science_kpf_target",
-				"ob_type": "science",
-				"ui_name": "Non Siderial Science Target",
-				"recipe": [
-					"kpf_common_parameters",
-					"kpf_acq",
-					"kpf_sci",
-					"kpf_target"
-				]
-			},
-			"calibration_dark": {
-				"name": "calibration_dark",
-				"ob_type": "calibration",
-				"ui_name": "Dark Calibration",
-				"recipe": [
-					"kpf_common_parameters",
-					"kpf_dark"
-				]
-			},
-			"calibration_arcs": {
-				"name": "calibration_arcs",
-				"ob_type": "calibration",
-				"ui_name": "Arc Calibration",
-				"recipe": [
-					"kpf_common_parameters",
-					"kpf_arcs"
-				]
-			}
-		},
 		"template_list": {
 			"kpf_acq": "0.1.0",
 			"kpf_arcs": "0.1.0",
@@ -276,52 +133,6 @@
 		"pointing_origins": [
 			"REF"
 		],
-		"recipes": {
-			"science_sidereal_target": {
-				"name": "science_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Siderial Science Target",
-				"recipe": [
-					"ssc_common_parameters",
-					"ssc_acq_direct",
-					"ssc_sci_image",
-					"sideriel_target"
-				]
-			},
-			"science_non_sidereal_target": {
-				"name": "science_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Non Siderial Science Target",
-				"recipe": [
-					"ssc_common_parameters",
-					"ssc_acq_direct",
-					"ssc_sci_image",
-					"non_sideriel_target"
-				]
-			},
-			"science_dithered_sidereal_target": {
-				"name": "science_dithered_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Dithered Siderial Science Target",
-				"recipe": [
-					"ssc_common_parameters",
-					"ssc_acq_direct",
-					"ssc_sci_dither",
-					"sideriel_target"
-				]
-			},
-			"science_dithered_non_sidereal_target": {
-				"name": "science_dithered_non_sidereal_target",
-				"ob_type": "science",
-				"ui_name": "Dithered Non Siderial Science Target",
-				"recipe": [
-					"ssc_common_parameters",
-					"ssc_acq_direct",
-					"ssc_sci_dither",
-					"non_sideriel_target"
-				]
-			}
-		},
 		"template_list": {
 			"non_sidereal_target": "0.1.1",
 			"sidereal_target": "0.1.1",

@@ -283,11 +283,16 @@ export interface GUIDER {
 
 export type InstrumentPackage = KCWIInstrumentPackage
 
-export interface Recipe {
+export interface RecipeMetadata{
 	name: string,
+	instrument: string,
 	ui_name: string,
-	recipe: string[]
 	ob_type: TemplateType
+}
+
+export interface Recipe {
+	metadata: RecipeMetadata,
+	recipe: string[]
 }
 
 interface KCWIInstrumentPackage extends Base {

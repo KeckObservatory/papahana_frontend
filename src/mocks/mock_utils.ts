@@ -1,4 +1,4 @@
-import { Instrument, ObservationBlock, SemesterIds, Template } from './../typings/papahana.d';
+import { Instrument, ObservationBlock, Recipe, SemesterIds, Template } from './../typings/papahana.d';
 // import { mock_kcwi_instrument_package } from './mock_template';
 
 // import { mock_observation_blocks } from './mock_obs'
@@ -9,6 +9,7 @@ import { default as mock_obs } from './ob.json'
 import { default as mock_templates } from './templates.json'
 import { default as mock_containers } from './containers-demo.json'
 import { default as mock_instrument_packages } from './instrument_packages.json'
+import { default as mock_instrument_recipes} from './recipes.json'
 import { mock_targets, mock_metadata } from './mock_ob_metadata_targets'
 import { default as mock_ob_table_rows } from './ob_table_rows.json'
 import { OBTableRow } from '../typings/ddoi_api';
@@ -40,6 +41,15 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
       const ips = mock_instrument_packages
       const ip = ips.find((ip) => ip.metadata.instrument === instrument)
       resolve(ip as any as InstrumentPackage)
+   })
+   return mockPromise
+}
+
+export const mock_get_instrument_recipes = (instrument: Instrument): Promise<Recipe[]> => {
+   const mockPromise = new Promise<Recipe[]>((resolve) => {
+      //@ts-ignore
+      const mir = mock_instrument_recipes[instrument] as Recipe[]
+      resolve(mir)
    })
    return mockPromise
 }

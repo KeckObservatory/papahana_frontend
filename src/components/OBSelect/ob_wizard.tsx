@@ -56,10 +56,10 @@ const OBRecipeStepper = (props: Props) => {
     const generate_ob_from_recipe = () => {
         const templateNames = recipe.recipe
         const meta = {
-            name: `Made by ODT for ${inst} using ${recipe.ui_name} recipe`,
+            name: `Made by ODT for ${inst} using ${recipe.metadata.ui_name} recipe`,
             priority: 0,
             version: "0.1.0",
-            ob_type: recipe.ob_type,
+            ob_type: recipe.metadata.ob_type,
             instrument: inst,
             pi_id: JSON.parse(observer_context.observer_id),
             sem_id: ob_select_context.sem_id,
@@ -131,7 +131,7 @@ const OBRecipeStepper = (props: Props) => {
             label: 'Select OB Recipe',
             component: <DropDown
                 placeholder={'Recipe'}
-                value={recipe.name}
+                value={recipe.metadata.name}
                 arr={recipes}
                 handleChange={set_type}
                 label={'OB Recipe'}
