@@ -81,7 +81,7 @@ const OBRecipeStepper = (props: Props) => {
         }
         const newOB = { metadata: meta, status: status } as any
         templateNames.forEach(async (tName: string) => {
-            const templateObj = await get_select_funcs.get_template(tName)
+            const templateObj = await get_select_funcs.get_template(tName, inst)
             const [key, template] = Object.entries(templateObj)[0]
             let comp = {
                 'metadata': template.metadata,

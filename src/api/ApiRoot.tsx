@@ -108,7 +108,7 @@ const get_instrument_recipes = (instrument: Instrument): Promise<Recipe[]> => {
         .catch(handleError);
 }
 
-const get_template = (name: string, inst: string = 'KCWI'): Promise<{ [key: string]: Template }> => {
+const get_template = (name: string, inst: string): Promise<{ [key: string]: Template }> => {
     let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}`
     if (name.includes('target')) {
         url += '&parameter_order=true'
