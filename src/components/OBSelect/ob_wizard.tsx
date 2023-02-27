@@ -32,7 +32,7 @@ const OBRecipeStepper = (props: Props) => {
     const [activeStep, setActiveStep] = React.useState(0);
     const [inst, setInst] = React.useState('' as Instrument);
     const [recipe, setRecipe] = React.useState({} as Recipe);
-    const [recipes, setRecipes] = React.useState([] as string[]);
+    const [recipes, setRecipes] = React.useState([] as Recipe[]);
     const [ip, setIP] = React.useState({} as InstrumentPackage)
 
     const observer_context = useObserverContext()
@@ -43,10 +43,11 @@ const OBRecipeStepper = (props: Props) => {
 
         const get_recipes = async (instrument: Instrument) => {
             const instPack = await get_select_funcs.get_instrument_package(instrument)
+            const instRecipes = await get_select_funcs.get_instrument_recipes(instrument)
             console.log('ip for instrument', inst, instPack)
+            console.log('recipes for instrument', instRecipes)
             if (instPack) {
-                const recipeNames = Object.keys(instPack.recipes)
-                setRecipes(recipeNames)
+                setRecipes(instRecipes)
                 setIP(instPack)
             }
         }
@@ -111,8 +112,8 @@ const OBRecipeStepper = (props: Props) => {
 
     const set_type = (newType: string) => {
         console.log('type selected', newType)
-        const newRecipe = ip.recipes[newType]
-        setRecipe(newRecipe)
+        const newRecipe = recipes.find( (recipe: Recipe) => recipe.metadata.ui_name === newType )
+        setRecipe(newRecipe as Recipe)
     }
 
 
@@ -131,8 +132,8 @@ const OBRecipeStepper = (props: Props) => {
             label: 'Select OB Recipe',
             component: <DropDown
                 placeholder={'Recipe'}
-                value={recipe.metadata.name}
-                arr={recipes}
+                value={recipe?.metadata?.ui_name}
+                arr={recipes.map( (recipe: Recipe) => recipe.metadata.ui_name)}
                 handleChange={set_type}
                 label={'OB Recipe'}
             />

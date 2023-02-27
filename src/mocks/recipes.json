@@ -101,20 +101,6 @@
         {
             "metadata": {
                 "instrument": "KCWI",
-                "name": "science_direct_dithered_non_sidereal_target",
-                "ob_type": "science",
-                "ui_name": "Direct Dithered Non Siderial Science Target"
-            },
-            "recipe": [
-                "kcwi_common_parameters",
-                "kcwi_ifu_acq_direct",
-                "kcwi_ifu_sci_dither",
-                "non_sideriel_target"
-            ]
-        },
-        {
-            "metadata": {
-                "instrument": "KCWI",
                 "name": "science_offset_dithered_non_sidereal_target",
                 "ob_type": "science",
                 "ui_name": "Offset Dithered Siderial Science Target"

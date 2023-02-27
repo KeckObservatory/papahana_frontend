@@ -302,7 +302,6 @@ interface KCWIInstrumentPackage extends Base {
 	configurable_elements: string[]
 	pointing_origins: string[]
 	common_parameters: string,
-	recipes: { [key: string]: Recipe },
 	template_list: { [key: string]: string }
 }
 
