@@ -106,6 +106,7 @@ const OBRecipeStepper = (props: Props) => {
             }
             const tType = template.metadata.template_type
             if (tType.includes('science') || tType.includes('calibration')) {
+                comp['parameters']['sequence_number'] = 0
                 newOB['observations'] = [comp]
             }
             else {
