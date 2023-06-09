@@ -1300,29 +1300,43 @@
 			"tcs_coord_raoff"
 		],
 		"parameters": {
-			"tcs_coord_decoff": {
+			"tcs_coord_offset": {
+				"ui_name": "TCS Coordinate Offset",
+				"option": "set",
 				"allowed": [
-					0,
-					2000
+					{
+						"ra_offset": {
+							"allowed": [
+								0,
+								2000
+							],
+							"default": 0,
+							"option": "range",
+							"optionality": "optional",
+							"type": "float",
+							"ui_name": "The right ascension offset from coordinates to get to the target",
+							"units": "arcseconds"
+						}
+					},
+					{
+						"dec_offset": {
+							"allowed": [
+								0,
+								2000
+							],
+							"default": 0,
+							"option": "range",
+							"optionality": "optional",
+							"type": "float",
+							"ui_name": "The declination offset from coordinates to get to the target",
+							"units": "arcseconds"
+						}
+					}
 				],
-				"default": 0,
-				"option": "range",
-				"optionality": "optional",
-				"type": "float",
-				"ui_name": "The declination offset from coordinates to get to the target",
-				"units": "arcseconds"
-			},
-			"tcs_coord_raoff": {
-				"allowed": [
-					0,
-					2000
-				],
-				"default": 0,
-				"option": "range",
-				"optionality": "optional",
-				"type": "float",
-				"ui_name": "The right ascension offset from coordinates to get to the target",
-				"units": "arcseconds"
+				"default": null,
+				"optionality": "required",
+				"type": "array",
+				"units": null
 			}
 		}
 	},

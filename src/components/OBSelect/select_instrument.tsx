@@ -5,7 +5,7 @@ import Dialog from '@mui/material/Dialog';
 import DropDown from './../drop_down'
 import { Instrument } from '../../typings/papahana';
 
-const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC'];
+const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC', 'NIRES'];
 
 export interface SimpleDialogProps {
     open: boolean;

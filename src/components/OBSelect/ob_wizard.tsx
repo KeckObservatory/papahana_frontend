@@ -18,7 +18,7 @@ import { useOBContext } from '../ODT/observation_data_tool_view';
 import { resolve } from 'path';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
-const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC'];
+const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC', 'NIRES'];
 const OBTypes: string[] = ['Science', 'Calibratoin', 'Blank'];
 
 interface Props {
