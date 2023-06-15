@@ -40,8 +40,9 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
 
 export const get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
    const promise = new Promise<TemplateMetadata[]>((resolve) => {
-      get_select_funcs.get_template_metadata(instrument).then(tmo=> {
-         const templateMetadata = Object.values(tmo)
+      get_select_funcs.get_template_metadata(instrument).then(templateObject=> {
+         const templates = Object.values(templateObject)
+         const templateMetadata = templates.map(t => t.metadata)
          resolve(templateMetadata)
       })
    })

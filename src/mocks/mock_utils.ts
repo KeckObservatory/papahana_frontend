@@ -46,15 +46,15 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
 }
 
 
-export const mock_get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
-   const mockPromise = new Promise<TemplateMetadata[]>((resolve) => {
-      let tm: TemplateMetadata[] = []
+export const mock_get_template_metadata = (instrument: Instrument): Promise<{[key: string]: Template}> => {
+   const mockPromise = new Promise<{[key: string]: Template}>((resolve) => {
+      let tm = {} as any
       mock_templates.forEach( (t: any) => {
          if (t.metadata.instrument === instrument) {
-            tm.push(t.metadata)
+            tm[t.metadata.name] = t
          }
          if (t.metadata.name.includes('target')){
-            tm.push(t.metadata) //include targets
+            tm[t.metadata.name] = t //include targets
          }
       })
       resolve(tm)

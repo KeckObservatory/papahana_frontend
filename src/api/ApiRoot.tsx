@@ -102,7 +102,7 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
         .catch(handleError);
 }
 
-const get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
+const get_template_metadata = (instrument: Instrument): Promise<{ [key: string]: Template }> => {
     const url = `${INSTRUMENT_URL}/${instrument}/templates/metadata`
     return axiosInstance
         .get(url)
