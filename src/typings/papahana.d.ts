@@ -302,7 +302,7 @@ interface KCWIInstrumentPackage extends Base {
 	configurable_elements: string[]
 	pointing_origins: string[]
 	common_parameters: string,
-	template_list: { [key: string]:  InstrumentPackageTemplates }
+	template_list: { [key: string]: string }
 }
 
 export type CameraName = "BLUE" | "RED"
@@ -317,9 +317,7 @@ export interface Cameras extends object {
 
 
 export interface InstrumentPackageTemplates {
-	version: string,
-	ui_name, string,
-	name, string
+	[key: string]: string
 }
 
 export type TemplateType = "acqusition" | "science" | "calibration" | "common_parameters"

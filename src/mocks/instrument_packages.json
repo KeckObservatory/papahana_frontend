@@ -69,42 +69,13 @@
 			"Imaging"
 		],
 		"template_list": {
-			"sidereal_target": {
-				"name": "sidereal_target",
-				"ui_name": "Sidereal Target",
-				"version": "0.1.0"
-			  },
-			  "non_sidereal_target": {
-				"qame": "non_sidereal_target",
-				"ui_name": "Non-Sidereal Target",
-				"version": "0.1.0"
-			  },
-			  "kcwi_common_parameters": {
-				"name": "kcwi_common_parameters",
-				"ui_name": "KCWI Common Parameters",
-				"version": "01.0"
-			  },
-			  "kcwi_ifu_acq_direct": {
-				"name": "kcwi_ifu_acq_direct",
-				"ui_name": "KCWI direct",
-				"version": "0.1.0"
-			  },
-			  "kcwi_ifu_acq_offsetStar": {
-				"name": "kcwi_ifu_acq_offsetStar",
-				"ui_name": "KCWI direct",
-				"version": "0.1.0"
-			  },
-			  "kcwi_ifu_sci_dither": {
-				"name": "kcwi_ifu_sci_dither",
-				"ui_name": "KCWI dither",
-				"version": "0.1.0"
-			  },
-			  "kcwi_ifu_sci_stare": {
-				"name": "kcwi_ifu_sci_stare",
-				"ui_name": "KCWI stare",
-				"version": "0.1.0"
-			  }
-		  
+			"kcwi_common_parameters": "0.1.0",
+			"kcwi_ifu_acq_direct": "0.1.1",
+			"kcwi_ifu_acq_offsetStar": "0.1.1",
+			"kcwi_ifu_sci_dither": "0.1.1",
+			"kcwi_ifu_sci_stare": "0.1.1",
+			"non_sidereal_target": "0.1.1",
+			"sidereal_target": "0.1.1"
 		}
 	},
 	{

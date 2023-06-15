@@ -1,7 +1,7 @@
 import React from 'react';
 import { get_instrument_package } from '../../api/utils'
 import { useState, useEffect } from 'react';
-import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template } from '../../typings/papahana';
+import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template} from '../../typings/papahana';
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
@@ -12,13 +12,13 @@ interface Props {
 }
 
 const check_disabled = (templateName: string, obSequences: string[]) => {
-    if (templateName.includes('acq') && obSequences.includes('acquisition')) {
-        return true
+    if (templateName.includes('acq') && obSequences.includes('acquisition') ) {
+        return true 
     }
     else if (templateName.includes('common_parameters') && obSequences.includes('common_parameters')) {
         return true
     }
-    else if (templateName.includes('target') && obSequences.includes('target')) {
+    else if (templateName.includes('target') && obSequences.includes('target')) { 
         return true
     }
     else if (obSequences.includes(templateName)) { //acquistion and science 
@@ -29,12 +29,12 @@ const check_disabled = (templateName: string, obSequences: string[]) => {
     }
 }
 
-const create_drop_down_list = (instTemplates: { [key: string]: InstrumentPackageTemplates }, obSequences: string[]): [string[], boolean[]] => {
+const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[]] => {
     let templateList: string[] = []
     let disList: boolean[] = []
-    Object.entries(instTemplates).forEach(([templateName, templateMetadata]: [string, InstrumentPackageTemplates ]) => {
-        const disabled = check_disabled(templateName, obSequences)
-        templateList.push(templateMetadata.ui_name)
+    Object.entries(instTemplates).forEach(([templateName, templateID]: any) => {
+        const disabled = check_disabled(templateName, obSequences) 
+        templateList.push(templateName)
         disList.push(disabled)
     })
     return [templateList, disList]
@@ -42,7 +42,7 @@ const create_drop_down_list = (instTemplates: { [key: string]: InstrumentPackage
 
 export default function TemplateSelection(props: Props) {
 
-    const [templates, setTemplates] = useState({} as { [key: string]: InstrumentPackageTemplates })
+    const [templates, setTemplates] = useState({} as InstrumentPackageTemplates)
     const [templateList, setTemplateList] = useState([] as string[])
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
     const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
@@ -64,21 +64,19 @@ export default function TemplateSelection(props: Props) {
     }, [props.obSequences])
 
 
-    const handleChange = (uiName: string) => {
-        const templateMetadata = Object.entries(templates).find((x: any) => x[1]['ui_name']===uiName)
-        const templateName = templateMetadata ? templateMetadata[1].name : 'name not found' 
-        templateName && get_template(templateName, instrument).then((template: Template) => {
+    const handleChange = (templateName: string) => {
+        get_template(templateName, instrument).then((template: Template) => {
             console.log('template name created', templateName)
             let seq = {
                 'metadata': template.metadata,
-            } as Partial<Template>
-            if (templateName.includes('common')) {
-                seq['detector_parameters'] = {}
-                seq['instrument_parameters'] = {}
-                seq['tcs_parameters'] = {}
+            } as Partial<Template> 
+            if (templateName.includes('common') ) {
+              seq['detector_parameters'] = {}
+              seq['instrument_parameters'] = {}
+              seq['tcs_parameters'] = {}
             }
-            else {
-                seq['parameters'] = {}
+            else { 
+              seq['parameters'] = {}
             }
             props.addSeq(seq)
         })
@@ -90,9 +88,9 @@ export default function TemplateSelection(props: Props) {
             disabledArr={disabledArr}
             handleChange={handleChange}
             placeholder={'Template'}
-            label={'Select Template to add'}
-        />
-    )
+            label={'Select Template to add'} 
+            />
+            )
 }
 
 TemplateSelection.defaultProps = {
