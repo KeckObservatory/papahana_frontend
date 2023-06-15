@@ -9,7 +9,8 @@ import {
     InstrumentPackage,
     Template,
     ValidatorReport,
-    Recipe
+    Recipe,
+    TemplateMetadata
 } from './../typings/papahana'
 import { OBTableRow, UserInfo } from './../typings/ddoi_api'
 import {
@@ -24,7 +25,8 @@ import {
     mock_get_container_ob_metadata,
     mock_get_container_ob_target,
     mock_get_ob_table,
-    mock_get_instrument_recipes
+    mock_get_instrument_recipes,
+    mock_get_template_metadata
 
 } from '../mocks/mock_utils';
 
@@ -94,6 +96,14 @@ const get_semester_obs = (sem_id: string): Promise<ObservationBlock[]> => {
 
 const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
     const url = `${INSTRUMENT_URL}/${instrument}`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
+
+const get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
+    const url = `${INSTRUMENT_URL}/${instrument}/templates/metadata`
     return axiosInstance
         .get(url)
         .then(handleResponse)
@@ -243,6 +253,7 @@ export const get_select_funcs = {
     get_containers: IS_BUILD ? get_containers : mock_get_containers,
     get_observation_blocks_from_container: IS_BUILD ? get_observation_blocks_from_container : mock_get_observation_block_from_container,
     get_instrument_package: IS_BUILD ? get_instrument_package : mock_get_instrument_package,
+    get_template_metadata: IS_BUILD ? get_template_metadata : mock_get_template_metadata,
     get_instrument_recipes: IS_BUILD ? get_instrument_recipes : mock_get_instrument_recipes
 }
 

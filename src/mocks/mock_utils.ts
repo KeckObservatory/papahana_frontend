@@ -1,4 +1,4 @@
-import { Instrument, ObservationBlock, Recipe, SemesterIds, Template } from './../typings/papahana.d';
+import { Instrument, ObservationBlock, Recipe, SemesterIds, Template, TemplateMetadata } from './../typings/papahana.d';
 // import { mock_kcwi_instrument_package } from './mock_template';
 
 // import { mock_observation_blocks } from './mock_obs'
@@ -41,6 +41,23 @@ export const mock_get_instrument_package = (instrument: Instrument): Promise<Ins
       const ips = mock_instrument_packages
       const ip = ips.find((ip) => ip.metadata.instrument === instrument)
       resolve(ip as any as InstrumentPackage)
+   })
+   return mockPromise
+}
+
+
+export const mock_get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
+   const mockPromise = new Promise<TemplateMetadata[]>((resolve) => {
+      let tm: TemplateMetadata[] = []
+      mock_templates.forEach( (t: any) => {
+         if (t.metadata.instrument === instrument) {
+            tm.push(t.metadata)
+         }
+         if (t.metadata.name.includes('target')){
+            tm.push(t.metadata) //include targets
+         }
+      })
+      resolve(tm)
    })
    return mockPromise
 }

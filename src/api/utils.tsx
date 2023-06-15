@@ -1,4 +1,4 @@
-import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer } from "../typings/papahana";
+import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer, TemplateMetadata } from "../typings/papahana";
 import { get_select_funcs, get_container_ob_data, semid_api_funcs } from './ApiRoot';
 import { ObservationBlock, SemesterIds } from '../typings/papahana'
 
@@ -33,6 +33,16 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
    const promise = new Promise<InstrumentPackage>((resolve) => {
       get_select_funcs.get_instrument_package(instrument).then((instrumentPackage: InstrumentPackage) => {
          resolve(instrumentPackage)
+      })
+   })
+   return promise
+}
+
+export const get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
+   const promise = new Promise<TemplateMetadata[]>((resolve) => {
+      get_select_funcs.get_template_metadata(instrument).then(tmo=> {
+         const templateMetadata = Object.values(tmo)
+         resolve(templateMetadata)
       })
    })
    return promise

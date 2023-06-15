@@ -1,7 +1,7 @@
 import React from 'react';
-import { get_instrument_package } from '../../api/utils'
+import { get_template_metadata } from '../../api/utils'
 import { useState, useEffect } from 'react';
-import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template} from '../../typings/papahana';
+import { Instrument, InstrumentPackage, InstrumentPackageTemplates, Template, TemplateMetadata} from '../../typings/papahana';
 import DropDown from '../drop_down'
 import { get_template } from "../../api/utils";
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
@@ -29,12 +29,12 @@ const check_disabled = (templateName: string, obSequences: string[]) => {
     }
 }
 
-const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequences: string[]): [string[], boolean[]] => {
+const create_drop_down_list = (templateMetadata: TemplateMetadata[], obSequences: string[]): [string[], boolean[]] => {
     let templateList: string[] = []
     let disList: boolean[] = []
-    Object.entries(instTemplates).forEach(([templateName, templateID]: any) => {
+    Object.entries(templateMetadata).forEach(([templateName, tm]: any) => {
         const disabled = check_disabled(templateName, obSequences) 
-        templateList.push(templateName)
+        templateList.push(tm.ui_name)
         disList.push(disabled)
     })
     return [templateList, disList]
@@ -42,16 +42,16 @@ const create_drop_down_list = (instTemplates: InstrumentPackageTemplates, obSequ
 
 export default function TemplateSelection(props: Props) {
 
-    const [templates, setTemplates] = useState({} as InstrumentPackageTemplates)
+    const [templates, setTemplates] = useState([] as TemplateMetadata[])
     const [templateList, setTemplateList] = useState([] as string[])
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
     const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
     useEffect(() => {
-        get_instrument_package(instrument as Instrument)
-            .then((ip: InstrumentPackage) => {
-                const [templateList, disList] = create_drop_down_list(ip.template_list, props.obSequences)
-                setTemplates(ip.template_list)
+        get_template_metadata(instrument as Instrument)
+            .then((templateMetadata: TemplateMetadata[]) => {
+                const [templateList, disList] = create_drop_down_list(templateMetadata, props.obSequences)
+                setTemplates(templateMetadata)
                 setTemplateList(templateList)
                 setDisabledArr(disList)
             })
@@ -64,13 +64,14 @@ export default function TemplateSelection(props: Props) {
     }, [props.obSequences])
 
 
-    const handleChange = (templateName: string) => {
-        get_template(templateName, instrument).then((template: Template) => {
-            console.log('template name created', templateName)
+    const handleChange = (uiName: string) => {
+        const tm = templates.find(tm => tm.ui_name === uiName)
+        tm && get_template(tm.name, instrument).then((template: Template) => {
+            console.log('template name created', tm.name)
             let seq = {
-                'metadata': template.metadata,
+                'metadata': tm,
             } as Partial<Template> 
-            if (templateName.includes('common') ) {
+            if (tm.name.includes('common') ) {
               seq['detector_parameters'] = {}
               seq['instrument_parameters'] = {}
               seq['tcs_parameters'] = {}
