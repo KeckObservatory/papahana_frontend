@@ -107,7 +107,7 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
       >
         <TargetResolverDialog id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
         <Tooltip title={'Toggle on to display RA/DEC in decimal form'}>
-          <FormControlLabel control={<Switch onChange={handleDecimalChange} value={decimalToggle} />} label="Decimal" />
+          <FormControlLabel control={<Switch onChange={handleDecimalChange} checked={decimalToggle} />} label="Decimal" />
         </Tooltip>
       </Stack>
       <Form
