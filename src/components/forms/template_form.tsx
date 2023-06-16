@@ -130,6 +130,7 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
     const seq = obComponent as OBSequence
     formData = seq.parameters
   }
+
   return formData
 }
 

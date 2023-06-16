@@ -22,8 +22,8 @@ const format_values = (values: number[], times: Date[], sd: Scoby, units: string
             time: times[idx], value: values[idx], units: units,
             type: chartType,
             tgt: nm,
-            ra: sd.ra_deg,
-            dec: sd.dec_deg
+            ra: Number(sd.ra_deg),
+            dec: Number(sd.dec_deg)
 
         }
         data.push(d)
@@ -168,8 +168,8 @@ const formatDate = (date: Date) => {
 
 const get_chart_data = (sd: Scoby, times: Date[], chartType: string, lngLatEl: LngLatEl): number[] => {
     let val;
-    const ra = sd.ra_deg as number
-    const dec = sd.dec_deg as number
+    const ra = Number(sd.ra_deg)
+    const dec = Number(sd.dec_deg)
     switch (chartType) {
         case 'altitude': {
             val = util.get_target_traj(ra, dec, times, lngLatEl)

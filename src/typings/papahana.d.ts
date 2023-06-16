@@ -96,8 +96,8 @@ export interface Scoby {
 	name?: string
 	ra?: string,
 	dec?: string,
-	ra_deg?: number,
-	dec_deg?: number,
+	ra_deg?: string,
+	dec_deg?: string,
 	comment?: string,
 	ob_type?: string,
 	version?: string,

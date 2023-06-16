@@ -32,7 +32,6 @@ const check_disabled = (templateName: string, obSequences: string[]) => {
 const create_drop_down_list = (templateMetadata: TemplateMetadata[], obSequences: string[]): [string[], boolean[]] => {
     let templateList: string[] = []
     let disList: boolean[] = []
-    console.log('templateMetadata', templateMetadata)
     templateMetadata.forEach((tm) => {
         const disabled = check_disabled(tm.name, obSequences) 
         templateList.push(tm.ui_name)
