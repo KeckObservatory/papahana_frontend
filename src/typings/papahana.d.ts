@@ -339,6 +339,7 @@ export interface TemplateParameter {
 	allowed: string[] | number[] | object[];
 	default: string | number | null;
 	type: string;
+	description?: string,
 	optionality: string;
 }
 

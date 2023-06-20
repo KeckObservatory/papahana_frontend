@@ -133,7 +133,6 @@ export const uiStatusSchema: UiSchema = {
   },
 }
 
-
 export const targetSchema: JsonSchema = {
   title: "Target",
   type: "object",

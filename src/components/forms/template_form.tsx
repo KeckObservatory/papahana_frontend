@@ -9,6 +9,7 @@ import { DefaultTheme, makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { StringParam, useQueryParam, withDefault } from "use-query-params";
+import { UiSchema } from "react-jsonschema-form";
 export const Form = withTheme(MaterialUITheme)
 
 export interface Props {
@@ -90,6 +91,15 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
   return property
 }
 
+export const template_to_ui_schema = (template: Template, uiSchema: UiSchema) => {
+  // adds help text for each field
+  Object.entries(template.parameters).forEach(([key, param]) => {
+  
+    if (param.description) uiSchema[key] = {'ui:help': param.description}
+  })
+  return uiSchema
+}
+
 export const template_to_schema = (template: Template): JSONSchema7 => {
   let schema: Partial<JsonSchema> = {}
   schema.title = template.metadata.ui_name
@@ -147,7 +157,13 @@ const sort_template = (template: Template): Template => {
   return sortedTemplate
 }
 
-export const get_schema = async (obComponent: OBComponent, instrument: string, id: string): Promise<JSONSchema7> => {
+export const get_schemas = async (obComponent: OBComponent, instrument: string, id: string): Promise<[JSONSchema7, UiSchema]> => {
+
+
+  //get_ui_schema 
+  let uiSchema = schemas.getUiSchema(id)
+
+  //get schema
   let sch: JSONSchema7 = {}
   if (id === 'metadata') {
     sch = schemas.metadataSchema as JSONSchema7
@@ -166,17 +182,16 @@ export const get_schema = async (obComponent: OBComponent, instrument: string, i
       if (template.parameter_order) {
         template = sort_template(template)
       }
-      const sche = template_to_schema(template)
-      sch = sche as JSONSchema7
-      return sch
+      sch = template_to_schema(template) 
+      uiSchema = template_to_ui_schema(template, uiSchema)
     }
   }
-  return sch
+  return [sch, uiSchema]
 }
 
 export default function TemplateForm(props: Props): JSX.Element {
   const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const uiSchema = schemas.getUiSchema(props.id)
+  const [uiSchema, setUISchema] = React.useState({} as UiSchema)
   let initFormData = init_form_data(props.obComponent, props.id)
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
@@ -184,8 +199,9 @@ export default function TemplateForm(props: Props): JSX.Element {
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
-    get_schema(props.obComponent, instrument, props.id).then((initSchema: JSONSchema7) => {
-    setSchema(initSchema)
+    get_schemas(props.obComponent, instrument, props.id).then(([initSchema , initUiSchema ]) => {
+      setSchema(initSchema)
+      setUISchema(initUiSchema)
     })
   }, [])
 

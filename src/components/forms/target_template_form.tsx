@@ -4,11 +4,12 @@ import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 // import Form from '@rjsf/material-ui'
 import { JSONSchema7 } from 'json-schema'
 import * as schemas from './schemas'
-import { init_form_data, get_schema, Form, log } from './template_form'
+import { init_form_data, get_schemas, Form, log } from './template_form'
 import { TargetResolverDialog } from "../TgtRes/target_resolver_dialog";
 import { BooleanParam, StringParam, useQueryParam, withDefault } from "use-query-params";
 import { Divider, FormControlLabel, Stack, Switch, Tooltip } from "@mui/material";
 import { deg_to_sexagesimal, ra_dec_to_deg } from './../sky-view/sky_view_util'
+import { UiSchema } from "react-jsonschema-form";
 
 interface Props {
   obComponent: OBComponent
@@ -19,7 +20,7 @@ interface Props {
 export default function TargetTemplateForm(props: Props): JSX.Element {
   const [schema, setSchema] = useState({} as JSONSchema7)
   const [decimalToggle, setDecimalToggle] = useQueryParam('decimalToggle', withDefault(BooleanParam, false))
-  const uiSchema = schemas.getUiSchema(props.id)
+  const [uiSchema, setUISchema] = useState({} as UiSchema)
   let initFormData = init_form_data(props.obComponent, props.id)
   const ref = useRef(null)
   const initialRender = useRef(true);
@@ -27,9 +28,11 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
-    get_schema(props.obComponent, instrument, props.id).then((initSchema: JSONSchema7) => {
-      console.log('target schema', initSchema, props.obComponent, props.id)
-      setSchema(initSchema)
+    get_schemas(props.obComponent, instrument, props.id).then(([initSchema , initUiSchema ]) => {
+      console.log('target schema', initSchema, 'obComponent', props.obComponent, 'id', props.id, 'uiSchema', initUiSchema)
+      setSchema(() => initSchema)
+      setUISchema( () => initUiSchema)
+
     })
   }, [])
 
