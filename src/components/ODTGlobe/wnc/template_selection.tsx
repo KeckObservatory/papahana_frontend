@@ -31,9 +31,10 @@ const TemplateSelection = function (props: Props) {
     const [templateList, setTemplateList] = useState([] as string[])
     const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
     useEffect(() => {
+        console.log('props.rows', props.rows)
         get_template_list(props.rows).
             then((tpNames: string[]) => {
-                console.log(tpNames)
+                console.log('tpNames', tpNames)
                 setTemplateList(tpNames)
             })
     }, [])

@@ -26,12 +26,11 @@ interface CTProps {
 const format_rows = (rowData: Array<Array<any>>) => {
     const rows = rowData.map((rd) => {
         let row: any = {}
-        columnNames.map((n: string, idx: number) => {
+        columnNames.forEach((colName: string, idx: number) => {
             let val = rd[idx]
-            if (typeof val === 'object') {
-                val = val.props.children
+            if (typeof val !== 'object') {
+                row[colName] = val
             }
-            row[n] = val
         })
         return row
     })
@@ -71,7 +70,7 @@ const CustomToolbarSelect = (props: CTProps) => {
 }
 
 const TagsInput = (value: string[], tableMeta: any, updateValue: any) => {
-    console.log('Inputs', value, tableMeta.rowData, updateValue)
+    // console.log('Inputs', value, tableMeta.rowData, updateValue)
 
     return (
         <TagEditor
@@ -82,7 +81,7 @@ const TagsInput = (value: string[], tableMeta: any, updateValue: any) => {
 }
 
 const columnNames = [
-    '_id', 'ob_name', 'sem_id', 'instrument', 'ob_type', 'target_name', 'acquisition', 'number_sequences', 'common_parameters', 'tags'
+    '_id', 'edit ob', 'ob_name', 'sem_id', 'instrument', 'ob_type', 'target_name', 'acquisition', 'number_sequences', 'common_parameters', 'tags'
 ]
 
 const columns = [
