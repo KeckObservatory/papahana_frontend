@@ -101,7 +101,7 @@ const EditDialog = (props: Props) => {
                         <Form
                             schema={schema}
                             uiSchema={uiSchema as rUiSchema}
-                            formData={component.parameters}
+                            formData={component?.parameters}
                             onChange={handleChange as any}
                             onError={log("errors")} ><div></div></Form>
                     </DialogContent>
