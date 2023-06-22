@@ -21,14 +21,13 @@ interface CTProps {
     addSeq: Function,
     selectedRows: SelectedRows,
     displayData: DisplayData,
-    handleOBSelect: Function
 }
 
 const CustomToolbarSelect = (props: CTProps) => {
 
     const handle_target_add = () => {
-        console.log('ctprops', props)
-        const tgt = props.targets[props.selectedRows.data[0].dataIndex]
+        const dataIndex = props.selectedRows.data[0].dataIndex
+        const tgt = props.targets[dataIndex]
         props.addSeq(tgt)
     }
 
@@ -76,17 +75,12 @@ const TargetTable = (props: Props) => {
             setTargets(tgts)
             const rows = targets_to_rows(tgts)
             setRows(rows)
-            console.log('targets', tgts)
         }
 
         make_targets()
 
     }, []
     )
-
-    const handleOBSelect = () => {
-        console.log('ob selected')
-    }
 
     const options: MUIDataTableOptions = {
         filterType: 'dropdown',
@@ -99,7 +93,6 @@ const TargetTable = (props: Props) => {
                 selectedRows={selectedRows}
                 targets={targets}
                 displayData={displayData}
-                handleOBSelect={handleOBSelect}
             />
         ),
         setRowProps: (row, dataIndex, rowIndex) => {

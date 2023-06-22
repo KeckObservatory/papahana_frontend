@@ -29,7 +29,6 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
 
   React.useEffect(() => {
     get_schemas(props.obComponent, instrument, props.id).then(([initSchema , initUiSchema ]) => {
-      console.log('target schema', initSchema, 'obComponent', props.obComponent, 'id', props.id, 'uiSchema', initUiSchema)
       setSchema(() => initSchema)
       setUISchema( () => initUiSchema)
 
@@ -47,7 +46,6 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
       initialRender.current = false
     }
     else {
-      console.log('decimalToggle changed', decimalToggle)
       const newFormData = convert_ra_dec(formData as TargetParameters, decimalToggle)
       setFormData(() => newFormData)
     }
@@ -67,13 +65,11 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   const convert_ra_dec = (targetParams: TargetParameters, decToggle: boolean) => {
     const ra = targetParams.target_coord_ra
     const dec = targetParams.target_coord_dec
-    console.log('ra', ra, 'dec', dec)
     if (decToggle) {
       const raDeg = ra_dec_to_deg(ra)
       const decDeg = ra_dec_to_deg(dec, true)
-      console.log('raDeg', raDeg, 'decDeg', decDeg)
       const newFormData = {
-        ...formData,
+        ...targetParams,
         target_coord_ra: raDeg,
         target_coord_dec: decDeg
       }
@@ -83,9 +79,8 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
     else {
       const raSex = deg_to_sexagesimal(ra)
       const decSex = deg_to_sexagesimal(dec, true)
-      console.log('raSex', raSex, 'decSex', decSex)
       const newFormData = {
-        ...formData,
+        ...targetParams,
         target_coord_ra: raSex,
         target_coord_dec: decSex
       }

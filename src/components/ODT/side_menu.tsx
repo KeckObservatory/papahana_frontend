@@ -169,11 +169,14 @@ export const SideMenu = (props: Props) => {
             newOB.observations = [...obs]
         }
         else {
+
+            console.log('seq', seq)
             //@ts-ignore
             newOB[tmplType] = seq
         }
         // triggerBoop(true)
-        ob_context.setOB(newOB)
+        console.log('newOB', newOB)
+        ob_context.setOB(() => newOB)
         props.setTriggerRender(props.triggerRender + 1)
     }
 

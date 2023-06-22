@@ -70,8 +70,6 @@ const CustomToolbarSelect = (props: CTProps) => {
 }
 
 const TagsInput = (value: string[], tableMeta: any, updateValue: any) => {
-    // console.log('Inputs', value, tableMeta.rowData, updateValue)
-
     return (
         <TagEditor
           tags={value}
