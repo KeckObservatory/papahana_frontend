@@ -35,7 +35,7 @@ export const get_all_targets = async (): Promise<Target[]> => {
    for (let idx=0; idx < sem_ids.associations.length; idx++) {
       const semid = sem_ids.associations[idx]
       const tgts = await ob_table_funcs.get_targets(semid)
-         allTgts = [...allTgts, ...tgts]
+         allTgts = [...allTgts, ...tgts.map(t => t.target) as Target[]]
    }
    console.log('all targets length: ', allTgts.length)
    return (allTgts)

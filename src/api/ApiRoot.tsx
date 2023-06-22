@@ -80,7 +80,7 @@ const get_ob_table = (): Promise<OBTableRow[]> => {
         .catch(handleError)
 }
 
-const get_targets = (semid: string): Promise<Target[]> => {
+const get_targets = (semid: string): Promise<Partial<ObservationBlock>[]> => {
     const url = API_URL + `/semesterIds/${semid}/ob/targets`;
     return axiosInstance
         .get(url)

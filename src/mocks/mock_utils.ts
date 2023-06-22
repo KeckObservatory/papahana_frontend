@@ -30,11 +30,11 @@ export const mock_get_ob_table = () => {
 }
 
 export const mock_get_targets = (semid: string) => {
-   const mockPromise = new Promise<Target[]>( (resolve) => {
-      let targets = [] as Target[]
+   const mockPromise = new Promise<Partial<ObservationBlock>[]>( (resolve) => {
+      let targets = [] as Partial<ObservationBlock>[]
       (mock_obs as unknown as ObservationBlock[]).forEach( (ob: ObservationBlock) => {
          if (ob.metadata.sem_id.includes(semid)) {
-            ob.target && targets.push(ob.target)
+            ob.target && targets.push({id: '', target: ob.target} as Partial<ObservationBlock>)
          }
       })
       resolve(targets)
