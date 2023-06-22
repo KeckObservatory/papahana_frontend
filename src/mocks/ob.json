@@ -7,7 +7,7 @@
             "priority": 100,
             "ob_type": "Science",
             "pi_id": 8765,
-            "sem_id": "2021B_N057",
+            "sem_id": "2017A_U033",
             "instrument": "KCWI"
         },
         "target": {
@@ -449,7 +449,7 @@
             "priority": 100,
             "ob_type": "Science",
             "pi_id": 5555,
-            "sem_id": "2018A_U043",
+            "sem_id": "2017A_U033",
             "instrument": "KCWI"
         },
         "target": {
@@ -570,7 +570,7 @@
             "priority": 100,
             "ob_type": "Science",
             "pi_id": 8899,
-            "sem_id": "2018A_U045",
+            "sem_id": "2017A_U033",
             "instrument": "KCWI",
             "comment": "I am one of the few honest people I have ever known."
         },

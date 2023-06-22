@@ -1,4 +1,4 @@
-import { Instrument, ObservationBlock, Recipe, SemesterIds, Template, TemplateMetadata } from './../typings/papahana.d';
+import { Instrument, ObservationBlock, Recipe, SemesterIds, Target, Template, TemplateMetadata } from './../typings/papahana.d';
 // import { mock_kcwi_instrument_package } from './mock_template';
 
 // import { mock_observation_blocks } from './mock_obs'
@@ -25,6 +25,19 @@ export const mock_get_container_ob_metadata = (semid: string, container_id?: str
 export const mock_get_ob_table = () => {
    const mockPromise = new Promise<OBTableRow[]>( (resolve) => {
       resolve(mock_ob_table_rows as OBTableRow[])
+   })
+   return mockPromise
+}
+
+export const mock_get_targets = (semid: string) => {
+   const mockPromise = new Promise<Target[]>( (resolve) => {
+      let targets = [] as Target[]
+      (mock_obs as unknown as ObservationBlock[]).forEach( (ob: ObservationBlock) => {
+         if (ob.metadata.sem_id.includes(semid)) {
+            ob.target && targets.push(ob.target)
+         }
+      })
+      resolve(targets)
    })
    return mockPromise
 }

@@ -102,7 +102,7 @@ export const template_to_ui_schema = (template: Template, uiSchema: UiSchema) =>
 
 export const template_to_schema = (template: Template): JSONSchema7 => {
   let schema: Partial<JsonSchema> = {}
-  schema.title = template.metadata.ui_name
+  schema.title = template.metadata?.ui_name
   schema.type = 'object'
   let required: string[] = []
   let properties = {} as Partial<OBJsonSchemaProperties>

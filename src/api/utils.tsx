@@ -1,5 +1,5 @@
-import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer, TemplateMetadata } from "../typings/papahana";
-import { get_select_funcs, get_container_ob_data, semid_api_funcs } from './ApiRoot';
+import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer, TemplateMetadata, Target } from "../typings/papahana";
+import { get_select_funcs, get_container_ob_data, semid_api_funcs, ob_table_funcs } from './ApiRoot';
 import { ObservationBlock, SemesterIds } from '../typings/papahana'
 
 export const get_sem_id_list = (): Promise<SemesterIds> => {
@@ -27,6 +27,18 @@ export const get_all_obs = async (): Promise<ObservationBlock[]> => {
 
    console.log('all obs length: ', allObs.length)
    return (allObs)
+}
+
+export const get_all_targets = async (): Promise<Target[]> => {
+   let allTgts : Target[] = []
+   const sem_ids = await get_sem_id_list()
+   for (let idx=0; idx < sem_ids.associations.length; idx++) {
+      const semid = sem_ids.associations[idx]
+      const tgts = await ob_table_funcs.get_targets(semid)
+         allTgts = [...allTgts, ...tgts]
+   }
+   console.log('all targets length: ', allTgts.length)
+   return (allTgts)
 }
 
 export const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {

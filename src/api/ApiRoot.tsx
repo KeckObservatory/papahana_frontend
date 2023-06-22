@@ -10,7 +10,8 @@ import {
     Template,
     ValidatorReport,
     Recipe,
-    TemplateMetadata
+    TemplateMetadata,
+    Target
 } from './../typings/papahana'
 import { OBTableRow, UserInfo } from './../typings/ddoi_api'
 import {
@@ -25,6 +26,7 @@ import {
     mock_get_container_ob_metadata,
     mock_get_container_ob_target,
     mock_get_ob_table,
+    mock_get_targets,
     mock_get_instrument_recipes,
     mock_get_template_metadata
 
@@ -72,6 +74,14 @@ export const get_userinfo = (): Promise<UserInfo> => {
 
 const get_ob_table = (): Promise<OBTableRow[]> => {
     const url = API_URL + '/search/ob/tableview';
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError)
+}
+
+const get_targets = (semid: string): Promise<Target[]> => {
+    const url = API_URL + `/semesterIds/${semid}/ob/targets`;
     return axiosInstance
         .get(url)
         .then(handleResponse)
@@ -276,7 +286,8 @@ export const semid_api_funcs = {
 }
 
 export const ob_table_funcs = {
-    get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table
+    get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table,
+    get_targets: IS_BUILD ? get_targets : mock_get_targets
 }
 
 export const tag_functions = {
