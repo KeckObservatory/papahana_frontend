@@ -53,10 +53,10 @@ const targets_to_rows = (targets: Target[]) => {
     let rows = [] as object[]
     targets.forEach((target: Target) => {
         const row = {
-            target_name: target.metadata.name,
-            target_info: target.parameters.target_info_name,
-            ra: target.parameters.target_coord_ra,
-            dec: target.parameters.target_coord_dec,
+            target_name: target.metadata?.name,
+            target_info: target.parameters?.target_info_name,
+            ra: target.parameters?.target_coord_ra,
+            dec: target.parameters?.target_coord_dec,
         }
         rows.push(row)
 
