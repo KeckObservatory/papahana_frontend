@@ -34,8 +34,13 @@ export const get_all_targets = async (): Promise<Target[]> => {
    const sem_ids = await get_sem_id_list()
    for (let idx=0; idx < sem_ids.associations.length; idx++) {
       const semid = sem_ids.associations[idx]
-      const tgts = await ob_table_funcs.get_targets(semid)
-         allTgts = [...allTgts, ...tgts.map(t => t.target) as Target[]]
+      const obTgts = await ob_table_funcs.get_targets(semid)
+      let tgts = []
+      for (let idx=0; idx<obTgts.length; idx++) {
+         const t = obTgts[idx].target
+         t && tgts.push(t)
+      }
+      allTgts = [...allTgts, ...tgts]
    }
    console.log('all targets length: ', allTgts.length, allTgts)
    return (allTgts)
