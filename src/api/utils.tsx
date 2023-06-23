@@ -37,7 +37,7 @@ export const get_all_targets = async (): Promise<Target[]> => {
       const tgts = await ob_table_funcs.get_targets(semid)
          allTgts = [...allTgts, ...tgts.map(t => t.target) as Target[]]
    }
-   console.log('all targets length: ', allTgts.length)
+   console.log('all targets length: ', allTgts.length, allTgts)
    return (allTgts)
 }
 
