@@ -28,9 +28,9 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
-    get_schemas(props.obComponent, instrument, props.id).then(([initSchema , initUiSchema ]) => {
+    get_schemas(props.obComponent, instrument, props.id).then(([initSchema, initUiSchema]) => {
       setSchema(() => initSchema)
-      setUISchema( () => initUiSchema)
+      setUISchema(() => initUiSchema)
 
     })
   }, [])
@@ -65,27 +65,25 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   const convert_ra_dec = (targetParams: TargetParameters, decToggle: boolean) => {
     const ra = targetParams.target_coord_ra
     const dec = targetParams.target_coord_dec
-    if (decToggle) {
-      const raDeg = ra_dec_to_deg(ra)
-      const decDeg = ra_dec_to_deg(dec, true)
-      const newFormData = {
-        ...targetParams,
-        target_coord_ra: raDeg,
-        target_coord_dec: decDeg
+    let newFormData = { ...targetParams }
+    if (ra && dec) {
+      if (decToggle) {
+        const raDeg = ra_dec_to_deg(ra)
+        const decDeg = ra_dec_to_deg(dec, true)
+        newFormData['target_coord_ra'] = raDeg
+        newFormData['target_coord_dec'] = decDeg
+        setFormData(() => newFormData)
       }
-      setFormData(() => newFormData)
-      return newFormData
-    }
-    else {
-      const raSex = deg_to_sexagesimal(ra)
-      const decSex = deg_to_sexagesimal(dec, true)
-      const newFormData = {
-        ...targetParams,
-        target_coord_ra: raSex,
-        target_coord_dec: decSex
+      else {
+        const raSex = deg_to_sexagesimal(ra)
+        const decSex = deg_to_sexagesimal(dec, true)
+        newFormData['target_coord_ra'] = raSex
+        newFormData['target_coord_dec'] = decSex
+        setFormData(() => newFormData)
       }
-      return newFormData
     }
+
+    return newFormData
   }
 
   const handleDecimalChange = (evt: React.ChangeEvent<HTMLInputElement>) => {
