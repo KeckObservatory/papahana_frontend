@@ -293,6 +293,7 @@ export interface RecipeMetadata{
 export interface Recipe {
 	metadata: RecipeMetadata,
 	recipe: string[]
+	ob_data: Partial<ObservationBlock>
 }
 
 interface KCWIInstrumentPackage extends Base {

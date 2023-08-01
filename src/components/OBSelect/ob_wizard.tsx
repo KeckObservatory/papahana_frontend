@@ -59,60 +59,14 @@ const OBRecipeStepper = (props: Props) => {
 
     const generate_ob_from_recipe = async () => {
         const templateNames = recipe.recipe
-        const meta = {
-            name: `Made by ODT for ${inst} using ${recipe.metadata.ui_name} recipe`,
-            priority: 0,
-            version: "0.1.0",
-            ob_type: recipe.metadata.ob_type,
-            instrument: inst,
+        const ob_data = recipe.ob_data
+        let meta = {
+            ...ob_data.metadata,
             pi_id: JSON.parse(observer_context.observer_id),
             sem_id: ob_select_context.sem_id,
-            comment: ""
         }
-        const status: Status = {
-            current_exp_det1: 0,
-            current_exp_det2: 0,
-            current_seq: 0,
-            current_step: 0,
-            deleted: false,
-            executions: [],
-            priority: 0,
-            state: 4
-        }
-        const newOB = { metadata: meta, status: status } as any
-        for (let idx = 0; idx<templateNames.length; idx++) {
-            const tName = templateNames[idx]
-            const templateObj = await get_select_funcs.get_template(tName, inst)
-            const [key, template] = Object.entries(templateObj)[0]
-            let comp = {
-                'metadata': template.metadata,
-            } as any
-            if (tName.includes('common')) {
-                comp = comp as CommonParameters
-                comp['detector_parameters'] = {}
-                comp['instrument_parameters'] = {}
-                comp['tcs_parameters'] = {}
-            }
-            else {
-                let params = {}
-                const paramsKeys = Object.keys(template.parameters)
-                for (let jdx = 0; jdx<paramsKeys.length; jdx++){
-                    const key = paramsKeys[jdx] 
-                    const param= template.parameters[key]
-                    //@ts-ignore
-                    params[key] = param.default && param.default 
-                }
-                comp['parameters'] = params 
-            }
-            const tType = template.metadata.template_type
-            if (tType.includes('science') || tType.includes('calibration')) {
-                comp['metadata']['sequence_number'] = 0
-                newOB['observations'] = [comp]
-            }
-            else {
-                newOB[template.metadata.template_type] = comp
-            }
-        }
+        const status = ob_data.status
+        const newOB = { ...ob_data, metadata: meta, status: status } as any
         return (newOB as ObservationBlock)
     }
 
