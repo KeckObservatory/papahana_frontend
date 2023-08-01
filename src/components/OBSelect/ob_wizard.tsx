@@ -64,6 +64,7 @@ const OBRecipeStepper = (props: Props) => {
             ...ob_data.metadata,
             pi_id: JSON.parse(observer_context.observer_id),
             sem_id: ob_select_context.sem_id,
+            priority: 0
         }
         const status = ob_data.status
         const newOB = { ...ob_data, metadata: meta, status: status } as any
