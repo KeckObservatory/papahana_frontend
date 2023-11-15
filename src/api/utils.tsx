@@ -1,5 +1,5 @@
-import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer } from "../typings/papahana";
-import { get_select_funcs, get_container_ob_data } from './ApiRoot';
+import { Container, Scoby, Instrument, InstrumentPackage, Template, ContainerObs, DetailedContainer, TemplateMetadata, Target } from "../typings/papahana";
+import { get_select_funcs, get_container_ob_data, semid_api_funcs, ob_table_funcs } from './ApiRoot';
 import { ObservationBlock, SemesterIds } from '../typings/papahana'
 
 export const get_sem_id_list = (): Promise<SemesterIds> => {
@@ -12,6 +12,40 @@ export const get_sem_id_list = (): Promise<SemesterIds> => {
    return promise
 }
 
+export const get_all_obs = async (): Promise<ObservationBlock[]> => {
+
+   let allObs: ObservationBlock[] = []
+   await get_sem_id_list()
+      .then((sem_ids: SemesterIds) => {
+         sem_ids.associations.forEach((sem_id: string) => {
+            semid_api_funcs.get_semester_obs(sem_id)
+               .then((obs: ObservationBlock[]) => {
+                  allObs = [...allObs, ...obs]
+               })
+         })
+      })
+
+   console.log('all obs length: ', allObs.length)
+   return (allObs)
+}
+
+export const get_all_targets = async (): Promise<Target[]> => {
+   let allTgts : Target[] = []
+   const sem_ids = await get_sem_id_list()
+   for (let idx=0; idx < sem_ids.associations.length; idx++) {
+      const semid = sem_ids.associations[idx]
+      const obTgts = await ob_table_funcs.get_targets(semid)
+      let tgts = []
+      for (let idx=0; idx<obTgts.length; idx++) {
+         const t = obTgts[idx].target
+         t && tgts.push(t)
+      }
+      allTgts = [...allTgts, ...tgts]
+   }
+   console.log('all targets length: ', allTgts.length, allTgts)
+   return (allTgts)
+}
+
 export const get_instrument_package = (instrument: Instrument): Promise<InstrumentPackage> => {
    const promise = new Promise<InstrumentPackage>((resolve) => {
       get_select_funcs.get_instrument_package(instrument).then((instrumentPackage: InstrumentPackage) => {
@@ -21,9 +55,20 @@ export const get_instrument_package = (instrument: Instrument): Promise<Instrume
    return promise
 }
 
-export const get_template = (name: string): Promise<Template> => {
+export const get_template_metadata = (instrument: Instrument): Promise<TemplateMetadata[]> => {
+   const promise = new Promise<TemplateMetadata[]>((resolve) => {
+      get_select_funcs.get_template_metadata(instrument).then(templateObject=> {
+         const templates = Object.values(templateObject)
+         const templateMetadata = templates.map(t => t.metadata)
+         resolve(templateMetadata)
+      })
+   })
+   return promise
+}
+
+export const get_template = (name: string, instrument='KCWI'): Promise<Template> => {
    const promise = new Promise<Template>((resolve) => {
-      get_select_funcs.get_template(name).then((templateObject: { [key: string]: Template }) => {
+      get_select_funcs.get_template(name, instrument).then((templateObject: { [key: string]: Template }) => {
          const template = templateObject[name]
          resolve(template)
       }).catch(err => {
@@ -82,14 +127,14 @@ export const make_all_ob_container = async (sem_id: string, detailedContainers: 
 }
 
 export const make_detailed_containers = async (sem_id: string, containers: Container[]) => { // adds All OBs in a special container
-   const detailedContainers: DetailedContainer[] = [] 
-   for (let idx=0; idx<containers.length; idx++) {
+   const detailedContainers: DetailedContainer[] = []
+   for (let idx = 0; idx < containers.length; idx++) {
       const container = containers[idx]
       let partialObs: Partial<ObservationBlock>[] = []
       if (sem_id) {
          partialObs = await get_container_target_metadata(sem_id, container._id)
       }
-      const dContainer: DetailedContainer = {...container, 'ob_details': partialObs}
+      const dContainer: DetailedContainer = { ...container, 'ob_details': partialObs }
       detailedContainers.push(dContainer)
    }
    return detailedContainers
@@ -115,13 +160,13 @@ const scoby_rows_and_det_containers = (sem_id: string, detailedContainers: Detai
          scoby.push(row)
       })
    })
-   return scoby 
+   return scoby
 }
 
 export const remove_duplicated_rows = (scoby: Scoby[]) => {
-   const scobyObj: { [key: string]: Scoby} = {}
+   const scobyObj: { [key: string]: Scoby } = {}
    // find duplicates
-   scoby.forEach( (row: Scoby) => {
+   scoby.forEach((row: Scoby) => {
       const ob_id = row.ob_id as string
       const container_id = row.container_id
       if (scobyObj.hasOwnProperty(ob_id)) { // determine which duplicated row to use

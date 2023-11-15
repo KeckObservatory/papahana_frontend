@@ -1,6 +1,6 @@
 import React from "react"
 import { CatalogRow, Target } from "../../typings/papahana";
-import { ra_dec_to_deg } from './../SelectionTool/sky-view/sky_view_util'
+import { ra_dec_to_deg } from '../sky-view/sky_view_util'
 interface Props {
     target: Target
     selIdx: number | undefined
@@ -97,8 +97,8 @@ export default function Aladin(props: Props) {
         const win: any = window
         let ra: string = props.target.parameters.target_coord_ra;
         let dec: string = props.target.parameters.target_coord_dec;
-        const raDeg = ra_dec_to_deg(ra)
-        const decDeg = ra_dec_to_deg(dec, true)
+        const raDeg = Number(ra_dec_to_deg(ra))
+        const decDeg = Number(ra_dec_to_deg(dec, true))
         console.log('in degrees', raDeg, decDeg)
         const coords = format_target_coords(ra, dec)
 

@@ -1,3 +1,10 @@
+
+export interface ValidatorReport {
+	valid: boolean
+	errors: { [key: string]: string }
+
+}
+
 export interface ContainerObs {
 	[key: string]: ObservationBlock[]
 }
@@ -45,6 +52,7 @@ export type SourceAPI = 'papahana_demo' | 'papahana_local' | 'papahana_docker'
 
 export type OBSequence = Acquisition | Science
 export type OBComponent = MetadataLessOBComponent | OBStandardComponent | string | string[]
+export type TemplateComponent = Science[] | Acquisition | Target
 export type MetadataLessOBComponent = OBMetadata | TimeConstraint[] | Status | CommonParameters
 export type OBStandardComponent = Target | OBSequence
 export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations' | 'metadata' | 'common_parameters' | 'time_constraints' | 'status'
@@ -87,9 +95,9 @@ export interface Scoby {
 	ob_id?: string
 	name?: string
 	ra?: string,
-    dec?: string,
-	ra_deg?:  number,
-    dec_deg?: number,
+	dec?: string,
+	ra_deg?: string,
+	dec_deg?: string,
 	comment?: string,
 	ob_type?: string,
 	version?: string,
@@ -113,7 +121,8 @@ export interface OBMetadata {
 	pi_id: number | string;
 	sem_id: string;
 	instrument: Instrument;
-	comment: string
+	comment: string;
+	tags?: string[];
 }
 
 
@@ -123,6 +132,7 @@ export interface ObservationBlock extends Base {
 	metadata: OBMetadata;
 	target?: Target;
 	time_constraints: TimeConstraint[][]
+	common_parameters?: CommonTemplate,
 	comment?: string;
 	observations?: Science[];
 	acquisition: Acquisition;
@@ -150,7 +160,7 @@ export type GSMode = 'Automatic' | 'Operator' | 'User'
 export type PO = 'REF' | 'IFU'
 export type Slicer = 'Small' | 'Medium' | 'Large'
 export type Grating = 'BL' | 'BM' | 'BH1' | 'BH2' | 'RL' | 'RM' | 'RH1' | 'RH2'
-export type Instrument = 'KCWI' | 'DEIMOS' | 'MOSFIRE'
+export type Instrument = 'KCWI' | 'DEIMOS' | 'MOSFIRE' | 'KPF' | 'SSC' | 'NIRES'
 
 export interface KCWIAcquisition extends BaseSequence {
 	parameters: KCWIAcquisitionParameters
@@ -273,13 +283,26 @@ export interface GUIDER {
 
 export type InstrumentPackage = KCWIInstrumentPackage
 
+export interface RecipeMetadata{
+	name: string,
+	instrument: string,
+	ui_name: string,
+	ob_type: TemplateType
+}
+
+export interface Recipe {
+	metadata: RecipeMetadata,
+	recipe: string[]
+	ob_data: Partial<ObservationBlock>
+}
+
 interface KCWIInstrumentPackage extends Base {
 	metadata: IP_METADATA
 	optical_parameters: OPICAL_PARAMETERS
 	guider: GUIDER
 	configurable_elements: string[]
 	pointing_origins: string[]
-	common_parameters: string
+	common_parameters: string,
 	template_list: { [key: string]: string }
 }
 
@@ -298,10 +321,17 @@ export interface InstrumentPackageTemplates {
 	[key: string]: string
 }
 
-export type TemplateType = "acq" | "sci" | "config"
+export type TemplateType = "acqusition" | "science" | "calibration" | "common_parameters"
 
 export interface TemplateMetadata extends Metadata {
-
+	instrument: Instrument,
+	name: string,
+	script: string,
+	script_version: string,
+	sequence_number: number,
+	template_type: TemplateType,
+	ui_name: string,
+	version: string 
 }
 
 export interface TemplateParameter {
@@ -310,6 +340,7 @@ export interface TemplateParameter {
 	allowed: string[] | number[] | object[];
 	default: string | number | null;
 	type: string;
+	description?: string,
 	optionality: string;
 }
 

@@ -1,71 +1,145 @@
-{
-	"metadata": {
-		 "_id" : "61203d272a0a5829277a7f2b",
-		 "name": "KCWI_instrument_package",
-		 "ui_name": "KCWI Instrument Package",
-		 "version" : "0.1.0",
-		 "instrument" : "KCWI",
-		 "observing_modes" : ["imaging", "ifu"]
-	 },
-	 "optical_parameters" : {
-		 "field_of_view" : [1200, 1200],
-		 "slit_length" : 4
-	 },
-	 "guider" : {
-		 "name" : "Guider",
-		 "fov" : [120, 120],
-		 "pixel_scale" : 0.17,
-		 "pa_offset" : null,
-		 "read_noise" : null,
-		 "gain" : null,
-		 "zero_points" : null,
-		 "sensitivity" : null,
-		 "filters" : null
-	 },
-	 "configurable_elements" : [
-		 "inst_cfg_slicer",
-		 "inst_cfg_hatch",
-		 "inst_cfg_calib",
-		 "inst_cfg_polarimeter",
-		 "inst_cfg_ifu",
-		 "inst_cfg1_filter",
-		 "inst_cfg1_grating",
-		 "inst_cfg1_blockingfilter",
-		 "inst_cfg2_filter",
-		 "inst_cfg2_grating",
-		 "inst_cfg2_blockingfilter",
-		 "inst_ns_mask",
-		 "inst_ns_direction",
-		 "inst_kmirror_mode",
-		 "inst_kmirror_angle",
-		 "inst_det1_focus",
-		 "inst_det2_focus",
-		 "inst_wavelengt1_central",
-		 "inst_wavelength1_peak",
-		 "inst_wavelength2_central",
-		 "inst_wavelength2_peak",
-		 "det1_mode_binning",
-		 "det1_mode_amp",
-		 "det1_mode_read",
-		 "det1_mode_gain",
-		 "det2_mode_binning",
-		 "det2_mode_amp",
-		 "det2_mode_read",
-		 "det2_mode_gain"
-	 ],
-	 "pointing_origins" : [
-		 "IFU",
-		 "REF",
-		 "Imaging"
-	 ],
-	 "template_list" : {
-		 "KCWI_ifu_acq_offsetStar": "61203d3a86574cd1da879135",
-		 "KCWI_ifu_acq_direct": "61203d3a86574cd1da879136",
-		 "KCWI_ifu_sci_stare": "61203d3a86574cd1da879137",
-		 "KCWI_ifu_sci_dither": "61203d3a86574cd1da879138"
-	 },
-	 "common_parameters": "61203d3a86574cd1da879135",
-	 "event_table" : null,
-	 "comment" : "A KCWI Instrument Package"
- }
-
+[
+	{
+		"_id": "63d9aa5d03fb7ff6d1c65ff6",
+		"comment": "A KCWI Instrument Package",
+		"configurable_elements": [
+			"inst_cfg_slicer",
+			"inst_cfg_hatch",
+			"inst_cfg_calib",
+			"inst_cfg_polarimeter",
+			"inst_cfg_ifu",
+			"inst_cfg1_filter",
+			"inst_cfg1_grating",
+			"inst_cfg1_blockingfilter",
+			"inst_cfg2_filter",
+			"inst_cfg2_grating",
+			"inst_cfg2_blockingfilter",
+			"inst_ns_mask",
+			"inst_ns_direction",
+			"inst_kmirror_mode",
+			"inst_kmirror_angle",
+			"inst_det1_focus",
+			"inst_det2_focus",
+			"inst_wavelengt1_central",
+			"inst_wavelength1_peakinst_wavelength2_central",
+			"inst_wavelength2_peakdet1_mode_binning",
+			"det1_mode_amp",
+			"det1_mode_read",
+			"det1_mode_gain",
+			"det2_mode_binning",
+			"det2_mode_amp",
+			"det2_mode_read",
+			"det2_mode_gain"
+		],
+		"event_table": "null",
+		"guider1": {
+			"filters": "null",
+			"fov": [
+				120,
+				120
+			],
+			"gain": "null",
+			"name": "Guider",
+			"pa_offset": "null",
+			"pixel_scale": 0.17,
+			"read_noise": "null",
+			"sensitivity": "null",
+			"zero_points": "null"
+		},
+		"metadata": {
+			"instrument": "KCWI",
+			"name": "kcwi_instrument_package",
+			"observing_modes": [
+				"imaging",
+				"ifu"
+			],
+			"ui_name": "KCWI Instrument Package",
+			"version": "0.1.0"
+		},
+		"optical_parameters": {
+			"field_of_view": [
+				1200,
+				1200
+			],
+			"slit_length": 4
+		},
+		"pointing_origins": [
+			"IFU",
+			"REF",
+			"Imaging"
+		],
+		"template_list": {
+			"kcwi_common_parameters": "0.1.0",
+			"kcwi_ifu_acq_direct": "0.1.1",
+			"kcwi_ifu_acq_offsetStar": "0.1.1",
+			"kcwi_ifu_sci_dither": "0.1.1",
+			"kcwi_ifu_sci_stare": "0.1.1",
+			"non_sidereal_target": "0.1.1",
+			"sidereal_target": "0.1.1"
+		}
+	},
+	{
+		"_id": "63d9aa5d03fb7ff6d1c65ff5",
+		"comment": "A KPF Instrument Package",
+		"configurable_elements": [],
+		"event_table": "null",
+		"metadata": {
+			"instrument": "KPF",
+			"name": "kpf_instrument_package",
+			"observing_modes": [
+				"spectroscopy"
+			],
+			"ui_name": "KPF Instrument Package",
+			"version": "0.0.1"
+		},
+		"optical_parameters": {},
+		"pointing_origins": [
+			"KPF",
+			"SKY",
+			"EM_SKY",
+			"REF"
+		],
+		"template_list": {
+			"kpf_acq": "0.1.0",
+			"kpf_arcs": "0.1.0",
+			"kpf_common_parameters": "0.1.1",
+			"kpf_dark": "0.1.0",
+			"kpf_sci": "0.1.0",
+			"kpf_target": "0.1.0",
+			"non_sidereal_target": "0.1.1",
+			"sidereal_target": "0.1.1"
+		}
+	},
+	{
+		"_id": "639b6c181d283dc92f4a8291",
+		"comment": "A SSC Instrument Package",
+		"event_table": "null",
+		"metadata": {
+			"instrument": "SSC",
+			"name": "ssc_instrument_package",
+			"observing_modes": [
+				"imaging"
+			],
+			"ui_name": "SSC Instrument Package",
+			"version": "0.0.1"
+		},
+		"optical_parameters": {
+			"field_of_view": [
+				30.24,
+				40.32
+			],
+			"pixel_scale": 0.105
+		},
+		"pointing_origins": [
+			"REF"
+		],
+		"template_list": {
+			"non_sidereal_target": "0.1.1",
+			"sidereal_target": "0.1.1",
+			"ssc_acq_direct": "0.0.1",
+			"ssc_common_parameters": "0.0.1",
+			"ssc_sci_dither": "0.1.1",
+			"ssc_sci_image": "0.1.1"
+		}
+	}
+]

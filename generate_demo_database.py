@@ -568,7 +568,7 @@ def generate_common_parameters():
             "inst_cfg_slicer": random.choice(["slicer1", "slicer2"]),
             "inst_cfg_blockingfilter": random.choice(["filter1", "filter2"]),
             "inst_cfg_hatch": random.choice(["open", "closed"]),
-            "inst_cfg_polarimeter": random.choice(["Sky", "Polar", "Lense"]),
+            "inst_cfg_polarimeter": random.choice(["Sky", "Polar", "Lens"]),
             "inst_cfg_ifu":  random.choice([ "Home", "Large", "Medium", "Small", "FPCam", "Aux" ]),
             "inst_cfg1_filter": random.choice([ "Home", "Large", "Medium", "Small", "FPCam", "Aux" ]),
             "inst_cfg2_filter": random.choice([ "Home", "Large", "Medium", "Small", "FPCam", "Aux" ]),
@@ -613,31 +613,34 @@ def generate_sidereal_target_parameters():
         'target_info_magnitude': generate_mags(),
         'target_info_comment': optionalRandComment()
     }
-    return schema
+    
+    md = generate_target_metadata('sidereal_target')
+    return schema, md
 
 
 @remove_none_values_in_dict
 def generate_nonsidereal_target_parameters():
-    schema = generate_sidereal_target_parameters()
+    schema, _ = generate_sidereal_target_parameters()
     schema['target_coord_dra'] = randFloat()
     schema['target_coord_ddec'] = randFloat()
-
-    return schema
+    md = generate_target_metadata('non_sidereal_target')
+    return schema, md
 
 
 @remove_none_values_in_dict
 def generate_mos_target_parameters():
-    schema = generate_sidereal_target_parameters()
+    schema, _ = generate_sidereal_target_parameters()
     schema['inst_cfg_mask'] = "Science Mask 101"
+    md = generate_target_metadata('multi_object_target')
 
-    return schema
+    return schema, md
 
 
 @remove_none_values_in_dict
-def generate_target_metadata():
+def generate_target_metadata(templateName):
     name = 'standard stars #' + str(random.randint(0, 9))
     schema = {
-        'name': name,
+        'name': templateName,
         'ui_name': name.upper(),
         'version': "0.1.0",
         'template_type': 'target',
@@ -645,10 +648,8 @@ def generate_target_metadata():
     return schema
 
 def generate_target(): 
-    parameters = random.choice([generate_sidereal_target_parameters(),
-                                 generate_nonsidereal_target_parameters(),
-                                 generate_mos_target_parameters()])
-    metadata = generate_target_metadata()
+    parameters, metadata = random.choice([generate_sidereal_target_parameters(),
+                                 generate_nonsidereal_target_parameters()])
     return {"metadata":metadata, "parameters":parameters}
 
 @remove_none_values_in_dict

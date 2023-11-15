@@ -16,34 +16,70 @@ export const get_gmt = (date?: Date) => {
     if (!date) date = new Date()
     const JD = date_to_juld(date)
     const T = (JD - 2451545) / 36525;
-    let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T 
-    + .093104 * (T**2) - ( 6.2 * 10**-6 ) * ( T**3 )
-    ThetaGMST = ( ThetaGMST % ( 86400 * ( ThetaGMST / Math.abs(ThetaGMST) ) ) / 240) % 360
+    let ThetaGMST = 67310.54841 + (876600 * 3600 + 8640184.812866) * T
+        + .093104 * (T ** 2) - (6.2 * 10 ** -6) * (T ** 3)
+    ThetaGMST = (ThetaGMST % (86400 * (ThetaGMST / Math.abs(ThetaGMST))) / 240) % 360
 
-    return ThetaGMST 
+    return ThetaGMST
 }
 
 export const ra_dec_to_deg = (time: string, dec = false) => {
-    let [hours, min, sec] = time.split(':')
-    let deg
-    if (dec) {
-        let sign = 1
-        if (hours[0] === '+') hours = hours.substring(1);
-        if (hours[0] === '-') {
-            hours = hours.substring(1);
-            sign = -1;
-        }
-        deg = sign * parseInt(hours, 10) // dec is already in degrees
-            + parseInt(min, 10) / 60
-            + parseInt(sec, 10) / 60 ** 2
+    //if float return
+    if (!time.includes(':')) { //already stored as degree
+        return time
     }
 
-    else {
-        deg = 15 * parseInt(hours, 10) // convert hours to deg
-            + 15 * parseInt(min, 10) / 60
-            + 15 * parseInt(sec, 10) / 60 ** 2
+    let deg = 0
+    try {
+        let [hours, min, sec] = time.split(':')
+        if (dec) {
+            const decDeg = Number(hours)
+            let sign = Math.sign(decDeg)
+            deg = decDeg // dec is already in degrees
+                + sign * Number(min) / 60
+                + sign * Number(sec) / 3600
+        }
+
+        else {
+            deg = Number(hours) * 15 // convert hours to deg
+                + Number(min) / 4
+                + Number(sec) / 240
+        }
     }
-    return deg
+    finally {
+        return String(deg)
+    }
+}
+
+export const deg_to_sexagesimal = (x: string, dec = false) => {
+    //if in sexagesimal form return
+    if (x.includes(':')) {
+        return x
+    }
+    let sex = ''
+    try {
+        if (dec) {
+            const decDec = Number(x)
+            const posneg = Math.sign(decDec)
+            const deg = Math.trunc(decDec)
+            const c = decDec - deg
+            const min = Math.trunc(c * 60 * posneg)
+            const sec = (c - posneg * Number(min) / 60) * 3600 * posneg
+            sex = `${String(deg).padStart(2, '0')}:${String(min).padStart(2, '0')}:${sec.toFixed(5)}`
+            console.log('sex', sex)
+        }
+        else {
+            const decRa = Number(x)
+            const h = Math.trunc(decRa / 15)
+            const min = Math.trunc((decRa - Number(h) * 15) * 4)
+            const sec = (decRa - Number(h) * 15 - Number(min) / 4) * 240
+            sex = `${String(h).padStart(2, '0')}:${String(min).padStart(2, '0')}:${sec.toFixed(5)}`
+            console.log('sex', sex)
+        }
+    }
+    finally {
+        return sex
+    }
 }
 
 const cosd = (deg: number): number => {
@@ -118,7 +154,7 @@ const air_mass = (alt: number) => { // Homogeneous spherical atmosphsere with el
     const r = RADIUS_EARTH + KECK_ELEVATION
     const g = ATMOSPHERE_HEIGHT - KECK_ELEVATION
     const zenith = 90 - alt
-    const firstTerm = (r * r) * cosd(zenith) * cosd(zenith) / ( a2 )
+    const firstTerm = (r * r) * cosd(zenith) * cosd(zenith) / (a2)
     const secondTerm = 2 * RADIUS_EARTH * (g) / a2
     const thirdTerm = y * y
     const forthTerm = (y + z) * cosd(zenith)
@@ -142,7 +178,7 @@ export const parallatic_angle = (ra: number, dec: number, date: Date, lngLatEl: 
     const denominator: number = tand(lngLatEl.lat)
         * cosd(dec)
         - sind(dec) * cosd(hourAngle)
-    return Math.atan2(numerator, denominator) * 180 / Math.PI 
+    return Math.atan2(numerator, denominator) * 180 / Math.PI
 }
 
 export const get_parallactic_angle = (ra: number, dec: number, times: Date[], lngLatEl: LngLatEl): number[] => {

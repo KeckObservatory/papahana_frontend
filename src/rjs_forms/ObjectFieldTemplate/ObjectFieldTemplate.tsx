@@ -1,7 +1,6 @@
 import React from 'react'
 
 import Grid from '@mui/material/Grid'
-import { makeStyles } from '@mui/styles'
 
 import { ObjectFieldTemplateProps } from '@rjsf/core'
 import { utils } from '@rjsf/core'
@@ -9,12 +8,6 @@ import { utils } from '@rjsf/core'
 import AddButton from '../AddButton/AddButton'
 
 const { canExpand } = utils
-
-const useStyles = makeStyles({
-  root: {
-    marginTop: 10,
-  },
-})
 
 const ObjectFieldTemplate = ({
   DescriptionField,
@@ -31,7 +24,6 @@ const ObjectFieldTemplate = ({
   formData,
   onAddClick,
 }: ObjectFieldTemplateProps) => {
-  const classes = useStyles()
 
   return (
     <>
@@ -48,7 +40,7 @@ const ObjectFieldTemplate = ({
           description={description}
         />
       )}
-      <Grid container={true} spacing={2} className={classes.root}>
+      <Grid container={true} spacing={2} sx={{marginTop: '10px'}}>
         {properties.map((element, index) =>
           // Remove the <Grid> if the inner element is hidden as the <Grid>
           // itself would otherwise still take up space.

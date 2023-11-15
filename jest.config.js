@@ -9,7 +9,11 @@ module.exports = {
 
     // Stop running tests after `n` failures
     // bail: 0,
-
+    preset: 'ts-jest/presets/js-with-babel',
+    transform: {
+        '^.+\\.(ts|tsx)?$': 'ts-jest',
+        "^.+\\.(js|jsx)$": "babel-jest",
+	  },
     // The directory where Jest should store its cached dependency information
     // cacheDirectory: "/tmp/jest_rs",
 
@@ -20,14 +24,14 @@ module.exports = {
     collectCoverage: true,
 
     // An array of glob patterns indicating a set of files for which coverage information should be collected
-    // collectCoverageFrom: undefined,
+    collectCoverageFrom: ['src/**/*.{ts,tsx,js,jsx}', '!src/**/*.d.ts'],
 
     // The directory where Jest should output its coverage files
     coverageDirectory: "coverage",
 
     // An array of regexp pattern strings used to skip coverage collection
     coveragePathIgnorePatterns: [
-        "/node_modules/"
+        "node_modules/",
     ],
 
     // Indicates which provider should be used to instrument code for coverage
@@ -132,7 +136,7 @@ module.exports = {
     setupFiles: [],
 
     // A list of paths to modules that run some code to configure or set up the testing framework before each test
-    setupFilesAfterEnv: [ './src/setupTests.ts' ],
+    // setupFilesAfterEnv: [ './src/setupTests.ts' ],
 
     // The number of seconds after which a test is considered as slow and reported as such in the results.
     // slowTestThreshold: 5,
@@ -141,7 +145,7 @@ module.exports = {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    testEnvironment: "jsdom",
+    testEnvironment: "node",
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},
@@ -176,18 +180,10 @@ module.exports = {
     // Setting this value to "fake" allows the use of fake timers for functions such as "setTimeout"
     // timers: "real",
 
-    // A map from regular expressions to paths to transformers
-    // transform: undefined,
-    transform: {
-
-        "^.+\\.tsx?$": "ts-jest"
-
-    },
     // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-    // transformIgnorePatterns: [
-    //   "/node_modules/",
-    //   "\\.pnp\\.[^\\/]+$"
-    // ],
+    transformIgnorePatterns: [
+        "node_modules/",
+    ],
 
     // An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
     // unmockedModulePathPatterns: undefined,

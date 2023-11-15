@@ -24,6 +24,7 @@ interface Args {
 };
 
 interface SpringStyle {
+  color?: string,
   transform?: SpringValue<string>;
 };
 
@@ -68,8 +69,7 @@ const useBoop: Boop = ({
   });
 
   const trigger = (triggered: boolean=true) => {
-    console.log(`setting to triggered to`)
-    console.log(triggered)
+    console.log(`setting to triggered to`, triggered)
     setIsTriggered(triggered);
   };
 

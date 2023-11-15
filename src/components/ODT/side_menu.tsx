@@ -3,7 +3,7 @@ import { IconButton, Paper } from '@mui/material'
 import cloneDeep from 'lodash/cloneDeep';
 import { animated } from 'react-spring'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
-import { Instrument, OBSequence, ObservationBlock, ScienceMetadata } from '../../typings/papahana'
+import { Instrument, OBSequence, ObservationBlock, ScienceMetadata, ValidatorReport } from '../../typings/papahana'
 import SaveIcon from '@mui/icons-material/Save';
 import PublishIcon from '@mui/icons-material/Publish';
 import Tooltip from '@mui/material/Tooltip'
@@ -18,26 +18,26 @@ import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 import { get_ob_list, get_container_list } from '../../api/utils'
-
 import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
 import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
-import { makeStyles } from '@mui/styles'
-import { Theme } from '@mui/material/styles'
+import OBValidator from './ob_validator';
+import { useOBContext } from './observation_data_tool_view';
+import TargetDialog from './TargetDialog';
 
 
 export interface OBSelectContextObject {
-  sem_id: string,
-  setSemId: Function,
-  reset_container_and_ob_select: Function,
-  trigger: number,
-  setTrigger: Function
+    sem_id: string,
+    setSemId: Function,
+    reset_container_and_ob_select: Function,
+    trigger: number,
+    setTrigger: Function
 }
 
 const init_object: OBSelectContextObject = {
     sem_id: '',
-    setSemId: () => {},
+    setSemId: () => { },
     reset_container_and_ob_select: () => { },
     trigger: 0,
     setTrigger: () => { }
@@ -47,29 +47,9 @@ const init_object: OBSelectContextObject = {
 const OBSelectContext = createContext<OBSelectContextObject>(init_object)
 export const useOBSelectContext = () => useContext(OBSelectContext)
 
-const useStyles = makeStyles((theme: Theme) => ({
-    buttonBlock: {
-        margin: theme.spacing(1),
-        display: 'inline-flex',
-    },
-    templateSelect: {
-    },
-    paper: {
-        padding: theme.spacing(2),
-        margin: theme.spacing(1),
-        width: "100%",
-        elevation: 5,
-    },
-}))
-
 interface Props {
-    ob_id?: string | null,
-    setOBID: Function
-    ob: ObservationBlock,
-    setOB: Function,
     triggerRender: number,
     setTriggerRender: Function,
-    instrument: Instrument,
 }
 
 export const SideMenu = (props: Props) => {
@@ -79,7 +59,6 @@ export const SideMenu = (props: Props) => {
     const [sem_id, setSemId] =
         useQueryParam('sem_id', withDefault(StringParam, ''))
     const [boopStyle, triggerBoop] = useBoop({})
-    const classes = useStyles();
     const jsonEditable = true
 
     const [selAccdExpanded, setSelAccdExpanded] = React.useState(true);
@@ -87,18 +66,18 @@ export const SideMenu = (props: Props) => {
 
     let jsonTheme = darkState ? 'bespin' : 'summerfruit:inverted' as ThemeKeys
     const [theme, setTheme] = useQueryParam('theme', withDefault(StringParam, jsonTheme))
-
-
     const [containerIdList, setContainerIdList] = React.useState([] as string[])
     const [trigger, setTrigger] = React.useState(0)
     const [obList, setOBList] = React.useState([] as string[])
 
+    const [validatorReport, setValidatorReport] = React.useState({ valid: true, errors: {} } as ValidatorReport)
+
     const [container_id, setContainerId] =
         useQueryParam('container_id', withDefault(StringParam, 'all'))
 
+    const ob_context = useOBContext()
     //check if can submit ob
-    let obEditable: boolean = 'metadata' in props.ob && typeof (props.ob_id) === "string"
-
+    let obEditable: boolean = 'metadata' in ob_context.ob && typeof (ob_context.ob_id) === "string"
 
     const reset_container_and_ob_select = () => {
         get_container_list(sem_id)
@@ -126,11 +105,11 @@ export const SideMenu = (props: Props) => {
 
     const saveOBasJSON = () => {
         // Create a blob with the data we want to download as a file
-        const blob = new Blob([JSON.stringify(props.ob, null, 4)], { type: 'text/plain' })
+        const blob = new Blob([JSON.stringify(ob_context.ob, null, 4)], { type: 'text/plain' })
         // Create an anchor element and dispatch a click event on it
         // to trigger a download
         const a = document.createElement('a')
-        a.download = props.ob._id + '.json'
+        a.download = ob_context.ob._id + '.json'
         a.href = window.URL.createObjectURL(blob)
         const clickEvt = new MouseEvent('click', {
             view: window,
@@ -143,16 +122,16 @@ export const SideMenu = (props: Props) => {
 
     const uploadOBFromJSON = (newOB: ObservationBlock): void => {
         if (newOB) {
-            props.setOBID(newOB._id)
-            props.setOB(newOB)
+            ob_context.setOBID(newOB._id)
+            ob_context.setOB(newOB)
             props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
         }
     }
 
     const copyOB = (): void => {
-        console.log(`creating new ob from ob ${props.ob_id}`)
-        let copyOB = { ...props.ob } as any
-        const copyName = 'Copy of ' + props.ob.metadata.name
+        console.log(`creating new ob from ob ${ob_context.ob_id}`)
+        let copyOB = { ...ob_context.ob } as any
+        const copyName = 'Copy of ' + ob_context.ob.metadata.name
         copyOB.metadata['name'] = copyName
         delete copyOB._id
         delete copyOB._ob_id
@@ -164,39 +143,23 @@ export const SideMenu = (props: Props) => {
     }
 
     const deleteOB = (): void => {
-        console.log(`deleting ob ${props.ob_id}`)
-        ob_api_funcs.remove(props.ob_id as string).then((result: unknown) => {
+        console.log(`deleting ob ${ob_context.ob_id}`)
+        ob_api_funcs.remove(ob_context.ob_id as string).then((result: unknown) => {
             console.log('delete result')
             console.log(result)
             props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
             setTrigger(trigger + 1) //force sidebar to rerender
-            props.setOB({} as ObservationBlock)
-            props.setOBID('')
+            ob_context.setOB({} as ObservationBlock)
+            ob_context.setOBID('')
         })
-    }
-
-    const getOB = (new_ob_id: string): void => {
-        ob_api_funcs.get(new_ob_id).then((newOb: ObservationBlock) => {
-            if (newOb._id) {
-                props.setOB(newOb)
-            }
-        })
-            .finally(() => {
-                props.setTriggerRender(props.triggerRender + 1) //force dnd component to rerender
-            })
-    }
-    const handleOBSelect = (ob_id: string) => { //TODO : make context to prevent prop drilling
-        console.log(`setting selected ob to ${ob_id}`)
-        props.setOBID(ob_id)
-        getOB(ob_id)
     }
 
     const addSeq = (seq: OBSequence) => {
-        console.log('ob before add Seq', props.ob)
+        console.log('ob before add Seq', ob_context.ob)
         const tmplType = seq.metadata.template_type
         console.log('templateType adding', tmplType)
-        const newOB: ObservationBlock = cloneDeep(props.ob) // need to deep clone a nested object
-        if (tmplType.includes('sci')) {
+        const newOB: ObservationBlock = cloneDeep(ob_context.ob) // need to deep clone a nested object
+        if (tmplType.includes('sci') || tmplType.includes('calibration')) {
             let obs = [...(newOB.observations ?? [])] //need to make a deep copy of observations
             const metadata = seq.metadata as ScienceMetadata
             metadata['sequence_number'] = obs.length + 1
@@ -206,33 +169,37 @@ export const SideMenu = (props: Props) => {
             newOB.observations = [...obs]
         }
         else {
+
+            console.log('seq', seq)
             //@ts-ignore
             newOB[tmplType] = seq
         }
         // triggerBoop(true)
-        props.setOB(newOB)
+        console.log('newOB', newOB)
+        ob_context.setOB(() => newOB)
         props.setTriggerRender(props.triggerRender + 1)
     }
-
-    const createOB = () => {
-        const newOB = { metadata: {} } as ObservationBlock
-        // triggerBoop(true)
-        props.setOB(newOB)
-    }
-
 
     const onEdit = (e: InteractionProps) => {
         //ob was edited. in react json viewer
         // triggerBoop(true)
         console.log('editing via json directly.')
-        props.setOB(() => e.updated_src as ObservationBlock);
+        ob_context.setOB(() => e.updated_src as ObservationBlock);
         props.setTriggerRender(props.triggerRender + 1) //re render DnD items 
     }
 
     const handleEdit = jsonEditable ? onEdit : false
+
     const handleSubmit = () => {
         triggerBoop(false)
-        ob_api_funcs.put(props.ob._id, props.ob)
+        ob_api_funcs.put(ob_context.ob._id, ob_context.ob)
+            .then((response: ValidatorReport) => {
+                // setValidatorReport(response)
+            })
+            .finally(() => {
+                console.log('triggering new side menu build', trigger)
+                setTrigger(trigger + 1)
+            })
     }
 
     const handleAccordionChange = (accd: string) => (event: React.SyntheticEvent, newExpanded: boolean) => {
@@ -250,7 +217,12 @@ export const SideMenu = (props: Props) => {
     return (
 
         <OBSelectContext.Provider value={ob_select_object}>
-            <Paper className={classes.paper} elevation={3}>
+            <Paper sx={{
+                padding: '4px',
+                margin: '4px',
+                width: "100%",
+                elevation: 5,
+            }} elevation={3}>
                 {obEditable &&
                     <React.Fragment>
                         <Accordion expanded={editAccdExpanded} onChange={handleAccordionChange('edit')}>
@@ -263,7 +235,10 @@ export const SideMenu = (props: Props) => {
                                 {/* <h3>Observation Block Edit/Display</h3> */}
                             </AccordionSummary>
                             <AccordionDetails>
-                                <div className={classes.buttonBlock}>
+                                <div style={{
+                                    margin: '4px',
+                                    display: 'inline-flex',
+                                }}>
                                     <Tooltip title="Upload OB to database">
                                         <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
                                             <PublishIcon />
@@ -281,10 +256,14 @@ export const SideMenu = (props: Props) => {
                                     </Tooltip>
                                     <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
                                     <DeleteDialog deleteOB={deleteOB} />
+                                    <OBValidator validatorReport={validatorReport} />
+                                    <TargetDialog addSeq={addSeq} />
                                 </div>
                                 <Tooltip title="Add template to Selected OB">
-                                    <div className={classes.templateSelect}>
-                                        <TemplateSelection addSeq={addSeq} instrument={props.instrument} obSequences={Object.keys(props.ob)} />
+                                    <div>
+                                        <TemplateSelection
+                                            addSeq={addSeq}
+                                            obSequences={Object.keys(ob_context.ob)} />
                                     </div>
                                 </Tooltip>
                             </AccordionDetails>
@@ -300,10 +279,7 @@ export const SideMenu = (props: Props) => {
                         <Typography>Observation Block Selection</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
-                        <ObservationBlockSelecter
-                            setOB={props.setOB}
-                            handleOBSelect={handleOBSelect}
-                            ob_id={props.ob_id} />
+                        <ObservationBlockSelecter />
                     </AccordionDetails>
                 </Accordion>
                 <Tooltip title="Change the color theme of the OB JSON display">
@@ -316,7 +292,7 @@ export const SideMenu = (props: Props) => {
                 </Tooltip>
                 <ReactJson
                     style={{ marginBottom: '80px' }}
-                    src={props.ob as object}
+                    src={ob_context.ob as object}
                     theme={theme as ThemeKeys | undefined}
                     iconStyle={'circle'}
                     collapsed={1}

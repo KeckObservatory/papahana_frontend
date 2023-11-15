@@ -1,37 +1,12 @@
 import React from 'react';
-import { DefaultTheme, makeStyles } from "@mui/styles"
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import ODTView from './ODT/observation_data_tool_view';
-import { ThemeKeys } from 'react-json-view';
-import { SelectionToolView } from './SelectionTool/selection_tool_view';
+import ODTGlobeView from './ODTGlobe/global_observing_definition_tool_view';
 import { useDrawerOpenContext } from './App'
-
-const useStyles = makeStyles((theme: DefaultTheme) => ({
-    moduleMain: {
-        width: '100%'
-    },
-    tabs: {
-        marginTop: theme.spacing(9),
-        // height: theme.spacing(10),
-        position: "absolute",
-        display: "flex",
-        width: '100%',
-        // padding: theme.spacing(2),
-    },
-    items: {
-        // marginTop: theme.spacing(12),
-        position: "relative",
-        // height: '100%',
-        width: '100%',
-        display: "flex"
-    },
-    panel: {
-        width: '100%',
-    }
-}))
+import { NumberParam, useQueryParam, withDefault } from 'use-query-params'
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -40,10 +15,14 @@ interface TabPanelProps {
 }
 
 const TabPanel = (props: TabPanelProps) => {
-    const classes = useStyles();
     const { children, value, index, ...other } = props;
     return (
-        <div className={classes.items}
+        <div style={{
+            position: "absolute",
+            width: '100%',
+            display: "flex",
+            marginTop: '80px'
+        }}
             role="tabpanel"
             hidden={value !== index}
             id={`simple-tabpanel-${index}`}
@@ -51,7 +30,7 @@ const TabPanel = (props: TabPanelProps) => {
             {...other}
         >
             {value === index && (
-                <Box className={classes.panel} p={3}>
+                <Box sx={{width: '100%'}} p={3}>
                     {children}
                 </Box>
             )}
@@ -70,15 +49,14 @@ interface ModuleMenuProps {
 }
 
 export const ModuleMenu = (props: ModuleMenuProps) => {
-    const classes = useStyles();
-    const [tabIdx, setTabIdx] = React.useState(0);
+    const [tabIdx, setTabIdx] = useQueryParam('tab_index', withDefault(NumberParam, 0));
 
     //setting drawer to always closed
     const drawerOpenContext = useDrawerOpenContext()
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 
-        if (newValue === 1) {
+        if (newValue >= 1) {
             console.log('setting drawer to closed')
             drawerOpenContext.setDrawerOpen(false)
         }
@@ -90,8 +68,21 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
     };
 
     return (
-        <div className={classes.moduleMain}>
-            <AppBar position="static" className={classes.tabs}>
+        <div style={
+            {
+                marginTop: '36px',
+                display: "flex",
+                width: '100%',
+            }
+        } >
+            <AppBar position="static" sx={
+                {
+                    marginTop: '28px',
+                    height: "50px",
+                    display: "flex",
+                    width: '100%',
+                }
+            }>
                 <Tabs
                     value={tabIdx}
                     onChange={handleChange}
@@ -101,15 +92,15 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                     aria-label="full width tabs"
                 >
                     <Tab label="ODT" {...a11yProps(0)} />
-                    <Tab label="Planning Tool (Work in progress)" {...a11yProps(1)} />
+                    {/* <Tab label="Global ODT (Work in progress)" {...a11yProps(0)} /> */}
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIdx} index={0}>
                 <ODTView />
             </TabPanel>
-            <TabPanel value={tabIdx} index={1}>
-                <SelectionToolView />
-            </TabPanel>
+            {/* <TabPanel value={tabIdx} index={1}>
+                <ODTGlobeView />
+            </TabPanel> */}
         </ div >
     )
 }

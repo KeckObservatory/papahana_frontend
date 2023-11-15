@@ -7,10 +7,14 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddContainerDialog from './add_container_dialog';
 import RemoveContainerDialog from './remove_container_dialog';
 import EditContainerNameDialog from './edit_container_name_dialog';
-import { Container, ObservationBlock, Status } from '../../typings/papahana';
+import { Container, Instrument, ObservationBlock, Status } from '../../typings/papahana';
 import { container_api_funcs, ob_api_funcs } from './../../api/ApiRoot'
 import { useOBSelectContext } from './../ODT/side_menu'
 import { useObserverContext } from './../App'
+import SelectInstrument from './select_instrument'
+import { OBWizardButton } from './ob_wizard';
+import { useOBContext } from '../ODT/observation_data_tool_view';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 interface PButtonProps extends Props {
     handleClose: Function
@@ -22,9 +26,7 @@ interface Props {
     name?: string
     parentNodeId?: string
     ob_details?: Partial<ObservationBlock>
-    handleOBSelect: Function
     container_names?: Set<string>
-    setOB?: Function
     open?: boolean,
     handleClose?: Function
     anchorPos?: object 
@@ -36,14 +38,17 @@ const PopoverButtons = (props: PButtonProps) => {
     const ob_select_context = useOBSelectContext()
     const observer_context = useObserverContext()
 
-    const addOB = () => {
-        console.log(`creating new ob in ${props.type} id ${props.id}.`)
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const ob_context = useOBContext()
+
+    const addOB = (inst: string) => {
+        console.log(`creating new ${inst} ob in ${props.type} id ${props.id}.`)
         const meta = {
-            name: "Made by ODT",
+            name: `Made by ODT for ${inst}`,
             priority: 0,
             version: "0.1.0",
             ob_type: "engineering",
-            instrument: "KCWI",
+            instrument: inst,
             pi_id: JSON.parse(observer_context.observer_id),
             sem_id: ob_select_context.sem_id,
             comment: ""
@@ -73,20 +78,26 @@ const PopoverButtons = (props: PButtonProps) => {
                 })
                 .finally(() => {
                     setTimeout(() => {
-                        console.log("new ob added to container. triggering new view")
+                        console.log(`new ob ${ob_id} added to container. triggering new view`)
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                        ob_context.handleOBSelect(ob_id)
                         props.handleClose()
-                    }, 1000);
+                    }, 250);
                 })
         }
         else { //ignore containers
             ob_api_funcs.post(newOB)
+                .then( (obid: string) => {
+                    ob_id = obid
+                })
                 .finally(() => {
                     setTimeout(() => {
-                        console.log("new ob added to container. triggering new view")
+                        console.log(`new ob ${ob_id} added to container. triggering new view`)
+                        setInstrument(newOB.metadata.instrument as Instrument)
                         ob_select_context.setTrigger(ob_select_context.trigger + 1)
+                        ob_context.handleOBSelect(ob_id)
                         props.handleClose()
-                    }, 1000);
+                    }, 250);
                 })
         }
     }
@@ -112,7 +123,7 @@ const PopoverButtons = (props: PButtonProps) => {
 
     const selectOB = () => {
         console.log(`selecting ${props.type} id ${props.id}.`)
-        props.handleOBSelect(props.id)
+        ob_context.handleOBSelect(props.id)
         props.handleClose()
     }
 
@@ -129,7 +140,8 @@ const PopoverButtons = (props: PButtonProps) => {
             }
             {props.type === 'container' &&
                 <div style={{ display: 'flex' }}>
-                    <Button onClick={addOB}>add new OB</Button>
+                    <SelectInstrument addOB={addOB}/>
+                    <OBWizardButton />
                     <RemoveContainerDialog
                         name={props.name as string}
                         container_id={props.id}
@@ -195,11 +207,9 @@ const NodePopover = (props: Props) => {
                 {props.ob_details && create_ob_text(props.ob_details)}
                 <PopoverButtons
                     container_names={props.container_names}
-                    handleOBSelect={props.handleOBSelect}
                     parentNodeId={props.parentNodeId}
                     handleClose={props.handleClose as Function}
                     type={props.type}
-                    setOB={props.setOB}
                     name={props.name}
                     id={props.id} />
             </Popover>

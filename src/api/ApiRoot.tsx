@@ -1,17 +1,35 @@
 import axios, { AxiosResponse } from 'axios';
 
 import { handleResponse, handleError, intResponse, intError } from './response';
-import { Container, ObservationBlock, SemesterIds, Instrument, InstrumentPackage, Template } from './../typings/papahana'
 import {
+    Container,
+    ObservationBlock,
+    SemesterIds,
+    Instrument,
+    InstrumentPackage,
+    Template,
+    ValidatorReport,
+    Recipe,
+    TemplateMetadata,
+    Target
+} from './../typings/papahana'
+import { OBTableRow, UserInfo } from './../typings/ddoi_api'
+import {
+    mock_get_userinfo,
     mock_get_instrument_package,
     mock_get_template,
     mock_get_containers,
     mock_get_observation_block_from_container,
     mock_get_semesters,
     mock_ob_get,
+    mock_ob_post,
     mock_get_semester_obs,
     mock_get_container_ob_metadata,
-    mock_get_container_ob_target
+    mock_get_container_ob_target,
+    mock_get_ob_table,
+    mock_get_targets,
+    mock_get_instrument_recipes,
+    mock_get_template_metadata
 
 } from '../mocks/mock_utils';
 
@@ -19,22 +37,26 @@ import {
 // Pulling from your .env file when on the server or from localhost when locally
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 const IS_DEVELOPMENT: boolean = process.env.REACT_APP_ENVIRONMENT === 'development'
-const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT
+const IS_LOCAL: boolean = process.env.REACT_APP_ENVIRONMENT === 'local'
+const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT || IS_LOCAL
 
 console.log(`is BUILD ? set to ${IS_BUILD}`)
+console.log(`is LOCAL ? set to ${IS_LOCAL}`)
 console.log(`is DEVELOPMENT ? set to ${IS_DEVELOPMENT}`)
 var DEVELOPMENT_URL = 'https://www3build.keck.hawaii.edu'
 var PRODUCTION_URL = 'https://www3.keck.hawaii.edu'
-var TEST_URL = 'http://localhost:50000/v0/' //use locally or for testing (npm start or npm run demobuild)
+var TEST_URL = 'http://localhost:50000/' //use locally or for testing (npm start or npm run demobuild)
 var BASE_URL = IS_BUILD ? PRODUCTION_URL : TEST_URL // sets for production vs test 
-
 BASE_URL = IS_DEVELOPMENT ? DEVELOPMENT_URL : BASE_URL
-var API_URL = BASE_URL + '/api/ddoi/'
+BASE_URL = IS_LOCAL ? TEST_URL : BASE_URL
+var API_URL = BASE_URL
+if (!IS_LOCAL) { API_URL = IS_DEVELOPMENT ? BASE_URL + '/api/test/ddoi/' : BASE_URL + '/api/ddoi/' }
 
 var OB_URL = API_URL + 'obsBlocks'
 var CONTAINER_URL = API_URL + 'containers'
 var SEMESTERS_URL = API_URL + 'semesterIds'
 var INSTRUMENT_URL = API_URL + 'instrumentPackages'
+var TAG_URL = API_URL + 'tags'
 console.log('backend url set to')
 console.log(API_URL)
 
@@ -47,20 +69,25 @@ const axiosInstance = axios.create({
 })
 axiosInstance.interceptors.response.use(intResponse, intError);
 
-export const get_userinfo = (): Promise<any> => {
+const get_userinfo_func = (): Promise<UserInfo> => {
     const url = BASE_URL + '/userinfo';
     return axiosInstance.get(url)
-        .then((response: AxiosResponse<any>) => {
-            const ip = response.headers["x-my-real-ip"]
-            return axios.request({
-                url: url,
-                method: "get",
-                withCredentials: true,
-                headers: {
-                    'X-My-Real-Ip': ip,
-                },
-            })
-        })
+        .then(handleResponse)
+        .catch(handleError)
+}
+
+const get_ob_table = (): Promise<OBTableRow[]> => {
+    const url = API_URL + '/search/ob/tableview';
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError)
+}
+
+const get_targets = (semid: string): Promise<Partial<ObservationBlock>[]> => {
+    const url = API_URL + `/semesterIds/${semid}/ob/targets`;
+    return axiosInstance
+        .get(url)
         .then(handleResponse)
         .catch(handleError)
 }
@@ -89,9 +116,24 @@ const get_instrument_package = (instrument: Instrument): Promise<InstrumentPacka
         .catch(handleError);
 }
 
+const get_template_metadata = (instrument: Instrument): Promise<{ [key: string]: Template }> => {
+    const url = `${INSTRUMENT_URL}/${instrument}/templates/metadata`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
 
-const get_template = (name: string, ip_version: string = '0.1.0', inst: string = 'KCWI'): Promise<{ [key: string]: Template }> => {
-    let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}&ip_version=${ip_version}`
+const get_instrument_recipes = (instrument: Instrument): Promise<Recipe[]> => {
+    const url = `${INSTRUMENT_URL}/${instrument}/recipes`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+}
+
+const get_template = (name: string, inst: string): Promise<{ [key: string]: Template }> => {
+    let url = `${INSTRUMENT_URL}/${inst}/templates?template_name=${name}`
     if (name.includes('target')) {
         url += '&parameter_order=true'
     }
@@ -131,7 +173,7 @@ const ob_post = (ob: object): Promise<string> => {
         .then(handleResponse)
 };
 
-const ob_put = (ob_id: string, ob: ObservationBlock): Promise<unknown> => {
+const ob_put = (ob_id: string, ob: ObservationBlock): Promise<ValidatorReport> => {
     const url = `${OB_URL}?ob_id=${ob_id}`
     return axiosInstance
         .put(url, ob)
@@ -194,6 +236,28 @@ const get_container_ob_target = (semid: string, container_id?: string) => {
         .catch(handleError);
 }
 
+
+const add_tag = (ob_id: string, tag: string): Promise<string> => {
+    let url = TAG_URL + '/add'
+    url = `?tag_name=${tag}&ob_id=${ob_id}`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+const delete_tag = (ob_id: string, tag: string): Promise<string> => {
+    let url = TAG_URL + '/delete'
+    url = `?tag_name=${tag}&ob_id=${ob_id}`
+    return axiosInstance
+        .get(url)
+        .then(handleResponse)
+        .catch(handleError);
+};
+
+export const get_userinfo = IS_LOCAL ? mock_get_userinfo : mock_get_userinfo
+
+
 export const get_container_ob_data = {
     get_container_ob_metadata: IS_BUILD ? get_container_ob_metadata : mock_get_container_ob_metadata,
     get_container_ob_target: IS_BUILD ? get_container_ob_target : mock_get_container_ob_target
@@ -205,12 +269,14 @@ export const get_select_funcs = {
     get_semesters: IS_BUILD ? get_semesters : mock_get_semesters,
     get_containers: IS_BUILD ? get_containers : mock_get_containers,
     get_observation_blocks_from_container: IS_BUILD ? get_observation_blocks_from_container : mock_get_observation_block_from_container,
-    get_instrument_package: IS_BUILD ? get_instrument_package : mock_get_instrument_package
+    get_instrument_package: IS_BUILD ? get_instrument_package : mock_get_instrument_package,
+    get_template_metadata: IS_BUILD ? get_template_metadata : mock_get_template_metadata,
+    get_instrument_recipes: IS_BUILD ? get_instrument_recipes : mock_get_instrument_recipes
 }
 
 export const ob_api_funcs = {
     get: IS_BUILD ? ob_get : mock_ob_get,
-    post: ob_post,
+    post: IS_BUILD ? ob_post : mock_ob_post,
     put: ob_put,
     remove: ob_remove,
 };
@@ -223,5 +289,15 @@ export const container_api_funcs = {
 }
 
 export const semid_api_funcs = {
-    get_semester_obs: IS_BUILD ? get_semester_obs : mock_get_semester_obs
+    get_semester_obs: !IS_LOCAL ? get_semester_obs : mock_get_semester_obs
+}
+
+export const ob_table_funcs = {
+    get_ob_table: IS_BUILD ? get_ob_table : mock_get_ob_table,
+    get_targets: IS_BUILD ? get_targets : mock_get_targets
+}
+
+export const tag_functions = {
+    add_tag: add_tag,
+    delete_tag: delete_tag
 }

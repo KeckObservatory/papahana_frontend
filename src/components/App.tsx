@@ -1,48 +1,15 @@
 import React, { createContext, useContext, useState } from 'react';
-import { makeStyles } from "@mui/styles"
 import './App.css';
 import { createTheme, ThemeProvider, Theme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { lightBlue, deepOrange, deepPurple } from '@mui/material/colors';
-import { BooleanParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
+import { BooleanParam, NumberParam, StringParam, useQueryParam, withDefault } from 'use-query-params'
 import { ThemeKeys } from 'react-json-view'
 import { TopBar } from './top_bar'
 import { ModuleMenu } from './module_menu'
 import { styled, useTheme } from '@mui/material/styles';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    display: "flex"
-  },
-  toolbar: {
-    paddingRight: '8px',
-    paddingLeft: '40px'
-  },
-  toolbarIcon: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "flex-end",
-    padding: "0 8px",
-    // ...theme.mixins.toolbar
-  },
-  menuButton: {
-    marginRight: '16px'
-  },
-  // appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: "100vh",
-    overflow: "auto"
-  },
-  container: {
-    paddingTop: '27px',
-    paddingBottom: '16px'
-  },
-  fixedHeight: { height: 240 }
-}));
-
 
 export const handleTheme = (darkState: boolean | null | undefined): Theme => {
   const palletType = darkState ? "dark" : "light"
@@ -106,15 +73,15 @@ const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' && pr
   }));
 
 export default function App() {
-  const classes = useStyles();
   const [darkState, setDarkState] = useQueryParam('darkState', withDefault(BooleanParam, true));
   const [drawerOpen, setDrawerOpen] = useQueryParam('drawerOpen', withDefault(BooleanParam, true));
-  const [drawerWidth, setDrawerWidth] = React.useState(400)
+  const [drawerWidth, setDrawerWidth] = useQueryParam('drawerWidth', withDefault(NumberParam, 400));
 
   const [observer_id, setObserverId] =
     useQueryParam('observer_id', withDefault(StringParam, 'Stranger'))
 
   const theme = handleTheme(darkState)
+
 
   const handleThemeChange = (): void => {
     setDarkState(!darkState);
@@ -125,7 +92,7 @@ export default function App() {
       <CssBaseline /> {/* CssBaseline lets ThemeProvider overwrite default css */}
       <DrawerOpenContext.Provider value={{ drawerOpen: drawerOpen, setDrawerOpen: setDrawerOpen, drawerWidth: drawerWidth, setDrawerWidth }}>
         <ObserverContext.Provider value={{ observer_id: observer_id, setObserverId: setObserverId }}>
-          <div className={classes.root}>
+          <div style={{'display': 'flex'}} >
             <Main open={drawerOpen ? 'open' : 'closed'} drawerWidth={drawerWidth} >
               <TopBar darkState={darkState} observer_id={observer_id} handleThemeChange={handleThemeChange} />
               <ModuleMenu />

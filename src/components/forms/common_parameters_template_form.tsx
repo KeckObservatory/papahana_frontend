@@ -8,30 +8,13 @@ import { Theme as MaterialUITheme } from '../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import { template_parameter_to_schema_properties, log } from "./template_form"
-import { DefaultTheme, makeStyles } from "@mui/styles";
 import { get_template } from "../../api/utils";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import { StringParam, useQueryParam, withDefault } from "use-query-params";
 
 const Form = withTheme(MaterialUITheme)
-
-export const useStyles = makeStyles((theme: DefaultTheme) => ({
-  root: {
-    textAlign: 'left',
-    margin: theme.spacing(0),
-    display: 'flex',
-    flexWrap: 'wrap',
-  },
-  form: {
-    margin: theme.spacing(0),
-    padding: theme.spacing(0),
-  },
-  tab: {
-    minWidth: theme.spacing(15),
-    width: 'flex'
-  }
-}))
 
 interface Props {
   obComponent: CommonParameters
@@ -40,9 +23,9 @@ interface Props {
   id: string
 }
 
-const template_to_schema = (template: Template, formName: string): JSONSchema7 => {
+export const template_to_schema = (template: Template, formName: string): JSONSchema7 => {
   let schema: Partial<JsonSchema> = {}
-  schema.title = formName 
+  schema.title = formName
   schema.type = 'object'
   let required: string[] = []
   let properties = {} as Partial<OBJsonSchemaProperties>
@@ -57,28 +40,31 @@ const template_to_schema = (template: Template, formName: string): JSONSchema7 =
 }
 
 export default function CommonParametersTemplateForm(props: Props): JSX.Element {
-  const classes = useStyles()
   const sub_forms = [
-   'instrument_parameters',
-   'detector_parameters',
-   'tcs_parameters'] as unknown as (keyof Template)[]
-  const [schemas, setSchemas] = React.useState({} as { [id: string]: JSONSchema7})
+    'instrument_parameters',
+    'detector_parameters',
+    'tcs_parameters'] as unknown as (keyof Template)[]
+  const [schemas, setSchemas] = React.useState({} as { [id: string]: JSONSchema7 })
   const ref = React.useRef(null)
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
 
   React.useEffect(() => {
     const md = props.obComponent.metadata
-    let newSchemas = {...schemas}
+    let newSchemas = { ...schemas }
     const name = md.name
-    get_template(name)
-    .then((template: Template) => {
-        sub_forms.forEach( (formName: keyof Template) => {
-        const subSchema = template_to_schema(template[formName] as unknown as Template, formName)
-        newSchemas[formName] = subSchema
+    get_template(name, instrument)
+      .then((template: Template) => {
+        sub_forms.forEach((formName: keyof Template) => {
+          const tmpl = template[formName] as unknown as Template
+          if (tmpl) {
+            const subSchema = template_to_schema(tmpl, formName)
+            newSchemas[formName] = subSchema
+          }
+        })
+        setSchemas(newSchemas)
+      }).catch(err => {
+        console.error(`TemplateForm err: ${err}`)
       })
-      setSchemas(newSchemas)
-    }).catch(err => {
-      console.error(`TemplateForm err: ${err}`)
-    })
   }, [])
 
 
@@ -89,7 +75,17 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
   }
 
   return (
-    <div ref={ref} className={classes.root}>
+    <div ref={ref}
+
+      style={
+        {
+          textAlign: 'left',
+          margin: '0px',
+          display: 'flex',
+          flexWrap: 'wrap',
+        }
+      }
+    >
       {sub_forms.map((formName: string) => {
         //@ts-ignore
         const formData = props.obComponent[formName]
@@ -105,12 +101,12 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
               <Typography variant={"h6"} >{formName}</Typography>
             </AccordionSummary>
             <AccordionDetails >
-              {schemas[formName] && 
-              <Form className={classes.form}
-                schema={schemas[formName]}
-                formData={formData}
-                onChange={handleSubChange}
-                onError={log("errors")}><div></div></Form>
+              {schemas[formName] &&
+                <Form
+                  schema={schemas[formName]}
+                  formData={formData}
+                  onChange={handleSubChange}
+                  onError={log("errors")}><div></div></Form>
               }
             </AccordionDetails>
           </Accordion>

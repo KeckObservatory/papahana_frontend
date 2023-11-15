@@ -1,0 +1,47 @@
+//babel.config.js
+{ 
+    "presets":[
+        "@babel/preset-env",
+        "@babel/preset-react",
+        "@babel/preset-typescript"
+      ],
+    "plugins": [
+        "@babel/plugin-transform-runtime",
+        "@babel/proposal-class-properties",
+        "@babel/transform-regenerator",
+        "@babel/plugin-transform-template-literals",
+        "react-hot-loader/babel"
+      ],
+    "jest": {
+        "preset": "ts-jest",
+        "testEnvironment": "node",
+        "transform": {
+            "node_modules/variables/.+\\.(j|t)sx?$": "ts-jest"
+            },
+    
+    "transformIgnorePatterns": [
+        "node_modules/(?!@mui)"
+        ]
+    }
+}
+// {
+//   "presets": [
+//     [
+//       "@babel/preset-env",
+//       {
+//         "modules": "auto",
+//         "targets": {
+//           "node": true
+//         }
+//       }
+//     ]
+//   ]
+// }
+// {
+//   "presets": [
+//     "@babel/preset-env"
+//   ],
+//   "plugins": [
+//     "@babel/transform-runtime"
+//   ]
+// }
