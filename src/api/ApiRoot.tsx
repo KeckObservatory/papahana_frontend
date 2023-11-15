@@ -15,6 +15,7 @@ import {
 } from './../typings/papahana'
 import { OBTableRow, UserInfo } from './../typings/ddoi_api'
 import {
+    mock_get_userinfo,
     mock_get_instrument_package,
     mock_get_template,
     mock_get_containers,
@@ -36,17 +37,20 @@ import {
 // Pulling from your .env file when on the server or from localhost when locally
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 const IS_DEVELOPMENT: boolean = process.env.REACT_APP_ENVIRONMENT === 'development'
-const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT
+const IS_LOCAL: boolean = process.env.REACT_APP_ENVIRONMENT === 'local'
+const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT || IS_LOCAL
 
 console.log(`is BUILD ? set to ${IS_BUILD}`)
+console.log(`is LOCAL ? set to ${IS_LOCAL}`)
 console.log(`is DEVELOPMENT ? set to ${IS_DEVELOPMENT}`)
 var DEVELOPMENT_URL = 'https://www3build.keck.hawaii.edu'
 var PRODUCTION_URL = 'https://www3.keck.hawaii.edu'
-var TEST_URL = 'http://localhost:50000/v0' //use locally or for testing (npm start or npm run demobuild)
+var TEST_URL = 'http://localhost:50000/' //use locally or for testing (npm start or npm run demobuild)
 var BASE_URL = IS_BUILD ? PRODUCTION_URL : TEST_URL // sets for production vs test 
-
 BASE_URL = IS_DEVELOPMENT ? DEVELOPMENT_URL : BASE_URL
-var API_URL = IS_DEVELOPMENT ? BASE_URL + '/api/test/ddoi/' : BASE_URL + '/api/ddoi/'
+BASE_URL = IS_LOCAL ? TEST_URL : BASE_URL
+var API_URL = BASE_URL
+if (!IS_LOCAL) { API_URL = IS_DEVELOPMENT ? BASE_URL + '/api/test/ddoi/' : BASE_URL + '/api/ddoi/' }
 
 var OB_URL = API_URL + 'obsBlocks'
 var CONTAINER_URL = API_URL + 'containers'
@@ -65,7 +69,7 @@ const axiosInstance = axios.create({
 })
 axiosInstance.interceptors.response.use(intResponse, intError);
 
-export const get_userinfo = (): Promise<UserInfo> => {
+const get_userinfo_func = (): Promise<UserInfo> => {
     const url = BASE_URL + '/userinfo';
     return axiosInstance.get(url)
         .then(handleResponse)
@@ -251,6 +255,9 @@ const delete_tag = (ob_id: string, tag: string): Promise<string> => {
         .catch(handleError);
 };
 
+export const get_userinfo = IS_LOCAL ? mock_get_userinfo : mock_get_userinfo
+
+
 export const get_container_ob_data = {
     get_container_ob_metadata: IS_BUILD ? get_container_ob_metadata : mock_get_container_ob_metadata,
     get_container_ob_target: IS_BUILD ? get_container_ob_target : mock_get_container_ob_target
@@ -282,7 +289,7 @@ export const container_api_funcs = {
 }
 
 export const semid_api_funcs = {
-    get_semester_obs: IS_BUILD ? get_semester_obs : mock_get_semester_obs
+    get_semester_obs: !IS_LOCAL ? get_semester_obs : mock_get_semester_obs
 }
 
 export const ob_table_funcs = {

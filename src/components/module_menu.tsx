@@ -49,7 +49,7 @@ interface ModuleMenuProps {
 }
 
 export const ModuleMenu = (props: ModuleMenuProps) => {
-    const [tabIdx, setTabIdx] = useQueryParam('tab_index', withDefault(NumberParam, 1));
+    const [tabIdx, setTabIdx] = useQueryParam('tab_index', withDefault(NumberParam, 0));
 
     //setting drawer to always closed
     const drawerOpenContext = useDrawerOpenContext()
@@ -92,15 +92,15 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
                     aria-label="full width tabs"
                 >
                     <Tab label="ODT" {...a11yProps(0)} />
-                    <Tab label="Global ODT (Work in progress)" {...a11yProps(0)} />
+                    {/* <Tab label="Global ODT (Work in progress)" {...a11yProps(0)} /> */}
                 </Tabs>
             </AppBar>
             <TabPanel value={tabIdx} index={0}>
                 <ODTView />
             </TabPanel>
-            <TabPanel value={tabIdx} index={1}>
+            {/* <TabPanel value={tabIdx} index={1}>
                 <ODTGlobeView />
-            </TabPanel>
+            </TabPanel> */}
         </ div >
     )
 }
