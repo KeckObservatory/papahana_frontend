@@ -45,7 +45,7 @@ export default function TemplateSelection(props: Props) {
     const [templates, setTemplates] = useState([] as TemplateMetadata[])
     const [templateList, setTemplateList] = useState([] as string[])
     const [disabledArr, setDisabledArr] = useState([] as boolean[])
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
     useEffect(() => {
         get_template_metadata(instrument as Instrument)

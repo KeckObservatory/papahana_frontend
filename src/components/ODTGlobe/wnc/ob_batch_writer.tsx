@@ -46,7 +46,7 @@ const OBBatchWriter = function (props: Props) {
     const isSequence = componentKey === 'observations';
     console.log('n rows', rowLen, 'componentKey', componentKey)
 
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
     useEffect(() => {
         //get ob component

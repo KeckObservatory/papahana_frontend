@@ -36,7 +36,7 @@ const EditSeqDialog = (props: Props) => {
     const [uiSchemas, setUISchemas] = useState([] as UiSchema[])
     const [ob, setOB] = useState({} as ObservationBlock)
 
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
     let compKey = props.tableMeta.columnData.name as keyof ObservationBlock
     compKey = compKey.includes('number_sequences') ? 'observations' : compKey

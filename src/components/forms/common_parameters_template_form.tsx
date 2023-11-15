@@ -46,7 +46,7 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
     'tcs_parameters'] as unknown as (keyof Template)[]
   const [schemas, setSchemas] = React.useState({} as { [id: string]: JSONSchema7 })
   const ref = React.useRef(null)
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
   React.useEffect(() => {
     const md = props.obComponent.metadata

@@ -9,16 +9,15 @@ import Paper from '@mui/material/Paper';
 import Typography from '@mui/material/Typography';
 import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
-import { CommonParameters, Instrument, InstrumentPackage, OBComponent, ObservationBlock, Recipe, Status, Template } from '../../typings/papahana';
+import { CommonParameters, Instrument, InstrumentPackage, ObservationBlock, Recipe, Status, Template } from '../../typings/papahana';
 import DropDown from '../drop_down';
 import { get_select_funcs, ob_api_funcs } from '../../api/ApiRoot';
 import { useObserverContext } from '../App';
 import { useOBSelectContext } from '../ODT/side_menu';
 import { useOBContext } from '../ODT/observation_data_tool_view';
-import { resolve } from 'path';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { Instruments } from './select_instrument';
 
-const Instruments: Instrument[] = ['KCWI', 'KPF', 'SSC', 'NIRES'];
 const OBTypes: string[] = ['Science', 'Calibratoin', 'Blank'];
 
 interface Props {
@@ -31,7 +30,7 @@ const OBRecipeStepper = (props: Props) => {
 
     const [activeStep, setActiveStep] = React.useState(0);
     // const [inst, setInst] = React.useState('' as Instrument);
-    const [inst, setInst] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [inst, setInst] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
     const [recipe, setRecipe] = React.useState({} as Recipe);
     const [recipes, setRecipes] = React.useState([] as Recipe[]);
     const [ip, setIP] = React.useState({} as InstrumentPackage)

@@ -29,7 +29,7 @@ const get_template_list = async (rows: Array<any>) => {
 
 const TemplateSelection = function (props: Props) {
     const [templateList, setTemplateList] = useState([] as string[])
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
     useEffect(() => {
         console.log('props.rows', props.rows)
         get_template_list(props.rows).

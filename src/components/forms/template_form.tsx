@@ -196,7 +196,7 @@ export default function TemplateForm(props: Props): JSX.Element {
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
 
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
   React.useEffect(() => {
     get_schemas(props.obComponent, instrument, props.id).then(([initSchema , initUiSchema ]) => {

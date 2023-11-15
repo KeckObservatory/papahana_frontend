@@ -29,7 +29,7 @@ const EditCPDialog = (props: Props) => {
     const ref = React.useRef(null)
     const [open, setOpen] = useState(false);
 
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
     const [component, setComponent] = useState({} as CommonParameters)
     const [schemas, setSchemas] = useState({} as { [id: string]: JSONSchema7 })

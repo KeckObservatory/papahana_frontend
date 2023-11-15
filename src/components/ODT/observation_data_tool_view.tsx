@@ -31,7 +31,7 @@ export interface Props {
 
 export default function ODTView(props: Props) {
 
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
   const initOB = {}

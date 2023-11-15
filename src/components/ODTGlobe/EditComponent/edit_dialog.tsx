@@ -22,7 +22,7 @@ const EditDialog = (props: Props) => {
     const [open, setOpen] = useState(false);
 
 
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
     const [component, setComponent] = useState({} as Acquisition | Target )
     const [schema, setSchema] = useState({})
     const [uiSchema, setUISchema] = useState({})

@@ -290,7 +290,7 @@ export const SideMenu = (props: Props) => {
                         />
                     </div>
                 </Tooltip>
-                <ReactJson
+                {/* <ReactJson
                     style={{ marginBottom: '80px' }}
                     src={ob_context.ob as object}
                     theme={theme as ThemeKeys | undefined}
@@ -299,7 +299,7 @@ export const SideMenu = (props: Props) => {
                     collapseStringsAfterLength={15}
                     enableClipboard={true}
                     onEdit={handleEdit}
-                />
+                /> */}
             </Paper >
         </OBSelectContext.Provider>
     )

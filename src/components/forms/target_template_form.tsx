@@ -25,7 +25,7 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
   const ref = useRef(null)
   const initialRender = useRef(true);
   const [formData, setFormData] = useState(initFormData)
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
   React.useEffect(() => {
     get_schemas(props.obComponent, instrument, props.id).then(([initSchema, initUiSchema]) => {

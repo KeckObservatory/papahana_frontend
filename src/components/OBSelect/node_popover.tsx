@@ -38,7 +38,7 @@ const PopoverButtons = (props: PButtonProps) => {
     const ob_select_context = useOBSelectContext()
     const observer_context = useObserverContext()
 
-    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'KCWI'))
+    const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
     const ob_context = useOBContext()
 
     const addOB = (inst: string) => {
