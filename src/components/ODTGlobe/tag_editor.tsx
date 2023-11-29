@@ -1,5 +1,4 @@
 import React from 'react';
-import ChipInput from 'material-ui-chip-input'
 import { tag_functions } from './../../api/ApiRoot'
 import Chip from '@mui/material/Chip';
 
@@ -31,12 +30,7 @@ const TagEditor = (props: Props) => {
     }
 
     return (
-        <ChipInput 
-        value={tags}
-        onAdd={(chip) => handleAddChip(chip)}
-        onDelete={(chip, index) => handleDeleteChip(chip, index)}
-        />
-
+        <React.Fragment></React.Fragment>
     )
 }
 
