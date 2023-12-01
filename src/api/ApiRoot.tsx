@@ -255,7 +255,7 @@ const delete_tag = (ob_id: string, tag: string): Promise<string> => {
         .catch(handleError);
 };
 
-export const get_userinfo = IS_LOCAL ? mock_get_userinfo : mock_get_userinfo
+export const get_userinfo = IS_LOCAL ? mock_get_userinfo : get_userinfo_func
 
 
 export const get_container_ob_data = {
