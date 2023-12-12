@@ -113,7 +113,7 @@ export default function ObservationBlockSelecter(props: Props) {
         {/* <Button onClick={handleNewOB} sx={{width: "100%"}}disabled={!ob_sel.sem_id} variant="contained">
           New OB
         </Button> */}
-        <OBWizardButton />
+        { ob_sel.sem_id && <OBWizardButton />}
         <ContainerTree
           containers={containers}
         />
