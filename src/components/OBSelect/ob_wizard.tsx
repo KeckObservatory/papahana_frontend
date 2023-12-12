@@ -232,7 +232,7 @@ export const OBWizardButton = (props: ButtonProps) => {
     };
     return (
         <div>
-            <Button variant="outlined" onClick={handleClickOpen}>
+            <Button sx={{width: "100%"}} variant="contained" onClick={handleClickOpen}>
                 New OB From Recipe
             </Button>
             <OBWizardDialog

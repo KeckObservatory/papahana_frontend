@@ -2,13 +2,15 @@ import React, { createContext, useContext } from 'react';
 import { get_ob_list, get_container_list, get_sem_id_list, make_semid_scoby_table_and_containers } from '../../api/utils'
 import { useState, useEffect } from 'react';
 import DropDown from '../drop_down'
-import { Paper } from '@mui/material'
+import { Button, Paper } from '@mui/material'
 import { useObserverContext } from './../App'
 import ContainerTree from './container_tree'
 import ContainerTable from './container_table'
 import { DetailedContainer, Scoby, SemesterIds } from '../../typings/papahana';
 import { useOBSelectContext } from './../ODT/side_menu'
 import { useOBContext } from '../ODT/observation_data_tool_view';
+import { OBWizardButton } from './ob_wizard';
+import SelectInstrument from './select_instrument';
 
 export interface Props {
 }
@@ -91,6 +93,10 @@ export default function ObservationBlockSelecter(props: Props) {
       })
   }, [ob_sel.trigger])
 
+  const handleNewOB = () => {
+
+  }
+
 
 
   return (
@@ -104,10 +110,14 @@ export default function ObservationBlockSelecter(props: Props) {
         highlightOnEmpty={true}
       />
       <Paper>
+        {/* <Button onClick={handleNewOB} sx={{width: "100%"}}disabled={!ob_sel.sem_id} variant="contained">
+          New OB
+        </Button> */}
+        <OBWizardButton />
         <ContainerTree
           containers={containers}
         />
-        <ContainerTable rows={rows} containerIdNames={containerIdNames}/>
+        <ContainerTable rows={rows} containerIdNames={containerIdNames} />
       </Paper>
     </React.Fragment>
   )
