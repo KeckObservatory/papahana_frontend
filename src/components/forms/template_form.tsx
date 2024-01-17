@@ -1,7 +1,6 @@
 import React, { } from "react"
 import { Target, Template, OBComponent, TemplateParameter, OBSequence, TimeConstraint } from "../../typings/papahana"
 import { withTheme, ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
-// import Form from '@rjsf/material-ui'
 import { Theme as MaterialUITheme } from './../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
@@ -10,6 +9,7 @@ import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
 import { StringParam, useQueryParam, withDefault } from "use-query-params";
 import { UiSchema } from "react-jsonschema-form";
+
 export const Form = withTheme(MaterialUITheme)
 
 export interface Props {
@@ -24,7 +24,7 @@ export const to_schema_type = (tpl_param: string): string => {
   let type: string
   switch (tpl_param) {
     case 'float': {
-      type = 'number'
+      type = 'string' // type='string' prevents scrolling
       break;
     }
     case 'file': {
@@ -36,7 +36,7 @@ export const to_schema_type = (tpl_param: string): string => {
       break;
     }
     case 'integer': {
-      type = 'number'
+      type = 'string' // type = 'string' prevents scrolling
       break;
     }
     case 'array': {

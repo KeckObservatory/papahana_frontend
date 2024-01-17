@@ -28,7 +28,7 @@ const NewTemplateForm = function (props: Props) {
   }
 
     return (
-      <Form 
+      <Form
         schema={schema}
         uiSchema={uiSchema as rUiSchema}
         formData={props.parentState.obComponent.parameters}

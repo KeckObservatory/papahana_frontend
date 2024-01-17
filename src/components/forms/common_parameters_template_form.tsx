@@ -1,20 +1,18 @@
 import React, { } from "react"
 import { Template, CommonParameters, CommonTemplate } from "../../typings/papahana"
-import { withTheme, ISubmitEvent } from "@rjsf/core";
+import { ISubmitEvent } from "@rjsf/core";
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Typography from '@mui/material/Typography';
 // import Form from '@rjsf/material-ui'
-import { Theme as MaterialUITheme } from '../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
 import { JsonSchema, OBJsonSchemaProperties } from "../../typings/ob_json_form";
-import { template_parameter_to_schema_properties, log } from "./template_form"
+import { Form, template_parameter_to_schema_properties, log } from "./template_form"
 import { get_template } from "../../api/utils";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { StringParam, useQueryParam, withDefault } from "use-query-params";
 
-const Form = withTheme(MaterialUITheme)
 
 interface Props {
   obComponent: CommonParameters
