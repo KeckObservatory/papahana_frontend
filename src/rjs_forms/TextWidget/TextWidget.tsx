@@ -56,6 +56,7 @@ const TextWidget = ({
       label={displayLabel ? label || schema.title : false}
       autoFocus={autofocus}
       required={required}
+      onWheel={(e: any) => e.target.blur()} //prevent mouse wheel from scrolling the number input 
       disabled={disabled || readonly}
       type={inputType as string}
       value={value || value === 0 ? value : ''}

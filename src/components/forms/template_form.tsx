@@ -24,7 +24,7 @@ export const to_schema_type = (tpl_param: string): string => {
   let type: string
   switch (tpl_param) {
     case 'float': {
-      type = 'string' // type='string' prevents scrolling
+      type = 'number' 
       break;
     }
     case 'file': {
@@ -36,7 +36,7 @@ export const to_schema_type = (tpl_param: string): string => {
       break;
     }
     case 'integer': {
-      type = 'string' // type = 'string' prevents scrolling
+      type = 'number' 
       break;
     }
     case 'array': {
