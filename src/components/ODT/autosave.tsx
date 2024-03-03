@@ -3,7 +3,7 @@ import debounce from "lodash.debounce";
 import { ObservationBlock } from "../../typings/papahana";
 import { ob_api_funcs } from './../../api/ApiRoot';
 
-const DEBOUNCE_SAVE_DELAY = 1000;
+const DEBOUNCE_SAVE_DELAY = 2000;
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 
 interface Props {
@@ -23,7 +23,7 @@ export const Autosave = (props: Props) => {
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
         if (IS_PRODUCTION) {
-            // updateDatabaseOB(newOB) //todo: decide to keep this
+            updateDatabaseOB(newOB) //todo: decide to keep this
             await saveToLocalStorage(newOB)
         }
         else {
