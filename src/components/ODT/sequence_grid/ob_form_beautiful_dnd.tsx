@@ -13,6 +13,9 @@ import {
 } from './../../../typings/papahana'
 import "./styles.css";
 import { chunkify, reorder, move, create_draggable } from './dnd_helpers'
+import { useOBContext } from '../observation_data_tool_view';
+import { JSONSchema7 } from 'json-schema'
+import { useQueryParam } from 'use-query-params';
 
 const GRID = 4;
 const ROW_HEIGHT = 45;
@@ -159,21 +162,22 @@ const updateOBComponent = (seqName: keyof ObservationBlock, ob: ObservationBlock
 interface Props {
     triggerRender: number
     setTriggerRender: Function
-    ob: ObservationBlock
-    setOB: Function
 }
 
 export const OBBeautifulDnD = (props: Props) => {
-    const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
+    const obComponents: Partial<ObservationBlock> = parseOB(obContext.ob)
+    const obContext = useOBContext()
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
     obItems = chunkify(obItems, nColumns, evenChunks) as any
     const [state, setState] = React.useState(obItems);
 
+    const [instrument, setInstrument ] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
+
     React.useEffect(() => {
         console.log(`JSON edited. resetting grid items`)
-        const obComponents: Partial<ObservationBlock> = parseOB(props.ob)
+        const obComponents: Partial<ObservationBlock> = parseOB(obContext.ob)
         let obItems = Object.entries(obComponents)
         obItems = chunkify(obItems, nColumns, evenChunks) as any
         setState(() => obItems)
@@ -181,7 +185,7 @@ export const OBBeautifulDnD = (props: Props) => {
 
     const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence, subFormName?: string) => {
         if (Object.keys(formData).length > 0) {
-            let newOb = { ...props.ob }
+            let newOb = { ...obContext.ob }
             //handle observations
             if (seqName.includes('sequence')) {
                 newOb = updateOBScience(seqName, newOb, formData)
@@ -195,7 +199,7 @@ export const OBBeautifulDnD = (props: Props) => {
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
             }
-            props.setOB(newOb)
+            obContext.setOB(newOb)
         }
     }
 
@@ -226,12 +230,12 @@ export const OBBeautifulDnD = (props: Props) => {
     const handleDelete = (name: string) => {
         console.log('deleteing component:', name)
 
-        let newOB = { ...props.ob }
+        let newOB = { ...obContext.ob }
         if (name.includes('sequence')) {
             //find id
             const sequence_number = JSON.parse(name.split(' ')[1])
             //find and delete sequence from array
-            let newSequences = props.ob.observations
+            let newSequences = obContext.ob.observations
             const idx = newSequences?.findIndex((s) => s.metadata.sequence_number === sequence_number)
             newSequences?.splice(idx as number, 1)
             newOB.observations = newSequences
@@ -239,7 +243,7 @@ export const OBBeautifulDnD = (props: Props) => {
         else {
             delete newOB[name as keyof ObservationBlock]
         }
-        props.setOB(newOB)
+        obContext.setOB(newOB)
         props.setTriggerRender(props.triggerRender + 1)
     }
 
@@ -254,6 +258,44 @@ export const OBBeautifulDnD = (props: Props) => {
             margin: '0 0 4px 0',
         }
     }
+
+    const droppables = []
+    const obSchema: { [key: string]: JSONSchema7} = {} 
+    state.forEach(async (keyValueArr: [OBComponent, string], ind: number) => {
+        const [obComponent, componentName] = keyValueArr
+        const [schema, uiSchema]= await get_schemas(obComponent, instrument, componentName)
+        obSchema[componentName] = schema
+
+        droppables.push(<Droppable key={ind} droppableId={`${ind}`}>
+            {(provided, snapshot) => (
+                <div
+                    style={snapshot.isDraggingOver ? {
+                        padding: '4px',
+                        minWidth: '300px',
+                        maxWidth: '450px'
+                    }
+                        :
+                        {
+                            padding: '4px',
+                            minWidth: '300px',
+                            maxWidth: '450px'
+                        }
+                    }
+                    ref={provided.innerRef}
+                    {...provided.droppableProps}
+                >
+                    {keyValueArr.map((keyValue: [string, unknown], index: number) => (
+                        create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema)
+                    ))}
+                    {provided.placeholder}
+                </div>
+            )}
+        </Droppable>)
+    })
+
+    obContext.setOBSchama(obSchema)
+
+
     return (
         <div style={{
             display: 'flex',
@@ -261,33 +303,7 @@ export const OBBeautifulDnD = (props: Props) => {
         }}>
             <div style={{ display: "flex" }}>
                 <DragDropContext onDragEnd={onDragEnd}>
-                    {state.map((keyValueArr: any[], ind: number) => (
-                        <Droppable key={ind} droppableId={`${ind}`}>
-                            {(provided, snapshot) => (
-                                <div
-                                    style={snapshot.isDraggingOver ? {
-                                        padding: '4px',
-                                        minWidth: '300px',
-                                        maxWidth: '450px'
-                                    }
-                                        :
-                                        {
-                                            padding: '4px',
-                                            minWidth: '300px',
-                                            maxWidth: '450px'
-                                        }
-                                    }
-                                    ref={provided.innerRef}
-                                    {...provided.droppableProps}
-                                >
-                                    {keyValueArr.map((keyValue: [string, unknown], index: number) => (
-                                        create_draggable(keyValue, index, updateOB, acc, handleDelete)
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    ))}
+                    {droppables}
                 </DragDropContext>
             </div>
         </div>

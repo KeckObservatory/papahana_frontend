@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react'
-import { ObservationBlock } from '../../typings/papahana'
+import { ObservationBlock, Template } from '../../typings/papahana'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
 import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
 import { Autosave } from './autosave'
@@ -7,21 +7,31 @@ import Drawer from '@mui/material/Drawer';
 import { useDrawerOpenContext } from './../App'
 import { SideMenu } from './side_menu'
 import { ob_api_funcs } from './../../api/ApiRoot';
+import { JSONSchema7 } from 'json-schema'
+import { ErrorObject } from 'ajv'
 
 export interface OBContext {
   ob: ObservationBlock,
   ob_id: string | null | undefined,
+  obSchema: JSONSchema7[],
+  errors: ErrorObject[],
+  setOBSchema: Function
   setOBID: Function
   setOB: Function
   handleOBSelect: Function
+  setErrors: Function
 }
 
 const init_ob_context: OBContext = {
   ob: {} as ObservationBlock,
   ob_id: '',
+  obSchema: [],
+  errors: [],
+  setOBSchema: () => { },
   setOBID: () => { },
   setOB: () => { },
-  handleOBSelect: () => { }
+  handleOBSelect: () => { },
+  setErrors: () => { }
 }
 const OBContext = createContext<OBContext>(init_ob_context)
 export const useOBContext = () => useContext(OBContext)
@@ -31,8 +41,10 @@ export interface Props {
 
 export default function ODTView(props: Props) {
 
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
+  const [_, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
+  const [obSchema, setOBSchema] = useState<JSONSchema7[]>([])
+  const [errors, setErrors] = useState([] as ErrorObject[])
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
   const initOB = {}
   const [ob, setOB] = useState(initOB as ObservationBlock)
@@ -48,6 +60,10 @@ export default function ODTView(props: Props) {
     }
   }, [])
 
+  useEffect(() => { 
+    console.log('ERRORS', errors)
+  }, [errors])
+
   useEffect(() => { //ensure instrument matches the selected ob
     if (ob.metadata) setInstrument(ob.metadata.instrument.toUpperCase())
   }, [ob])
@@ -57,13 +73,9 @@ export default function ODTView(props: Props) {
     if (notEmpty) {
       return (
         <OBBeautifulDnD
-          ob={ob}
           triggerRender={triggerRender}
           setTriggerRender={setTriggerRender}
-          setOB={(newOb: ObservationBlock) => {
-            // triggerBoop(true)
-            setOB(newOb)
-          }} />
+        />
       )
     }
     else {
@@ -110,8 +122,12 @@ export default function ODTView(props: Props) {
     ob: ob,
     ob_id: ob_id,
     setOBID: setOBID,
+    obSchema: obSchema,
+    errors: errors,
+    setOBSchema: setOBSchema,
     setOB: setOB,
-    handleOBSelect: handleOBSelect
+    handleOBSelect: handleOBSelect,
+    setErrors: setErrors
   }
 
   return (
@@ -138,7 +154,7 @@ export default function ODTView(props: Props) {
           />
         </Drawer>
         {renderRGL()}
-        <Autosave ob={ob} />
+        <Autosave/>
       </OBContext.Provider>
     </div>
   )

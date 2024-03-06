@@ -1,4 +1,6 @@
 import TemplateForm from '../../forms/template_form';
+import { JSONSchema7 } from 'json-schema'
+import { UiSchema } from "react-jsonschema-form";
 import { Draggable, DraggableProvided, DraggableStateSnapshot } from 'react-beautiful-dnd'
 import TargetTemplateForm from '../../forms/target_template_form';
 import CommonParametersTemplateForm from '../../forms/common_parameters_template_form';
@@ -64,16 +66,21 @@ export const createAccordianDiv = (provided: DraggableProvided,
     )
 }
 
-export const createForm = (id: string, obComponent: OBComponent, updateOB: Function): JSX.Element => {
-    let form
+export const createForm = (id: string, 
+    obComponent: OBComponent, 
+    updateOB: Function,
+    schema: JSONSchema7,
+    uiSchema: UiSchema ): JSX.Element => {
+    const params = {id:id, schema:schema, uiSchema:uiSchema, updateOB:updateOB, obComponent:(obComponent as CommonParameters)}
+    let form: JSX.Element
     if (id === 'common_parameters') {
-        form = <CommonParametersTemplateForm id={id} updateOB={updateOB} obComponent={obComponent as CommonParameters} />
+        form = <CommonParametersTemplateForm {...params} />
     }
     else if (id === 'target') {
-        form = <TargetTemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
+        form = <TargetTemplateForm {...params} />
     }
     else {
-        form = <TemplateForm id={id} updateOB={updateOB} obComponent={obComponent} />
+        form = <TemplateForm {...params} />
     }
     return form
 }
@@ -83,10 +90,11 @@ export const create_draggable = (keyValue: [string, OBComponent],
     updateOB: Function,
     acc: AccordionClasses,
     handleDelete: Function,
-    ) => {
+    schema: JSONSchema7,
+    uiSchema: UiSchema ): JSX.Element => {
     const [key, component] = keyValue
     const expanded = NOMINALLY_OPEN.includes(key)
-    const form = createForm(key, component, updateOB)
+    const form = createForm(key, component, updateOB, schema, uiSchema)
     return (
         <Draggable
             key={key}
@@ -94,8 +102,8 @@ export const create_draggable = (keyValue: [string, OBComponent],
             index={index}
         >
             {
-            (provided, snapshot) => 
-              createAccordianDiv(provided, snapshot, key, form, acc, handleDelete, expanded)
+                (provided, snapshot) =>
+                    createAccordianDiv(provided, snapshot, key, form, acc, handleDelete, expanded)
             }
         </Draggable>
     )

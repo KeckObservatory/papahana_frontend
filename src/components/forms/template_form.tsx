@@ -3,12 +3,10 @@ import { Target, Template, OBComponent, TemplateParameter, OBSequence, TimeConst
 import { withTheme, ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { Theme as MaterialUITheme } from './../../rjs_forms'
 import { JSONSchema7 } from 'json-schema'
+import { UiSchema } from "react-jsonschema-form";
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
-import { DefaultTheme, makeStyles } from "@mui/styles";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
-import { StringParam, useQueryParam, withDefault } from "use-query-params";
-import { UiSchema } from "react-jsonschema-form";
 
 export const Form = withTheme(MaterialUITheme)
 
@@ -16,6 +14,8 @@ export interface Props {
   obComponent: OBComponent
   updateOB: Function
   id: string
+  schema: JSONSchema7
+  uiSchema: UiSchema
 }
 
 export const log = (type: unknown) => console.log.bind(console, type);
@@ -190,19 +190,11 @@ export const get_schemas = async (obComponent: OBComponent, instrument: string, 
 }
 
 export default function TemplateForm(props: Props): JSX.Element {
-  const [schema, setSchema] = React.useState({} as JSONSchema7)
-  const [uiSchema, setUISchema] = React.useState({} as UiSchema)
   let initFormData = init_form_data(props.obComponent, props.id)
   const ref = React.useRef(null)
   const [formData, setFormData] = React.useState(initFormData)
 
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
-
   React.useEffect(() => {
-    get_schemas(props.obComponent, instrument, props.id).then(([initSchema , initUiSchema ]) => {
-      setSchema(initSchema)
-      setUISchema(initUiSchema)
-    })
   }, [])
 
   React.useEffect(() => {
@@ -225,8 +217,8 @@ export default function TemplateForm(props: Props): JSX.Element {
     flexWrap: 'wrap',
     }}>
       <Form
-        schema={schema}
-        uiSchema={uiSchema as rUiSchema}
+        schema={props.schema}
+        uiSchema={props.uiSchema as rUiSchema}
         formData={formData}
         onChange={handleChange}
         onError={log("errors")} ><div></div></Form>
