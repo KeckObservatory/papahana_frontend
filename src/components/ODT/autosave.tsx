@@ -31,6 +31,17 @@ export const Autosave = () => {
 
     const [obSchema, setOBSchema] = React.useState<JSONSchema7>(OB_SCHEMA_BASE)
 
+    useEffect(() => {
+        try {
+            const val = validate(ob_context.ob)
+            console.log('obSchema changed. errors', val?.errors, 'ob', ob_context.ob, 'obSchema', obSchema)
+            ob_context.setErrors(val?.errors ?? [])
+        }
+        catch (err) {
+            console.error('error validating ob', err)
+        }
+    }, [setOBSchema])
+
     const updateDatabaseOB = (ob: ObservationBlock) => {
         ob_api_funcs.put(ob._id, ob)
     }
@@ -38,13 +49,25 @@ export const Autosave = () => {
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
             try {
-                const val = validate && await validate(newOB)
-                console.log('errors', val?.errors, 'ob', ob_context.ob)
-                ob_context.setErrors(val?.errors ?? [])
+                let difference = Object.keys(parseOB(newOB)).filter(x => !Object.keys(ob_context.templateSchemas).includes(x));
+                let templateSchemas = ob_context.templateSchemas
+                if (difference.length > 0) {
+                    console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
+                    templateSchemas = await get_template_schemas(newOB)
+                    ob_context.setTemplateSchemas(templateSchemas)
+                    const newOBSchema = create_ob_schema(newOB.metadata, templateSchemas)
+                    setOBSchema(newOBSchema)
+                }
+                else {
+                    const val = validate(newOB)
+                    console.log('errors', val?.errors, 'ob', ob_context.ob, 'obSchema', obSchema)
+                    ob_context.setErrors(val?.errors ?? [])
+                }
             }
             catch (err) {
                 console.error('error validating ob', err)
             }
+
             if (IS_PRODUCTION) {
                 updateDatabaseOB(newOB) //todo: decide to keep this
                 await saveToLocalStorage(newOB)
@@ -90,29 +113,11 @@ export const Autosave = () => {
 
     }
 
-    const validate = useCallback( async (ob: ObservationBlock) => {
-
-        let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(ob_context.templateSchemas).includes(x));
-        let templateSchemas = ob_context.templateSchemas 
-        if (difference.length > 0) {
-            console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
-            templateSchemas = await get_template_schemas(ob)
-            ob_context.setTemplateSchemas(templateSchemas)
-            const newOBSchema = create_ob_schema(ob.metadata, templateSchemas)
-            setOBSchema(newOBSchema)
-        }
-
+    const validate = useCallback((ob: ObservationBlock) => {
         const parsedOB = parseOB(ob)
-        try {
-            const newValidate = ajv.compile(obSchema)
-            newValidate(parsedOB)
-            console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
-            ob_context.setErrors(newValidate.errors ?? [])
-            return newValidate
-        }
-        catch (err) {
-            console.error('error compiling schema', err, 'obSchema', obSchema, 'ob', ob, 'parsedOB', parsedOB)
-        }
+        const newValidate = ajv.compile(obSchema)
+        newValidate(parsedOB)
+        return newValidate
     }, [ob_context.templateSchemas, obSchema])
 
     useEffect(() => {
