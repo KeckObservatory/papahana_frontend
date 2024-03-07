@@ -73,9 +73,7 @@ export default function ODTView(props: Props) {
       setOB(initOB)
       setInstrument(initOB.metadata.instrument)
     }
-
     ob_id && init_ob(ob_id)
-
   }, [])
 
   useEffect(() => {
@@ -83,15 +81,9 @@ export default function ODTView(props: Props) {
   }, [errors])
 
   useEffect(() => { //ensure instrument matches the selected ob
-    async function set_ob() {
-      if (ob.metadata) {
-        const obsch = await get_ob_schemas(ob)
-        setOBSchema(obsch)
-        setInstrument(ob.metadata.instrument.toUpperCase())
-      }
+    if (ob.metadata) {
+      setInstrument(ob.metadata.instrument.toUpperCase())
     }
-
-    set_ob()
   }, [ob])
 
   const renderRGL = () => {

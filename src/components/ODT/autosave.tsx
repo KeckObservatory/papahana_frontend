@@ -53,6 +53,7 @@ export const Autosave = () => {
 
             const properties: { [key: string]: JSONSchema7 } = {}
             for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
+                console.log('name', name, 'schemas', schemas)
                 properties[name] = schemas[0]
             }
             console.log('ob_context.obSchema', ob_context.obSchema, 'properties', properties)
