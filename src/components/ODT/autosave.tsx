@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import debounce from "lodash.debounce";
-import { ObservationBlock } from "../../typings/papahana";
+import { Metadata, OBMetadata, ObservationBlock } from "../../typings/papahana";
 import { ob_api_funcs } from './../../api/ApiRoot';
 import { useOBContext } from "./observation_data_tool_view";
 import AJV2019, { ValidateFunction } from 'ajv/dist/2019'
@@ -13,6 +13,7 @@ const DEBOUNCE_SAVE_DELAY = 2000;
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 
 const OB_SCHEMA_BASE: JSONSchema7 = {
+    title: "Observation Block",
     required: ['metadata', 'status'],
     type: "object",
     properties: {},
@@ -48,7 +49,7 @@ export const Autosave = () => {
         []
     )
 
-    const create_ob_schema = () => {
+    const create_ob_schema = (obMetadata: OBMetadata) => {
         const properties: { [key: string]: JSONSchema7 } = {}
         // for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
         for (let idx = 0; idx < Object.keys(ob_context.obSchema).length; idx++) {
@@ -73,15 +74,20 @@ export const Autosave = () => {
         }
         const newSchema = {
             ...OB_SCHEMA_BASE,
-            properties: properties
+            properties: properties,
+            required: obMetadata.ob_type.includes("Science") ? 
+            ['metadata', 'status', 'acquisition', 'target'] : OB_SCHEMA_BASE.required
         }
         console.log('ob_context.obSchema', ob_context.obSchema, 'newSchema', newSchema)
         return newSchema
 
     }
 
-    const validate = useCallback( (ob) => {
-        const newValidate = ajv.compile(create_ob_schema())
+    const validate = useCallback( (ob: ObservationBlock) => {
+
+
+        const newValidate = ajv.compile(create_ob_schema(ob.metadata))
+
         if (ob_context.ob) {
             const parsedOB = parseOB(ob)
             newValidate(parsedOB)
