@@ -52,10 +52,12 @@ export const Autosave = () => {
         ob_context.obSchema && setValidate((oldValidate: ValidateFunction) => {
 
             const properties: { [key: string]: JSONSchema7 } = {}
-            Object.entries(ob_context.obSchema).forEach(([name, schemas]) => { properties[name] = schemas[0] })
+            for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
+                properties[name] = schemas[0]
+            }
             const newSchema = {
                 ...OB_SCHEMA_BASE,
-                properties
+                properties: properties
             }
             console.log('new OB Schema', newSchema)
             try {

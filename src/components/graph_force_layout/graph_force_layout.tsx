@@ -130,10 +130,6 @@ export default function GraphForceLayout(props: Props) {
     const darkMode = true 
     useEffect(() => {
         const dataObj = scoby_arr_to_data_object(props.data, darkMode)
-        // console.log('props.data')
-        // console.log(props.data)
-        // console.log('dataObj')
-        // console.log(dataObj)
         setClonedData(dataObj)
     }, [props])
 

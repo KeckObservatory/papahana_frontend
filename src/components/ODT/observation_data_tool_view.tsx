@@ -52,7 +52,6 @@ export const get_ob_schemas = async (ob: ObservationBlock) => {
             const [schema, uiSchema] = await get_schemas(obComponent, ob.metadata.instrument, componentName)
             obSchema[componentName] = [schema, uiSchema]
     })
-    console.log('get_ob_schemas', obSchema)
     return obSchema
   }
 export default function ODTView(props: Props) {

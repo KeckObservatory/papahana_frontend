@@ -3,7 +3,7 @@ import { IconButton, Paper } from '@mui/material'
 import cloneDeep from 'lodash/cloneDeep';
 import { animated } from 'react-spring'
 import FileCopyIcon from '@mui/icons-material/FileCopy'
-import { Instrument, OBSequence, ObservationBlock, ScienceMetadata, ValidatorReport } from '../../typings/papahana'
+import { Instrument, OBSequence, ObservationBlock, ScienceMetadata, Template, ValidatorReport } from '../../typings/papahana'
 import SaveIcon from '@mui/icons-material/Save';
 import PublishIcon from '@mui/icons-material/Publish';
 import Tooltip from '@mui/material/Tooltip'
