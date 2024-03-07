@@ -48,29 +48,34 @@ export const Autosave = () => {
         []
     )
 
-    useEffect(() => {
+    const create_ob_schema = () => {
+        const properties: { [key: string]: JSONSchema7 } = {}
+        // for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
+        for (let idx = 0; idx < Object.keys(ob_context.obSchema).length; idx++) {
+            const key = Object.keys(ob_context.obSchema)[idx]
+            const schema = ob_context.obSchema[key][0]
+            console.log('key', key, 'schema', schema)
+            properties[key] = schema
+        }
+        console.log('ob_context.obSchema', ob_context.obSchema, 'properties', properties)
+        const newSchema = {
+            ...OB_SCHEMA_BASE,
+            properties: properties
+        }
+        return newSchema
 
-            const properties: { [key: string]: JSONSchema7 } = {}
-            // for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
-            for (let idx = 0; idx < Object.keys(ob_context.obSchema).length; idx++) {
-                const key = Object.keys(ob_context.obSchema)[idx]
-                const schema = ob_context.obSchema[key][0]
-                console.log('key', key, 'schema', schema)
-                properties[key] = schema 
-            }
-            console.log('ob_context.obSchema', ob_context.obSchema, 'properties', properties)
-            const newSchema = {
-                ...OB_SCHEMA_BASE,
-                properties: properties
-            }
-            console.log('new OB Schema', newSchema)
-            try {
-                const newValidate = ajv.compile(newSchema)
-                setValidate(newValidate)
-            }
-            catch (err) {
-                console.error('Error in compiling new schema', err)
-            }
+    }
+
+    useEffect(() => {
+        const newSchema = create_ob_schema()
+        console.log('new OB Schema', newSchema)
+        try {
+            const newValidate = ajv.compile(newSchema)
+            setValidate(newValidate)
+        }
+        catch (err) {
+            console.error('Error in compiling new schema', err)
+        }
 
     }
         , [ob_context.obSchema])
@@ -79,11 +84,16 @@ export const Autosave = () => {
         console.log('validate', validate);
         if ((validate as unknown as boolean) && ob_context.ob) {
             const parsedOB = parseOB(ob_context.ob)
-            validate(parsedOB)
+            // let difference = Object.keys(parsedOB).filter(x => !Object.keys(ob_context.obSchema).includes(x));
+            // console.log('difference', difference)
+
+            const newSchema = create_ob_schema()
+            const val = ajv.compile(newSchema)
+
+            val(parsedOB)
             console.log('errors', validate.errors, 'parsedOB', parsedOB)
             ob_context.setErrors(validate.errors ?? [])
             debouncedSave(ob_context.ob)
-        }
     },
         [ob_context.ob, debouncedSave])
 
