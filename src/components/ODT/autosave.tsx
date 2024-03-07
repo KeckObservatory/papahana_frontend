@@ -13,7 +13,7 @@ const DEBOUNCE_SAVE_DELAY = 2000;
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 
 const OB_SCHEMA_BASE: JSONSchema7 = {
-    required: ['_id', 'metadata'],
+    required: ['metadata', 'status'],
     type: "object",
     properties: {},
     additionalProperties: true
@@ -55,6 +55,7 @@ export const Autosave = () => {
             for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
                 properties[name] = schemas[0]
             }
+            console.log('ob_context.obSchema', ob_context.obSchema, 'properties', properties)
             const newSchema = {
                 ...OB_SCHEMA_BASE,
                 properties: properties
