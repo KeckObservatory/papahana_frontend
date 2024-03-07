@@ -67,7 +67,6 @@ export default function ODTView(props: Props) {
   const drawer = useDrawerOpenContext()
 
   useEffect(() => {
-
     async function init_ob(id: string) {
       const initOB = await ob_api_funcs.get(id)
       const obsch = await get_ob_schemas(initOB)
@@ -75,20 +74,28 @@ export default function ODTView(props: Props) {
       setOBSchema(obsch)
       setInstrument(initOB.metadata.instrument)
     }
-
     ob_id && init_ob(ob_id)
-
   }, [])
 
   useEffect(() => {
     errors && console.log('ERRORS', errors)
   }, [errors])
 
+
   useEffect(() => { //ensure instrument matches the selected ob
     if (ob.metadata) {
       setInstrument(ob.metadata.instrument.toUpperCase())
+      setOBID(ob._id)
     }
-
+    const check_schema = async (ob: ObservationBlock) => {
+      let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(obSchema).includes(x));
+      if (difference) {
+        console.log('difference in ob and obSchema, updateing obSchema', difference)
+        const obsch = await get_ob_schemas(ob)
+        setOBSchema(obsch)
+      }
+    }
+    check_schema(ob)
   }, [ob])
 
   const renderRGL = () => {

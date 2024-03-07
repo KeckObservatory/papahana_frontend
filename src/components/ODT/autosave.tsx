@@ -35,9 +35,14 @@ export const Autosave = () => {
 
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
-            const val = validate(newOB)
-            console.log('errors', val?.errors, 'ob', ob_context.ob)
-            ob_context.setErrors(val?.errors ?? [])
+            try {
+                const val = validate(newOB)
+                console.log('errors', val?.errors, 'ob', ob_context.ob)
+                ob_context.setErrors(val?.errors ?? [])
+            }
+            catch (err)  {
+                console.error('error validating ob', err)
+            }
             if (IS_PRODUCTION) {
                 updateDatabaseOB(newOB) //todo: decide to keep this
                 await saveToLocalStorage(newOB)
