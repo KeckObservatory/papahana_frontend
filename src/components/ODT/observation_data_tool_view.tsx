@@ -54,7 +54,9 @@ export const get_ob_schemas = async (ob: ObservationBlock) => {
   })
   return obSchema
 }
-export default function ODTView(props: Props) {
+
+
+export default function ODTView() {
 
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
