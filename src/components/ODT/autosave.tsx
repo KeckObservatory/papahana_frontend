@@ -94,8 +94,8 @@ export const Autosave = () => {
             console.log('errors', validate.errors, 'parsedOB', parsedOB)
             ob_context.setErrors(validate.errors ?? [])
             debouncedSave(ob_context.ob)
-        },
-        [ob_context.ob, debouncedSave] })
+        }},
+        [ob_context.ob, debouncedSave] )
 
     return null
 }
