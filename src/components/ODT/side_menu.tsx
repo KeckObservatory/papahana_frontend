@@ -22,7 +22,7 @@ import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
 import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
-import { get_ob_schemas, useOBContext } from './observation_data_tool_view';
+import { get_template_schemas, useOBContext } from './observation_data_tool_view';
 import TargetDialog from './TargetDialog';
 import ValidationDialogButton from '../validator_dialog';
 
@@ -177,7 +177,7 @@ export const SideMenu = (props: Props) => {
         // triggerBoop(true)
         console.log('newOB', newOB)
         ob_context.setOB(() => newOB)
-        const newTemplateSchemas = await get_ob_schemas(newOB)
+        const newTemplateSchemas = await get_template_schemas(newOB)
         ob_context.setTemplateSchemas(newTemplateSchemas)
         props.setTriggerRender(props.triggerRender + 1)
     }

@@ -176,9 +176,6 @@ export const OBBeautifulDnD = (props: Props) => {
             if (seqName.includes('sequence')) {
                 newOb = updateOBScience(seqName, newOb, formData)
             }
-            // else if (seqName.includes('time_constraints')) {
-            //     newOb = updateOBTimeConstraint(newOb, formData)
-            // }
             else if (subFormName) { //common parameters
                 newOb = updateOBCommonParameters(newOb, formData, subFormName)
             }

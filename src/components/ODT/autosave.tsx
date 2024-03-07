@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import debounce from "lodash.debounce";
 import { Metadata, OBMetadata, ObservationBlock } from "../../typings/papahana";
 import { ob_api_funcs } from './../../api/ApiRoot';
-import { TemplateSchemas, get_ob_schemas, useOBContext } from "./observation_data_tool_view";
+import { TemplateSchemas, get_template_schemas, useOBContext } from "./observation_data_tool_view";
 import AJV2019, { ValidateFunction } from 'ajv/dist/2019'
 // import AJV, { ValidateFunction } from 'ajv'
 import addFormats from "ajv-formats";
@@ -53,7 +53,7 @@ export const Autosave = () => {
                 await saveToLocalStorage(newOB)
             }
         }, DEBOUNCE_SAVE_DELAY),
-        []
+        [ob_context.ob]
     )
 
     const create_ob_schema = (obMetadata: OBMetadata, templateSchemas: TemplateSchemas) => {
@@ -96,7 +96,7 @@ export const Autosave = () => {
         let templateSchemas = ob_context.templateSchemas 
         if (difference.length > 0) {
             console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
-            templateSchemas = await get_ob_schemas(ob)
+            templateSchemas = await get_template_schemas(ob)
             ob_context.setTemplateSchemas(templateSchemas)
             const newOBSchema = create_ob_schema(ob.metadata, templateSchemas)
             setOBSchema(newOBSchema)
@@ -116,7 +116,7 @@ export const Autosave = () => {
     }, [ob_context.templateSchemas, obSchema])
 
     useEffect(() => {
-        ob_context.ob !== undefined && debouncedSave(ob_context.ob)
+        Object.keys(ob_context.ob ?? {}).length > 0 && debouncedSave(ob_context.ob)
     },
         [ob_context.ob, debouncedSave])
 

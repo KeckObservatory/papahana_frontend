@@ -43,7 +43,7 @@ export interface Props {
 
 export interface TemplateSchemas { [key: string]: [JSONSchema7, UiSchema] }
 
-export const get_ob_schemas = async (ob: ObservationBlock) => {
+export const get_template_schemas = async (ob: ObservationBlock) => {
   const obComponents = parseOB(ob)
   let obItems = Object.entries(obComponents)
   let templateSchemas = {} as TemplateSchemas
@@ -71,17 +71,13 @@ export default function ODTView() {
   useEffect(() => {
     async function init_ob(id: string) {
       const initOB = await ob_api_funcs.get(id)
-      const obsch = await get_ob_schemas(initOB)
+      const obsch = await get_template_schemas(initOB)
       setOB(initOB)
       setTemplateSchemas(obsch)
       setInstrument(initOB.metadata.instrument)
     }
     ob_id && init_ob(ob_id)
   }, [])
-
-  useEffect(() => {
-    errors && console.log('ERRORS', errors)
-  }, [errors])
 
 
   useEffect(() => { //ensure instrument matches the selected ob
@@ -93,7 +89,7 @@ export default function ODTView() {
       let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(templateSchemas).includes(x));
       if (difference.length > 0) {
         console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
-        const obsch = await get_ob_schemas(ob)
+        const obsch = await get_template_schemas(ob)
         setTemplateSchemas(obsch)
       }
     }
