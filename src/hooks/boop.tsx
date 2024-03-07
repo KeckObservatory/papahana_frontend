@@ -91,7 +91,6 @@ const useBoop: Boop = ({
 
   useEffect(() => {
     if (!isBooped) return;
-    console.log('booping')
     const timeoutId = window.setTimeout(() => setIsBooped(false), timing);
     return () => window.clearTimeout(timeoutId);
   }, [isBooped, timing]);

@@ -22,9 +22,9 @@ import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
 import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
-import OBValidator from './ob_validator';
 import { useOBContext } from './observation_data_tool_view';
 import TargetDialog from './TargetDialog';
+import ValidationDialogButton from '../validator_dialog';
 
 
 export interface OBSelectContextObject {
@@ -256,7 +256,7 @@ export const SideMenu = (props: Props) => {
                                     </Tooltip>
                                     <UploadDialog uploadOBFromJSON={uploadOBFromJSON} />
                                     <DeleteDialog deleteOB={deleteOB} />
-                                    <OBValidator validatorReport={validatorReport} />
+                                    <ValidationDialogButton />
                                     <TargetDialog addSeq={addSeq} />
                                 </div>
                                 <Tooltip title="Add template to Selected OB">

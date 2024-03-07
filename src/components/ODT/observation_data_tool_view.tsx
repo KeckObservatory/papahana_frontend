@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useCallback, useEffect, useState } from 'react'
 import { ObservationBlock, Template } from '../../typings/papahana'
 import { useQueryParam, StringParam, withDefault } from 'use-query-params'
-import { OBBeautifulDnD } from './sequence_grid/ob_form_beautiful_dnd'
+import { OBBeautifulDnD, parseOB } from './sequence_grid/ob_form_beautiful_dnd'
 import { Autosave } from './autosave'
 import Drawer from '@mui/material/Drawer';
 import { useDrawerOpenContext } from './../App'
@@ -9,11 +9,13 @@ import { SideMenu } from './side_menu'
 import { ob_api_funcs } from './../../api/ApiRoot';
 import { JSONSchema7 } from 'json-schema'
 import { ErrorObject } from 'ajv'
+import { UiSchema } from 'react-jsonschema-form'
+import { get_schemas } from '../forms/template_form'
 
 export interface OBContext {
   ob: ObservationBlock,
   ob_id: string | null | undefined,
-  obSchema: JSONSchema7[],
+  obSchema: OBSchema,
   errors: ErrorObject[],
   setOBSchema: Function
   setOBID: Function
@@ -25,7 +27,7 @@ export interface OBContext {
 const init_ob_context: OBContext = {
   ob: {} as ObservationBlock,
   ob_id: '',
-  obSchema: [],
+  obSchema: {},
   errors: [],
   setOBSchema: () => { },
   setOBID: () => { },
@@ -39,29 +41,47 @@ export const useOBContext = () => useContext(OBContext)
 export interface Props {
 }
 
+export interface OBSchema { [key: string]: [JSONSchema7, UiSchema] }
+
+export const get_ob_schemas = async (ob: ObservationBlock) => {
+    const obComponents = parseOB(ob)
+    let obItems = Object.entries(obComponents)
+    let obSchema = {} as OBSchema
+    obItems.forEach(async (keyValue) => {
+            const [componentName, obComponent] = keyValue
+            const [schema, uiSchema] = await get_schemas(obComponent, ob.metadata.instrument, componentName)
+            obSchema[componentName] = [schema, uiSchema]
+    })
+    return obSchema
+  }
 export default function ODTView(props: Props) {
 
-  const [_, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
+  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
-  const [obSchema, setOBSchema] = useState<JSONSchema7[]>([])
+  const [obSchema, setOBSchema] = useState<OBSchema>({})
   const [errors, setErrors] = useState([] as ErrorObject[])
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
-  const initOB = {}
-  const [ob, setOB] = useState(initOB as ObservationBlock)
+  const [ob, setOB] = useState<ObservationBlock>({} as ObservationBlock)
   const [triggerRender, setTriggerRender] = useState(0)
 
   const drawer = useDrawerOpenContext()
 
   useEffect(() => {
-    if (ob_id) {
-      ob_api_funcs.get(ob_id).then((initOb: ObservationBlock) => {
-        setOB(initOb)
-      })
+
+    async function init_ob(id: string) {
+      const initOB = await ob_api_funcs.get(id) 
+      const obsch = await get_ob_schemas(initOB)
+      setOB(initOB)
+      setOBSchema(obsch)
+      setInstrument(initOB.metadata.instrument)
     }
+
+    ob_id && init_ob(ob_id)
+
   }, [])
 
-  useEffect(() => { 
-    console.log('ERRORS', errors)
+  useEffect(() => {
+    errors && console.log('ERRORS', errors)
   }, [errors])
 
   useEffect(() => { //ensure instrument matches the selected ob
@@ -69,7 +89,7 @@ export default function ODTView(props: Props) {
   }, [ob])
 
   const renderRGL = () => {
-    const notEmpty = Object.keys(ob).length > 0
+    const notEmpty = Object.keys(ob).length > 0 && Object.keys(obSchema).length > 0
     if (notEmpty) {
       return (
         <OBBeautifulDnD
@@ -101,17 +121,16 @@ export default function ODTView(props: Props) {
   // }, []);
 
 
-  const getOB = (new_ob_id: string): void => {
-    ob_api_funcs.get(new_ob_id).then((newOb: ObservationBlock) => {
-      if (newOb._id) {
-        setInstrument(newOb.metadata.instrument)
-        setOB(newOb)
-      }
-    })
-      .finally(() => {
-        setTriggerRender(triggerRender + 1) //force dnd component to rerender
-      })
+  const getOB = async (new_ob_id: string) => {
+    const newOB = await ob_api_funcs.get(new_ob_id)
+    console.log('setting ob', newOB)
+    if (newOB._id) {
+      setInstrument(newOB.metadata.instrument)
+      setOB(newOB)
+    }
+    setTriggerRender(triggerRender + 1) //force dnd component to rerender
   }
+
   const handleOBSelect = (ob_id: string) => {
     console.log(`setting selected ob to ${ob_id}`)
     setOBID(ob_id)
@@ -154,7 +173,7 @@ export default function ODTView(props: Props) {
           />
         </Drawer>
         {renderRGL()}
-        <Autosave/>
+        <Autosave />
       </OBContext.Provider>
     </div>
   )

@@ -8,7 +8,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { JSONSchema7 } from 'json-schema'
 import * as form_schemas from './../../forms/schemas'
 import { Form, log } from './../../forms/template_form'
-import { template_to_schema } from './../../forms/common_parameters_template_form'
+import { common_parameters_template_to_schema } from './../../forms/common_parameters_template_form'
 import { ISubmitEvent, UiSchema as rUiSchema } from "@rjsf/core";
 import { ob_api_funcs } from '../../../api/ApiRoot';
 import { get_template } from '../../../api/utils';
@@ -58,7 +58,7 @@ const EditCPDialog = (props: Props) => {
             get_template(templateName, instrument).then((template: Template) => {
                 sub_forms.forEach((formName: keyof Template) => {
                     const subTemplate = template[formName] as unknown as Template
-                    const schema = template_to_schema(subTemplate, formName)
+                    const schema = common_parameters_template_to_schema(subTemplate, formName)
                     newSchemas[formName] = schema
                 })
                 setSchemas(newSchemas)

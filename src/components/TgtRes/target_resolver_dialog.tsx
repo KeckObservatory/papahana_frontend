@@ -9,15 +9,20 @@ import DialogActions from '@mui/material/DialogActions';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Aladin from './aladin'
-import TemplateForm from '../forms/template_form';
+import TemplateForm, { get_schemas } from '../forms/template_form';
 import { OBComponent, Target } from './../../typings/papahana';
 import CatalogTable from './catalog_table';
 import { mockCatalog } from "./../../mocks/catalog"
+import { useQueryParam } from 'use-query-params';
+import { JSONSchema7 } from 'json-schema'
+import { UiSchema } from "react-jsonschema-form";
 
 interface Props {
   id: string
   obComponent: OBComponent
   updateOB: Function;
+  schema: JSONSchema7;
+  uiSchema: UiSchema;
 }
 
 export const TargetResolverDialog = (props: Props) => {
@@ -35,9 +40,11 @@ export const TargetResolverDialog = (props: Props) => {
   const close_target_resolver = () => {
     setOpen(false);
   };
+
+
   return (
     <React.Fragment>
-      <Typography sx={{marginTop: "12px"}} >Target Resolver</Typography>
+      <Typography sx={{ marginTop: "12px" }} >Target Resolver</Typography>
       <Tooltip title="Launch Image resolver">
         <IconButton aria-label='launch' onClick={launch_target_resolver}>
           <LaunchIcon />
@@ -48,7 +55,13 @@ export const TargetResolverDialog = (props: Props) => {
         <DialogContent >
           <div style={{ display: 'flex' }}>
             <div style={{ width: '250px', margin: '5px', padding: '5px' }}>
-              <TemplateForm id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
+              <TemplateForm 
+              id={props.id} 
+              obComponent={props.obComponent} 
+              updateOB={props.updateOB} 
+              schema={props.schema}
+              uiSchema={props.uiSchema}
+              />
             </div>
             <Aladin
               selIdx={selIdx}

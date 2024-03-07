@@ -13,25 +13,17 @@ interface Props {
   obComponent: OBComponent
   updateOB: Function
   id: string
+  schema: JSONSchema7,
+  uiSchema: UiSchema
 }
 
 export default function TargetTemplateForm(props: Props): JSX.Element {
-  const [schema, setSchema] = useState({} as JSONSchema7)
   const [decimalToggle, setDecimalToggle] = useQueryParam('decimalToggle', withDefault(BooleanParam, false))
-  const [uiSchema, setUISchema] = useState({} as UiSchema)
   let initFormData = init_form_data(props.obComponent, props.id)
   const ref = useRef(null)
   const initialRender = useRef(true);
   const [formData, setFormData] = useState(initFormData)
-  const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
 
-  React.useEffect(() => {
-    get_schemas(props.obComponent, instrument, props.id).then(([initSchema, initUiSchema]) => {
-      setSchema(() => initSchema)
-      setUISchema(() => initUiSchema)
-
-    })
-  }, [])
 
   React.useEffect(() => {
     let newFormData = init_form_data(props.obComponent, props.id)
@@ -99,14 +91,19 @@ export default function TargetTemplateForm(props: Props): JSX.Element {
         divider={<Divider orientation="vertical" flexItem />}
         spacing={2}
       >
-        <TargetResolverDialog id={props.id} obComponent={props.obComponent} updateOB={props.updateOB} />
+        <TargetResolverDialog id={props.id}
+          obComponent={props.obComponent}
+          updateOB={props.updateOB}
+          schema={props.schema}
+          uiSchema={props.uiSchema}
+        />
         <Tooltip title={'Toggle on to display RA/DEC in decimal form'}>
           <FormControlLabel control={<Switch onChange={handleDecimalChange} checked={decimalToggle} />} label="Decimal" />
         </Tooltip>
       </Stack>
       <Form
-        schema={schema}
-        uiSchema={uiSchema as rUiSchema}
+        schema={props.schema}
+        uiSchema={props.uiSchema as rUiSchema}
         formData={formData}
         onChange={handleChange}
         onError={log("errors")} ><div></div></Form>

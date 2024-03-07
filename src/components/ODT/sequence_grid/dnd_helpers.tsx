@@ -109,7 +109,8 @@ export const create_draggable = (keyValue: [string, OBComponent],
     )
 }
 
-export const chunkify = (a: [string, unknown][], n: number, balanced: boolean) => {
+export function chunkify<T>(a: T[], n: number, balanced: boolean) {
+
     if (n < 2)
         return [a];
     var len = a.length,

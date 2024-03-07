@@ -38,7 +38,7 @@ import {
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
 const IS_DEVELOPMENT: boolean = process.env.REACT_APP_ENVIRONMENT === 'development'
 const IS_LOCAL: boolean = process.env.REACT_APP_ENVIRONMENT === 'local'
-const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT || IS_LOCAL
+const IS_BUILD = IS_PRODUCTION || IS_DEVELOPMENT
 
 console.log(`is BUILD ? set to ${IS_BUILD}`)
 console.log(`is LOCAL ? set to ${IS_LOCAL}`)

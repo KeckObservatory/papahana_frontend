@@ -23,7 +23,6 @@ export const getUiSchema = (id: string): UiSchema => {
     uiSchema = uiTimeConstraintSchema
   }
   else {
-    console.log(`component ${id} has undefined schema`)
     uiSchema = {}
   }
   return uiSchema

@@ -7,6 +7,7 @@ import { UiSchema } from "react-jsonschema-form";
 import { JsonSchema, JSProperty, OBJsonSchemaProperties } from "../../typings/ob_json_form";
 import * as schemas from './schemas'
 import { get_template } from "../../api/utils";
+import { SUB_FORMS, common_parameters_template_to_schema } from "./common_parameters_template_form";
 
 export const Form = withTheme(MaterialUITheme)
 
@@ -24,7 +25,7 @@ export const to_schema_type = (tpl_param: string): string => {
   let type: string
   switch (tpl_param) {
     case 'float': {
-      type = 'number' 
+      type = 'number'
       break;
     }
     case 'file': {
@@ -36,7 +37,7 @@ export const to_schema_type = (tpl_param: string): string => {
       break;
     }
     case 'integer': {
-      type = 'number' 
+      type = 'number'
       break;
     }
     case 'array': {
@@ -56,18 +57,18 @@ export const to_schema_type = (tpl_param: string): string => {
 }
 
 const make_dither_schema = (param: TemplateParameter) => {
-    let schema = {} as JsonSchema
-    schema.title = 'dither item'
-    schema.type = 'object'
-    schema.properties = {}
-    param.allowed.forEach( (param: any) => {
-      const dkey = Object.keys(param)[0]
-      const dvalue = param[dkey as string]
-      //@ts-ignore
-      schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
-    })
-    schema.required = Object.keys(schema.properties)
-    return schema 
+  let schema = {} as JsonSchema
+  schema.title = 'dither item'
+  schema.type = 'object'
+  schema.properties = {}
+  param.allowed.forEach((param: any) => {
+    const dkey = Object.keys(param)[0]
+    const dvalue = param[dkey as string]
+    //@ts-ignore
+    schema.properties[dkey] = template_parameter_to_schema_properties(dvalue as TemplateParameter)
+  })
+  schema.required = Object.keys(schema.properties)
+  return schema
 }
 
 export const template_parameter_to_schema_properties = (param: TemplateParameter): OBJsonSchemaProperties => {
@@ -77,7 +78,7 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
   if (param.default) {
     property.default = param.default
   }
-  property.readonly = false 
+  property.readonly = false
   if (param.option === "range") {
     property.minimum = param.allowed[0] as string | number | undefined
     property.maximum = param.allowed[1] as string | number | undefined
@@ -86,7 +87,7 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
     property.enum = param.allowed
   }
   if (property.type === 'array') {
-    property.items = make_dither_schema(param) 
+    property.items = make_dither_schema(param)
   }
   return property
 }
@@ -94,8 +95,8 @@ export const template_parameter_to_schema_properties = (param: TemplateParameter
 export const template_to_ui_schema = (template: Template, uiSchema: UiSchema) => {
   // adds help text for each field
   Object.entries(template.parameters).forEach(([key, param]) => {
-  
-    if (param.description) uiSchema[key] = {'ui:help': param.description}
+
+    if (param.description) uiSchema[key] = { 'ui:help': param.description }
   })
   return uiSchema
 }
@@ -122,8 +123,8 @@ export const init_form_data = (obComponent: OBComponent, id: string) => {
     //@ts-ignore
     formData = obComponent
   }
-  else if( id==='target') {
-    const tgt = obComponent as Target 
+  else if (id === 'target') {
+    const tgt = obComponent as Target
     formData = tgt.parameters
   }
   else if (id === 'time_constraints') {
@@ -148,8 +149,8 @@ const sort_template = (template: Template): Template => {
   if (!template.parameter_order) {
     return template
   }
-  let params = {}  as { [key: string]: TemplateParameter };
-  let paramOrder = template.parameter_order 
+  let params = {} as { [key: string]: TemplateParameter };
+  let paramOrder = template.parameter_order
   paramOrder.forEach((param: string) => {
     params[param] = template.parameters[param]
   })
@@ -182,8 +183,20 @@ export const get_schemas = async (obComponent: OBComponent, instrument: string, 
       if (template.parameter_order) {
         template = sort_template(template)
       }
-      sch = template_to_schema(template) 
-      uiSchema = template_to_ui_schema(template, uiSchema)
+      if (template.metadata.name.includes('common_parameters')) {
+        sch.type = 'object'
+        const properties = {} as { [key: string]: JSONSchema7 } 
+        SUB_FORMS.forEach((sf: string) => {
+          const tmpl = template[sf as keyof Template]
+          const subSchema = common_parameters_template_to_schema(tmpl as unknown as Template, sf)
+          properties[sf] = subSchema
+        }) 
+        sch.properties = properties
+      }
+      else {
+        sch = template_to_schema(template)
+        uiSchema = template_to_ui_schema(template, uiSchema)
+      }
     }
   }
   return [sch, uiSchema]
@@ -211,10 +224,10 @@ export default function TemplateForm(props: Props): JSX.Element {
 
   return (
     <div ref={ref} style={{
-    textAlign: 'left',
-    margin: '0px',
-    display: 'flex',
-    flexWrap: 'wrap',
+      textAlign: 'left',
+      margin: '0px',
+      display: 'flex',
+      flexWrap: 'wrap',
     }}>
       <Form
         schema={props.schema}

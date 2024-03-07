@@ -1,25 +1,25 @@
-//@ts-nocheck
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import React from "react";
 import {
     MetadataLessOBComponent,
     OBComponent,
-    OBSeqNames,
+    OBSeqs,
     OBSequence,
     ObservationBlock,
     OBStandardComponent,
     Science,
-    TimeConstraint,
 } from './../../../typings/papahana'
 import "./styles.css";
 import { chunkify, reorder, move, create_draggable } from './dnd_helpers'
 import { useOBContext } from '../observation_data_tool_view';
 import { JSONSchema7 } from 'json-schema'
-import { useQueryParam } from 'use-query-params';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
+import { get_schemas } from '../../forms/template_form';
+import { UiSchema } from 'react-jsonschema-form';
 
 const GRID = 4;
 const ROW_HEIGHT = 45;
-const OB_NAMES: OBSeqNames[] = [
+const OB_NAMES: string[] = [
     'target',
     'metadata',
     'observations',
@@ -51,19 +51,21 @@ interface AccordionClasses {
 
 const sort_forms = (inForms: Partial<ObservationBlock>) => {
     const keys = Object.keys(inForms)
-    const ofArr = []
+    const ofArr: any = []
     const oCompKeys = Object.keys(OB_COMPONENT_ORDER)
     //create an array of [order, component] items 
     keys.forEach((key: string) => {
         if (oCompKeys.includes(key)) {
+            // @ts-ignore
             ofArr.push([OB_COMPONENT_ORDER[key], key, inForms[key]])
         }
         else {
+            // @ts-ignore
             ofArr.push([999, key, inForms[key]])
         }
     })
     //sort array of [order, component] items
-    ofArr.sort((a, b) => {
+    ofArr.sort((a: number[], b: number[]) => {
         if (a[0] > b[0]) return 1;
         if (a[0] < b[0]) return -1;
         return 0;
@@ -71,28 +73,29 @@ const sort_forms = (inForms: Partial<ObservationBlock>) => {
 
     const sortedForms = {}
     //create sorted Array
-    ofArr.forEach((okf) => {
+    ofArr.forEach((okf: any) => {
         const [order, key, form] = okf
+        //@ts-ignore
         sortedForms[key] = form
     })
     return sortedForms
 }
 
-const parseOB = (ob: ObservationBlock): Partial<ObservationBlock> => {
+export const parseOB = (ob: ObservationBlock) => {
     // return the components that will generate forms
-    let forms: { [k: string]: unknown } = {}
-    Object.keys(ob).forEach((componentName: string) => {
-        if (OB_NAMES.indexOf(componentName as OBSeqNames) > -1) {
+    let forms: { [k: string]: Exclude<OBSeqs, Science[]> | Science } = {}
+    Object.keys(ob).forEach((componentName) => {
+        if (OB_NAMES.includes(componentName)) {
             if (componentName === 'observations') {
                 const seq = ob.observations as Science[]
                 for (let idx = 0; idx < seq.length; idx++) {
                     const sn = JSON.stringify(seq[idx].metadata.sequence_number)
                     const sci_name = 'sequence ' + sn
-                    forms[sci_name] = seq[idx]
+                    forms[sci_name as any] = seq[idx]
                 }
             }
-            else {
-                forms[componentName] = ob[componentName as keyof ObservationBlock]
+            else if (componentName !== 'time_constraints') {
+                forms[componentName] = ob[componentName as keyof OBSeqs]
             }
         }
     })
@@ -123,19 +126,21 @@ interface FormTimeConstraint {
     end_datetime: string
 }
 
-const updateOBTimeConstraint = (ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
-    let newOB = { ...ob }
-    let time_constraints: TimeConstraint[] = []
-    formData['time_constraints'].forEach((timeConstraint: FormTimeConstraint) => {
-        const ts = [timeConstraint.start_datetime, timeConstraint.end_datetime]
-        time_constraints.push(ts as [string, string])
-    })
-    newOB['time_constraints'] = [time_constraints]
-    return newOB
-}
+// const updateOBTimeConstraint = (ob: ObservationBlock, formData: OBSequence): ObservationBlock => {
+//     let newOB = { ...ob }
+//     let time_constraints: TimeConstraint[] = []
+//     // @ts-ignore
+//     formData['time_constraints'].forEach((timeConstraint: FormTimeConstraint) => {
+//         const ts = [timeConstraint.start_datetime, timeConstraint.end_datetime]
+//         time_constraints.push(ts as [string, string])
+//     })
+//     newOB['time_constraints'] = [time_constraints]
+//     return newOB
+// }
 
 const updateOBCommonParameters = (ob: ObservationBlock, formData: OBSequence, subFormName: string) => {
     let newOB = { ...ob }
+    // @ts-ignore
     newOB['common_parameters'][subFormName] = formData[subFormName]
     return newOB
 }
@@ -165,22 +170,20 @@ interface Props {
 }
 
 export const OBBeautifulDnD = (props: Props) => {
-    const obComponents: Partial<ObservationBlock> = parseOB(obContext.ob)
     const obContext = useOBContext()
+    const obComponents = parseOB(obContext.ob)
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
-    obItems = chunkify(obItems, nColumns, evenChunks) as any
-    const [state, setState] = React.useState(obItems);
-
-    const [instrument, setInstrument ] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
+    const obItemChunks = chunkify(obItems, nColumns, evenChunks)
+    const [state, setState] = React.useState(obItemChunks);
 
     React.useEffect(() => {
         console.log(`JSON edited. resetting grid items`)
         const obComponents: Partial<ObservationBlock> = parseOB(obContext.ob)
         let obItems = Object.entries(obComponents)
         obItems = chunkify(obItems, nColumns, evenChunks) as any
-        setState(() => obItems)
+        setState(() => obItemChunks)
     }, [props.triggerRender])
 
     const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence, subFormName?: string) => {
@@ -190,9 +193,9 @@ export const OBBeautifulDnD = (props: Props) => {
             if (seqName.includes('sequence')) {
                 newOb = updateOBScience(seqName, newOb, formData)
             }
-            else if (seqName.includes('time_constraints')) {
-                newOb = updateOBTimeConstraint(newOb, formData)
-            }
+            // else if (seqName.includes('time_constraints')) {
+            //     newOb = updateOBTimeConstraint(newOb, formData)
+            // }
             else if (subFormName) { //common parameters
                 newOb = updateOBCommonParameters(newOb, formData, subFormName)
             }
@@ -217,13 +220,13 @@ export const OBBeautifulDnD = (props: Props) => {
             const items = reorder(state[sInd], source.index, destination.index) as any;
             const newState = [...state];
             newState[sInd] = items;
-            setState(() => newState);
+            // setState(() => newState);
         } else {
             const result = move(state[sInd], state[dInd], source, destination) as any;
             const newState = [...state];
             newState[sInd] = result[sInd];
             newState[dInd] = result[dInd];
-            setState(() => newState.filter(group => group.length));
+            // setState(() => newState.filter(group => group.length));
         }
     }
 
@@ -252,23 +255,32 @@ export const OBBeautifulDnD = (props: Props) => {
             userSelect: "none",
             padding: '8px',
             margin: '0 0 4px 0',
-        }, accDrag: {
+        },
+        accDrag: {
             userSelect: "none",
             padding: '8px',
             margin: '0 0 4px 0',
         }
     }
 
-    const droppables = []
-    const obSchema: { [key: string]: JSONSchema7} = {} 
-    state.forEach(async (keyValueArr: [OBComponent, string], ind: number) => {
-        const [obComponent, componentName] = keyValueArr
-        const [schema, uiSchema]= await get_schemas(obComponent, instrument, componentName)
-        obSchema[componentName] = schema
 
-        droppables.push(<Droppable key={ind} droppableId={`${ind}`}>
-            {(provided, snapshot) => (
-                <div
+
+    const droppables = state.map((keyValueArr, ind: number) => {
+        return (<Droppable key={ind} droppableId={`${ind}`}>
+            {(provided, snapshot) => {
+                const draggables: any = []
+                keyValueArr.forEach(async (keyValue, index: number) => {
+                    const [componentName, _] = keyValue
+                    if (obContext.obSchema[componentName] !== undefined) {
+                        const [schema, uiSchema] = obContext.obSchema[componentName]
+                        // @ts-ignore
+                        schema && draggables.push(create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema))
+                    }
+                    // else {
+                    //     console.log('obContext.obSchema undefined', componentName, obContext.obSchema)
+                    // }
+                })
+                return (<div
                     style={snapshot.isDraggingOver ? {
                         padding: '4px',
                         minWidth: '300px',
@@ -284,17 +296,12 @@ export const OBBeautifulDnD = (props: Props) => {
                     ref={provided.innerRef}
                     {...provided.droppableProps}
                 >
-                    {keyValueArr.map((keyValue: [string, unknown], index: number) => (
-                        create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema)
-                    ))}
+                    {draggables}
                     {provided.placeholder}
-                </div>
-            )}
+                </div>)
+            }}
         </Droppable>)
     })
-
-    obContext.setOBSchama(obSchema)
-
 
     return (
         <div style={{

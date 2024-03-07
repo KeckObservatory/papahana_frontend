@@ -55,6 +55,11 @@ export type OBComponent = MetadataLessOBComponent | OBStandardComponent | string
 export type TemplateComponent = Science[] | Acquisition | Target
 export type MetadataLessOBComponent = OBMetadata | TimeConstraint[] | Status | CommonParameters
 export type OBStandardComponent = Target | OBSequence
+
+export type OBStringComponents = '_id' | 'comment' | 'ob_id'
+export type OBKeys = ObservationBlock[keyof ObservationBlock]
+
+export type OBSeqs = Exclude<OBKeys, string | undefined>
 export type OBSeqNames = 'acquisition' | 'signature' | 'target' | 'observations' | 'metadata' | 'common_parameters' | 'time_constraints' | 'status'
 
 
@@ -131,16 +136,16 @@ export interface ObservationBlock extends Base {
 	_ob_id?: string,
 	metadata: OBMetadata;
 	target?: Target;
-	time_constraints: TimeConstraint[][]
+	// time_constraints: TimeConstraint[][]
 	common_parameters?: CommonTemplate,
 	comment?: string;
 	observations?: Science[];
 	acquisition: Acquisition;
-	associations: string[];
+	// associations: string[];
 	status: Status;
 }
 
-export type Acquisition = DefaultAcquisition | KCWIAcquisition
+export type Acquisition = DefaultAcquisition 
 
 export interface AcquisitionMetadata extends Metadata {
 
@@ -182,9 +187,8 @@ export interface Dither extends Base {
 	'letter': string,
 }
 
-export type Science = KCWIScience
 
-export interface KCWIScienceParameters {
+export interface ScienceParameters {
 	[key: string]: number | string | Slicer | Grating | any
 }
 
@@ -208,9 +212,9 @@ export interface ScienceMetadata extends SequenceMetadata {
 export interface AcquisitionMetadata extends SequenceMetadata {
 }
 
-export interface KCWIScience extends Base {
+export interface Science extends Base {
 	metadata: ScienceMetadata;
-	parameters: KCWIScienceParameters;
+	parameters: ScienceParameters;
 }
 
 export interface Observation extends Base {
