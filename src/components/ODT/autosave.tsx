@@ -6,7 +6,7 @@ import { useOBContext } from "./observation_data_tool_view";
 import AJV2019, { ValidateFunction } from 'ajv/dist/2019'
 // import AJV, { ValidateFunction } from 'ajv'
 import addFormats from "ajv-formats";
-import { JSONSchema7 } from 'json-schema'
+import { JSONSchema7, JSONSchema7Definition } from 'json-schema'
 import { parseOB } from "./sequence_grid/ob_form_beautiful_dnd";
 
 const DEBOUNCE_SAVE_DELAY = 2000;
@@ -50,15 +50,29 @@ export const Autosave = () => {
         // for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
         for (let idx = 0; idx < Object.keys(ob_context.obSchema).length; idx++) {
             const key = Object.keys(ob_context.obSchema)[idx]
-            const schema = ob_context.obSchema[key][0]
+            const schema = ob_context.obSchema[key][0].properties as { [key: string]: JSONSchema7Definition }
             console.log('key', key, 'schema', schema)
-            properties[key] = schema
+            properties[key] = { 
+             title: key,
+             type: 'object',
+             properties: {
+                metadata: {
+                    title: 'metadata',
+                    type: 'object'
+                },
+                parameters: {
+                    title: 'parameters',
+                    type: 'object',
+                    properties: schema
+                },
+                }
+            }
         }
-        console.log('ob_context.obSchema', ob_context.obSchema, 'properties', properties)
         const newSchema = {
             ...OB_SCHEMA_BASE,
             properties: properties
         }
+        console.log('ob_context.obSchema', ob_context.obSchema, 'newSchema', newSchema)
         return newSchema
 
     }

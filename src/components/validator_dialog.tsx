@@ -12,77 +12,80 @@ import { useOBContext } from './ODT/observation_data_tool_view';
 
 
 export interface SimpleDialogProps {
-  open: boolean;
-  handleClose: Function;
+    open: boolean;
+    handleClose: Function;
 }
 
 
 function ValidationDialog(props: SimpleDialogProps) {
-  const { open, handleClose } = props;
-  const ob_context = useOBContext()
-  console.log('ob_context.errors', ob_context.errors)
-  return (
-    <Dialog maxWidth="lg" onClose={() => handleClose()} open={open}>
-      <DialogTitle>Target Validation Errors</DialogTitle>
-      <DialogContent dividers>
-        {ob_context.errors && 
-          ob_context.errors.map((err) => {
-            let msg = err.message
-            if (err.keyword === 'required') {
-              msg = `${err.params.missingProperty}: ${err.message}`
-            }
-            if (err.keyword === 'type') {
-            msg = `${err.instancePath.substring(1)}: ${err.message}`
-            }
-            return (
-              <Typography gutterBottom>
-                {msg}
-              </Typography>)
-          })
-      }
-      </DialogContent>
-    </Dialog>
-  );
+    const { open, handleClose } = props;
+    const ob_context = useOBContext()
+    console.log('ob_context.errors', ob_context.errors)
+    return (
+        <Dialog maxWidth="lg" onClose={() => handleClose()} open={open}>
+            <DialogTitle>Target Validation Errors</DialogTitle>
+            <DialogContent dividers>
+                {ob_context.errors &&
+                    ob_context.errors.map((err) => {
+                        let msg = err.message
+                        if (err.keyword === 'required') {
+                            msg = `${err.params.missingProperty}: ${err.message}`
+                        }
+                        if (err.keyword === 'type') {
+                            msg = `${err.instancePath.substring(1)}: ${err.message}`
+                        }
+                        if (err.keyword === 'minimum' || err.keyword === 'maximum') {
+                            msg = `${err.instancePath.substring(1)}: ${err.message}`
+                        }
+                        return (
+                            <Typography gutterBottom>
+                                {msg}
+                            </Typography>)
+                    })
+                }
+            </DialogContent>
+        </Dialog>
+    );
 }
 
 
 export default function ValidationDialogButton() {
-  const [open, setOpen] = React.useState(false);
-  const [icon, setIcon] = React.useState(<ApprovalIcon />)
-  const ob_context = useOBContext()
+    const [open, setOpen] = React.useState(false);
+    const [icon, setIcon] = React.useState(<ApprovalIcon />)
+    const ob_context = useOBContext()
 
-  React.useEffect(() => {
-    if (ob_context.errors.length > 0) {
-      setIcon(<LocalFireDepartmentIcon color="warning" />)
-    }
-    else {
-      setIcon(<VerifiedIcon color="success" />)
-    }
-  }, [ob_context.ob, ob_context.errors])
+    React.useEffect(() => {
+        if (ob_context.errors.length > 0) {
+            setIcon(<LocalFireDepartmentIcon color="warning" />)
+        }
+        else {
+            setIcon(<VerifiedIcon color="success" />)
+        }
+    }, [ob_context.ob, ob_context.errors])
 
 
-  const handleClickOpen = () => {
-    if (ob_context.errors.length > 0) {
-      console.log(ob_context.errors)
-      setOpen(true);
-    }
-  };
+    const handleClickOpen = () => {
+        if (ob_context.errors.length > 0) {
+            console.log(ob_context.errors)
+            setOpen(true);
+        }
+    };
 
-  const handleClose = () => {
-    setOpen(false);
-  };
+    const handleClose = () => {
+        setOpen(false);
+    };
 
-  return (
-    <>
-      <Tooltip title="Select to see target validation errors (if any)">
-        <IconButton onClick={handleClickOpen}>
-          {icon}
-        </IconButton>
-      </Tooltip>
-      <ValidationDialog
-        open={open}
-        handleClose={handleClose}
-      />
-    </>
-  );
+    return (
+        <>
+            <Tooltip title="Select to see target validation errors (if any)">
+                <IconButton onClick={handleClickOpen}>
+                    {icon}
+                </IconButton>
+            </Tooltip>
+            <ValidationDialog
+                open={open}
+                handleClose={handleClose}
+            />
+        </>
+    );
 }

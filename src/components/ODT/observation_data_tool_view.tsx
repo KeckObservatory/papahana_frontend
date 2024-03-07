@@ -7,7 +7,7 @@ import Drawer from '@mui/material/Drawer';
 import { useDrawerOpenContext } from './../App'
 import { SideMenu } from './side_menu'
 import { ob_api_funcs } from './../../api/ApiRoot';
-import { JSONSchema7 } from 'json-schema'
+import { JSONSchema7, } from 'json-schema'
 import { ErrorObject } from 'ajv'
 import { UiSchema } from 'react-jsonschema-form'
 import { get_schemas } from '../forms/template_form'
