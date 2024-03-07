@@ -34,6 +34,9 @@ export const Autosave = () => {
 
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
+            const val = validate(ob_context.ob)
+            console.log('errors', val?.errors, 'ob', ob_context.ob)
+            ob_context.setErrors(val?.errors ?? [])
             if (IS_PRODUCTION) {
                 updateDatabaseOB(newOB) //todo: decide to keep this
                 await saveToLocalStorage(newOB)
@@ -89,10 +92,6 @@ export const Autosave = () => {
     }, [ob_context.obSchema])
 
     useEffect(() => {
-        console.log('validate', validate);
-        const val = validate(ob_context.ob)
-        console.log('errors', val?.errors, 'ob', ob_context.ob)
-        ob_context.setErrors(val?.errors ?? [])
         ob_context.ob !== undefined && debouncedSave(ob_context.ob)
     },
         [ob_context.ob, debouncedSave] )
