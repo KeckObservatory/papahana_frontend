@@ -35,7 +35,7 @@ export const Autosave = () => {
 
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
-            const val = validate(ob_context.ob)
+            const val = validate(newOB)
             console.log('errors', val?.errors, 'ob', ob_context.ob)
             ob_context.setErrors(val?.errors ?? [])
             if (IS_PRODUCTION) {
@@ -75,7 +75,7 @@ export const Autosave = () => {
         const newSchema = {
             ...OB_SCHEMA_BASE,
             properties: properties,
-            required: obMetadata.ob_type.includes("Science") ? 
+            required: obMetadata?.ob_type?.includes("Science") ? 
             ['metadata', 'status', 'acquisition', 'target'] : OB_SCHEMA_BASE.required
         }
         console.log('ob_context.obSchema', ob_context.obSchema, 'newSchema', newSchema)
@@ -85,8 +85,9 @@ export const Autosave = () => {
 
     const validate = useCallback( (ob: ObservationBlock) => {
         if (ob_context.ob) {
-            const newValidate = ajv.compile(create_ob_schema(ob.metadata))
             const parsedOB = parseOB(ob)
+            const obSchema = create_ob_schema(ob.metadata) 
+            const newValidate = ajv.compile(obSchema)
             newValidate(parsedOB)
             console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
             ob_context.setErrors(newValidate.errors ?? [])
