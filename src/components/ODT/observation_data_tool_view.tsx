@@ -91,7 +91,7 @@ export default function ODTView() {
     }
     const check_schema = async (ob: ObservationBlock) => {
       let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(obSchema).includes(x));
-      if (difference) {
+      if (difference.length > 0) {
         console.log('difference in ob and obSchema, updateing obSchema', difference)
         const obsch = await get_ob_schemas(ob)
         setOBSchema(obsch)

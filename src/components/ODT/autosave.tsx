@@ -36,11 +36,11 @@ export const Autosave = () => {
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
             try {
-                const val = validate(newOB)
+                const val = validate && validate(newOB)
                 console.log('errors', val?.errors, 'ob', ob_context.ob)
                 ob_context.setErrors(val?.errors ?? [])
             }
-            catch (err)  {
+            catch (err) {
                 console.error('error validating ob', err)
             }
             if (IS_PRODUCTION) {
@@ -61,49 +61,54 @@ export const Autosave = () => {
             const key = Object.keys(ob_context.obSchema)[idx]
             const schema = ob_context.obSchema[key][0].properties as { [key: string]: JSONSchema7Definition }
             console.log('key', key, 'schema', schema)
-            properties[key] = { 
-             title: key,
-             type: 'object',
-             properties: {
-                metadata: {
-                    title: 'metadata',
-                    type: 'object'
-                },
-                parameters: {
-                    title: 'parameters',
-                    type: 'object',
-                    properties: schema
-                },
+            properties[key] = {
+                title: key,
+                type: 'object',
+                properties: {
+                    metadata: {
+                        title: 'metadata',
+                        type: 'object'
+                    },
+                    parameters: {
+                        title: 'parameters',
+                        type: 'object',
+                        properties: schema
+                    },
                 }
             }
         }
         const newSchema = {
             ...OB_SCHEMA_BASE,
             properties: properties,
-            required: obMetadata?.ob_type?.includes("Science") ? 
-            ['metadata', 'status', 'acquisition', 'target'] : OB_SCHEMA_BASE.required
+            required: obMetadata?.ob_type?.includes("Science") ?
+                ['metadata', 'status', 'acquisition', 'target'] : OB_SCHEMA_BASE.required
         }
         console.log('ob_context.obSchema', ob_context.obSchema, 'newSchema', newSchema)
         return newSchema
 
     }
 
-    const validate = useCallback( (ob: ObservationBlock) => {
+    const validate = useCallback((ob: ObservationBlock) => {
         if (ob_context.ob) {
             const parsedOB = parseOB(ob)
-            const obSchema = create_ob_schema(ob.metadata) 
-            const newValidate = ajv.compile(obSchema)
-            newValidate(parsedOB)
-            console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
-            ob_context.setErrors(newValidate.errors ?? [])
-            return newValidate
+            const obSchema = create_ob_schema(ob.metadata)
+            try {
+                const newValidate = ajv.compile(obSchema)
+                newValidate(parsedOB)
+                console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
+                ob_context.setErrors(newValidate.errors ?? [])
+                return newValidate
+            }
+            catch (err) {
+                console.error('error compiling schema', err, 'obSchema', obSchema, 'ob', ob, 'parsedOB', parsedOB)
+            }
         }
     }, [ob_context.obSchema])
 
     useEffect(() => {
         ob_context.ob !== undefined && debouncedSave(ob_context.ob)
     },
-        [ob_context.ob, debouncedSave] )
+        [ob_context.ob, debouncedSave])
 
     return null
 }
