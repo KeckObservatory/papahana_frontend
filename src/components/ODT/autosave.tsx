@@ -42,38 +42,15 @@ export const Autosave = () => {
         }
     }, [setOBSchema])
 
-    const updateDatabaseOB = (ob: ObservationBlock) => {
-        ob_api_funcs.put(ob._id, ob)
-    }
 
     const debouncedSave = useCallback(
-        debounce(async (newOB) => {
-            try {
-                let difference = Object.keys(parseOB(newOB)).filter(x => !Object.keys(ob_context.templateSchemas).includes(x));
-                let templateSchemas = ob_context.templateSchemas
-                if (difference.length > 0) {
-                    console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
-                    templateSchemas = await get_template_schemas(newOB)
-                    ob_context.setTemplateSchemas(templateSchemas)
-                    const newOBSchema = create_ob_schema(newOB.metadata, templateSchemas)
-                    setOBSchema(newOBSchema)
-                }
-                else {
-                    const val = validate(newOB)
-                    console.log('errors', val?.errors, 'ob', ob_context.ob, 'obSchema', obSchema)
-                    ob_context.setErrors(val?.errors ?? [])
-                }
-            }
-            catch (err) {
-                console.error('error validating ob', err)
-            }
-
+        debounce(async (ob) => {
             if (IS_PRODUCTION) {
-                updateDatabaseOB(newOB) //todo: decide to keep this
-                await saveToLocalStorage(newOB)
+                ob_api_funcs.put(ob._id, ob)
+                await saveToLocalStorage(ob)
             }
             else {
-                await saveToLocalStorage(newOB)
+                await saveToLocalStorage(ob)
             }
         }, DEBOUNCE_SAVE_DELAY),
         [ob_context.ob]
@@ -120,8 +97,35 @@ export const Autosave = () => {
         return newValidate
     }, [ob_context.templateSchemas, obSchema])
 
+    const debouncedValidate = useCallback(
+        debounce(async (ob: ObservationBlock) => {
+            try {
+                let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(ob_context.templateSchemas).includes(x));
+                let templateSchemas = ob_context.templateSchemas
+                console.log('debounced validate', difference, ob_context.templateSchemas, ob_context.ob, ob, obSchema)
+                if (difference.length > 0) {
+                    console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
+                    templateSchemas = await get_template_schemas(ob)
+                    ob_context.setTemplateSchemas(templateSchemas)
+                    const newOBSchema = create_ob_schema(ob.metadata, templateSchemas)
+                    setOBSchema(newOBSchema)
+                }
+                else {
+                    const val = validate(ob)
+                    console.log('errors', val?.errors, 'ob', ob_context.ob, 'obSchema', obSchema)
+                    ob_context.setErrors(val?.errors ?? [])
+                }
+            }
+            catch (err) {
+                console.error('error validating ob', err)
+            }
+        }, DEBOUNCE_SAVE_DELAY),
+        []
+    )
+
     useEffect(() => {
         Object.keys(ob_context.ob ?? {}).length > 0 && debouncedSave(ob_context.ob)
+        Object.keys(ob_context.ob ?? {}).length > 0 && debouncedValidate(ob_context.ob)
     },
         [ob_context.ob, debouncedSave])
 
