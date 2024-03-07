@@ -44,16 +44,16 @@ export interface Props {
 export interface OBSchema { [key: string]: [JSONSchema7, UiSchema] }
 
 export const get_ob_schemas = async (ob: ObservationBlock) => {
-    const obComponents = parseOB(ob)
-    let obItems = Object.entries(obComponents)
-    let obSchema = {} as OBSchema
-    obItems.forEach(async (keyValue) => {
-            const [componentName, obComponent] = keyValue
-            const [schema, uiSchema] = await get_schemas(obComponent, ob.metadata.instrument, componentName)
-            obSchema[componentName] = [schema, uiSchema]
-    })
-    return obSchema
-  }
+  const obComponents = parseOB(ob)
+  let obItems = Object.entries(obComponents)
+  let obSchema = {} as OBSchema
+  obItems.forEach(async (keyValue) => {
+    const [componentName, obComponent] = keyValue
+    const [schema, uiSchema] = await get_schemas(obComponent, ob.metadata.instrument, componentName)
+    obSchema[componentName] = [schema, uiSchema]
+  })
+  return obSchema
+}
 export default function ODTView(props: Props) {
 
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
@@ -69,10 +69,8 @@ export default function ODTView(props: Props) {
   useEffect(() => {
 
     async function init_ob(id: string) {
-      const initOB = await ob_api_funcs.get(id) 
-      const obsch = await get_ob_schemas(initOB)
+      const initOB = await ob_api_funcs.get(id)
       setOB(initOB)
-      setOBSchema(obsch)
       setInstrument(initOB.metadata.instrument)
     }
 
@@ -85,7 +83,15 @@ export default function ODTView(props: Props) {
   }, [errors])
 
   useEffect(() => { //ensure instrument matches the selected ob
-    if (ob.metadata) setInstrument(ob.metadata.instrument.toUpperCase())
+    async function set_ob() {
+      if (ob.metadata) {
+        const obsch = await get_ob_schemas(ob)
+        setOBSchema(obsch)
+        setInstrument(ob.metadata.instrument.toUpperCase())
+      }
+    }
+
+    set_ob()
   }, [ob])
 
   const renderRGL = () => {

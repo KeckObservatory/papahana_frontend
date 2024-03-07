@@ -57,11 +57,9 @@ export const ModuleMenu = (props: ModuleMenuProps) => {
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
 
         if (newValue >= 1) {
-            console.log('setting drawer to closed')
             drawerOpenContext.setDrawerOpen(false)
         }
         else {
-            console.log('setting drawer to open')
             drawerOpenContext.setDrawerOpen(true)
         }
         setTabIdx(newValue);
