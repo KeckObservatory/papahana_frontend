@@ -88,14 +88,14 @@ export const Autosave = () => {
             // console.log('difference', difference)
 
             const newSchema = create_ob_schema()
+            //TODO: compile only if new template is added
             const val = ajv.compile(newSchema)
-
             val(parsedOB)
             console.log('errors', validate.errors, 'parsedOB', parsedOB)
             ob_context.setErrors(validate.errors ?? [])
             debouncedSave(ob_context.ob)
-    },
-        [ob_context.ob, debouncedSave])
+        },
+        [ob_context.ob, debouncedSave] })
 
     return null
 }
