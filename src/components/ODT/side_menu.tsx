@@ -177,8 +177,8 @@ export const SideMenu = (props: Props) => {
         // triggerBoop(true)
         console.log('newOB', newOB)
         ob_context.setOB(() => newOB)
-        const newOBSchema = await get_ob_schemas(newOB)
-        ob_context.setOBSchema(newOBSchema)
+        const newTemplateSchemas = await get_ob_schemas(newOB)
+        ob_context.setTemplateSchemas(newTemplateSchemas)
         props.setTriggerRender(props.triggerRender + 1)
     }
 

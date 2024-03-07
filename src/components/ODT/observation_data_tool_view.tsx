@@ -15,9 +15,9 @@ import { get_schemas } from '../forms/template_form'
 export interface OBContext {
   ob: ObservationBlock,
   ob_id: string | null | undefined,
-  obSchema: OBSchema,
+  templateSchemas: TemplateSchemas,
   errors: ErrorObject[],
-  setOBSchema: Function
+  setTemplateSchemas: Function
   setOBID: Function
   setOB: Function
   handleOBSelect: Function
@@ -27,9 +27,9 @@ export interface OBContext {
 const init_ob_context: OBContext = {
   ob: {} as ObservationBlock,
   ob_id: '',
-  obSchema: {},
+  templateSchemas: {},
   errors: [],
-  setOBSchema: () => { },
+  setTemplateSchemas: () => { },
   setOBID: () => { },
   setOB: () => { },
   handleOBSelect: () => { },
@@ -41,18 +41,18 @@ export const useOBContext = () => useContext(OBContext)
 export interface Props {
 }
 
-export interface OBSchema { [key: string]: [JSONSchema7, UiSchema] }
+export interface TemplateSchemas { [key: string]: [JSONSchema7, UiSchema] }
 
 export const get_ob_schemas = async (ob: ObservationBlock) => {
   const obComponents = parseOB(ob)
   let obItems = Object.entries(obComponents)
-  let obSchema = {} as OBSchema
+  let templateSchemas = {} as TemplateSchemas
   obItems.forEach(async (keyValue) => {
     const [componentName, obComponent] = keyValue
     const [schema, uiSchema] = await get_schemas(obComponent, ob.metadata.instrument, componentName)
-    obSchema[componentName] = [schema, uiSchema]
+    templateSchemas[componentName] = [schema, uiSchema]
   })
-  return obSchema
+  return templateSchemas
 }
 
 
@@ -60,7 +60,7 @@ export default function ODTView() {
 
   const [instrument, setInstrument] = useQueryParam('instrument', withDefault(StringParam, 'NIRES'))
   const [ob_id, setOBID] = useQueryParam('ob_id', StringParam)
-  const [obSchema, setOBSchema] = useState<OBSchema>({})
+  const [templateSchemas, setTemplateSchemas] = useState<TemplateSchemas>({})
   const [errors, setErrors] = useState([] as ErrorObject[])
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
   const [ob, setOB] = useState<ObservationBlock>({} as ObservationBlock)
@@ -73,7 +73,7 @@ export default function ODTView() {
       const initOB = await ob_api_funcs.get(id)
       const obsch = await get_ob_schemas(initOB)
       setOB(initOB)
-      setOBSchema(obsch)
+      setTemplateSchemas(obsch)
       setInstrument(initOB.metadata.instrument)
     }
     ob_id && init_ob(ob_id)
@@ -90,18 +90,18 @@ export default function ODTView() {
       setOBID(ob._id)
     }
     const check_schema = async (ob: ObservationBlock) => {
-      let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(obSchema).includes(x));
+      let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(templateSchemas).includes(x));
       if (difference.length > 0) {
-        console.log('difference in ob and obSchema, updateing obSchema', difference)
+        console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
         const obsch = await get_ob_schemas(ob)
-        setOBSchema(obsch)
+        setTemplateSchemas(obsch)
       }
     }
     check_schema(ob)
   }, [ob])
 
   const renderRGL = () => {
-    const notEmpty = Object.keys(ob).length > 0 && Object.keys(obSchema).length > 0
+    const notEmpty = Object.keys(ob).length > 0 && Object.keys(templateSchemas).length > 0
     if (notEmpty) {
       return (
         <OBBeautifulDnD
@@ -153,9 +153,9 @@ export default function ODTView() {
     ob: ob,
     ob_id: ob_id,
     setOBID: setOBID,
-    obSchema: obSchema,
+    templateSchemas: templateSchemas,
     errors: errors,
-    setOBSchema: setOBSchema,
+    setTemplateSchemas: setTemplateSchemas,
     setOB: setOB,
     handleOBSelect: handleOBSelect,
     setErrors: setErrors

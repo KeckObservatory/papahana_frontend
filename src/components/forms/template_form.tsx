@@ -194,7 +194,6 @@ export const get_schemas = async (obComponent: OBComponent, instrument: string, 
         sch.properties = properties
       }
       else {
-        console.log(id, 'template', template)
         sch = template_to_schema(template)
         uiSchema = template_to_ui_schema(template, uiSchema)
       }

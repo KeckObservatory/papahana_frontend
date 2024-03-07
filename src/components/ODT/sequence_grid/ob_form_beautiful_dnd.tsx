@@ -254,13 +254,13 @@ export const OBBeautifulDnD = (props: Props) => {
                 const draggables: any = []
                 keyValueArr.forEach(async (keyValue, index: number) => {
                     const [componentName, _] = keyValue
-                    if (ob_context.obSchema[componentName] !== undefined) {
-                        const [schema, uiSchema] = ob_context.obSchema[componentName]
+                    if (ob_context.templateSchemas[componentName] !== undefined) {
+                        const [schema, uiSchema] = ob_context.templateSchemas[componentName]
                         // @ts-ignore
                         schema && draggables.push(create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema))
                     }
                     // else {
-                    //     console.log('ob_context.obSchema undefined', componentName, ob_context.obSchema)
+                    //     console.log('ob_context.templateSchemas undefined', componentName, ob_context.templateSchemas)
                     // }
                 })
                 return (<div

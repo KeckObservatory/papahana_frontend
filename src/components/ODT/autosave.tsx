@@ -2,7 +2,7 @@ import React, { useCallback, useEffect } from "react";
 import debounce from "lodash.debounce";
 import { Metadata, OBMetadata, ObservationBlock } from "../../typings/papahana";
 import { ob_api_funcs } from './../../api/ApiRoot';
-import { useOBContext } from "./observation_data_tool_view";
+import { TemplateSchemas, get_ob_schemas, useOBContext } from "./observation_data_tool_view";
 import AJV2019, { ValidateFunction } from 'ajv/dist/2019'
 // import AJV, { ValidateFunction } from 'ajv'
 import addFormats from "ajv-formats";
@@ -29,6 +29,8 @@ export const Autosave = () => {
         window.localStorage.setItem('OB', JSON.stringify(ob));
     }
 
+    const [obSchema, setOBSchema] = React.useState<JSONSchema7>(OB_SCHEMA_BASE)
+
     const updateDatabaseOB = (ob: ObservationBlock) => {
         ob_api_funcs.put(ob._id, ob)
     }
@@ -36,7 +38,7 @@ export const Autosave = () => {
     const debouncedSave = useCallback(
         debounce(async (newOB) => {
             try {
-                const val = validate && validate(newOB)
+                const val = validate && await validate(newOB)
                 console.log('errors', val?.errors, 'ob', ob_context.ob)
                 ob_context.setErrors(val?.errors ?? [])
             }
@@ -54,12 +56,11 @@ export const Autosave = () => {
         []
     )
 
-    const create_ob_schema = (obMetadata: OBMetadata) => {
+    const create_ob_schema = (obMetadata: OBMetadata, templateSchemas: TemplateSchemas) => {
         const properties: { [key: string]: JSONSchema7 } = {}
-        // for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
-        for (let idx = 0; idx < Object.keys(ob_context.obSchema).length; idx++) {
-            const key = Object.keys(ob_context.obSchema)[idx]
-            const schema = ob_context.obSchema[key][0].properties as { [key: string]: JSONSchema7Definition }
+        for (let idx = 0; idx < Object.keys(templateSchemas).length; idx++) {
+            const key = Object.keys(templateSchemas)[idx]
+            const schema = templateSchemas[key][0].properties as { [key: string]: JSONSchema7Definition }
             console.log('key', key, 'schema', schema)
             properties[key] = {
                 title: key,
@@ -77,33 +78,42 @@ export const Autosave = () => {
                 }
             }
         }
+
         const newSchema = {
             ...OB_SCHEMA_BASE,
             properties: properties,
             required: obMetadata?.ob_type?.includes("Science") ?
                 ['metadata', 'status', 'acquisition', 'target'] : OB_SCHEMA_BASE.required
         }
-        console.log('ob_context.obSchema', ob_context.obSchema, 'newSchema', newSchema)
+        console.log('ob_context.templateSchemas', templateSchemas, 'newSchema', newSchema)
         return newSchema
 
     }
 
-    const validate = useCallback((ob: ObservationBlock) => {
-        if (ob_context.ob) {
-            const parsedOB = parseOB(ob)
-            const obSchema = create_ob_schema(ob.metadata)
-            try {
-                const newValidate = ajv.compile(obSchema)
-                newValidate(parsedOB)
-                console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
-                ob_context.setErrors(newValidate.errors ?? [])
-                return newValidate
-            }
-            catch (err) {
-                console.error('error compiling schema', err, 'obSchema', obSchema, 'ob', ob, 'parsedOB', parsedOB)
-            }
+    const validate = useCallback( async (ob: ObservationBlock) => {
+
+        let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(ob_context.templateSchemas).includes(x));
+        let templateSchemas = ob_context.templateSchemas 
+        if (difference.length > 0) {
+            console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
+            templateSchemas = await get_ob_schemas(ob)
+            ob_context.setTemplateSchemas(templateSchemas)
+            const newOBSchema = create_ob_schema(ob.metadata, templateSchemas)
+            setOBSchema(newOBSchema)
         }
-    }, [ob_context.obSchema])
+
+        const parsedOB = parseOB(ob)
+        try {
+            const newValidate = ajv.compile(obSchema)
+            newValidate(parsedOB)
+            console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
+            ob_context.setErrors(newValidate.errors ?? [])
+            return newValidate
+        }
+        catch (err) {
+            console.error('error compiling schema', err, 'obSchema', obSchema, 'ob', ob, 'parsedOB', parsedOB)
+        }
+    }, [ob_context.templateSchemas, obSchema])
 
     useEffect(() => {
         ob_context.ob !== undefined && debouncedSave(ob_context.ob)
