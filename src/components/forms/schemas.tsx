@@ -46,7 +46,7 @@ export const metadataSchema: JsonSchema = {
       title: "Version"
     },
     pi_id: {
-      type: "string",
+      type: "number",
       title: "PI ID"
     },
     ob_type: {
