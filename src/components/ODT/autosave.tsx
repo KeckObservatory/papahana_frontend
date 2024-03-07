@@ -24,9 +24,6 @@ export const Autosave = () => {
     const ob_context = useOBContext()
     const ajv = new AJV2019({ allErrors: true, strict: false })
     addFormats(ajv)
-    const initValidate = ajv.compile(OB_SCHEMA_BASE)
-
-    const [validate, setValidate] = React.useState<ValidateFunction>(initValidate)
     const saveToLocalStorage = (ob: ObservationBlock) => {
         window.localStorage.setItem('OB', JSON.stringify(ob));
     }
@@ -66,35 +63,24 @@ export const Autosave = () => {
 
     }
 
-    useEffect(() => {
-        const newSchema = create_ob_schema()
-        console.log('new OB Schema', newSchema)
-        try {
-            const newValidate = ajv.compile(newSchema)
-            setValidate(newValidate)
+    const validate = useCallback( (ob) => {
+        const newValidate = ajv.compile(create_ob_schema())
+        if (ob_context.ob) {
+            const parsedOB = parseOB(ob)
+            newValidate(parsedOB)
+            console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
+            ob_context.setErrors(newValidate.errors ?? [])
+            return newValidate
         }
-        catch (err) {
-            console.error('Error in compiling new schema', err)
-        }
-
-    }
-        , [ob_context.obSchema])
+    }, [ob_context.obSchema])
 
     useEffect(() => {
         console.log('validate', validate);
-        if ((validate as unknown as boolean) && ob_context.ob) {
-            const parsedOB = parseOB(ob_context.ob)
-            // let difference = Object.keys(parsedOB).filter(x => !Object.keys(ob_context.obSchema).includes(x));
-            // console.log('difference', difference)
-
-            const newSchema = create_ob_schema()
-            //TODO: compile only if new template is added
-            const val = ajv.compile(newSchema)
-            val(parsedOB)
-            console.log('errors', validate.errors, 'parsedOB', parsedOB)
-            ob_context.setErrors(validate.errors ?? [])
-            debouncedSave(ob_context.ob)
-        }},
+        const val = validate(ob_context.ob)
+        console.log('errors', val?.errors, 'ob', ob_context.ob)
+        ob_context.setErrors(val?.errors ?? [])
+        ob_context.ob !== undefined && debouncedSave(ob_context.ob)
+    },
         [ob_context.ob, debouncedSave] )
 
     return null

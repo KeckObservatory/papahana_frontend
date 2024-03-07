@@ -140,7 +140,7 @@ export interface ObservationBlock extends Base {
 	common_parameters?: CommonTemplate,
 	comment?: string;
 	observations?: Science[];
-	acquisition: Acquisition;
+	acquisition?: Acquisition;
 	// associations: string[];
 	status: Status;
 }
