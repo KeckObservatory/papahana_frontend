@@ -49,12 +49,14 @@ export const Autosave = () => {
     )
 
     useEffect(() => {
-        ob_context.obSchema && setValidate((oldValidate: ValidateFunction) => {
 
             const properties: { [key: string]: JSONSchema7 } = {}
-            for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
-                console.log('name', name, 'schemas', schemas)
-                properties[name] = schemas[0]
+            // for (const [name, schemas] of Object.entries(ob_context.obSchema)) {
+            for (let idx = 0; idx < Object.keys(ob_context.obSchema).length; idx++) {
+                const key = Object.keys(ob_context.obSchema)[idx]
+                const schema = ob_context.obSchema[key][0]
+                console.log('key', key, 'schema', schema)
+                properties[key] = schema 
             }
             console.log('ob_context.obSchema', ob_context.obSchema, 'properties', properties)
             const newSchema = {
@@ -63,17 +65,13 @@ export const Autosave = () => {
             }
             console.log('new OB Schema', newSchema)
             try {
-                ajv.removeSchema(ob_context.obSchema)
                 const newValidate = ajv.compile(newSchema)
-                return newValidate
+                setValidate(newValidate)
             }
             catch (err) {
                 console.error('Error in compiling new schema', err)
-                return oldValidate
             }
 
-
-        })
     }
         , [ob_context.obSchema])
 
