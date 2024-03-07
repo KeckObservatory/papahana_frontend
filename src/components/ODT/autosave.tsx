@@ -7,6 +7,7 @@ import AJV2019, { ValidateFunction } from 'ajv/dist/2019'
 // import AJV, { ValidateFunction } from 'ajv'
 import addFormats from "ajv-formats";
 import { JSONSchema7 } from 'json-schema'
+import { parseOB } from "./sequence_grid/ob_form_beautiful_dnd";
 
 const DEBOUNCE_SAVE_DELAY = 2000;
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
@@ -20,7 +21,7 @@ const OB_SCHEMA_BASE: JSONSchema7 = {
 
 export const Autosave = () => {
 
-    const obContext = useOBContext()
+    const ob_context = useOBContext()
     const ajv = new AJV2019({ allErrors: true, strict: false })
     addFormats(ajv)
     const initValidate = ajv.compile(OB_SCHEMA_BASE)
@@ -48,26 +49,41 @@ export const Autosave = () => {
     )
 
     useEffect(() => {
-        obContext.obSchema && setValidate( () => {
+        ob_context.obSchema && setValidate((oldValidate: ValidateFunction) => {
+
             const properties: { [key: string]: JSONSchema7 } = {}
-            Object.entries(obContext.obSchema).forEach(([name, schemas]) => { properties[name] = schemas[0] })
-            const newSchema = {...OB_SCHEMA_BASE,
-            properties }
+            Object.entries(ob_context.obSchema).forEach(([name, schemas]) => { properties[name] = schemas[0] })
+            const newSchema = {
+                ...OB_SCHEMA_BASE,
+                properties
+            }
             console.log('new OB Schema', newSchema)
-            return ajv.compile(newSchema)
-            })
+            try {
+                ajv.removeSchema(ob_context.obSchema)
+                const newValidate = ajv.compile(newSchema)
+                return newValidate
+            }
+            catch (err) {
+                console.error('Error in compiling new schema', err)
+                return oldValidate
+            }
+
+
+        })
     }
-    , [obContext.obSchema])
+        , [ob_context.obSchema])
 
     useEffect(() => {
         console.log('validate', validate);
-
-        ((validate as unknown as boolean) && obContext.ob) && validate(obContext.ob)
-        console.log('errors', validate.errors)
-        obContext.setErrors(validate.errors ?? [])
-        debouncedSave(obContext.ob)
+        if ((validate as unknown as boolean) && ob_context.ob) {
+            const parsedOB = parseOB(ob_context.ob)
+            validate(parsedOB)
+            console.log('errors', validate.errors, 'parsedOB', parsedOB)
+            ob_context.setErrors(validate.errors ?? [])
+            debouncedSave(ob_context.ob)
+        }
     },
-    [obContext.ob, debouncedSave])
+        [ob_context.ob, debouncedSave])
 
     return null
 }

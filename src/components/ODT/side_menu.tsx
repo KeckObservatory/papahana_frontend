@@ -22,7 +22,7 @@ import ReactJson, { ThemeKeys, InteractionProps } from 'react-json-view'
 import useBoop from '../../hooks/boop'
 import { ob_api_funcs } from '../../api/ApiRoot';
 import { useQueryParam, StringParam, BooleanParam, withDefault } from 'use-query-params'
-import { useOBContext } from './observation_data_tool_view';
+import { get_ob_schemas, useOBContext } from './observation_data_tool_view';
 import TargetDialog from './TargetDialog';
 import ValidationDialogButton from '../validator_dialog';
 
@@ -154,7 +154,7 @@ export const SideMenu = (props: Props) => {
         })
     }
 
-    const addSeq = (seq: OBSequence) => {
+    const addSeq = async (seq: OBSequence) => {
         console.log('ob before add Seq', ob_context.ob)
         const tmplType = seq.metadata.template_type
         console.log('templateType adding', tmplType)
@@ -177,6 +177,8 @@ export const SideMenu = (props: Props) => {
         // triggerBoop(true)
         console.log('newOB', newOB)
         ob_context.setOB(() => newOB)
+        const newOBSchema = await get_ob_schemas(newOB)
+        ob_context.setOBSchema(newOBSchema)
         props.setTriggerRender(props.triggerRender + 1)
     }
 

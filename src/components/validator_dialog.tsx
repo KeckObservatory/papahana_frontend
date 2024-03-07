@@ -19,14 +19,14 @@ export interface SimpleDialogProps {
 
 function ValidationDialog(props: SimpleDialogProps) {
   const { open, handleClose } = props;
-  const obContext = useOBContext()
-  console.log('obContext.errors', obContext.errors)
+  const ob_context = useOBContext()
+  console.log('ob_context.errors', ob_context.errors)
   return (
     <Dialog maxWidth="lg" onClose={() => handleClose()} open={open}>
       <DialogTitle>Target Validation Errors</DialogTitle>
       <DialogContent dividers>
-        {obContext.errors && 
-          obContext.errors.map((err) => {
+        {ob_context.errors && 
+          ob_context.errors.map((err) => {
             let msg = err.message
             if (err.keyword === 'required') {
               msg = `${err.params.missingProperty}: ${err.message}`
@@ -49,21 +49,21 @@ function ValidationDialog(props: SimpleDialogProps) {
 export default function ValidationDialogButton() {
   const [open, setOpen] = React.useState(false);
   const [icon, setIcon] = React.useState(<ApprovalIcon />)
-  const obContext = useOBContext()
+  const ob_context = useOBContext()
 
   React.useEffect(() => {
-    if (obContext.errors.length > 0) {
+    if (ob_context.errors.length > 0) {
       setIcon(<LocalFireDepartmentIcon color="warning" />)
     }
     else {
       setIcon(<VerifiedIcon color="success" />)
     }
-  }, [obContext.ob, obContext.errors])
+  }, [ob_context.ob, ob_context.errors])
 
 
   const handleClickOpen = () => {
-    if (obContext.errors.length > 0) {
-      console.log(obContext.errors)
+    if (ob_context.errors.length > 0) {
+      console.log(ob_context.errors)
       setOpen(true);
     }
   };

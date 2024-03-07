@@ -72,8 +72,6 @@ export default function CommonParametersTemplateForm(props: Props): JSX.Element 
         //@ts-ignore
         const formData = props.obComponent[formName]
         const handleSubChange = (evt: ISubmitEvent<CommonParameters>) => handleChange(evt, formName as keyof CommonParameters)
-
-        console.log('schema', props.schema)
         // @ts-ignore
         const schema = props.schema.properties[formName] as JSONSchema7
         return (

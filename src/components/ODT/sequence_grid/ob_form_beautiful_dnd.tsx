@@ -170,8 +170,8 @@ interface Props {
 }
 
 export const OBBeautifulDnD = (props: Props) => {
-    const obContext = useOBContext()
-    const obComponents = parseOB(obContext.ob)
+    const ob_context = useOBContext()
+    const obComponents = parseOB(ob_context.ob)
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
@@ -180,7 +180,7 @@ export const OBBeautifulDnD = (props: Props) => {
 
     React.useEffect(() => {
         console.log(`JSON edited. resetting grid items`)
-        const obComponents: Partial<ObservationBlock> = parseOB(obContext.ob)
+        const obComponents: Partial<ObservationBlock> = parseOB(ob_context.ob)
         let obItems = Object.entries(obComponents)
         obItems = chunkify(obItems, nColumns, evenChunks) as any
         setState(() => obItemChunks)
@@ -188,7 +188,7 @@ export const OBBeautifulDnD = (props: Props) => {
 
     const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence, subFormName?: string) => {
         if (Object.keys(formData).length > 0) {
-            let newOb = { ...obContext.ob }
+            let newOb = { ...ob_context.ob }
             //handle observations
             if (seqName.includes('sequence')) {
                 newOb = updateOBScience(seqName, newOb, formData)
@@ -202,7 +202,7 @@ export const OBBeautifulDnD = (props: Props) => {
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
             }
-            obContext.setOB(newOb)
+            ob_context.setOB(newOb)
         }
     }
 
@@ -233,12 +233,12 @@ export const OBBeautifulDnD = (props: Props) => {
     const handleDelete = (name: string) => {
         console.log('deleteing component:', name)
 
-        let newOB = { ...obContext.ob }
+        let newOB = { ...ob_context.ob }
         if (name.includes('sequence')) {
             //find id
             const sequence_number = JSON.parse(name.split(' ')[1])
             //find and delete sequence from array
-            let newSequences = obContext.ob.observations
+            let newSequences = ob_context.ob.observations
             const idx = newSequences?.findIndex((s) => s.metadata.sequence_number === sequence_number)
             newSequences?.splice(idx as number, 1)
             newOB.observations = newSequences
@@ -246,7 +246,7 @@ export const OBBeautifulDnD = (props: Props) => {
         else {
             delete newOB[name as keyof ObservationBlock]
         }
-        obContext.setOB(newOB)
+        ob_context.setOB(newOB)
         props.setTriggerRender(props.triggerRender + 1)
     }
 
@@ -271,13 +271,13 @@ export const OBBeautifulDnD = (props: Props) => {
                 const draggables: any = []
                 keyValueArr.forEach(async (keyValue, index: number) => {
                     const [componentName, _] = keyValue
-                    if (obContext.obSchema[componentName] !== undefined) {
-                        const [schema, uiSchema] = obContext.obSchema[componentName]
+                    if (ob_context.obSchema[componentName] !== undefined) {
+                        const [schema, uiSchema] = ob_context.obSchema[componentName]
                         // @ts-ignore
                         schema && draggables.push(create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema))
                     }
                     // else {
-                    //     console.log('obContext.obSchema undefined', componentName, obContext.obSchema)
+                    //     console.log('ob_context.obSchema undefined', componentName, ob_context.obSchema)
                     // }
                 })
                 return (<div

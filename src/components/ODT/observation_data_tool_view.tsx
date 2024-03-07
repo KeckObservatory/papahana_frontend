@@ -52,6 +52,7 @@ export const get_ob_schemas = async (ob: ObservationBlock) => {
             const [schema, uiSchema] = await get_schemas(obComponent, ob.metadata.instrument, componentName)
             obSchema[componentName] = [schema, uiSchema]
     })
+    console.log('get_ob_schemas', obSchema)
     return obSchema
   }
 export default function ODTView(props: Props) {
@@ -137,7 +138,7 @@ export default function ODTView(props: Props) {
     getOB(ob_id)
   }
 
-  const obContext: OBContext = {
+  const ob_context: OBContext = {
     ob: ob,
     ob_id: ob_id,
     setOBID: setOBID,
@@ -151,7 +152,7 @@ export default function ODTView(props: Props) {
 
   return (
     <div>
-      <OBContext.Provider value={obContext}>
+      <OBContext.Provider value={ob_context}>
         <Drawer
           anchor={'left'}
           open={drawer.drawerOpen}
