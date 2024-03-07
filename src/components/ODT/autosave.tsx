@@ -84,11 +84,8 @@ export const Autosave = () => {
     }
 
     const validate = useCallback( (ob: ObservationBlock) => {
-
-
-        const newValidate = ajv.compile(create_ob_schema(ob.metadata))
-
         if (ob_context.ob) {
+            const newValidate = ajv.compile(create_ob_schema(ob.metadata))
             const parsedOB = parseOB(ob)
             newValidate(parsedOB)
             console.log('errors', newValidate.errors, 'parsedOB', parsedOB)
