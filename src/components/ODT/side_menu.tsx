@@ -1,4 +1,4 @@
-import React, { createContext, useContext } from 'react';
+import React, { useEffect, createContext, useContext } from 'react';
 import { IconButton, Paper } from '@mui/material'
 import cloneDeep from 'lodash/cloneDeep';
 import { animated } from 'react-spring'
@@ -95,6 +95,10 @@ export const SideMenu = (props: Props) => {
             })
     }
 
+    useEffect(() => {
+        console.log('boop style', boopStyle)
+    },[boopStyle])
+
     const ob_select_object = {
         sem_id: sem_id,
         setSemId: setSemId,
@@ -177,6 +181,8 @@ export const SideMenu = (props: Props) => {
         triggerBoop(true)
         console.log('newOB', newOB)
         ob_context.setOB(() => newOB)
+        const newTemplateSchemas = await get_template_schemas(newOB)
+        ob_context.setTemplateSchemas(newTemplateSchemas)
         props.setTriggerRender(props.triggerRender + 1)
     }
 
