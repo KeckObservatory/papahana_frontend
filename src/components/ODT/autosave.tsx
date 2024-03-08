@@ -1,14 +1,12 @@
 import React, { useCallback, useEffect } from "react";
 import debounce from "lodash.debounce";
-import { Metadata, OBMetadata, ObservationBlock } from "../../typings/papahana";
-import { ob_api_funcs } from './../../api/ApiRoot';
+import {  OBMetadata, ObservationBlock } from "../../typings/papahana";
 import { TemplateSchemas, schema_templates_match_ob, get_template_schemas, useOBContext } from "./observation_data_tool_view";
-import AJV2019, { ValidateFunction } from 'ajv/dist/2019'
+import AJV2019 from 'ajv/dist/2019'
 // import AJV, { ValidateFunction } from 'ajv'
 import addFormats from "ajv-formats";
 import { JSONSchema7, JSONSchema7Definition } from 'json-schema'
 import { parseOB } from "./sequence_grid/ob_form_beautiful_dnd";
-import { create, get } from "lodash";
 
 const DEBOUNCE_SAVE_DELAY = 2000;
 const IS_PRODUCTION: boolean = process.env.REACT_APP_ENVIRONMENT === 'production'
@@ -69,12 +67,7 @@ export const Autosave = () => {
         window.localStorage.setItem('OB', JSON.stringify(ob));
     }
 
-    // const [obSchema, setOBSchema] = React.useState<JSONSchema7>(create_ob_schema(ob_context.ob.metadata, ob_context.templateSchemas))
-    const [obSchema, setOBSchema] = React.useState<JSONSchema7>({})
 
-    useEffect(() => {
-        setOBSchema(create_ob_schema(ob_context.ob.metadata, ob_context.templateSchemas))
-    }, [])
 
     useEffect(() => {
         Object.keys(ob_context.ob ?? {}).length > 0 && debouncedValidate(ob_context.ob)
@@ -88,7 +81,7 @@ export const Autosave = () => {
     const debouncedSave = useCallback(
         debounce(async (ob) => {
             if (IS_PRODUCTION) {
-                ob_api_funcs.put(ob._id, ob)
+                // ob_api_funcs.put(ob._id, ob)
                 await saveToLocalStorage(ob)
             }
             else {
@@ -124,7 +117,7 @@ export const Autosave = () => {
                 console.error('error validating ob', err)
             }
         }, 3000),
-        [ob_context.ob, ob_context.templateSchemas, obSchema]
+        [ob_context.ob, ob_context.templateSchemas ]
         // []
     )
 

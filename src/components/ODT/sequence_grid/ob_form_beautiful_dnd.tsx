@@ -16,6 +16,7 @@ import { JSONSchema7 } from 'json-schema'
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { get_schemas } from '../../forms/template_form';
 import { UiSchema } from 'react-jsonschema-form';
+import useBoop from '../../../hooks/boop';
 
 const GRID = 4;
 const ROW_HEIGHT = 45;
@@ -160,7 +161,7 @@ export const OBBeautifulDnD = (props: Props) => {
     const evenChunks = true
     const obItemChunks = chunkify(obItems, nColumns, evenChunks)
     const [state, setState] = React.useState(obItemChunks);
-
+    const [boopStyle, triggerBoop] = useBoop({})
     React.useEffect(() => {
         console.log(`JSON edited. resetting grid items`)
         const obComponents: Partial<ObservationBlock> = parseOB(ob_context.ob)
@@ -183,6 +184,7 @@ export const OBBeautifulDnD = (props: Props) => {
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
             }
+            triggerBoop(true)
             ob_context.setOB(newOb)
         }
     }

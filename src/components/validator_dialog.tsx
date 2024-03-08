@@ -20,6 +20,7 @@ export interface SimpleDialogProps {
 function ValidationDialog(props: SimpleDialogProps) {
     const { open, handleClose } = props;
     const ob_context = useOBContext()
+    const incInstancePath = ['type', 'minimum', 'maximum', 'enum']
     return (
         <Dialog maxWidth="lg" onClose={() => handleClose()} open={open}>
             <DialogTitle>Target Validation Errors</DialogTitle>
@@ -30,10 +31,10 @@ function ValidationDialog(props: SimpleDialogProps) {
                         if (err.keyword === 'required') {
                             msg = `${err.params.missingProperty}: ${err.message}`
                         }
-                        if (err.keyword === 'type') {
+                        else if (err.keyword === 'type') {
                             msg = `${err.instancePath.substring(1)}: ${err.message}`
                         }
-                        if (err.keyword === 'minimum' || err.keyword === 'maximum') {
+                        else if (incInstancePath.includes(err.keyword)) {
                             msg = `${err.instancePath.substring(1)}: ${err.message}`
                         }
                         return (

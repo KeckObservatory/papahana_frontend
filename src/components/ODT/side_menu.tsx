@@ -174,7 +174,7 @@ export const SideMenu = (props: Props) => {
             //@ts-ignore
             newOB[tmplType] = seq
         }
-        // triggerBoop(true)
+        triggerBoop(true)
         console.log('newOB', newOB)
         ob_context.setOB(() => newOB)
         props.setTriggerRender(props.triggerRender + 1)
@@ -182,7 +182,7 @@ export const SideMenu = (props: Props) => {
 
     const onEdit = (e: InteractionProps) => {
         //ob was edited. in react json viewer
-        // triggerBoop(true)
+        triggerBoop(true)
         console.log('editing via json directly.')
         ob_context.setOB(() => e.updated_src as ObservationBlock);
         props.setTriggerRender(props.triggerRender + 1) //re render DnD items 
