@@ -58,7 +58,6 @@ export const SideMenu = (props: Props) => {
 
     const [sem_id, setSemId] =
         useQueryParam('sem_id', withDefault(StringParam, ''))
-    const [boopStyle, triggerBoop] = useBoop({})
     const jsonEditable = true
 
     const [selAccdExpanded, setSelAccdExpanded] = React.useState(true);
@@ -96,8 +95,9 @@ export const SideMenu = (props: Props) => {
     }
 
     useEffect(() => {
-        console.log('boop style', boopStyle)
-    },[boopStyle])
+        props.triggerRender > 0 && ob_context.triggerBoop(true)
+    },[ob_context.ob])
+
 
     const ob_select_object = {
         sem_id: sem_id,
@@ -173,12 +173,11 @@ export const SideMenu = (props: Props) => {
             newOB.observations = [...obs]
         }
         else {
-
             console.log('seq', seq)
             //@ts-ignore
             newOB[tmplType] = seq
         }
-        triggerBoop(true)
+        ob_context.triggerBoop(true)
         console.log('newOB', newOB)
         ob_context.setOB(() => newOB)
         const newTemplateSchemas = await get_template_schemas(newOB)
@@ -188,7 +187,7 @@ export const SideMenu = (props: Props) => {
 
     const onEdit = (e: InteractionProps) => {
         //ob was edited. in react json viewer
-        triggerBoop(true)
+        ob_context.triggerBoop(true)
         console.log('editing via json directly.')
         ob_context.setOB(() => e.updated_src as ObservationBlock);
         props.setTriggerRender(props.triggerRender + 1) //re render DnD items 
@@ -197,7 +196,7 @@ export const SideMenu = (props: Props) => {
     const handleEdit = jsonEditable ? onEdit : false
 
     const handleSubmit = () => {
-        triggerBoop(false)
+        ob_context.triggerBoop(false)
         ob_api_funcs.put(ob_context.ob._id, ob_context.ob)
             .then((response: ValidatorReport) => {
                 // setValidatorReport(response)
@@ -246,7 +245,7 @@ export const SideMenu = (props: Props) => {
                                     display: 'inline-flex',
                                 }}>
                                     <Tooltip title="Upload OB to database">
-                                        <animated.button aria-label='upload' onClick={handleSubmit} style={boopStyle}>
+                                        <animated.button aria-label='upload' onClick={handleSubmit} style={ob_context.boopStyle}>
                                             <PublishIcon />
                                         </animated.button>
                                     </Tooltip>

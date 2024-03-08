@@ -153,7 +153,6 @@ export const OBBeautifulDnD = (props: Props) => {
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
-    const [boopStyle, triggerBoop] = useBoop({})
     const obItemChunks = chunkify(obItems, nColumns, evenChunks)
     const [state, setState] = React.useState(obItemChunks);
     React.useEffect(() => {
@@ -178,7 +177,8 @@ export const OBBeautifulDnD = (props: Props) => {
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
             }
-            triggerBoop(true)
+            props.setTriggerRender(props.triggerRender + 1)
+            ob_context.triggerBoop(true)
             ob_context.setOB(newOb)
         }
     }

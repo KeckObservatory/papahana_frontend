@@ -11,17 +11,20 @@ import { JSONSchema7, } from 'json-schema'
 import { ErrorObject } from 'ajv'
 import { UiSchema } from 'react-jsonschema-form'
 import { get_schemas } from '../forms/template_form'
+import useBoop, { SpringStyle } from '../../hooks/boop'
 
 export interface OBContext {
   ob: ObservationBlock,
   ob_id: string | null | undefined,
   templateSchemas: TemplateSchemas,
   errors: ErrorObject[],
+  boopStyle: SpringStyle,
   setTemplateSchemas: Function
   setOBID: Function
   setOB: Function
   handleOBSelect: Function
   setErrors: Function
+  triggerBoop: Function
 }
 
 const init_ob_context: OBContext = {
@@ -29,17 +32,16 @@ const init_ob_context: OBContext = {
   ob_id: '',
   templateSchemas: {},
   errors: [],
+  boopStyle: {},
   setTemplateSchemas: () => { },
   setOBID: () => { },
   setOB: () => { },
   handleOBSelect: () => { },
-  setErrors: () => { }
+  setErrors: () => { },
+  triggerBoop: () => { }
 }
 const OBContext = createContext<OBContext>(init_ob_context)
 export const useOBContext = () => useContext(OBContext)
-
-export interface Props {
-}
 
 export interface TemplateSchemas { [key: string]: [JSONSchema7, UiSchema] }
 
@@ -53,7 +55,7 @@ export const schema_templates_match_ob = (ob: ObservationBlock, templateSchemas:
   return difference.length === 0
 }
 
-export const get_template_schemas = async (ob: ObservationBlock) => {
+export const get_template_schemas: (ob: ObservationBlock) => Promise<TemplateSchemas> = async (ob) => {
   const obComponents = parseOB(ob)
   let obItems = Object.entries(obComponents)
   let templateSchemas = {} as TemplateSchemas
@@ -75,6 +77,7 @@ export default function ODTView() {
   // const initOB = JSON.parse(window.localStorage.getItem('OB') ?? '{}') //save ob to local storage
   const [ob, setOB] = useState<ObservationBlock>({} as ObservationBlock)
   const [triggerRender, setTriggerRender] = useState(0)
+  const [boopStyle, triggerBoop ] = useBoop({})
 
   const drawer = useDrawerOpenContext()
 
@@ -86,7 +89,8 @@ export default function ODTView() {
       setTemplateSchemas(obsch)
       setInstrument(initOB.metadata.instrument)
     }
-    ob_id && init_ob(ob_id)
+    const templatesMatch = schema_templates_match_ob(ob, templateSchemas)
+    if (ob_id && templatesMatch)  init_ob(ob_id)
   }, [])
 
 
@@ -150,6 +154,7 @@ export default function ODTView() {
 
   const handleOBSelect = (ob_id: string) => {
     console.log(`setting selected ob to ${ob_id}`)
+    setTriggerRender(0)
     setOBID(ob_id)
     getOB(ob_id)
   }
@@ -160,10 +165,12 @@ export default function ODTView() {
     setOBID: setOBID,
     templateSchemas: templateSchemas,
     errors: errors,
+    boopStyle: boopStyle,
     setTemplateSchemas: setTemplateSchemas,
     setOB: setOB,
     handleOBSelect: handleOBSelect,
-    setErrors: setErrors
+    setErrors: setErrors,
+    triggerBoop: triggerBoop
   }
 
   return (

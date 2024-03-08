@@ -23,7 +23,7 @@ interface Args {
   delay?: number;
 };
 
-interface SpringStyle {
+export interface SpringStyle {
   color?: string,
   transform?: SpringValue<string>;
 };
