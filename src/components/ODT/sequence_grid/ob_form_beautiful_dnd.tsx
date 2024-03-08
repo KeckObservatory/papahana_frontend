@@ -12,6 +12,7 @@ import {
 import "./styles.css";
 import { chunkify, reorder, move, create_draggable } from './dnd_helpers'
 import { schema_templates_match_ob, useOBContext } from '../observation_data_tool_view';
+import useBoop from '../../../hooks/boop';
 
 const OB_NAMES: string[] = [
     'target',
@@ -152,6 +153,7 @@ export const OBBeautifulDnD = (props: Props) => {
     let obItems = Object.entries(obComponents)
     const nColumns = 3
     const evenChunks = true
+    const [boopStyle, triggerBoop] = useBoop({})
     const obItemChunks = chunkify(obItems, nColumns, evenChunks)
     const [state, setState] = React.useState(obItemChunks);
     React.useEffect(() => {
@@ -176,6 +178,7 @@ export const OBBeautifulDnD = (props: Props) => {
             else {
                 newOb = updateOBComponent(seqName, newOb, formData)
             }
+            triggerBoop(true)
             ob_context.setOB(newOb)
         }
     }
