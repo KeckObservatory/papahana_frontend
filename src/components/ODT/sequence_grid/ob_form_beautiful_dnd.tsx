@@ -11,7 +11,7 @@ import {
 } from './../../../typings/papahana'
 import "./styles.css";
 import { chunkify, reorder, move, create_draggable } from './dnd_helpers'
-import { useOBContext } from '../observation_data_tool_view';
+import { schema_templates_match_ob, useOBContext } from '../observation_data_tool_view';
 import { JSONSchema7 } from 'json-schema'
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 import { get_schemas } from '../../forms/template_form';
@@ -169,6 +169,7 @@ export const OBBeautifulDnD = (props: Props) => {
         setState(() => obItemChunks)
     }, [props.triggerRender])
 
+
     const updateOB = (seqName: keyof ObservationBlock, formData: OBSequence, subFormName?: string) => {
         if (Object.keys(formData).length > 0) {
             let newOb = { ...ob_context.ob }
@@ -243,22 +244,22 @@ export const OBBeautifulDnD = (props: Props) => {
         }
     }
 
-
-
     const droppables = state.map((keyValueArr, ind: number) => {
+        const templatesMatchOB = schema_templates_match_ob(ob_context.ob, ob_context.templateSchemas)
         return (<Droppable key={ind} droppableId={`${ind}`}>
             {(provided, snapshot) => {
-                const draggables: any = []
-                keyValueArr.forEach(async (keyValue, index: number) => {
+                const draggables: JSX.Element[] = []
+                templatesMatchOB && keyValueArr.forEach(async (keyValue, index: number) => {
                     const [componentName, _] = keyValue
-                    if (ob_context.templateSchemas[componentName] !== undefined) {
-                        const [schema, uiSchema] = ob_context.templateSchemas[componentName]
-                        // @ts-ignore
-                        schema && draggables.push(create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema))
+                    try {
+                    const [schema, uiSchema] = ob_context.templateSchemas[componentName]
+                    // @ts-ignore
+                    schema && draggables.push(create_draggable(keyValue, index, updateOB, acc, handleDelete, schema, uiSchema))
                     }
-                    // else {
-                    //     console.log('ob_context.templateSchemas undefined', componentName, ob_context.templateSchemas)
-                    // }
+                    catch (err) {
+                        console.log('error', err, componentName, ob_context.templateSchemas)
+                    }
+                    
                 })
                 return (<div
                     style={snapshot.isDraggingOver ? {

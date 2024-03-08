@@ -43,6 +43,16 @@ export interface Props {
 
 export interface TemplateSchemas { [key: string]: [JSONSchema7, UiSchema] }
 
+
+export const schema_templates_match_ob = (ob: ObservationBlock, templateSchemas: TemplateSchemas) => {
+      const arr1 = Object.keys(parseOB(ob))
+      const arr2 = Object.keys(templateSchemas)
+      let difference = arr1.filter(x => !arr2.includes(x))
+        .concat(arr2.filter(x => !arr1.includes(x)));
+      difference.length > 0 && console.log('difference in ob and templateSchemas, updateing templateSchemas', arr1, arr2, difference)
+      return difference.length === 0 
+    }
+
 export const get_template_schemas = async (ob: ObservationBlock) => {
   const obComponents = parseOB(ob)
   let obItems = Object.entries(obComponents)
@@ -85,20 +95,23 @@ export default function ODTView() {
       setInstrument(ob.metadata.instrument.toUpperCase())
       setOBID(ob._id)
     }
-    const check_schema = async (ob: ObservationBlock) => {
-      let difference = Object.keys(parseOB(ob)).filter(x => !Object.keys(templateSchemas).includes(x));
-      if (difference.length > 0) {
-        console.log('difference in ob and templateSchemas, updateing templateSchemas', difference)
-        const obsch = await get_template_schemas(ob)
+      
+    const set_schema_if_diff = async () => {
+      if (schema_templates_match_ob(ob, ob_context.templateSchemas)) {
+        const obsch = await get_template_schemas(ob);
         setTemplateSchemas(obsch)
       }
     }
-    check_schema(ob)
+
+    set_schema_if_diff()
   }, [ob])
 
   const renderRGL = () => {
-    const notEmpty = Object.keys(ob).length > 0 && Object.keys(templateSchemas).length > 0
-    if (notEmpty) {
+      const arr1 = Object.keys(parseOB(ob))
+      const arr2 = Object.keys(ob_context.templateSchemas)
+      let difference = arr1.filter(x => !arr2.includes(x))
+        .concat(arr2.filter(x => !arr1.includes(x)));
+    if (difference.length === 0) {
       return (
         <OBBeautifulDnD
           triggerRender={triggerRender}

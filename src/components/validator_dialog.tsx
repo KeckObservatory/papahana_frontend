@@ -20,7 +20,6 @@ export interface SimpleDialogProps {
 function ValidationDialog(props: SimpleDialogProps) {
     const { open, handleClose } = props;
     const ob_context = useOBContext()
-    console.log('ob_context.errors', ob_context.errors)
     return (
         <Dialog maxWidth="lg" onClose={() => handleClose()} open={open}>
             <DialogTitle>Target Validation Errors</DialogTitle>
@@ -63,10 +62,8 @@ export default function ValidationDialogButton() {
         }
     }, [ob_context.ob, ob_context.errors])
 
-
     const handleClickOpen = () => {
         if (ob_context.errors.length > 0) {
-            console.log(ob_context.errors)
             setOpen(true);
         }
     };
