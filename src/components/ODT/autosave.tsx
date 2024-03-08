@@ -113,8 +113,10 @@ export const Autosave = () => {
                     console.log('AHHHHH!!!!', 'parsed ob', parseOB(ob), 'ob_context.templateSchemas', ob_context.templateSchemas)
                 } 
                 else {
-                    const errors = validate(ob, obSchema)
-                    console.log('validating', validate, 'errors', errors, 'ob', ob_context.ob, obSchema)
+                    const os = create_ob_schema(ob.metadata, ob_context.templateSchemas)
+                    const errors = validate(ob, os)
+
+                    console.log('validating', validate, 'errors', errors, 'ob', ob_context.ob, 'ob schema', os)
                     ob_context.setErrors(errors ?? [])
                 }
             }
